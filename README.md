@@ -2,13 +2,10 @@
 <h1>MoonLight</h1>
 <h3> Welcome to the Moonlight repository, a fully structured client project.</h3>
 Requirements: Java 17 is required to build and run this project.<br>
-Latest build: <a href="https://github.com/randomguy3725/MoonLight/actions/workflows/build.yml?query=event%3Apush">beta-version</a><br>
-Discord: <a href="https://discord.gg/BrXGxGeY8r">discord.gg/moonlight </a><br>
-QQ: 713315328
 </div>
 
 ## Issues
-Found a bug or have an idea for a new feature? You can let us know by clicking [here](https://github.com/randomguy3725/MoonLight/issues) to open an issue.
+Found a bug or have an idea for a new feature? You can let us know by clicking [here](https://github.com/Bzdhyp/MoonLight/issues) to open an issue.
 
 ## License
 This project is subject to the [GNU General Public License v3.0](LICENSE). This does only apply for source code located directly in this clean repository. During the development and compilation process, additional source code may be used to which we have obtained no rights. Such code is not covered by the GPL license.
@@ -27,14 +24,21 @@ This project entirely or partially for free and even commercially. However, plea
 
 Do the above and share your source code with everyone; just like we do!
 
+## What changes were made?
+- TargetHUD Mode
+- Scaffold bypass Hypixel?
+- CCBlueX FakeLag
+- CCBlueX Velocity
+- Fix BlinkComponent
 ## Acknowledgements
 This project is built upon various inspirations and contributions from the community. Special thanks to:
 
 - **Structure Inspiration:**
-  - [GradleMCPBase](https://github.com/AbyssClient/GradleMCPBase)
+  - [MCP](https://github.com/Bzdhyp/MCP-1.8.9)
 
 - **Code Contributions:**
   - Raven XD
+  - Raven Bs - alpha
   - Acrimony
   - Vegaline
   - Excellent
