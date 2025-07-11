@@ -30,7 +30,6 @@ import org.lwjglx.input.Keyboard;
 import org.lwjglx.input.Mouse;
 import wtf.moonlight.Client;
 import com.cubk.EventTarget;
-import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.events.player.StrafeEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.events.render.Render2DEvent;
@@ -303,6 +302,31 @@ public class KillAura extends Module {
                     }
                 }
             }
+
+            if (shouldBlock()) {
+                renderBlocking = true;
+            }
+
+            if (preTickBlock()) return;
+
+            if (clicks == 0) return;
+
+            if (isBlocking || autoBlock.is("HYT"))
+                if (preAttack()) return;
+
+            if (shouldAttack()) {
+                maxClicks = clicks;
+                for (int i = 0; i < maxClicks; i++) {
+                    attack();
+                    clicks--;
+                }
+            }
+
+            if (!autoBlock.is("None") && (shouldBlock() || autoBlock.is("HYT"))) {
+                if (Mouse.isButtonDown(2))
+                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
+                postAttack();
+            }
         }
     }
 
@@ -352,40 +376,6 @@ public class KillAura extends Module {
                 }
 
                 break;
-            }
-        }
-    }
-
-    @EventTarget
-    public void onMotion(MotionEvent event) {
-        if (target == null) return;
-
-        if (event.isPre()) {
-            if (isEnabled(Scaffold.class)) return;
-
-            if (shouldBlock()) renderBlocking = true;
-
-            if (preTickBlock()) return;
-
-            if (clicks == 0) return;
-
-            if (isBlocking || autoBlock.is("HYT"))
-                if (preAttack()) return;
-
-            if (shouldAttack()) {
-                maxClicks = clicks;
-                for (int i = 0; i < maxClicks; i++) {
-                    attack();
-                    clicks--;
-                }
-            }
-        }
-
-        if (event.isPost()) {
-            if (!autoBlock.is("None") && (shouldBlock() || autoBlock.is("HYT"))) {
-                if (Mouse.isButtonDown(2))
-                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
-                postAttack();
             }
         }
     }
