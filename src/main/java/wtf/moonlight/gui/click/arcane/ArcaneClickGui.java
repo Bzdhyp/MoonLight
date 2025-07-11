@@ -45,7 +45,7 @@ public class ArcaneClickGui extends GuiScreen {
     public Color fontcolor;
     private final Animation animations = new DecelerateAnimation(250, 1);
     private final Animation animations2 = new DecelerateAnimation(250, 1);
-    private Animation hoverAnimation = new DecelerateAnimation(1000, 1);;
+    private final Animation hoverAnimation = new DecelerateAnimation(1000, 1);;
     public final ESPComponent espPreviewComponent = new ESPComponent();
     boolean sb = false;
 
@@ -83,14 +83,12 @@ public class ArcaneClickGui extends GuiScreen {
         RoundedUtils.drawGradientVertical(x, y + 30, w, h - 30, 7, backgroundColor2,backgroundColor3);
         RenderUtils.stopGlScissor();
 
-        Fonts.Bold.get(30).drawString("ARC", x + 10, y + 10, fontcolor.getRGB());
-        Fonts.Bold.get(30).drawStringDynamic("ANE", x + 10 + Fonts.Bold.get(30).getStringWidth("ARC"), y + 10,1, 6);
+        Fonts.Bold.get(30).drawString(Client.INSTANCE.clientName, x + 10, y + 10, fontcolor.getRGB());
 
-        Fonts.Bold.get(18).drawString("NextGen", x + w - 46, y + 16, versionColor.getRGB());
+        Fonts.Bold.get(24).drawStringDynamic("v2", x + w - 32, y + 14,1, 6);
+
         RoundedUtils.drawRound(x + w - 68, y + 44, 60, 25, 5, smallbackgroundColor);
-
         RoundedUtils.drawRound(x + 10, y + 44, 96, 25, 5, smallbackgroundColor);
-
         RoundedUtils.drawRound(x + 53, y + 44, 1, 25, 5, smallbackgroundColor2);
 
         if (Mouse.isButtonDown(0)) {
@@ -142,9 +140,9 @@ public class ArcaneClickGui extends GuiScreen {
         Fonts.Icon.get(18).drawStringDynamic("R", x + w - 56, y + 55, 1,6);
         Fonts.Icon.get(20).drawStringDynamic("S", x + w - 28, y + 54.5f, 1,6);
         RoundedUtils.drawRound(x + w - 90, y + h - 35, 80, 25, 5, smallbackgroundColor);
-        Fonts.Bold.get(16).drawStringDynamic("DEV", x + w - 86, y + h - 30, 1,6);
+        Fonts.Bold.get(16).drawStringDynamic(mc.thePlayer.getNameClear(), x + w - 86, y + h - 30, 1,6);
         Fonts.Semibold.get(16).drawString("Time remaining:", x + w - 86, y + h - 20, fontcolor.getRGB());
-        Fonts.Semibold.get(16).drawStringDynamic("30D", x + w - 86 + Fonts.Semibold.get(16).getStringWidth("Time remaining:"), y + h - 20, 1,6);
+        Fonts.Semibold.get(16).drawStringDynamic("Lifetime", x + w - 86 + Fonts.Semibold.get(16).getStringWidth("Time remaining:"), y + h - 20, 1,6);
 
 
         Fonts.Icon.get(25).drawStringDynamic("M", x + 16, y + 53.5f, 1,6);
