@@ -54,12 +54,12 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.events.impl.misc.EntityUpdateEvent;
-import wtf.moonlight.events.impl.player.*;
-import wtf.moonlight.features.modules.impl.movement.NoFluid;
-import wtf.moonlight.features.modules.impl.visual.Animations;
-import wtf.moonlight.features.modules.impl.visual.Rotation;
-import wtf.moonlight.utils.animations.ContinualAnimation;
+import wtf.moonlight.events.misc.EntityUpdateEvent;
+import wtf.moonlight.events.player.*;
+import wtf.moonlight.module.impl.movement.NoFluid;
+import wtf.moonlight.module.impl.visual.Animations;
+import wtf.moonlight.module.impl.visual.Rotation;
+import wtf.moonlight.utils.animations.advanced.ContinualAnimation;
 import wtf.moonlight.utils.player.MovementUtils;
 import wtf.moonlight.utils.player.RotationUtils;
 
@@ -1152,7 +1152,7 @@ public abstract class EntityLivingBase extends Entity
 
     public int getArmSwingAnimationEnd() {
         if (Moonlight.INSTANCE.getModuleManager().getModule(Animations.class).isEnabled() && this == Minecraft.getMinecraft().thePlayer) {
-            return (int) (6 + Moonlight.INSTANCE.getModuleManager().getModule(Animations.class).getSlowdown().get());
+            return (int) (6 + Moonlight.INSTANCE.getModuleManager().getModule(Animations.class).getSlowdown().getValue());
         } else {
             return this.isPotionActive(digSpeed) ? 6 - (1 + this.getActivePotionEffect(digSpeed).getAmplifier()) : this.isPotionActive(digSlowdown) ? 6 + (1 + this.getActivePotionEffect(digSlowdown).getAmplifier()) * 2 : 6;
         }

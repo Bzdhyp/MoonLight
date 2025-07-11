@@ -14,7 +14,7 @@ package wtf.moonlight.gui.click.astolfo.window;
 import kotlin.collections.CollectionsKt;
 import lombok.Getter;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.features.modules.ModuleCategory;
+import wtf.moonlight.module.ModuleCategory;
 import wtf.moonlight.gui.click.IComponent;
 import wtf.moonlight.gui.click.astolfo.component.ModuleComponent;
 import wtf.moonlight.gui.font.Fonts;

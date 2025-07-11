@@ -33,7 +33,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.events.impl.misc.BlockAABBEvent;
+import wtf.moonlight.events.misc.BlockAABBEvent;
 
 public class Block
 {

@@ -12,17 +12,17 @@ package wtf.moonlight.gui.click.dropdown.component;
 
 import lombok.Getter;
 import lombok.Setter;
-import wtf.moonlight.features.modules.Module;
-import wtf.moonlight.features.modules.impl.visual.ClickGUI;
-import wtf.moonlight.features.values.Value;
-import wtf.moonlight.features.values.impl.*;
+import wtf.moonlight.module.Module;
+import wtf.moonlight.module.impl.visual.ClickGUI;
+import wtf.moonlight.module.values.Value;
+import wtf.moonlight.module.values.impl.*;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.click.IComponent;
 import wtf.moonlight.gui.click.dropdown.component.impl.*;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.Direction;
-import wtf.moonlight.utils.animations.impl.EaseInOutQuad;
-import wtf.moonlight.utils.animations.impl.EaseOutSine;
+import wtf.moonlight.utils.animations.advanced.Direction;
+import wtf.moonlight.utils.animations.advanced.impl.EaseInOutQuad;
+import wtf.moonlight.utils.animations.advanced.impl.EaseOutSine;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.MouseUtils;
 import wtf.moonlight.utils.render.RenderUtils;
@@ -57,13 +57,13 @@ public class ModuleComponent implements IComponent {
             if (value instanceof SliderValue sliderValue) {
                 settings.add(new SliderComponent(sliderValue));
             }
-            if (value instanceof ModeValue modeValue) {
+            if (value instanceof ListValue modeValue) {
                 settings.add(new ModeComponent(modeValue));
             }
             if (value instanceof MultiBoolValue multiBoolValue) {
                 settings.add(new MultiBooleanComponent(multiBoolValue));
             }
-            if(value instanceof TextValue textValue){
+            if(value instanceof StringValue textValue){
                 settings.add(new StringComponent(textValue));
             }
         }
@@ -76,12 +76,12 @@ public class ModuleComponent implements IComponent {
         toggleAnimation.setDirection(module.isEnabled() ? Direction.FORWARDS : Direction.BACKWARDS);
         hoverAnimation.setDirection(isHovered(mouseX, mouseY) ? Direction.FORWARDS : Direction.BACKWARDS);
 
-        RoundedUtils.drawRound(x,y,width,yOffset - 4,3,new Color(ColorUtils.darker(INSTANCE.getModuleManager().getModule(ClickGUI.class).color.get().getRGB(), (float) (0.15f + (0.15 * toggleAnimation.getOutput())))));
+        RoundedUtils.drawRound(x,y,width,yOffset - 4,3,new Color(ColorUtils.darker(INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue().getRGB(), (float) (0.15f + (0.15 * toggleAnimation.getOutput())))));
 
-        Fonts.interRegular.get((float) (14 - 1 * hoverAnimation.getOutput())).drawCenteredString(module.getName(), x + getWidth() / 2, y + yOffset / 2 - 3 + 0.5 * hoverAnimation.getOutput(), ColorUtils.interpolateColor2(Color.GRAY, INSTANCE.getModuleManager().getModule(ClickGUI.class).color.get(), (float) toggleAnimation.getOutput()));
+        Fonts.interRegular.get((float) (14 - 1 * hoverAnimation.getOutput())).drawCenteredString(module.getName(), x + getWidth() / 2, y + yOffset / 2 - 3 + 0.5 * hoverAnimation.getOutput(), ColorUtils.interpolateColor2(Color.GRAY, INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue(), (float) toggleAnimation.getOutput()));
 
         if (!settings.isEmpty()) {
-            RenderUtils.drawCircle(x + width - 10, y + 7, 0, 360, 1f, .1f, true, INSTANCE.getModuleManager().getModule(ClickGUI.class).color.get().getRGB());
+            RenderUtils.drawCircle(x + width - 10, y + 7, 0, 360, 1f, .1f, true, INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue().getRGB());
         }
 
         for (Component component : settings) {
@@ -90,7 +90,7 @@ public class ModuleComponent implements IComponent {
             component.setY((float) (y + yOffset * openAnimation.getOutput()));
             component.setWidth(width);
             if (openAnimation.getOutput() > .7f) {
-                component.drawRoundBackground(new Color(ColorUtils.darker(INSTANCE.getModuleManager().getModule(ClickGUI.class).color.get().getRGB(), (float) (0.15f + (0.15 * toggleAnimation.getOutput())))));
+                component.drawRoundBackground(new Color(ColorUtils.darker(INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue().getRGB(), (float) (0.15f + (0.15 * toggleAnimation.getOutput())))));
                 component.drawScreen(mouseX, mouseY);
             }
             yOffset += (float) (component.getHeight() * openAnimation.getOutput());

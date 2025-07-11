@@ -12,26 +12,19 @@ package wtf.moonlight.gui.widget.impl;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
-import org.apache.commons.lang3.time.StopWatch;
-import org.lwjgl.opengl.GL11;
-import org.lwjglx.input.Mouse;
-import wtf.moonlight.events.impl.render.Shader2DEvent;
-import wtf.moonlight.features.modules.impl.visual.Interface;
-import wtf.moonlight.features.values.impl.ModeValue;
+import wtf.moonlight.events.render.Shader2DEvent;
+import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.widget.Widget;
 import wtf.moonlight.utils.InstanceAccess;
-import wtf.moonlight.utils.animations.Animation;
+import wtf.moonlight.utils.animations.advanced.Animation;
 import wtf.moonlight.utils.math.MathUtils;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.ParticleRenderer;
@@ -85,7 +78,7 @@ public class TargetHUDWidget extends Widget {
     }
 
     public float getTHUDWidth(Entity entity) {
-        return switch (setting.targetHudMode.get()) {
+        return switch (setting.targetHudMode.getValue()) {
             case "Type 1" -> Math.max(120, Fonts.interBold.get(18).getStringWidth(entity.getName()) + 50);
             case "Astolfo" -> Math.max(130, mc.fontRendererObj.getStringWidth(entity.getName()) + 60);
             case "Type 2" -> Math.max(100, mc.fontRendererObj.getStringWidth(entity.getDisplayName().getFormattedText())) + 11;
@@ -107,7 +100,7 @@ public class TargetHUDWidget extends Widget {
     }
 
     public float getTHUDHeight() {
-        return switch (setting.targetHudMode.get()) {
+        return switch (setting.targetHudMode.getValue()) {
             case "Type 1" -> 44;
             case "Astolfo" -> 56;
             case "Type 2" -> 38.0F;
@@ -138,11 +131,11 @@ class TargetHUD implements InstanceAccess {
     private EntityPlayer target;
     private Animation animation;
     private boolean shader;
-    private ModeValue style;
+    private ListValue style;
     private Interface setting = INSTANCE.getModuleManager().getModule(Interface.class);
     private final DecimalFormat decimalFormat = new DecimalFormat("0.0");
 
-    public TargetHUD(float x, float y, EntityPlayer target, Animation animation, boolean shader, ModeValue style) {
+    public TargetHUD(float x, float y, EntityPlayer target, Animation animation, boolean shader, ListValue style) {
         this.x = x;
         this.y = y;
         this.target = target;
@@ -160,7 +153,7 @@ class TargetHUD implements InstanceAccess {
             GlStateManager.scale(animation.getOutput(), animation.getOutput(), animation.getOutput());
             GlStateManager.translate(-(x + width / 2F), -(y + height / 2F), 0);
         }
-        switch (style.get()) {
+        switch (style.getValue()) {
             case "Astolfo": {
                 if (!shader) {
                     RoundedUtils.drawRound(x, y, width, height, 0, ColorUtils.applyOpacity(new Color(0, 0, 0), (float) (.4 * animation.getOutput())));

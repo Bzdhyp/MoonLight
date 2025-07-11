@@ -13,6 +13,7 @@ Found a bug or have an idea for a new feature? You can let us know by clicking [
 - CCBlueX FakeLag
 - CCBlueX Velocity
 - Fix BlinkComponent
+- NoSlowDown bypass Hypixel
 - Prediction LongJump
 
 ## Play Hypixel

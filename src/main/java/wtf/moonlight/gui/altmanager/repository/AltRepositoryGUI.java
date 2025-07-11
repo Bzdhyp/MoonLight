@@ -38,7 +38,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjglx.input.Keyboard;
 import org.lwjglx.input.Mouse;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.features.modules.impl.visual.Interface;
+import wtf.moonlight.module.impl.visual.Interface;
 import wtf.moonlight.gui.altmanager.login.AltLoginThread;
 import wtf.moonlight.gui.altmanager.login.AltType;
 import wtf.moonlight.gui.altmanager.login.SessionUpdatingAltLoginListener;
@@ -68,9 +68,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.nio.file.StandardOpenOption.CREATE;

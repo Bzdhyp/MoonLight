@@ -2,7 +2,7 @@ package net.minecraft.util;
 
 import net.minecraft.client.Minecraft;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.events.impl.misc.TimerManipulationEvent;
+import wtf.moonlight.events.misc.TimerManipulationEvent;
 
 public class Timer
 {

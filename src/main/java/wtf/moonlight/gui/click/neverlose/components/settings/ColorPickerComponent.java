@@ -11,13 +11,13 @@
 package wtf.moonlight.gui.click.neverlose.components.settings;
 
 import net.minecraft.util.MathHelper;
-import wtf.moonlight.features.modules.impl.visual.Interface;
-import wtf.moonlight.features.values.impl.ColorValue;
+import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.values.impl.ColorValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.Animation;
-import wtf.moonlight.utils.animations.Direction;
-import wtf.moonlight.utils.animations.impl.DecelerateAnimation;
+import wtf.moonlight.utils.animations.advanced.Animation;
+import wtf.moonlight.utils.animations.advanced.Direction;
+import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.MouseUtils;
 import wtf.moonlight.utils.render.RenderUtils;
@@ -45,7 +45,7 @@ public class ColorPickerComponent extends Component {
         RoundedUtils.drawRound(getX() + 4, getY() + 10, 172, .5f, 4, lineColor2);
 
         Fonts.interSemiBold.get(17).drawString(setting.getName(), getX() + 6, getY() + 20, textRGB);
-        RenderUtils.drawCircle(getX() + 164, getY() + 22, 0, 360, 7, 2, true, (setting.isRainbow() ? INSTANCE.getModuleManager().getModule(Interface.class).getRainbow(0) : setting.get().getRGB()));
+        RenderUtils.drawCircle(getX() + 164, getY() + 22, 0, 360, 7, 2, true, (setting.isRainbow() ? INSTANCE.getModuleManager().getModule(Interface.class).getRainbow(0) : setting.getValue().getRGB()));
         //picker
         if (open.getOutput() > 0) {
             float colorAlpha = 1;

@@ -13,16 +13,13 @@ package wtf.moonlight.gui.click.astolfo.component;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.lwjglx.input.Mouse;
-import wtf.moonlight.features.modules.Module;
-import wtf.moonlight.features.modules.impl.visual.ClickGUI;
-import wtf.moonlight.features.values.Value;
-import wtf.moonlight.features.values.impl.*;
+import wtf.moonlight.module.Module;
+import wtf.moonlight.module.values.Value;
+import wtf.moonlight.module.values.impl.*;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.click.IComponent;
 import wtf.moonlight.gui.click.astolfo.component.impl.*;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.MouseUtils;
 import wtf.moonlight.utils.render.RenderUtils;
 
@@ -48,7 +45,7 @@ public class ModuleComponent implements IComponent {
             if (value instanceof SliderValue sliderValue) {
                 values.add(new SliderComponent(sliderValue));
             }
-            if (value instanceof ModeValue modeValue) {
+            if (value instanceof ListValue modeValue) {
                 values.add(new ModeComponent(modeValue));
             }
             if (value instanceof MultiBoolValue multiBoolValue) {

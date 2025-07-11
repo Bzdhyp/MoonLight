@@ -2,7 +2,7 @@ package wtf.moonlight.utils.render;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
-import wtf.moonlight.features.modules.impl.visual.Interface;
+import wtf.moonlight.module.impl.visual.Interface;
 import wtf.moonlight.utils.InstanceAccess;
 import wtf.moonlight.utils.math.MathUtils;
 import wtf.moonlight.utils.math.TimerUtils;

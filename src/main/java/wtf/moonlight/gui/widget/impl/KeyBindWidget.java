@@ -12,12 +12,12 @@ package wtf.moonlight.gui.widget.impl;
 
 import org.lwjglx.input.Keyboard;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.events.impl.render.Shader2DEvent;
+import wtf.moonlight.events.render.Shader2DEvent;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.widget.Widget;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.RoundedUtils;
-import wtf.moonlight.features.modules.Module;
+import wtf.moonlight.module.Module;
 
 import java.awt.*;
 

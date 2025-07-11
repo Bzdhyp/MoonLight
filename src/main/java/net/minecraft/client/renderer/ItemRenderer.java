@@ -29,9 +29,9 @@ import net.optifine.reflect.Reflector;
 import net.optifine.shaders.Shaders;
 import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.features.modules.impl.combat.KillAura;
-import wtf.moonlight.features.modules.impl.visual.Animations;
-import wtf.moonlight.features.modules.impl.visual.Camera;
+import wtf.moonlight.module.impl.combat.KillAura;
+import wtf.moonlight.module.impl.visual.Animations;
+import wtf.moonlight.module.impl.visual.Camera;
 import wtf.moonlight.utils.misc.SpoofSlotUtils;
 
 public class ItemRenderer
@@ -72,7 +72,7 @@ public class ItemRenderer
             } else {
                 Animations animations = Moonlight.INSTANCE.getModuleManager().getModule(Animations.class);
                 if (animations.isEnabled()) {
-                    double factor = 1 - animations.getDownscaleFactor().get();
+                    double factor = 1 - animations.getDownscaleFactor().getValue();
                     GlStateManager.scale(factor, factor, factor);
                 }
             }
@@ -337,7 +337,7 @@ public class ItemRenderer
             i++;
             if (animations.isEnabled()){
                 if (mc.thePlayer.getHeldItem() != null)
-                    GL11.glTranslated(animations.getX().get(), animations.getY().get(), animations.getZ().get());
+                    GL11.glTranslated(animations.getX().getValue(), animations.getY().getValue(), animations.getZ().getValue());
             }
 
             if (this.itemToRender != null)
@@ -366,7 +366,7 @@ public class ItemRenderer
                         case BLOCK:
                             if (animations.isEnabled()) {
                                 if (mc.thePlayer.getHeldItem() != null)
-                                    GL11.glTranslated(animations.getBx().get(), animations.getBy().get(), animations.getBz().get());
+                                    GL11.glTranslated(animations.getBx().getValue(), animations.getBy().getValue(), animations.getBz().getValue());
                                 if (animations.getRotating().get()){
                                     GL11.glRotated(i, 0, 0, 1);
                                 }
@@ -376,7 +376,7 @@ public class ItemRenderer
                                     transformFirstPersonItem(f, f1);
                                     doBlockTransformations();
                                 } else {
-                                    switch (animations.getType().get()) {
+                                    switch (animations.getType().getValue()) {
                                         case "Push":
                                             GlStateManager.translate(0.56F, -0.52F, -0.71999997F);
                                             GlStateManager.translate(0.0F, f1 * -0.6F, 0.0F);

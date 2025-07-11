@@ -10,8 +10,8 @@
  */
 package wtf.moonlight.gui.click.dropdown.component.impl;
 
-import wtf.moonlight.features.modules.impl.visual.ClickGUI;
-import wtf.moonlight.features.values.impl.ModeValue;
+import wtf.moonlight.module.impl.visual.ClickGUI;
+import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.utils.render.MouseUtils;
@@ -20,9 +20,9 @@ import wtf.moonlight.utils.render.RoundedUtils;
 import java.awt.*;
 
 public class ModeComponent extends Component {
-    private final ModeValue setting;
+    private final ListValue setting;
 
-    public ModeComponent(ModeValue setting) {
+    public ModeComponent(ListValue setting) {
         this.setting = setting;
     }
 
@@ -41,9 +41,9 @@ public class ModeComponent extends Component {
                 heightoff += 8;
             }
 
-            if (text.equals(setting.get())) {
+            if (text.equals(setting.getValue())) {
                 Fonts.interRegular.get(13).drawString(text, getX() + offset + 8, getY() + Fonts.interRegular.get(15).getHeight() + 2 + heightoff,
-                        INSTANCE.getModuleManager().getModule(ClickGUI.class).color.get().getRGB());
+                        INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue().getRGB());
             } else {
                 Fonts.interRegular.get(13).drawString(text, getX() + offset + 8, getY() + Fonts.interRegular.get(15).getHeight() + 2 + heightoff,
                         Color.GRAY.getRGB());
@@ -68,7 +68,7 @@ public class ModeComponent extends Component {
                 heightoff += 8;
             }
             if (MouseUtils.isHovered2(getX() + offset + 8, getY() + Fonts.interRegular.get(15).getHeight() + 2 + heightoff, Fonts.interRegular.get(13).getStringWidth(text), Fonts.interRegular.get(13).getHeight(), mouseX, mouseY) && mouse == 0) {
-                setting.set(text);
+                setting.setValue(text);
             }
             offset += off;
         }

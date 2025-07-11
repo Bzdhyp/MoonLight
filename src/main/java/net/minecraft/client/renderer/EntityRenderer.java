@@ -18,13 +18,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiDownloadTerrain;
-import wtf.moonlight.events.impl.misc.MouseOverEvent;
-import wtf.moonlight.features.modules.impl.movement.LongJump;
-import wtf.moonlight.features.modules.impl.movement.Speed;
-import wtf.moonlight.features.modules.impl.visual.AspectRatio;
-import wtf.moonlight.features.modules.impl.visual.Atmosphere;
-import wtf.moonlight.features.modules.impl.visual.Camera;
-import wtf.moonlight.features.modules.impl.visual.FreeLook;
+import wtf.moonlight.events.misc.MouseOverEvent;
+import wtf.moonlight.module.impl.movement.Speed;
+import wtf.moonlight.module.impl.visual.AspectRatio;
+import wtf.moonlight.module.impl.visual.Atmosphere;
+import wtf.moonlight.module.impl.visual.Camera;
+import wtf.moonlight.module.impl.visual.FreeLook;
 import wtf.moonlight.gui.mainmenu.GuiMainMenu;
 import net.minecraft.client.gui.MapItemRenderer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -103,7 +102,7 @@ import org.lwjgl.opengl.GL12;
 import org.lwjglx.opengl.GLContext;
 import org.lwjglx.util.glu.Project;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.events.impl.render.Render3DEvent;
+import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.utils.render.shader.impl.Sky;
 
 public class EntityRenderer implements IResourceManagerReloadListener
@@ -653,9 +652,9 @@ public class EntityRenderer implements IResourceManagerReloadListener
         double d1 = entity.prevPosY + (entity.posY - entity.prevPosY) * (double)partialTicks + (double)f;
         double d2 = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * (double)partialTicks;
 
-        prevRenderX = prevRenderX + (d0 - prevRenderX) * camera.interpolation.get();
-        prevRenderY = prevRenderY + (d1 - prevRenderY) * camera.interpolation.get();
-        prevRenderZ = prevRenderZ + (d2 - prevRenderZ) * camera.interpolation.get();
+        prevRenderX = prevRenderX + (d0 - prevRenderX) * camera.interpolation.getValue();
+        prevRenderY = prevRenderY + (d1 - prevRenderY) * camera.interpolation.getValue();
+        prevRenderZ = prevRenderZ + (d2 - prevRenderZ) * camera.interpolation.getValue();
 
         if (entity instanceof EntityLivingBase && ((EntityLivingBase)entity).isPlayerSleeping())
         {
@@ -684,7 +683,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         }
         else if (this.mc.gameSettings.thirdPersonView > 0)
         {
-            double d3 = Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled()?Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).cameraDistance.get():4.0;
+            double d3 = Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled()?Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).cameraDistance.getValue():4.0;
 
 
             if (this.mc.gameSettings.debugCamEnable)
@@ -840,7 +839,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             GlStateManager.scale(this.cameraZoom, this.cameraZoom, 1.0D);
         }
 
-        float aspect = Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.get() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
+        float aspect = Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.getValue() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
         Project.gluPerspective(this.getFOVModifier(partialTicks, true), aspect, 0.05F, this.clipDistance);
         GlStateManager.matrixMode(5888);
         GlStateManager.loadIdentity();
@@ -925,7 +924,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 Shaders.applyHandDepth();
             }
 
-            float aspect = Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.get() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
+            float aspect = Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.getValue() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
             Project.gluPerspective(this.getFOVModifier(p_renderHand_1_, false), aspect, 0.05F, this.farPlaneDistance * 2.0F);
             GlStateManager.matrixMode(5888);
             GlStateManager.loadIdentity();
@@ -1173,7 +1172,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                     int l = (int)(f9 * 255.0F);
                     int i1 = (int)(f10 * 255.0F);
                     Atmosphere atmosphere = Moonlight.INSTANCE.getModuleManager().getModule(Atmosphere.class);
-                    this.lightmapColors[i] = atmosphere.isEnabled() && atmosphere.worldColor.get() ? atmosphere.worldColorRGB.get().getRGB() : j << 24 | k << 16 | l << 8 | i1;
+                    this.lightmapColors[i] = atmosphere.isEnabled() && atmosphere.worldColor.get() ? atmosphere.worldColorRGB.getValue().getRGB() : j << 24 | k << 16 | l << 8 | i1;
                 }
 
                 this.lightmapTexture.updateDynamicTexture();
@@ -1535,7 +1534,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             }
             GlStateManager.matrixMode(5889);
             GlStateManager.loadIdentity();
-            float aspect = Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.get() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
+            float aspect = Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.getValue() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
             Project.gluPerspective(this.getFOVModifier(partialTicks, true), aspect ,0.05F, this.clipDistance);
             GlStateManager.matrixMode(5888);
 
@@ -1860,7 +1859,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         if (this.mc.gameSettings.renderDistanceChunks >= 4 && !Config.isCloudsOff() && Shaders.shouldRenderClouds(this.mc.gameSettings))
         {
 
-            float aspect = Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.get() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
+            float aspect = Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.getValue() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
             this.mc.mcProfiler.endStartSection("clouds");
             GlStateManager.matrixMode(5889);
             GlStateManager.loadIdentity();
@@ -2432,7 +2431,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             {
                 Atmosphere atmosphere = Moonlight.INSTANCE.getModuleManager().getModule(Atmosphere.class);
                 boolean isWorldFogEnabled = atmosphere.isEnabled() && atmosphere.worldFog.get();
-                float fogStartDistance = isWorldFogEnabled ? atmosphere.worldFogDistance.get() : Config.getFogStart();
+                float fogStartDistance = isWorldFogEnabled ? atmosphere.worldFogDistance.getValue() : Config.getFogStart();
                 GlStateManager.setFogStart(f3 * fogStartDistance);
                 GlStateManager.setFogEnd(f3);
             }
@@ -2464,9 +2463,9 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
         Atmosphere atmosphere = Moonlight.INSTANCE.getModuleManager().getModule(Atmosphere.class);
         if(atmosphere.isEnabled() && atmosphere.worldFog.get()){
-            fogColorRed = (float) atmosphere.worldFogRGB.get().getRed() / 255;
-            fogColorGreen = (float) atmosphere.worldFogRGB.get().getGreen() / 255;
-            fogColorBlue = (float) atmosphere.worldFogRGB.get().getBlue() / 255;
+            fogColorRed = (float) atmosphere.worldFogRGB.getValue().getRed() / 255;
+            fogColorGreen = (float) atmosphere.worldFogRGB.getValue().getGreen() / 255;
+            fogColorBlue = (float) atmosphere.worldFogRGB.getValue().getBlue() / 255;
         }
 
         GlStateManager.enableColorMaterial();

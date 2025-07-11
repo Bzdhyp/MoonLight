@@ -10,15 +10,15 @@
  */
 package wtf.moonlight.utils.animations;
 
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
 
+@Getter
 public final class Translate {
-
     private double x, y;
-    private final long lastMS = System.currentTimeMillis();
 
     public Translate(double x, double y) {
         this.x = x;
@@ -66,16 +66,8 @@ public final class Translate {
         return new BigDecimal(floored, MathContext.DECIMAL64).stripTrailingZeros().doubleValue();
     }
 
-    public double getX() {
-        return x;
-    }
-
     public void setX(float x) {
         this.x = x;
-    }
-
-    public double getY() {
-        return y;
     }
 
     public void setY(float y) {

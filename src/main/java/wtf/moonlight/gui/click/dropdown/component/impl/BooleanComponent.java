@@ -10,12 +10,12 @@
  */
 package wtf.moonlight.gui.click.dropdown.component.impl;
 
-import wtf.moonlight.features.modules.impl.visual.ClickGUI;
-import wtf.moonlight.features.values.impl.BoolValue;
+import wtf.moonlight.module.impl.visual.ClickGUI;
+import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.Direction;
-import wtf.moonlight.utils.animations.impl.SmoothStepAnimation;
+import wtf.moonlight.utils.animations.advanced.Direction;
+import wtf.moonlight.utils.animations.advanced.impl.SmoothStepAnimation;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.MouseUtils;
 import wtf.moonlight.utils.render.RoundedUtils;
@@ -38,7 +38,7 @@ public class BooleanComponent extends Component {
 
         Fonts.interRegular.get(15).drawString(setting.getName(), getX() + 4, getY() + 2.5f, -1);
 
-        RoundedUtils.drawRound(getX() + getWidth() - 15.5f, getY() + 2.5f, 13f, 5, 2, ColorUtils.interpolateColorC(new Color(128, 128, 128, 255), INSTANCE.getModuleManager().getModule(ClickGUI.class).color.get(), (float) toggleAnimation.getOutput()));
+        RoundedUtils.drawRound(getX() + getWidth() - 15.5f, getY() + 2.5f, 13f, 5, 2, ColorUtils.interpolateColorC(new Color(128, 128, 128, 255), INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue(), (float) toggleAnimation.getOutput()));
         RoundedUtils.drawRound(getX() + getWidth() - 15.5f + 5 * (float) toggleAnimation.getOutput(), getY() + 2f, 7f, 5, 2, Color.WHITE);
         super.drawScreen(mouseX, mouseY);
     }

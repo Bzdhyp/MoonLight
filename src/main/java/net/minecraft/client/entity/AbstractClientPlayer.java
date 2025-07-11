@@ -22,7 +22,7 @@ import net.optifine.player.CapeUtils;
 import net.optifine.player.PlayerConfigurations;
 import net.optifine.reflect.Reflector;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.events.impl.player.LookEvent;
+import wtf.moonlight.events.player.LookEvent;
 
 public abstract class AbstractClientPlayer extends EntityPlayer
 {

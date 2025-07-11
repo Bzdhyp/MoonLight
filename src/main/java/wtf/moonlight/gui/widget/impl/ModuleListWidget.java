@@ -1,10 +1,10 @@
 package wtf.moonlight.gui.widget.impl;
 
-import wtf.moonlight.events.impl.render.Shader2DEvent;
-import wtf.moonlight.features.modules.Module;
+import wtf.moonlight.events.render.Shader2DEvent;
+import wtf.moonlight.module.Module;
 import wtf.moonlight.gui.widget.Widget;
-import wtf.moonlight.utils.animations.Animation;
-import wtf.moonlight.utils.animations.Direction;
+import wtf.moonlight.utils.animations.advanced.Animation;
+import wtf.moonlight.utils.animations.advanced.Direction;
 import wtf.moonlight.utils.animations.Translate;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.RenderUtils;
@@ -36,7 +36,7 @@ public class ModuleListWidget extends Widget {
 
         for (int i = 0; i < enabledModules.size(); i++) {
             Module module = enabledModules.get(i);
-            module.getAnimation().setDuration((int) setting.animSpeed.get());
+            module.getAnimation().setDuration((int) setting.animSpeed.getValue());
             int width = getModuleWidth(module);
             int height = getModuleHeight() - 2;
 
@@ -81,7 +81,7 @@ public class ModuleListWidget extends Widget {
 
         for (int i = 0; i < enabledModules.size(); i++) {
             Module module = enabledModules.get(i);
-            module.getAnimation().setDuration((int) setting.animSpeed.get());
+            module.getAnimation().setDuration((int) setting.animSpeed.getValue());
             int width = getModuleWidth(module);
             int height = getModuleHeight() - 2;
 
@@ -170,19 +170,19 @@ public class ModuleListWidget extends Widget {
     private void renderBackground(float localX, float localY, float offset, int width, int height, int middle, int index) {
         if (localX < middle) {
             RenderUtils.drawRect(localX - PADDING, localY + offset, width + 3,
-                    height + PADDING + setting.textHeight.get(), setting.bgColor(index));
+                    height + PADDING + setting.textHeight.getValue(), setting.bgColor(index));
         } else {
             RenderUtils.drawRect(localX + this.width - 4 - width, localY + offset + 1,
-                    width + 3, height + PADDING + setting.textHeight.get(), setting.bgColor(index));
+                    width + 3, height + PADDING + setting.textHeight.getValue(), setting.bgColor(index));
         }
     }
     private void renderShaderBackground(float localX, float localY, float offset, int width, int height, int middle, int index) {
         if (localX < middle) {
             RenderUtils.drawRect(localX - PADDING, localY + offset, width + 3,
-                    height + PADDING + setting.textHeight.get(), setting.color(index));
+                    height + PADDING + setting.textHeight.getValue(), setting.color(index));
         } else {
             RenderUtils.drawRect(localX + this.width - 4 - width, localY + offset + 1,
-                    width + 3, height + PADDING + setting.textHeight.get(), setting.color(index));
+                    width + 3, height + PADDING + setting.textHeight.getValue(), setting.color(index));
         }
     }
 
@@ -192,10 +192,10 @@ public class ModuleListWidget extends Widget {
         // Main line
         if (localX < middle) {
             RenderUtils.drawRect(localX - PADDING, localY + offset, 1,
-                    height + 3 + setting.textHeight.get(), setting.color(index));
+                    height + 3 + setting.textHeight.getValue(), setting.color(index));
         } else {
             RenderUtils.drawRect(localX + this.width + PADDING - 3, localY + offset + 1, 1,
-                    height + PADDING + setting.textHeight.get(), setting.color(index));
+                    height + PADDING + setting.textHeight.getValue(), setting.color(index));
         }
 
         if (setting.outLine.get()) {
@@ -208,10 +208,10 @@ public class ModuleListWidget extends Widget {
         // Side lines
         if (localX < middle) {
             RenderUtils.drawRect(localX + width + 1, localY + offset + 1, 1,
-                    height + PADDING + setting.textHeight.get(), setting.color(index));
+                    height + PADDING + setting.textHeight.getValue(), setting.color(index));
         } else {
             RenderUtils.drawRect(localX + this.width - width - PADDING - 3, localY + offset, 1,
-                    height + 3 + setting.textHeight.get(), setting.color(index));
+                    height + 3 + setting.textHeight.getValue(), setting.color(index));
         }
 
         // Middle lines
@@ -248,11 +248,11 @@ public class ModuleListWidget extends Widget {
 
     private void renderBottomLines(float localX, float localY, float offset, int width, int height, int middle, int index) {
         if (localX < middle) {
-            RenderUtils.drawRect(localX - 1, localY + offset + height + PADDING + setting.textHeight.get(),
+            RenderUtils.drawRect(localX - 1, localY + offset + height + PADDING + setting.textHeight.getValue(),
                     width + PADDING, 1, setting.color(index));
         } else {
             RenderUtils.drawRect(localX - 4 - width + this.width,
-                    localY + offset + height + PADDING + setting.textHeight.get(),
+                    localY + offset + height + PADDING + setting.textHeight.getValue(),
                     width + 3, 1, setting.color(index));
         }
     }
@@ -295,7 +295,7 @@ public class ModuleListWidget extends Widget {
         float alphaAnimation = 1.0f;
 
         float MOVE_IN_SCALE = 2.0f;
-        switch (setting.animation.get()) {
+        switch (setting.animation.getValue()) {
             case "MoveIn":
                 if (localX > middle) {
                     localX += (float) Math.abs(module.getAnimation().getOutput() - 1.0) *
@@ -333,7 +333,7 @@ public class ModuleListWidget extends Widget {
     }
 
     private float calculateNextOffset(Module module, int height, float offset) {
-        return (float) (offset + ((module.getAnimation().getOutput()) * (height + setting.textHeight.get())) + PADDING);
+        return (float) (offset + ((module.getAnimation().getOutput()) * (height + setting.textHeight.getValue())) + PADDING);
     }
 
     @Override

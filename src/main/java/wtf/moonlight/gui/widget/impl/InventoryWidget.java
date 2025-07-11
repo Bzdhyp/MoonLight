@@ -11,7 +11,7 @@
 package wtf.moonlight.gui.widget.impl;
 
 import net.minecraft.item.ItemStack;
-import wtf.moonlight.events.impl.render.Shader2DEvent;
+import wtf.moonlight.events.render.Shader2DEvent;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.widget.Widget;
 import wtf.moonlight.utils.render.RenderUtils;

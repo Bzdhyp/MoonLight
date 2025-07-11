@@ -15,11 +15,11 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjglx.input.Keyboard;
 import org.lwjglx.input.Mouse;
-import wtf.moonlight.features.modules.ModuleCategory;
+import wtf.moonlight.module.ModuleCategory;
 import wtf.moonlight.gui.click.dropdown.panel.CategoryPanel;
-import wtf.moonlight.utils.animations.Animation;
-import wtf.moonlight.utils.animations.Direction;
-import wtf.moonlight.utils.animations.impl.EaseOutSine;
+import wtf.moonlight.utils.animations.advanced.Animation;
+import wtf.moonlight.utils.animations.advanced.Direction;
+import wtf.moonlight.utils.animations.advanced.impl.EaseOutSine;
 
 import java.io.IOException;
 import java.util.ArrayList;

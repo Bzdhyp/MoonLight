@@ -13,7 +13,7 @@ package wtf.moonlight.gui.click.neverlose.components.espelements;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import wtf.moonlight.features.modules.impl.visual.ESP;
+import wtf.moonlight.module.impl.visual.ESP;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.utils.math.MathUtils;
 import wtf.moonlight.utils.render.RenderUtils;
@@ -37,13 +37,13 @@ public class NameElement extends Component {
             if (INSTANCE.getModuleManager().getModule(ESP.class).tagsBackground.get()) {
 
                 RenderUtils.drawRect(
-                        (x - fontRenderer.getStringWidth(name) / 2f * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.get()),
+                        (x - fontRenderer.getStringWidth(name) / 2f * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue()),
                         (y - 2),
-                        fontRenderer.getStringWidth(name) * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.get(),
-                        fontRenderer.FONT_HEIGHT * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.get() + 1,
+                        fontRenderer.getStringWidth(name) * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue(),
+                        fontRenderer.FONT_HEIGHT * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue() + 1,
                         0x96000000);
             }
-            fontRenderer.drawScaledString(name, (x - fontRenderer.getStringWidth(name) / 2f * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.get()), y, INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.get(), -1);
+            fontRenderer.drawScaledString(name, (x - fontRenderer.getStringWidth(name) / 2f * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue()), y, INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue(), -1);
 
 
             if (INSTANCE.getModuleManager().getModule(ESP.class).item.get()) {
@@ -57,11 +57,11 @@ public class NameElement extends Component {
                         items.add(stack);
                     }
                 }
-                float armorX = x - fontRenderer.getStringWidth(name) / 2f - ((float) (items.size() * 18) / 2) * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.get();
+                float armorX = x - fontRenderer.getStringWidth(name) / 2f - ((float) (items.size() * 18) / 2) * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue();
 
                 for (ItemStack stack : items) {
-                    RenderUtils.renderItemStack(stack, armorX, y - 25 * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.get(), INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.get() + INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.get() / 2, true);
-                    armorX += 18 * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.get();
+                    RenderUtils.renderItemStack(stack, armorX, y - 25 * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue(), INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue() + INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue() / 2, true);
+                    armorX += 18 * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue();
                 }
             }
         }

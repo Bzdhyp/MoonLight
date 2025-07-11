@@ -41,7 +41,7 @@ import org.apache.logging.log4j.Logger;
 import org.lwjglx.input.Keyboard;
 import org.lwjglx.input.Mouse;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.events.impl.render.RenderGuiEvent;
+import wtf.moonlight.events.render.RenderGuiEvent;
 
 public abstract class GuiScreen extends Gui implements GuiYesNoCallback
 {

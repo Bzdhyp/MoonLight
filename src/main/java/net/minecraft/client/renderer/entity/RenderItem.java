@@ -66,8 +66,8 @@ import net.optifine.reflect.ReflectorForge;
 import net.optifine.shaders.Shaders;
 import net.optifine.shaders.ShadersRender;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.features.modules.impl.visual.EnchantGlint;
-import wtf.moonlight.features.modules.impl.visual.Interface;
+import wtf.moonlight.module.impl.visual.EnchantGlint;
+import wtf.moonlight.module.impl.visual.Interface;
 
 public class RenderItem implements IResourceManagerReloadListener
 {
@@ -240,7 +240,7 @@ public class RenderItem implements IResourceManagerReloadListener
                 GlStateManager.translate(f, 0.0F, 0.0F);
                 GlStateManager.rotate(-50.0F, 0.0F, 0.0F, 1.0F);
                 EnchantGlint enchantGlint  = Moonlight.INSTANCE.getModuleManager().getModule(EnchantGlint.class);
-                int color = enchantGlint.isEnabled() ? enchantGlint.syncColor.get() ? Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).color(0) : enchantGlint.color.get().getRGB() : -8372020;
+                int color = enchantGlint.isEnabled() ? enchantGlint.syncColor.get() ? Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).color(0) : enchantGlint.color.getValue().getRGB() : -8372020;
                 this.renderModel(model, color);
                 GlStateManager.popMatrix();
                 GlStateManager.pushMatrix();

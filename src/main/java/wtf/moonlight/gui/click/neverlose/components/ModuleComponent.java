@@ -13,15 +13,15 @@ package wtf.moonlight.gui.click.neverlose.components;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
 import lombok.Setter;
-import wtf.moonlight.features.modules.Module;
-import wtf.moonlight.features.values.Value;
-import wtf.moonlight.features.values.impl.*;
+import wtf.moonlight.module.Module;
+import wtf.moonlight.module.values.Value;
+import wtf.moonlight.module.values.impl.*;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.click.neverlose.components.settings.*;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.Animation;
-import wtf.moonlight.utils.animations.Direction;
-import wtf.moonlight.utils.animations.impl.DecelerateAnimation;
+import wtf.moonlight.utils.animations.advanced.Animation;
+import wtf.moonlight.utils.animations.advanced.Direction;
+import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.MouseUtils;
 import wtf.moonlight.utils.render.RenderUtils;
@@ -50,7 +50,7 @@ public class ModuleComponent extends Component {
             if (setting instanceof SliderValue slider) {
                 components.add(new SliderComponent(slider));
             }
-            if (setting instanceof ModeValue mode) {
+            if (setting instanceof ListValue mode) {
                 components.add(new ModeComponent(mode));
             }
             if (setting instanceof MultiBoolValue modes) {
@@ -59,7 +59,7 @@ public class ModuleComponent extends Component {
             if (setting instanceof ColorValue color) {
                 components.add(new ColorPickerComponent(color));
             }
-            if (setting instanceof TextValue string) {
+            if (setting instanceof StringValue string) {
                 components.add(new StringComponent(string));
             }
         }

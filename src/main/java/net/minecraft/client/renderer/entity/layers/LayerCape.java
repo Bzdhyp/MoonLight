@@ -9,7 +9,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.features.modules.impl.visual.Interface;
+import wtf.moonlight.module.impl.visual.Interface;
 
 import java.util.Iterator;
 
@@ -28,7 +28,7 @@ public class LayerCape implements LayerRenderer<AbstractClientPlayer>
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
             if(entitylivingbaseIn.getName().equals(Minecraft.getMinecraft().getSession().getUsername()) && Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).cape.get()){
-                switch (Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).capeMode.get()) {
+                switch (Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).capeMode.getValue()) {
                     case "Default":
                     this.playerRenderer.bindTexture(new ResourceLocation("moonlight/texture/cape/cape.png"));
                     break;
@@ -87,7 +87,7 @@ public class LayerCape implements LayerRenderer<AbstractClientPlayer>
             this.playerRenderer.getMainModel().renderCape(0.0625F);
 
             if(entitylivingbaseIn.getName().equals(Minecraft.getMinecraft().getSession().getUsername()) && Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).cape.get()){
-                switch (Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).capeMode.get()) {
+                switch (Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).capeMode.getValue()) {
                     case "Default":
                     this.playerRenderer.bindTexture(new ResourceLocation("moonlight/texture/cape/overlay.png"));
                     int rgb = Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).color();

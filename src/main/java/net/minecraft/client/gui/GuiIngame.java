@@ -33,19 +33,16 @@ import net.minecraft.util.*;
 import net.minecraft.world.border.WorldBorder;
 import net.optifine.CustomColors;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.events.impl.render.Render2DEvent;
-import wtf.moonlight.features.modules.impl.visual.Interface;
-import wtf.moonlight.features.modules.impl.visual.Shaders;
+import wtf.moonlight.events.render.Render2DEvent;
+import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.impl.visual.Shaders;
 import wtf.moonlight.utils.misc.SpoofSlotUtils;
-import wtf.moonlight.utils.render.RenderUtils;
 import wtf.moonlight.utils.render.RoundedUtils;
 
 import java.awt.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class GuiIngame extends Gui
 {

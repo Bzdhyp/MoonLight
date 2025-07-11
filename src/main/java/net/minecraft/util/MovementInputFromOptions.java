@@ -2,7 +2,7 @@ package net.minecraft.util;
 
 import net.minecraft.client.settings.GameSettings;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.events.impl.player.MoveInputEvent;
+import wtf.moonlight.events.player.MoveInputEvent;
 
 public class MovementInputFromOptions extends MovementInput
 {

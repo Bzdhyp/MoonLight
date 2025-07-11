@@ -11,10 +11,10 @@
 package wtf.moonlight.gui.widget;
 
 import org.lwjglx.opengl.Display;
-import wtf.moonlight.events.annotations.EventTarget;
-import wtf.moonlight.events.impl.render.ChatGUIEvent;
-import wtf.moonlight.events.impl.render.Render2DEvent;
-import wtf.moonlight.events.impl.render.Shader2DEvent;
+import com.cubk.EventTarget;
+import wtf.moonlight.events.render.ChatGUIEvent;
+import wtf.moonlight.events.render.Render2DEvent;
+import wtf.moonlight.events.render.Shader2DEvent;
 import wtf.moonlight.gui.widget.impl.*;
 import wtf.moonlight.utils.InstanceAccess;
 

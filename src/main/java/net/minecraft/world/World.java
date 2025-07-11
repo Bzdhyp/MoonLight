@@ -55,8 +55,8 @@ import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.WorldInfo;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.features.modules.impl.movement.NoFluid;
-import wtf.moonlight.features.modules.impl.visual.DashTrail;
+import wtf.moonlight.module.impl.movement.NoFluid;
+import wtf.moonlight.module.impl.visual.DashTrail;
 
 public abstract class World implements IBlockAccess
 {

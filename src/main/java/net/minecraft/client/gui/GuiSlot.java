@@ -13,7 +13,7 @@ public abstract class GuiSlot
     protected final Minecraft mc;
     protected int width;
     protected int height;
-    protected int top;
+    public int top;
     protected int bottom;
     protected int right;
     protected int left;

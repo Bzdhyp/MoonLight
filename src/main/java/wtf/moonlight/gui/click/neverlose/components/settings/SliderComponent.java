@@ -11,12 +11,12 @@
 package wtf.moonlight.gui.click.neverlose.components.settings;
 
 import net.minecraft.util.MathHelper;
-import wtf.moonlight.features.values.impl.SliderValue;
+import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.Animation;
-import wtf.moonlight.utils.animations.Direction;
-import wtf.moonlight.utils.animations.impl.DecelerateAnimation;
+import wtf.moonlight.utils.animations.advanced.Animation;
+import wtf.moonlight.utils.animations.advanced.Direction;
+import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
 import wtf.moonlight.utils.math.MathUtils;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.MouseUtils;
@@ -46,8 +46,8 @@ public class SliderComponent extends Component {
 
         RoundedUtils.drawRoundOutline(getX() + 154, getY() + 18, 20, 10, 2, .1f, bgColor4, outlineColor2);
 
-        Fonts.interSemiBold.get(12).drawCenteredString((int) ((setting).get() * 100.0D) / 100.0D + "", getX() + 164, getY() + 22, textRGB);
-        anim = RenderUtils.animate(anim, 60 * (setting.get() - setting.getMin()) / (setting.getMax() - setting.getMin()), 50);
+        Fonts.interSemiBold.get(12).drawCenteredString((int) ((setting).getValue() * 100.0D) / 100.0D + "", getX() + 164, getY() + 22, textRGB);
+        anim = RenderUtils.animate(anim, 60 * (setting.getValue() - setting.getMin()) / (setting.getMax() - setting.getMin()), 50);
         float sliderWidth = anim;
         drag.setDirection(dragging ? Direction.FORWARDS : Direction.BACKWARDS);
         RoundedUtils.drawRound(getX() + 90, getY() + 22, sliderWidth, 2, 1, sliderBarColor);

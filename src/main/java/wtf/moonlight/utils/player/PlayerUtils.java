@@ -35,8 +35,8 @@ import net.minecraft.potion.Potion;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.*;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.features.modules.impl.combat.AntiBot;
-import wtf.moonlight.features.modules.impl.combat.KillAura;
+import wtf.moonlight.module.impl.combat.AntiBot;
+import wtf.moonlight.module.impl.combat.KillAura;
 import wtf.moonlight.utils.InstanceAccess;
 import com.google.common.base.Predicate;
 

@@ -10,12 +10,11 @@
  */
 package wtf.moonlight.gui.widget.impl;
 
-import lombok.val;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.events.impl.render.Shader2DEvent;
-import wtf.moonlight.features.modules.impl.visual.Interface;
+import wtf.moonlight.events.render.Shader2DEvent;
+import wtf.moonlight.module.impl.visual.Interface;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.widget.Widget;
 import wtf.moonlight.utils.render.ColorUtils;
@@ -33,7 +32,7 @@ public class SessionInfoWidget extends Widget {
 
     @Override
     public void onShader(Shader2DEvent event) {
-        switch (setting.sessionInfoMode.get()) {
+        switch (setting.sessionInfoMode.getValue()) {
             case "Rise":
                 if (event.getShaderType() == Shader2DEvent.ShaderType.GLOW) {
                     RoundedUtils.drawRound(renderX, renderY, this.width, this.height, 11, new Color(setting.color(0)));
@@ -72,7 +71,7 @@ public class SessionInfoWidget extends Widget {
         } else
             srv = mc.getCurrentServerData().serverIP.toLowerCase().contains("ccc.blocksmc.com") ? "blocksmc.com" : mc.getCurrentServerData().serverIP;
 
-        switch (setting.sessionInfoMode.get()) {
+        switch (setting.sessionInfoMode.getValue()) {
             case "Default":
                 this.width = 150;
                 this.height = 100;

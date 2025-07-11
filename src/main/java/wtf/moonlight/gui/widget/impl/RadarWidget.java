@@ -1,8 +1,6 @@
 package wtf.moonlight.gui.widget.impl;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityGolem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -11,7 +9,7 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
-import wtf.moonlight.events.impl.render.Shader2DEvent;
+import wtf.moonlight.events.render.Shader2DEvent;
 import wtf.moonlight.gui.widget.Widget;
 import wtf.moonlight.utils.math.MathUtils;
 import wtf.moonlight.utils.player.RotationUtils;
@@ -31,14 +29,14 @@ public class RadarWidget extends Widget {
 
     @Override
     public void render() {
-        switch (setting.radarMode.get()) {
+        switch (setting.radarMode.getValue()) {
             case "Default": {
                 GL11.glPushMatrix();
 
                 float x = renderX;
                 float y = renderY;
-                width = setting.radarSize.get();
-                height = setting.radarSize.get();
+                width = setting.radarSize.getValue();
+                height = setting.radarSize.getValue();
                 float cx = x + (width / 2f);
                 float cy = y + (height / 2f);
 
@@ -47,7 +45,7 @@ public class RadarWidget extends Widget {
                 RenderUtils.drawRect(x, y + (height / 2f) - 0.5f, width, 1, 0xFF444444);
                 RenderUtils.drawRect(cx - 1, cy - 1, 2, 2, 0xFFFFFF00);
 
-                int maxDist = (int) (setting.radarSize.get() / 2);
+                int maxDist = (int) (setting.radarSize.getValue() / 2);
                 for (Entity entity : mc.theWorld.loadedEntityList) {
 
                     double dx = MathUtils.interpolate(entity.prevPosX, entity.posX, mc.timer.renderPartialTicks)
@@ -86,8 +84,8 @@ public class RadarWidget extends Widget {
 
                 float x = renderX;
                 float y = renderY;
-                width = setting.radarSize.get();
-                height = setting.radarSize.get();
+                width = setting.radarSize.getValue();
+                height = setting.radarSize.getValue();
                 float cx = x + (width / 2f);
                 float cy = y + (height / 2f);
 
@@ -103,7 +101,7 @@ public class RadarWidget extends Widget {
                 RenderUtils.drawGradientRect(x, y - 1, width / 2, 0.5f, true, Color.getHSBColor(h / 255f, 0.8f, 1.0f).getRGB(), Color.getHSBColor(h2 / 255f, 0.8f, 1.0f).getRGB());
                 RenderUtils.drawGradientRect(x + width / 2, y - 1, width / 2, 0.5f, true, Color.getHSBColor(h2 / 255f, 0.8f, 1.0f).getRGB(), Color.getHSBColor(h3 / 255f, 0.8f, 1.0f).getRGB());
 
-                int maxDist = (int) (setting.radarSize.get() / 2);
+                int maxDist = (int) (setting.radarSize.getValue() / 2);
                 for (Entity entity : mc.theWorld.loadedEntityList) {
 
                     if (entity == mc.thePlayer) continue;
@@ -144,8 +142,8 @@ public class RadarWidget extends Widget {
 
                 float x = renderX;
                 float y = renderY;
-                width = setting.radarSize.get();
-                height = setting.radarSize.get();
+                width = setting.radarSize.getValue();
+                height = setting.radarSize.getValue();
                 float cx = x + (width / 2f);
                 float cy = y + (height / 2f);
 
@@ -154,7 +152,7 @@ public class RadarWidget extends Widget {
                 RenderUtils.drawRect(x, y + (height / 2f) - 0.5f, width, 1f, new Color(255,255,255).getRGB());
                 RenderUtils.drawRect(x, y - 1, width, 1, setting.color());
 
-                int maxDist = (int) (setting.radarSize.get() / 2);
+                int maxDist = (int) (setting.radarSize.getValue() / 2);
                 for (Entity entity : mc.theWorld.loadedEntityList) {
                     if (entity == mc.thePlayer) continue;
 

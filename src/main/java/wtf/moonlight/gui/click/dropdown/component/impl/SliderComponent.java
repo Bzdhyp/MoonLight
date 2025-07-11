@@ -11,8 +11,8 @@
 package wtf.moonlight.gui.click.dropdown.component.impl;
 
 import net.minecraft.util.MathHelper;
-import wtf.moonlight.features.modules.impl.visual.ClickGUI;
-import wtf.moonlight.features.values.impl.SliderValue;
+import wtf.moonlight.module.impl.visual.ClickGUI;
+import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.utils.math.MathUtils;
@@ -37,15 +37,15 @@ public class SliderComponent extends Component {
     public void drawScreen(int mouseX, int mouseY) {
         Fonts.interRegular.get(15).drawString(setting.getName(), getX() + 4, getY(), -1);
 
-        anim = RenderUtils.animate(anim, (getWidth() - 8) * (setting.get() - setting.getMin()) / (setting.getMax() - setting.getMin()), 15);
+        anim = RenderUtils.animate(anim, (getWidth() - 8) * (setting.getValue() - setting.getMin()) / (setting.getMax() - setting.getMin()), 15);
         float sliderWidth = anim;
 
-        RoundedUtils.drawRound(getX() + 4, getY() + Fonts.interRegular.get(15).getHeight() + 2, getWidth() - 8, 2, 2, INSTANCE.getModuleManager().getModule(ClickGUI.class).color.get().darker().darker().darker());
-        RoundedUtils.drawGradientHorizontal(getX() + 4, getY() + Fonts.interRegular.get(15).getHeight() + 2, sliderWidth, 2, 2, INSTANCE.getModuleManager().getModule(ClickGUI.class).color.get(), INSTANCE.getModuleManager().getModule(ClickGUI.class).color.get().darker().darker());
+        RoundedUtils.drawRound(getX() + 4, getY() + Fonts.interRegular.get(15).getHeight() + 2, getWidth() - 8, 2, 2, INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue().darker().darker().darker());
+        RoundedUtils.drawGradientHorizontal(getX() + 4, getY() + Fonts.interRegular.get(15).getHeight() + 2, sliderWidth, 2, 2, INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue(), INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue().darker().darker());
         RenderUtils.drawCircle(getX() + 4 + sliderWidth, getY() + Fonts.interRegular.get(15).getHeight() + 3, 0, 360, 2, 0.1f, false, -1);
 
         Fonts.interRegular.get(15).drawString(setting.getMin() + "", getX() + 2, getY() + Fonts.interRegular.get(15).getHeight() * 2 + 2, new Color(160, 160, 160).getRGB());
-        Fonts.interRegular.get(15).drawCenteredString(setting.get() + "", getX() + getWidth() / 2, getY() + Fonts.interRegular.get(15).getHeight() * 2 + 2, -1);
+        Fonts.interRegular.get(15).drawCenteredString(setting.getValue() + "", getX() + getWidth() / 2, getY() + Fonts.interRegular.get(15).getHeight() * 2 + 2, -1);
         Fonts.interRegular.get(15).drawString(setting.getMax() + "", getX() - 2 + getWidth() - Fonts.interRegular.get(15).getStringWidth(setting.getMax() + ""), getY() + Fonts.interRegular.get(15).getHeight() * 2 + 2, new Color(160, 160, 160).getRGB());
 
         if (dragging) {

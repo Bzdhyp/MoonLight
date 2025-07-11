@@ -12,7 +12,7 @@
 package wtf.moonlight.gui.click.astolfo.component.impl;
 
 import org.lwjglx.input.Mouse;
-import wtf.moonlight.features.values.impl.ColorValue;
+import wtf.moonlight.module.values.impl.ColorValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.click.astolfo.HSBData;
 import wtf.moonlight.gui.font.Fonts;
@@ -33,15 +33,15 @@ public class ColorComponent extends Component {
 
     @Override
     public void drawScreen(int mouseX, int mouseY) {
-        HSBData data = new HSBData(value.get());
+        HSBData data = new HSBData(value.getValue());
         final float[] hsba = {
                 data.getHue(),
                 data.getSaturation(),
                 data.getBrightness(),
-                value.get().getAlpha(),
+                value.getValue().getAlpha(),
         };
         RenderUtils.drawRoundedRect(getX() + 88, getY() + 1F, 9F, 9F, 3f,
-                value.get().getRGB());
+                value.getValue().getRGB());
         Fonts.interSemiBold.get(13).drawString(value.getName(),getX() +  5f,
                 5.5f + getY(), 0xffffffff, false);
 
@@ -62,7 +62,7 @@ public class ColorComponent extends Component {
                     0.5F + ((1 - hsba[2]) * 60) - .5f + getY(), 1.5f, 1.5f,
                     new Color(0, 0, 0));
             RenderUtils.drawRect(getX() + 98 + 3.5F + hsba[1] * 60,
-                    0.5F + ((1 - hsba[2]) * 60) + getY(), .5f, .5f, value.get());
+                    0.5F + ((1 - hsba[2]) * 60) + getY(), .5f, .5f, value.getValue());
 
             final boolean onSB = MouseUtils.isHovered2(getX() + 98 + 3, getY() + 0.5F, 61, 61,
                     mouseX, mouseY);
@@ -71,7 +71,7 @@ public class ColorComponent extends Component {
                 data.setSaturation(Math.min(Math.max((mouseX - (getX() + 98) - 3) / 60F, 0), 1));
                 data.setBrightness(
                         1 - Math.min(Math.max((mouseY - getY() - getHeight()) / 60F, 0), 1));
-                value.set(data.getAsColor());
+                value.setValue(data.getAsColor());
 
             }
 
@@ -96,7 +96,7 @@ public class ColorComponent extends Component {
 
             if (onHue && Mouse.isButtonDown(0)) {
                 data.setHue(Math.min(Math.max((mouseY - getY() - getHeight()) / 60F, 0), 1));
-                value.set(data.getAsColor());
+                value.setValue(data.getAsColor());
             }
         }
         super.drawScreen(mouseX, mouseY);

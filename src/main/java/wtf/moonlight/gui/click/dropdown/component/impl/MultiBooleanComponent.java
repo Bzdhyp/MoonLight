@@ -10,13 +10,13 @@
  */
 package wtf.moonlight.gui.click.dropdown.component.impl;
 
-import wtf.moonlight.features.modules.impl.visual.ClickGUI;
-import wtf.moonlight.features.values.impl.BoolValue;
-import wtf.moonlight.features.values.impl.MultiBoolValue;
+import wtf.moonlight.module.impl.visual.ClickGUI;
+import wtf.moonlight.module.values.impl.BoolValue;
+import wtf.moonlight.module.values.impl.MultiBoolValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.Direction;
-import wtf.moonlight.utils.animations.impl.EaseOutSine;
+import wtf.moonlight.utils.animations.advanced.Direction;
+import wtf.moonlight.utils.animations.advanced.impl.EaseOutSine;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.MouseUtils;
 import wtf.moonlight.utils.render.RoundedUtils;
@@ -39,7 +39,7 @@ public class MultiBooleanComponent extends Component {
         float offset = 8;
         float heightoff = 0;
 
-        RoundedUtils.drawRound(getX() + offset, getY() + Fonts.interRegular.get(15).getHeight() + 2, getWidth() - 5, heightoff, 4, INSTANCE.getModuleManager().getModule(ClickGUI.class).color.get());
+        RoundedUtils.drawRound(getX() + offset, getY() + Fonts.interRegular.get(15).getHeight() + 2, getWidth() - 5, heightoff, 4, INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue());
         Fonts.interRegular.get(15).drawString(setting.getName(), getX() + 4, getY(), -1);
 
         for (BoolValue boolValue : setting.getValues()) {
@@ -51,7 +51,7 @@ public class MultiBooleanComponent extends Component {
             select.putIfAbsent(boolValue, new EaseOutSine(250, 1));
             select.get(boolValue).setDirection(boolValue.get() ? Direction.FORWARDS : Direction.BACKWARDS);
 
-            Fonts.interRegular.get(13).drawString(boolValue.getName(), getX() + offset, getY() + Fonts.interRegular.get(15).getHeight() + 2 + heightoff, ColorUtils.interpolateColor2(new Color(128, 128, 128), INSTANCE.getModuleManager().getModule(ClickGUI.class).color.get(), (float) select.get(boolValue).getOutput()));
+            Fonts.interRegular.get(13).drawString(boolValue.getName(), getX() + offset, getY() + Fonts.interRegular.get(15).getHeight() + 2 + heightoff, ColorUtils.interpolateColor2(new Color(128, 128, 128), INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue(), (float) select.get(boolValue).getOutput()));
 
             offset += off;
         }

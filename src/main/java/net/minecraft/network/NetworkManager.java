@@ -33,8 +33,8 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.events.impl.packet.PacketEvent;
-import wtf.moonlight.features.modules.impl.exploit.Disabler;
+import wtf.moonlight.events.packet.PacketEvent;
+import wtf.moonlight.module.impl.exploit.Disabler;
 
 import javax.crypto.SecretKey;
 import java.net.InetAddress;

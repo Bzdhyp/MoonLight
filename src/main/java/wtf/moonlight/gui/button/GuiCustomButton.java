@@ -15,9 +15,9 @@ import net.minecraft.client.gui.GuiButton;
 import org.jetbrains.annotations.NotNull;
 import wtf.moonlight.gui.font.FontRenderer;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.Animation;
-import wtf.moonlight.utils.animations.Direction;
-import wtf.moonlight.utils.animations.impl.SmoothStepAnimation;
+import wtf.moonlight.utils.animations.advanced.Animation;
+import wtf.moonlight.utils.animations.advanced.Direction;
+import wtf.moonlight.utils.animations.advanced.impl.SmoothStepAnimation;
 import wtf.moonlight.utils.render.MouseUtils;
 import wtf.moonlight.utils.render.RoundedUtils;
 

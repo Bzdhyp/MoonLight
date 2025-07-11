@@ -10,7 +10,7 @@
  */
 package wtf.moonlight.gui.click.neverlose.components.espelements;
 
-import wtf.moonlight.features.modules.impl.visual.ESP;
+import wtf.moonlight.module.impl.visual.ESP;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.GLUtils;
@@ -77,7 +77,7 @@ public class HealthElement extends Component {
 
             final float absorptionPercentage = Math.min(1.0F, absorption / 20.0F);
 
-            final int absorptionColor = INSTANCE.getModuleManager().getModule(ESP.class).absorptionColor.get().getRGB();
+            final int absorptionColor = INSTANCE.getModuleManager().getModule(ESP.class).absorptionColor.getValue().getRGB();
 
             final float absorptionHeight = heightDif * absorptionPercentage;
 

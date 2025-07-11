@@ -11,8 +11,7 @@
 
 package wtf.moonlight.gui.click.astolfo.component.impl;
 
-import org.lwjglx.input.Mouse;
-import wtf.moonlight.features.values.impl.BoolValue;
+import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.utils.render.MouseUtils;

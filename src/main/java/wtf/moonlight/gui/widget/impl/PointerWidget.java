@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
-import wtf.moonlight.events.impl.render.Shader2DEvent;
+import wtf.moonlight.events.render.Shader2DEvent;
 import wtf.moonlight.gui.widget.Widget;
 import wtf.moonlight.utils.math.MathUtils;
 import wtf.moonlight.utils.render.RenderUtils;

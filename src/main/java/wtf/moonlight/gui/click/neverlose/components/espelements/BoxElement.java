@@ -10,7 +10,7 @@
  */
 package wtf.moonlight.gui.click.neverlose.components.espelements;
 
-import wtf.moonlight.features.modules.impl.visual.ESP;
+import wtf.moonlight.module.impl.visual.ESP;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.utils.render.GLUtils;
 import wtf.moonlight.utils.render.RenderUtils;
@@ -59,7 +59,7 @@ public class BoxElement extends Component {
                 glVertex2f(x2 - 1.5F, y2 - 1.5F);
             }
 
-            RenderUtils.color(INSTANCE.getModuleManager().getModule(ESP.class).boxColor.get().getRGB());
+            RenderUtils.color(INSTANCE.getModuleManager().getModule(ESP.class).boxColor.getValue().getRGB());
 
             // Box
             {

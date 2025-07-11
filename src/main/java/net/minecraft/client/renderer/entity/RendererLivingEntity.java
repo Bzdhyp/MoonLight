@@ -32,8 +32,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.events.impl.render.RenderNameTagEvent;
-import wtf.moonlight.features.modules.impl.visual.Chams;
+import wtf.moonlight.events.render.RenderNameTagEvent;
+import wtf.moonlight.module.impl.visual.Chams;
 
 public abstract class RendererLivingEntity<T extends EntityLivingBase> extends Render<T>
 {
@@ -354,8 +354,8 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 if (entitylivingbaseIn instanceof EntityPlayer) {
                     boolean visibleFlat = instance.visibleFlatProperty.get();
                     boolean occludedFlat = instance.occludedFlatProperty.get();
-                    int visibleColor = instance.visibleColorProperty.get().getRGB();
-                    int occludedColor = instance.occludedColorProperty.get().getRGB();
+                    int visibleColor = instance.visibleColorProperty.getValue().getRGB();
+                    int occludedColor = instance.occludedColorProperty.getValue().getRGB();
 
                     boolean isTextureActive = true;
 

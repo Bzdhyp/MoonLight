@@ -51,8 +51,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import org.lwjglx.input.Mouse;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.events.impl.player.*;
-import wtf.moonlight.features.modules.impl.visual.FreeLook;
+import wtf.moonlight.events.player.*;
+import wtf.moonlight.module.impl.visual.FreeLook;
 
 public abstract class Entity implements ICommandSender
 {

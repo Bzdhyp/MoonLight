@@ -27,7 +27,7 @@ import net.minecraft.item.*;
 import net.minecraft.util.*;
 import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.features.modules.impl.visual.Interface;
+import wtf.moonlight.module.impl.visual.Interface;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.utils.InstanceAccess;
 
@@ -39,8 +39,6 @@ import java.util.regex.Pattern;
 
 import static java.lang.Math.PI;
 import static net.minecraft.client.gui.Gui.drawModalRectWithCustomSizedTexture;
-import static net.minecraft.client.renderer.GlStateManager.disableBlend;
-import static net.minecraft.client.renderer.GlStateManager.enableTexture2D;
 import static org.lwjgl.opengl.GL11.*;
 
 public class RenderUtils implements InstanceAccess {

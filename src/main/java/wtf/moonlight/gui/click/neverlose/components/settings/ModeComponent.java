@@ -14,13 +14,13 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 import org.lwjglx.input.Mouse;
-import wtf.moonlight.features.values.impl.ModeValue;
+import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.Animation;
-import wtf.moonlight.utils.animations.Direction;
-import wtf.moonlight.utils.animations.impl.DecelerateAnimation;
-import wtf.moonlight.utils.animations.impl.SmoothStepAnimation;
+import wtf.moonlight.utils.animations.advanced.Animation;
+import wtf.moonlight.utils.animations.advanced.Direction;
+import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.utils.animations.advanced.impl.SmoothStepAnimation;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.MouseUtils;
 import wtf.moonlight.utils.render.RenderUtils;
@@ -35,13 +35,13 @@ import static org.lwjgl.opengl.GL11.glEnable;
 import static wtf.moonlight.gui.click.neverlose.NeverLose.*;
 
 public class ModeComponent extends Component {
-    private final ModeValue setting;
+    private final ListValue setting;
     private float maxScroll = Float.MAX_VALUE, rawScroll, scroll;
     private Animation scrollAnimation = new SmoothStepAnimation(0, 0, Direction.BACKWARDS);
     private final Animation open = new DecelerateAnimation(175, 1);
     private boolean opened;
     private final Map<String, DecelerateAnimation> select = new HashMap<>();
-    public ModeComponent(ModeValue setting) {
+    public ModeComponent(ListValue setting) {
         this.setting = setting;
         setHeight(24);
         open.setDirection(opened ? Direction.FORWARDS : Direction.BACKWARDS);
@@ -67,12 +67,12 @@ public class ModeComponent extends Component {
             RoundedUtils.drawRoundOutline(getX() + 94, getY() + 12 - getHalfTotalHeight(), 80f, totalHeight,2,.1f,bgColor,outlineColor);
             for (String str : setting.getModes()){
                 select.putIfAbsent(str,new DecelerateAnimation(250, 1));
-                select.get(str).setDirection(str.equals(setting.get()) ? Direction.FORWARDS : Direction.BACKWARDS);
+                select.get(str).setDirection(str.equals(setting.getValue()) ? Direction.FORWARDS : Direction.BACKWARDS);
 
-                if (str.equals(setting.get())){
+                if (str.equals(setting.getValue())){
                     RoundedUtils.drawRound(getX() + 98, ((float) (getY() + 15 + (Arrays.asList(setting.getModes()).indexOf(str) * 20) * open.getOutput()) - getHalfTotalHeight()) + getScroll(), 72F,16f,2,
                             ColorUtils.applyOpacity(bgColor3
-                            , (float) select.get(setting.get()).getOutput()));
+                            , (float) select.get(setting.getValue()).getOutput()));
                 }
                 Fonts.interSemiBold.get(16).drawString(str,getX() + 104,getY() + 21 + (Arrays.asList(setting.getModes()).indexOf(str) * 20) * open.getOutput() - getHalfTotalHeight() + getScroll(),ColorUtils.interpolateColor2(Color.WHITE.darker().darker(), new Color(textRGB), (float) select.get(str).getOutput()));
             }
@@ -95,7 +95,7 @@ public class ModeComponent extends Component {
             GlStateManager.translate(0,0,-2f);
         } else {
             RoundedUtils.drawRoundOutline(getX() + 94,getY() + 13,80f,17,2,.1f,bgColor,outlineColor);
-            Fonts.interSemiBold.get(16).drawString(setting.get(),getX() + 98,getY() + 15 + Fonts.interSemiBold.get(16).getMiddleOfBox(17),textRGB);
+            Fonts.interSemiBold.get(16).drawString(setting.getValue(),getX() + 98,getY() + 15 + Fonts.interSemiBold.get(16).getMiddleOfBox(17),textRGB);
         }
         super.drawScreen(mouseX, mouseY);
     }
@@ -107,7 +107,7 @@ public class ModeComponent extends Component {
         if (opened){
             for (String str : setting.getModes()) {
                 if (MouseUtils.isHovered2(getX() + 98, ((getY() + 15 + Arrays.asList(setting.getModes()).indexOf(str) * 20) - getHalfTotalHeight()) + getScroll(), 52, 12, mouseX, mouseY) && mouse == 0) {
-                    setting.set(str);
+                    setting.setValue(str);
                 }
             }
         }

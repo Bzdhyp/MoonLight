@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.lwjglx.input.Keyboard;
 import org.lwjglx.input.Mouse;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.events.impl.render.ChatGUIEvent;
+import wtf.moonlight.events.render.ChatGUIEvent;
 
 import java.io.IOException;
 import java.util.List;

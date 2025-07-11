@@ -29,8 +29,8 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import wtf.moonlight.features.modules.impl.combat.AutoProjectile;
-import wtf.moonlight.features.modules.impl.combat.AutoRod;
+import wtf.moonlight.module.impl.combat.AutoProjectile;
+import wtf.moonlight.module.impl.combat.AutoRod;
 import wtf.moonlight.utils.InstanceAccess;
 
 import java.util.Iterator;

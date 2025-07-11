@@ -15,13 +15,12 @@ import lombok.Setter;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
-import wtf.moonlight.features.modules.impl.visual.Interface;
+import wtf.moonlight.module.impl.visual.Interface;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.utils.InstanceAccess;
-import wtf.moonlight.utils.animations.Animation;
-import wtf.moonlight.utils.animations.Direction;
+import wtf.moonlight.utils.animations.advanced.Animation;
+import wtf.moonlight.utils.animations.advanced.Direction;
 import wtf.moonlight.utils.animations.Translate;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.RenderUtils;
@@ -73,7 +72,7 @@ public class NotificationManager implements InstanceAccess {
                 float y = 0;
                 float yVal;
                 float actualOffset = 0;
-                switch (INSTANCE.getModuleManager().getModule(Interface.class).notificationMode.get()) {
+                switch (INSTANCE.getModuleManager().getModule(Interface.class).notificationMode.getValue()) {
                     case "Default":
                         actualOffset = 3;
 

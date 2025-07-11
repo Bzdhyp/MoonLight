@@ -12,7 +12,7 @@ package wtf.moonlight.gui.click;
 
 import lombok.Getter;
 import lombok.Setter;
-import wtf.moonlight.features.modules.impl.visual.ClickGUI;
+import wtf.moonlight.module.impl.visual.ClickGUI;
 import wtf.moonlight.utils.render.RenderUtils;
 import wtf.moonlight.utils.render.RoundedUtils;
 
@@ -23,7 +23,7 @@ import java.awt.*;
 public class Component implements IComponent {
 
     private float x, y, width, height;
-    private Color color = INSTANCE.getModuleManager().getModule(ClickGUI.class).color.get();
+    private Color color = INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue();
     private int colorRGB = color.getRGB();
 
     public void drawBackground(Color color) {

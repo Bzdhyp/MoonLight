@@ -11,8 +11,8 @@
 package wtf.moonlight.gui.click.neverlose.panel;
 
 import org.lwjglx.input.Mouse;
-import wtf.moonlight.features.modules.Module;
-import wtf.moonlight.features.modules.ModuleCategory;
+import wtf.moonlight.module.Module;
+import wtf.moonlight.module.ModuleCategory;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.click.IComponent;
 import wtf.moonlight.gui.click.neverlose.components.ModuleComponent;
@@ -21,10 +21,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.lwjgl.opengl.GL11;
 import wtf.moonlight.utils.InstanceAccess;
-import wtf.moonlight.utils.animations.Animation;
-import wtf.moonlight.utils.animations.Direction;
-import wtf.moonlight.utils.animations.impl.DecelerateAnimation;
-import wtf.moonlight.utils.animations.impl.SmoothStepAnimation;
+import wtf.moonlight.utils.animations.advanced.Animation;
+import wtf.moonlight.utils.animations.advanced.Direction;
+import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.utils.animations.advanced.impl.SmoothStepAnimation;
 import wtf.moonlight.utils.math.MathUtils;
 import wtf.moonlight.utils.render.MouseUtils;
 import wtf.moonlight.utils.render.RenderUtils;

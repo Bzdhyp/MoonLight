@@ -68,7 +68,7 @@ import net.minecraft.world.storage.MapData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.events.impl.player.TeleportEvent;
+import wtf.moonlight.events.player.TeleportEvent;
 import wtf.moonlight.gui.mainmenu.GuiMainMenu;
 
 import java.io.File;

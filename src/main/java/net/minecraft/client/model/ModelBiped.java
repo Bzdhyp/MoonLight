@@ -6,8 +6,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.features.modules.impl.combat.KillAura;
-import wtf.moonlight.features.modules.impl.visual.Animations;
+import wtf.moonlight.module.impl.combat.KillAura;
+import wtf.moonlight.module.impl.visual.Animations;
 
 public class ModelBiped extends ModelBase
 {

@@ -21,9 +21,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjglx.input.Keyboard;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.features.modules.impl.combat.KillAura;
-import wtf.moonlight.features.modules.impl.player.InvManager;
-import wtf.moonlight.features.modules.impl.player.Stealer;
+import wtf.moonlight.module.impl.combat.KillAura;
+import wtf.moonlight.module.impl.player.InvManager;
+import wtf.moonlight.module.impl.player.Stealer;
 import wtf.moonlight.gui.font.Fonts;
 
 public abstract class GuiContainer extends GuiScreen

@@ -10,12 +10,12 @@
  */
 package wtf.moonlight.gui.click.dropdown.component.impl;
 
-import wtf.moonlight.features.values.impl.ColorValue;
+import wtf.moonlight.module.values.impl.ColorValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.Animation;
-import wtf.moonlight.utils.animations.Direction;
-import wtf.moonlight.utils.animations.impl.EaseOutSine;
+import wtf.moonlight.utils.animations.advanced.Animation;
+import wtf.moonlight.utils.animations.advanced.Direction;
+import wtf.moonlight.utils.animations.advanced.impl.EaseOutSine;
 import wtf.moonlight.utils.render.MouseUtils;
 import wtf.moonlight.utils.render.RenderUtils;
 import wtf.moonlight.utils.render.RoundedUtils;
@@ -42,7 +42,7 @@ public class ColorPickerComponent extends Component {
         final float alpha = setting.getAlpha();
 
         Fonts.interRegular.get(15).drawString(setting.getName(), getX() + 4, getY(), -1);
-        RoundedUtils.drawRound(getX() + getWidth() - 18, getY(), 15, Fonts.interRegular.get(15).getHeight() - 3, 2, setting.get());
+        RoundedUtils.drawRound(getX() + getWidth() - 18, getY(), 15, Fonts.interRegular.get(15).getHeight() - 3, 2, setting.getValue());
 
         if (opened) {
 
@@ -58,9 +58,9 @@ public class ColorPickerComponent extends Component {
             for (int max = (int) (getWidth() - 8), i = 0; i < max; i++) {
                 float alphaValue = i / (float) max;
                 Color alphaColor = new Color(
-                        setting.get().getRed(),
-                        setting.get().getGreen(),
-                        setting.get().getBlue(),
+                        setting.getValue().getRed(),
+                        setting.getValue().getGreen(),
+                        setting.getValue().getBlue(),
                         (int)(alphaValue * 255)
                 );
                 RoundedUtils.drawRound(getX() + i + 4, alphaSliderY, 2, 4, 1, alphaColor);

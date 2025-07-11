@@ -28,7 +28,7 @@ import net.optifine.util.PropertiesOrdered;
 import net.optifine.util.ResUtils;
 import net.optifine.util.StrUtils;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.events.impl.misc.WorldEvent;
+import wtf.moonlight.events.misc.WorldEvent;
 
 public class RandomEntities
 {

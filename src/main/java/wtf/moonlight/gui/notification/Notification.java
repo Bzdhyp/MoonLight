@@ -14,14 +14,12 @@ import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.features.modules.impl.visual.Interface;
+import wtf.moonlight.module.impl.visual.Interface;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.utils.InstanceAccess;
-import wtf.moonlight.utils.animations.Animation;
+import wtf.moonlight.utils.animations.advanced.Animation;
 import wtf.moonlight.utils.animations.Translate;
-import wtf.moonlight.utils.animations.impl.EaseBackIn;
-import wtf.moonlight.utils.animations.impl.EaseInOutQuad;
-import wtf.moonlight.utils.animations.impl.EaseOutSine;
+import wtf.moonlight.utils.animations.advanced.impl.EaseOutSine;
 import wtf.moonlight.utils.math.TimerUtils;
 
 
@@ -51,7 +49,7 @@ public class Notification implements InstanceAccess {
     }
     
     public double getWidth(){
-        return switch (INSTANCE.getModuleManager().getModule(Interface.class).notificationMode.get()) {
+        return switch (INSTANCE.getModuleManager().getModule(Interface.class).notificationMode.getValue()) {
             case "Default" -> Fonts.interMedium.get(15).getStringWidth(getDescription()) + 5;
             case "Test" ->
                     Math.max(Fonts.interSemiBold.get(15).getStringWidth(getTitle()), Fonts.interSemiBold.get(15).getStringWidth(getDescription())) + 5;
@@ -72,7 +70,7 @@ public class Notification implements InstanceAccess {
     }
 
     public double getHeight(){
-        return switch (INSTANCE.getModuleManager().getModule(Interface.class).notificationMode.get()) {
+        return switch (INSTANCE.getModuleManager().getModule(Interface.class).notificationMode.getValue()) {
             case "Default" -> 16;
             case "Test" -> Fonts.interRegular.get(15).getHeight() * 2 + 2;
             case "Test2" -> 33;

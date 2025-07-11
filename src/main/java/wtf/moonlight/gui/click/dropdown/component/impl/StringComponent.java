@@ -12,12 +12,12 @@ package wtf.moonlight.gui.click.dropdown.component.impl;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.lwjglx.input.Keyboard;
-import wtf.moonlight.features.values.impl.TextValue;
+import wtf.moonlight.module.values.impl.StringValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.Animation;
-import wtf.moonlight.utils.animations.Direction;
-import wtf.moonlight.utils.animations.impl.DecelerateAnimation;
+import wtf.moonlight.utils.animations.advanced.Animation;
+import wtf.moonlight.utils.animations.advanced.Direction;
+import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.MouseUtils;
 import wtf.moonlight.utils.render.RoundedUtils;
@@ -27,11 +27,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StringComponent extends Component {
-    private final TextValue setting;
+    private final StringValue setting;
     private final Animation input = new DecelerateAnimation(250, 1);
     private boolean inputting;
     private String text = "";
-    public StringComponent(TextValue setting) {
+    public StringComponent(StringValue setting) {
         this.setting = setting;
         setHeight(Fonts.interRegular.get(14).getHeight() * 2 + 4);
         input.setDirection(Direction.BACKWARDS);
@@ -40,11 +40,11 @@ public class StringComponent extends Component {
     @Override
     public void drawScreen(int mouseX, int mouseY) {
         input.setDirection(inputting ? Direction.FORWARDS : Direction.BACKWARDS);
-        text = setting.get();
+        text = setting.getValue();
         if (setting.isOnlyNumber() && !NumberUtils.isNumber(text)) {
             text = text.replaceAll("[a-zA-Z]", "");
         }
-        String textToDraw = setting.get().isEmpty() && !inputting ? "Empty..." : setting.getText();
+        String textToDraw = setting.getValue().isEmpty() && !inputting ? "Empty..." : setting.getText();
         RoundedUtils.drawRound(getX(),getY() + Fonts.interRegular.get(14).getHeight() - 2,getWidth() ,Fonts.interRegular.get(14).getHeight() + 4,2,new Color(ColorUtils.darker(getColorRGB(),0.5f)));
         Fonts.interRegular.get(14).drawString(setting.getName(),getX() + 4,getY(),-1);
         drawTextWithLineBreaks(textToDraw + (inputting && text.length() < 59 && System.currentTimeMillis() % 1000 > 500 ? "|" : ""),getX() + 6,getY() + Fonts.interRegular.get(14).getHeight() + 2,getWidth() - 12);

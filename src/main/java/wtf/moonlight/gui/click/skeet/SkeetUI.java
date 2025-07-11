@@ -17,11 +17,11 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjglx.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.features.modules.Module;
-import wtf.moonlight.features.modules.ModuleCategory;
-import wtf.moonlight.features.modules.impl.visual.ClickGUI;
-import wtf.moonlight.features.values.Value;
-import wtf.moonlight.features.values.impl.*;
+import wtf.moonlight.module.Module;
+import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.impl.visual.ClickGUI;
+import wtf.moonlight.module.values.Value;
+import wtf.moonlight.module.values.impl.*;
 import wtf.moonlight.gui.click.skeet.component.Component;
 import wtf.moonlight.gui.click.skeet.component.TabComponent;
 import wtf.moonlight.gui.click.skeet.component.impl.GroupBoxComponent;
@@ -43,7 +43,6 @@ import wtf.moonlight.utils.render.RenderUtils;
 import java.awt.*;
 import java.io.IOException;
 import java.util.Comparator;
-import java.util.List;
 
 @SuppressWarnings("unused")
 public final class SkeetUI extends GuiScreen {
@@ -271,16 +270,16 @@ public final class SkeetUI extends GuiScreen {
                             Component component = null;
                             if (property instanceof BoolValue booleanProperty) {
                                 component = new CheckBoxTextComponent(groupBoxComponent, property.getName(), booleanProperty::get, booleanProperty::set, booleanProperty::canDisplay);
-                            } else if (property instanceof TextValue stringProperty) {
-                                component = new StringTextComponent(groupBoxComponent, property.getName(), stringProperty::get, stringProperty::setText, stringProperty::canDisplay);
+                            } else if (property instanceof StringValue stringProperty) {
+                                component = new StringTextComponent(groupBoxComponent, property.getName(), stringProperty::getValue, stringProperty::setText, stringProperty::canDisplay);
                             } else if (property instanceof SliderValue doubleProperty) {
-                                component = new SliderTextComponent(groupBoxComponent, property.getName(), doubleProperty::get, doubleProperty::setValue, doubleProperty::getMin, doubleProperty::getMax, doubleProperty::getIncrement, doubleProperty::canDisplay);
-                            } else if (property instanceof ModeValue enumProperty) {
-                                component = new ComboBoxTextComponent(groupBoxComponent, property.getName(), enumProperty::getModes, enumProperty::set, enumProperty::get, enumProperty::canDisplay);
+                                component = new SliderTextComponent(groupBoxComponent, property.getName(), doubleProperty::getValue, doubleProperty::setValue, doubleProperty::getMin, doubleProperty::getMax, doubleProperty::getIncrement, doubleProperty::canDisplay);
+                            } else if (property instanceof ListValue enumProperty) {
+                                component = new ComboBoxTextComponent(groupBoxComponent, property.getName(), enumProperty::getModes, enumProperty::setValue, enumProperty::getValue, enumProperty::canDisplay);
                             } else if (property instanceof MultiBoolValue enumProperty) {
                                 component = new ComboBox2TextComponent(groupBoxComponent, property.getName(), () -> enumProperty.getValues(), enumProperty::canDisplay);
                             } else if(property instanceof ColorValue colorProperty){
-                                component = new ColorPickerTextComponent(groupBoxComponent, property.getName(), colorProperty::get, colorProperty::set, colorProperty::canDisplay);
+                                component = new ColorPickerTextComponent(groupBoxComponent, property.getName(), colorProperty::getValue, colorProperty::setValue, colorProperty::canDisplay);
                             }
 
                             if (component != null)
@@ -352,7 +351,7 @@ public final class SkeetUI extends GuiScreen {
     }
 
     public static int getSkeetColor() {
-        return getSkeetColor(Moonlight.INSTANCE.getModuleManager().getModule(ClickGUI.class).color.get().getRGB());
+        return getSkeetColor(Moonlight.INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue().getRGB());
     }
 
     public static boolean shouldRenderText() {

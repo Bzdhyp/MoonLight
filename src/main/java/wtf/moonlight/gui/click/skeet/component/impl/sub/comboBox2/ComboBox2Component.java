@@ -10,7 +10,7 @@
  */
 package wtf.moonlight.gui.click.skeet.component.impl.sub.comboBox2;
 
-import wtf.moonlight.features.values.impl.BoolValue;
+import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.gui.click.skeet.SkeetUI;
 import wtf.moonlight.gui.click.skeet.component.ButtonComponent;
 import wtf.moonlight.gui.click.skeet.component.Component;

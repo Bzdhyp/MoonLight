@@ -29,7 +29,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.events.impl.player.AttackEvent;
+import wtf.moonlight.events.player.AttackEvent;
 
 public class PlayerControllerMP
 {

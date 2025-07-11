@@ -13,7 +13,7 @@ package wtf.moonlight.gui.click.astolfo;
 
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjglx.opengl.Display;
-import wtf.moonlight.features.modules.ModuleCategory;
+import wtf.moonlight.module.ModuleCategory;
 import wtf.moonlight.gui.click.astolfo.window.Window;
 import wtf.moonlight.utils.render.RenderUtils;
 

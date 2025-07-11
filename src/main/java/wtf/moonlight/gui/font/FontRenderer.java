@@ -13,7 +13,7 @@ package wtf.moonlight.gui.font;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.features.modules.impl.visual.NameHider;
+import wtf.moonlight.module.impl.visual.NameHider;
 import wtf.moonlight.utils.render.ColorUtils;
 
 import java.awt.*;

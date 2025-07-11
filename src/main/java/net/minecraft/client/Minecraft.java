@@ -48,8 +48,8 @@ import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.GuiIngameMenu;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GLCapabilities;
-import wtf.moonlight.features.modules.impl.combat.TickBase;
-import wtf.moonlight.features.modules.impl.visual.Animations;
+import wtf.moonlight.module.impl.combat.TickBase;
+import wtf.moonlight.module.impl.visual.Animations;
 import wtf.moonlight.gui.mainmenu.GuiMainMenu;
 import net.minecraft.client.gui.GuiMemoryErrorScreen;
 import net.minecraft.client.gui.GuiScreen;
@@ -178,9 +178,8 @@ import org.lwjglx.opengl.GLContext;
 import org.lwjglx.opengl.PixelFormat;
 import org.lwjglx.util.glu.GLU;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.events.impl.misc.KeyPressEvent;
-import wtf.moonlight.events.impl.misc.TickEvent;
-import wtf.moonlight.utils.animations.Animation;
+import wtf.moonlight.events.misc.KeyPressEvent;
+import wtf.moonlight.events.misc.TickEvent;
 import wtf.moonlight.utils.player.MovementInputFromKeyboard;
 
 public class Minecraft implements IThreadListener, IPlayerUsage
@@ -190,7 +189,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     public static final boolean isRunningOnMac = Util.getOSType() == Util.EnumOS.OSX;
     public static byte[] memoryReserve = new byte[10485760];
     private static final List<DisplayMode> macDisplayModes = Lists.newArrayList(new DisplayMode(2560, 1600), new DisplayMode(2880, 1800));
-    private final File fileResourcepacks;
+    public final File fileResourcepacks;
     private final PropertyMap twitchDetails;
     private final PropertyMap profileProperties;
     private ServerData currentServerData;
@@ -255,8 +254,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     private IReloadableResourceManager mcResourceManager;
     private final IMetadataSerializer metadataSerializer_ = new IMetadataSerializer();
     private final List<IResourcePack> defaultResourcePacks = Lists.newArrayList();
-    private final DefaultResourcePack mcDefaultResourcePack;
-    private ResourcePackRepository mcResourcePackRepository;
+    public final DefaultResourcePack mcDefaultResourcePack;
+    public ResourcePackRepository mcResourcePackRepository;
     private LanguageManager mcLanguageManager;
     private Framebuffer framebufferMc;
     private TextureMap textureMapBlocks;

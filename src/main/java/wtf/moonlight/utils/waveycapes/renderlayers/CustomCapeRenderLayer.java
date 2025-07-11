@@ -12,7 +12,7 @@ package wtf.moonlight.utils.waveycapes.renderlayers;
 
 import net.minecraft.util.ResourceLocation;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.features.modules.impl.visual.Interface;
+import wtf.moonlight.module.impl.visual.Interface;
 import wtf.moonlight.utils.render.shader.ShaderUtils;
 import wtf.moonlight.utils.waveycapes.CapeMovement;
 import wtf.moonlight.utils.waveycapes.CapeStyle;

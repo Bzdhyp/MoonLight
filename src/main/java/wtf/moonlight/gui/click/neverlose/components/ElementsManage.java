@@ -11,13 +11,13 @@
 package wtf.moonlight.gui.click.neverlose.components;
 
 import org.lwjgl.opengl.GL11;
-import wtf.moonlight.features.values.Value;
-import wtf.moonlight.features.values.impl.BoolValue;
+import wtf.moonlight.module.values.Value;
+import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.Animation;
-import wtf.moonlight.utils.animations.Direction;
-import wtf.moonlight.utils.animations.impl.DecelerateAnimation;
+import wtf.moonlight.utils.animations.advanced.Animation;
+import wtf.moonlight.utils.animations.advanced.Direction;
+import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.MouseUtils;
 import wtf.moonlight.utils.render.RenderUtils;

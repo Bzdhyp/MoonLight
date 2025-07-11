@@ -17,10 +17,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovementInput;
-import wtf.moonlight.events.impl.player.MoveEvent;
-import wtf.moonlight.events.impl.player.MoveInputEvent;
-import wtf.moonlight.features.modules.impl.combat.TargetStrafe;
+import wtf.moonlight.events.player.MoveEvent;
+import wtf.moonlight.events.player.MoveInputEvent;
+import wtf.moonlight.module.impl.combat.TargetStrafe;
 import wtf.moonlight.utils.InstanceAccess;
 
 import java.util.Arrays;

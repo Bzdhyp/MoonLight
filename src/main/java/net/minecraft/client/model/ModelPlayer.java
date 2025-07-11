@@ -4,8 +4,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import wtf.moonlight.Moonlight;
-import wtf.moonlight.features.modules.impl.visual.ESP;
-import wtf.moonlight.features.modules.impl.visual.Interface;
+import wtf.moonlight.module.impl.visual.ESP;
+import wtf.moonlight.module.impl.visual.Interface;
 
 public class ModelPlayer extends ModelBiped
 {
