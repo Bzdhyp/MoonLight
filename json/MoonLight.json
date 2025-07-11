@@ -26,7 +26,7 @@
          "url" : "https://launcher.mojang.com/v1/objects/5143618265b8a2d1d28bcadf206b7327738c2670/windows_server.exe"
       }
    },
-   "id" : "Moonlight",
+   "id" : "MoonLight",
    "javaVersion" : {
       "component" : "jre-legacy",
       "majorVersion" : 8
@@ -408,11 +408,5 @@
    "minimumLauncherVersion" : 14,
    "releaseTime" : "2015-12-03T09:24:39+00:00",
    "time" : "2015-12-03T09:24:39+00:00",
-   "type" : "release",
-   "arguments": {
-      "jvm": [
-          "-Dlog4j2.formatMsgNoLookups=true",
-          "-Dlog4j2.disableJndi=true"
-      ]
-  }
+   "type" : "release"
 }
