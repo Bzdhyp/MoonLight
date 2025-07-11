@@ -38,7 +38,6 @@ public class ModeComponent extends Component {
     }
     @Override
     public void drawScreen(int mouseX, int mouseY) {
-        RoundedUtils.drawRound(getX() + 10, getY() + getHeight() - 4, 145, 1, 0, INSTANCE.getArcaneClickGui().linecolor);
         Fonts.Bold.get(18).drawString(setting.getName(), getX() + 10, getY() + 4, ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(), 0.4f));
         open.setDirection(opened ? Direction.FORWARDS : Direction.BACKWARDS);
         if (open.getOutput() > 0.1) {

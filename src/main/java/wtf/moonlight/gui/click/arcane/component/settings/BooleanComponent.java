@@ -1,5 +1,6 @@
 package wtf.moonlight.gui.click.arcane.component.settings;
 
+import wtf.moonlight.Client;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.module.impl.display.Interface;
@@ -31,9 +32,13 @@ public class BooleanComponent extends Component {
     public void drawScreen(int mouseX, int mouseY) {
         enabled.setDirection(setting.get() ? Direction.FORWARDS : Direction.BACKWARDS);
         hover.setDirection(RenderUtils.isHovering(getX() + 172, getY() + 15, 22, 12,mouseX,mouseY) ? Direction.FORWARDS : Direction.BACKWARDS);
-        RoundedUtils.drawRound(getX() + 10, getY() + getHeight() - 4, 145, 1, 0, INSTANCE.getArcaneClickGui().linecolor);
         Fonts.Bold.get(18).drawString(setting.getName(), getX() + 10, getY() + 4, ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(),0.4f));
-        RoundedUtils.drawRound(getX() + 135, getY() + 4, 20, 10, 4, new Color(ColorUtils.applyOpacity(INSTANCE.getModuleManager().getModule(Interface.class).color(1),0.4f)));
+
+        Color bgColor = setting.get()
+                ? new Color(ColorUtils.applyOpacity(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(), 0.4f))
+                : new Color(0, 0, 0, 80);
+        RoundedUtils.drawRound(getX() + 135, getY() + 4, 20, 10, 4, bgColor);
+
         RenderUtils.drawCircleCGUI(getX() + 141 + enabled.getOutput() * 9f, getY() + 9, 8,new Color(INSTANCE.getModuleManager().getModule(Interface.class).color(1)).darker().getRGB());
 
         super.drawScreen(mouseX, mouseY);

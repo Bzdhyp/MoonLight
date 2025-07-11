@@ -153,7 +153,7 @@ public class FontRenderer {
                 new Color(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(tick2)),
                 () -> {
                     RenderUtils.setAlphaLimit(0);
-                    drawString(text, (float) x, (float) y, -1);
+                    drawString(text, (float) x, (float) y, -1, true);
                 }
         );
     }

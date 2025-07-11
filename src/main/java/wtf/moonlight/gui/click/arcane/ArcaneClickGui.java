@@ -45,7 +45,7 @@ public class ArcaneClickGui extends GuiScreen {
     public Color fontcolor;
     private final Animation animations = new DecelerateAnimation(250, 1);
     private final Animation animations2 = new DecelerateAnimation(250, 1);
-    private final Animation hoverAnimation = new DecelerateAnimation(1000, 1);;
+    private final Animation hoverAnimation = new DecelerateAnimation(1000, 1);
     public final ESPComponent espPreviewComponent = new ESPComponent();
     boolean sb = false;
 
@@ -78,14 +78,17 @@ public class ArcaneClickGui extends GuiScreen {
         }
 
         RoundedUtils.drawRound(x, y, w, h, 7, backgroundColor);
-        RoundedUtils.drawRound(x, y + 34, w, .5f, 0, linecolor);
         RenderUtils.startGlScissor(x, y + 35, w, h - 35);
         RoundedUtils.drawGradientVertical(x, y + 30, w, h - 30, 7, backgroundColor2, backgroundColor3);
         RenderUtils.stopGlScissor();
+        String firstLetter = Client.INSTANCE.clientName.substring(0, 1);
+        String remainingText = Client.INSTANCE.clientName.substring(1);
+        int firstLetterWidth = Fonts.Bold.get(30).getStringWidth(firstLetter);
 
-        Fonts.Bold.get(30).drawString(Client.INSTANCE.clientName, x + 10, y + 10, fontcolor.getRGB());
+        Fonts.Bold.get(30).drawStringDynamic(firstLetter, x + 10, y + 10, 1, 6);
+        Fonts.Bold.get(30).drawStringWithShadow(remainingText, x + 10 + firstLetterWidth, y + 10, fontcolor.getRGB());
 
-        Fonts.Bold.get(24).drawStringDynamic("v2", x + w - 32, y + 14, 1, 6);
+        Fonts.Bold.get(18).drawStringDynamic("v2", x + w - 32, y + 16, 1, 6);
 
         RoundedUtils.drawRound(x + w - 68, y + 44, 60, 25, 5, smallbackgroundColor);
         RoundedUtils.drawRound(x + 10, y + 44, 96, 25, 5, smallbackgroundColor);
@@ -119,7 +122,7 @@ public class ArcaneClickGui extends GuiScreen {
                 smallbackgroundColor2 = new Color(234, 236, 243, 255);
                 linecolor = new Color(210, 210, 210, 255);
                 versionColor = new Color(0, 0, 0, 50);
-                fontcolor = new Color(0, 0, 0, 255);
+                fontcolor = new Color(19, 17, 19, 255);
                 moduleAnimation.setDirection(Direction.BACKWARDS);
             } else if (RenderUtils.isHovering(x + w - 68, y + 44, 30, 25, mouseX, mouseY)) {
                 backgroundColor = new Color(22, 22, 26, 255);

@@ -34,7 +34,6 @@ public class ColorPickerComponent extends Component {
         open.setDirection(opened ? Direction.FORWARDS : Direction.BACKWARDS);
         setHeight((float) (24 + 66 * open.getOutput()));
 
-        RoundedUtils.drawRound(getX() + 10, getY() + getHeight() - 4, 145, 1, 0, INSTANCE.getArcaneClickGui().linecolor);
         Fonts.Bold.get(18).drawString(setting.getName(), getX() + 10, getY() + 4, ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(),0.4f));
         RenderUtils.drawCircle(getX() + 149, getY() + 7, 0, 360, 5, 2, true, (setting.isRainbow() ? ColorUtils.getRainbow().getRGB() : setting.getColor().getRGB()));
         RenderUtils.resetColor();

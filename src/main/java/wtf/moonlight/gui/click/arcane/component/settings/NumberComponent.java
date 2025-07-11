@@ -36,14 +36,13 @@ public class NumberComponent extends Component {
         anim = RenderUtils.animate(anim, (float) (w * (setting.getValue() - setting.getMin()) / (setting.getMax() - setting.getMin())), 50);
         float sliderWidth = anim;
         drag.setDirection(dragging ? Direction.FORWARDS : Direction.BACKWARDS);
-        RoundedUtils.drawRound(getX() + 10, getY() + getHeight() - 4, 145, 1, 0, INSTANCE.getArcaneClickGui().linecolor);
 
         Fonts.Bold.get(18).drawString(setting.getName(), getX() + 10, getY() + 4, ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(),0.4f));
         Fonts.Bold.get(18).drawString(String.valueOf(setting.getValue()), getX() + 155 - Fonts.Bold.get(18).getStringWidth(String.valueOf(setting.getValue())), getY() + 4, ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(),0.4f));
 
         RoundedUtils.drawRound(getX() + 10, getY() + 18, w, 2, 2, INSTANCE.getArcaneClickGui().versionColor);
         RoundedUtils.drawGradientHorizontal(getX() + 10, getY() + 18, sliderWidth, 2, 2, new Color(INSTANCE.getModuleManager().getModule(Interface.class).color(1)),new Color(-1));
-        RoundedUtils.drawRound(getX() + 5 + sliderWidth, getY() + 17, 8, 4, 1, INSTANCE.getArcaneClickGui().fontcolor);
+        RoundedUtils.drawRound(getX() + 5 + sliderWidth, getY() + 16.5f, 6, 6, 3, new Color(INSTANCE.getModuleManager().getModule(Interface.class).color(1)));
 
         if (dragging) {
             final double difference = this.setting.getMax() - this.setting

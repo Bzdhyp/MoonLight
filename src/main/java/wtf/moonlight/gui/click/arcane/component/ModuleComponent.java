@@ -63,10 +63,14 @@ public class ModuleComponent extends Component {
         if (!module.isEnabled() && moduleAnimation.finished(Direction.BACKWARDS));
 
         RoundedUtils.drawRound(getX(), y, 165, getHeight(), 2, INSTANCE.getArcaneClickGui().backgroundColor);
-        Fonts.Bold.get(18).drawString(module.getName() + " Module", getX() + 10, y + 5,ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(),0.6f));
-        RoundedUtils.drawRound(getX() + 135, y + 4, 20, 10, 4, new Color(ColorUtils.applyOpacity(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(),0.4f)));
+        Fonts.Bold.get(18).drawString(module.getName(), getX() + 10, y + 5,ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(),1f));
+
+        Color bgColor = module.isEnabled()
+                ? new Color(ColorUtils.applyOpacity(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(), 0.4f))
+                : new Color(0, 0, 0, 80);
+        RoundedUtils.drawRound(getX() + 135, y + 4, 20, 10, 4, bgColor);
+
         RenderUtils.drawCircleCGUI(getX() + 141 + moduleAnimation.getOutput() * 9f, y + 9, 8, new Color(Client.INSTANCE.getModuleManager().getModule(Interface.class).color()).darker().getRGB());
-        RoundedUtils.drawRound(getX() + 10, y + 20, 145, 1, 0, INSTANCE.getArcaneClickGui().linecolor);
 
         float componentY = y + 22;
         ObjectArrayList<Component> filtered = components.stream()

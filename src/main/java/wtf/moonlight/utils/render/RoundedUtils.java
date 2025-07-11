@@ -37,6 +37,7 @@ public class RoundedUtils implements InstanceAccess {
     public static void drawGradientHorizontal(float x, float y, float width, float height, float radius, Color left, Color right) {
         drawGradientRound(x, y, width, height, radius, left, left, right, right);
     }
+
     public static void drawCircle(float x, float y, float start, float end, float radius, float width, boolean filled, int color) {
         float i;
         float endOffset;
@@ -77,15 +78,19 @@ public class RoundedUtils implements InstanceAccess {
         GlStateManager.disableBlend();
         resetColor();
     }
+
     public static void setColor(int color) {
         GL11.glColor4ub((byte) (color >> 16 & 0xFF), (byte) (color >> 8 & 0xFF), (byte) (color & 0xFF), (byte) (color >> 24 & 0xFF));
     }
+
     public static void resetColor() {
         color(1, 1, 1, 1);
     }
+
     public static void color(double red, double green, double blue, double alpha) {
         GL11.glColor4d(red, green, blue, alpha);
     }
+
     public static void drawGradientVertical(float x, float y, float width, float height, float radius, Color top, Color bottom) {
         drawGradientRound(x, y, width, height, radius, bottom, top, bottom, top);
     }
