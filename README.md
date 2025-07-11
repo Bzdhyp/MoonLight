@@ -30,6 +30,7 @@ Do the above and share your source code with everyone; just like we do!
 - CCBlueX FakeLag
 - CCBlueX Velocity
 - Fix BlinkComponent
+- Prediction LongJump
 
 ## Play Hypixel
 - use 1.8.9
