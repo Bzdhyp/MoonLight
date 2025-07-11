@@ -5,7 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.visual.ESP;
-import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.impl.display.Interface;
 
 public class ModelPlayer extends ModelBiped
 {

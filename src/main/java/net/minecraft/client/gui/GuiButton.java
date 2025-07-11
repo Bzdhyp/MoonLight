@@ -7,7 +7,7 @@ import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import wtf.moonlight.Client;
-import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.utils.render.GLUtils;
 import wtf.moonlight.utils.render.RenderUtils;
 

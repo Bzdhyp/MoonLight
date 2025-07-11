@@ -9,7 +9,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Client;
-import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.impl.display.Interface;
 
 import java.util.Iterator;
 

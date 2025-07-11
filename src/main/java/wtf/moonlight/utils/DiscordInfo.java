@@ -18,7 +18,7 @@ import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.GuiSelectWorld;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.utils.misc.InstanceAccess;
 import wtf.moonlight.utils.packet.Workers;
 import wtf.moonlight.utils.misc.ServerUtils;

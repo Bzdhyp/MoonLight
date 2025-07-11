@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumChatFormatting;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.module.impl.visual.ESP;
-import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.utils.MathUtils;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.GLUtils;

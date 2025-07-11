@@ -22,6 +22,7 @@ public enum ModuleCategory {
     Player("Player","D"),
     Misc("Misc","C"),
     Visual("Visuals","F"),
+    Display("Display", "G"),
     Config("Configs","A"),
     Search("Search","A");
 

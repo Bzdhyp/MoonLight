@@ -16,7 +16,7 @@ import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.utils.misc.InstanceAccess;
 import wtf.moonlight.utils.animations.advanced.Animation;

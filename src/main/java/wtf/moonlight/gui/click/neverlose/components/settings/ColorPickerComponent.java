@@ -11,7 +11,7 @@
 package wtf.moonlight.gui.click.neverlose.components.settings;
 
 import net.minecraft.util.MathHelper;
-import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.ColorValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;

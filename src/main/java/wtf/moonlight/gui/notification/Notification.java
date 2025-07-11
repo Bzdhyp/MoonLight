@@ -14,7 +14,7 @@ import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import wtf.moonlight.Client;
-import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.utils.misc.InstanceAccess;
 import wtf.moonlight.utils.animations.advanced.Animation;

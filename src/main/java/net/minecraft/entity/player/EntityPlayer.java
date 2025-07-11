@@ -78,7 +78,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.combat.KeepSprint;
-import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.utils.player.RotationUtils;
 import wtf.moonlight.utils.waveycapes.config.Config;
 import wtf.moonlight.utils.waveycapes.sim.StickSimulation;

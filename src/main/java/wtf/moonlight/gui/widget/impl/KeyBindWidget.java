@@ -15,6 +15,7 @@ import wtf.moonlight.Client;
 import wtf.moonlight.events.render.Shader2DEvent;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.widget.Widget;
+import wtf.moonlight.module.impl.display.KeyBindHUD;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.RoundedUtils;
 import wtf.moonlight.module.Module;
@@ -31,8 +32,7 @@ public class KeyBindWidget extends Widget {
 
     @Override
     public void onShader(Shader2DEvent event) {
-
-        if(setting.keyBindMode.is("Type 1")) {
+        if(Client.INSTANCE.getModuleManager().getModule(KeyBindHUD.class).keyBindMode.is("Type 1")) {
             RoundedUtils.drawRound(renderX, renderY, width, height, 4, new Color(setting.bgColor(),true));
         }
     }
@@ -40,7 +40,7 @@ public class KeyBindWidget extends Widget {
     @Override
     public void render() {
 
-        if(setting.keyBindMode.is("Type 1")) {
+        if(Client.INSTANCE.getModuleManager().getModule(KeyBindHUD.class).keyBindMode.is("Type 1")) {
 
             float posX = renderX;
             float posY = renderY;
@@ -91,6 +91,6 @@ public class KeyBindWidget extends Widget {
 
     @Override
     public boolean shouldRender() {
-        return setting.isEnabled() && setting.elements.isEnabled("Key Bind");
+        return Client.INSTANCE.getModuleManager().getModule(KeyBindHUD.class).isEnabled();
     }
 }

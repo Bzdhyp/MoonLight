@@ -34,7 +34,7 @@ import net.minecraft.world.border.WorldBorder;
 import net.optifine.CustomColors;
 import wtf.moonlight.Client;
 import wtf.moonlight.events.render.Render2DEvent;
-import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.impl.visual.Shaders;
 import wtf.moonlight.utils.misc.SpoofSlotUtils;
 import wtf.moonlight.utils.render.RoundedUtils;

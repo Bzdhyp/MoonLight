@@ -8,7 +8,7 @@ import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.movement.Scaffold;
-import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.gui.font.FontRenderer;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.notification.Notification;

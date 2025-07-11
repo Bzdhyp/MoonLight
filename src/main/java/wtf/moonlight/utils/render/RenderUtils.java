@@ -27,7 +27,7 @@ import net.minecraft.item.*;
 import net.minecraft.util.*;
 import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Client;
-import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.utils.misc.InstanceAccess;
 

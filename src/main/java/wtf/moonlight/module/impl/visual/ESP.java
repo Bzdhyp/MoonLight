@@ -27,6 +27,7 @@ import wtf.moonlight.events.render.RenderNameTagEvent;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.ModuleCategory;
 import wtf.moonlight.module.ModuleInfo;
+import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.impl.misc.HackerDetector;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ColorValue;

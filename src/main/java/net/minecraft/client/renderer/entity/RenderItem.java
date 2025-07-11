@@ -67,7 +67,7 @@ import net.optifine.shaders.Shaders;
 import net.optifine.shaders.ShadersRender;
 import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.visual.EnchantGlint;
-import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.impl.display.Interface;
 
 public class RenderItem implements IResourceManagerReloadListener
 {

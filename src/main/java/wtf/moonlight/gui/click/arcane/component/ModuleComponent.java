@@ -1,6 +1,5 @@
 package wtf.moonlight.gui.click.arcane.component;
 
-import com.sun.jdi.BooleanValue;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +7,7 @@ import wtf.moonlight.Client;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.click.arcane.component.settings.*;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.Value;
 import wtf.moonlight.module.values.impl.*;
 import wtf.moonlight.module.Module;

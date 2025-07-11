@@ -16,7 +16,7 @@ import net.minecraft.util.EnumChatFormatting;
 import wtf.moonlight.Client;
 import wtf.moonlight.module.ModuleCategory;
 import wtf.moonlight.module.impl.visual.ESP;
-import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.gui.click.neverlose.panel.Panel;
 import wtf.moonlight.gui.click.neverlose.components.ESPPreviewComponent;
 import wtf.moonlight.gui.click.neverlose.panel.config.ConfigPanel;

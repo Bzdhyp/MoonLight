@@ -18,9 +18,11 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
+import wtf.moonlight.Client;
 import wtf.moonlight.events.render.Shader2DEvent;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.widget.Widget;
+import wtf.moonlight.module.impl.display.PotionHUD;
 import wtf.moonlight.utils.animations.advanced.ContinualAnimation;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.RenderUtils;
@@ -48,7 +50,7 @@ public class PotionHUDWidget extends Widget {
     @Override
     public void onShader(Shader2DEvent event) {
         ArrayList<PotionEffect> potions = new ArrayList<>(mc.thePlayer.getActivePotionEffects());
-        if (setting.potionHudMode.is("Default")) {
+        if (Client.INSTANCE.getModuleManager().getModule(PotionHUD.class).potionHudMode.is("Default")) {
             widthAnimation.animate(width, 18);
             potions.sort(Comparator.comparingDouble(effect -> -Fonts.interRegular.get(16).getStringWidth(Objects.requireNonNull(I18n.format(Potion.potionTypes[effect.getPotionID()].getName())))));
             float yOffset = 0;
@@ -57,7 +59,7 @@ public class PotionHUDWidget extends Widget {
             width = (MathHelper.clamp_int(!potions.isEmpty() ? Fonts.interRegular.get(16).getStringWidth(Objects.requireNonNull(potions.stream().max(Comparator.comparingDouble(effect -> Fonts.interRegular.get(16).getStringWidth(Objects.requireNonNull(I18n.format(Potion.potionTypes[effect.getPotionID()].getName()))))).stream().findFirst().orElse(null)).getEffectName()) + 20 : 0, 80, 999));
             height = ((Fonts.interRegular.get(15).getHeight() + 2 + (12 + heightAnimation.getOutput())));
         }
-        if (setting.potionHudMode.is("Sexy")) {
+        if (Client.INSTANCE.getModuleManager().getModule(PotionHUD.class).potionHudMode.is("Sexy")) {
             width = 92;
             height = heightAnimation.getOutput();
 
@@ -66,11 +68,11 @@ public class PotionHUDWidget extends Widget {
             heightAnimation.animate(20 + potions.size() * 10, 20);
         }
 
-        if (setting.potionHudMode.is("Type 1")) {
+        if (Client.INSTANCE.getModuleManager().getModule(PotionHUD.class).potionHudMode.is("Type 1")) {
             RoundedUtils.drawRound(renderX, renderY, width, height, 4, new Color(setting.bgColor(), true));
         }
 
-        if (setting.potionHudMode.is("NeverLose")) {
+        if (Client.INSTANCE.getModuleManager().getModule(PotionHUD.class).potionHudMode.is("NeverLose")) {
 
             height = (15);
             width = MathHelper.clamp_float(!potions.isEmpty() ? Fonts.interSemiBold.get(16).getStringWidth(Objects.requireNonNull(potions.stream().max(Comparator.comparingDouble(effect -> Fonts.interSemiBold.get(16).getStringWidth(Objects.requireNonNull(I18n.format(Potion.potionTypes[effect.getPotionID()].getName()))))).stream().findFirst().orElse(null)).getEffectName()) + 20 : 0, 80, 999);
@@ -85,7 +87,7 @@ public class PotionHUDWidget extends Widget {
     @Override
     public void render() {
         ArrayList<PotionEffect> potions = new ArrayList<>(mc.thePlayer.getActivePotionEffects());
-        if (setting.potionHudMode.is("Default")) {
+        if (Client.INSTANCE.getModuleManager().getModule(PotionHUD.class).potionHudMode.is("Default")) {
             widthAnimation.animate(width, 18);
             potions.sort(Comparator.comparingDouble(effect -> -Fonts.interRegular.get(16).getStringWidth(Objects.requireNonNull(I18n.format(Potion.potionTypes[effect.getPotionID()].getName())))));
             float yOffset = 0;
@@ -114,7 +116,7 @@ public class PotionHUDWidget extends Widget {
             }
         }
 
-        if (setting.potionHudMode.is("Nursultan")) {
+        if (Client.INSTANCE.getModuleManager().getModule(PotionHUD.class).potionHudMode.is("Nursultan")) {
 
             int maxWidth = calculateMaxPotionWidth();
             int offset = calculatePotionOffset();
@@ -186,7 +188,7 @@ public class PotionHUDWidget extends Widget {
             }
         }
 
-        if (setting.potionHudMode.is("Sexy")) {
+        if (Client.INSTANCE.getModuleManager().getModule(PotionHUD.class).potionHudMode.is("Sexy")) {
 
             width = 92;
             height = heightAnimation.getOutput();
@@ -212,7 +214,7 @@ public class PotionHUDWidget extends Widget {
             heightAnimation.animate(20 + potions.size() * 10, 20);
         }
 
-        if (setting.potionHudMode.is("Type 1")) {
+        if (Client.INSTANCE.getModuleManager().getModule(PotionHUD.class).potionHudMode.is("Type 1")) {
 
             float posX = renderX;
             float posY = renderY;
@@ -261,7 +263,7 @@ public class PotionHUDWidget extends Widget {
             height = localHeight + 2.5f;
         }
 
-        if (setting.potionHudMode.is("NeverLose")) {
+        if (Client.INSTANCE.getModuleManager().getModule(PotionHUD.class).potionHudMode.is("NeverLose")) {
 
             height = (15);
             width = MathHelper.clamp_float(!potions.isEmpty() ? Fonts.interSemiBold.get(16).getStringWidth(Objects.requireNonNull(potions.stream().max(Comparator.comparingDouble(effect -> Fonts.interSemiBold.get(16).getStringWidth(Objects.requireNonNull(I18n.format(Potion.potionTypes[effect.getPotionID()].getName()))))).stream().findFirst().orElse(null)).getEffectName()) + 20 : 0, 80, 999);
@@ -305,7 +307,7 @@ public class PotionHUDWidget extends Widget {
 
     @Override
     public boolean shouldRender() {
-        return setting.isEnabled() && setting.elements.isEnabled("Potion HUD") && !setting.potionHudMode.is("Exhi");
+        return setting.isEnabled() && Client.INSTANCE.getModuleManager().getModule(PotionHUD.class).isEnabled() && !Client.INSTANCE.getModuleManager().getModule(PotionHUD.class).potionHudMode.is("Exhi");
     }
 
     private int calculateMaxPotionWidth() {

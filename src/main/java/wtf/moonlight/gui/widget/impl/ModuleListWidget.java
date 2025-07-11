@@ -14,7 +14,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ModuleListWidget extends Widget {
-
     private final int PADDING = 2;
 
     public ModuleListWidget() {

@@ -17,7 +17,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import wtf.moonlight.Client;
-import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.Value;
 import wtf.moonlight.gui.notification.NotificationType;
 import wtf.moonlight.utils.misc.InstanceAccess;

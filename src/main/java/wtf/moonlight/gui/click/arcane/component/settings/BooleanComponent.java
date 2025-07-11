@@ -2,7 +2,7 @@ package wtf.moonlight.gui.click.arcane.component.settings;
 
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.utils.animations.advanced.Animation;
 import wtf.moonlight.utils.animations.advanced.Direction;

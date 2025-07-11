@@ -18,8 +18,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
+import wtf.moonlight.Client;
 import wtf.moonlight.events.render.Shader2DEvent;
-import wtf.moonlight.module.impl.visual.Interface;
+import wtf.moonlight.module.impl.display.Interface;
+import wtf.moonlight.module.impl.display.TargetHUD;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.widget.Widget;
@@ -54,7 +56,7 @@ public class TargetHUDWidget extends Widget {
             float currentTargetWidth = getTHUDWidth(target);
             this.width = currentTargetWidth;
             if (count > 9) continue;
-            TargetHUD targetHUD = new TargetHUD((float) (renderX + ((count % 3) * (lastTargetWidth + 4)) * setting.animationEntityPlayerMap.get(target).getOutput()), (float) (this.renderY + ((count / 3) * (this.height + 4)) * setting.animationEntityPlayerMap.get(target).getOutput()), target, setting.animationEntityPlayerMap.get(target), false, setting.targetHudMode);
+            TargetDisplay targetHUD = new TargetDisplay((float) (renderX + ((count % 3) * (lastTargetWidth + 4)) * setting.animationEntityPlayerMap.get(target).getOutput()), (float) (this.renderY + ((count / 3) * (this.height + 4)) * setting.animationEntityPlayerMap.get(target).getOutput()), target, setting.animationEntityPlayerMap.get(target), false, Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudMode);
             targetHUD.render();
             lastTargetWidth = currentTargetWidth;
             count++;
@@ -70,7 +72,7 @@ public class TargetHUDWidget extends Widget {
             float currentTargetWidth = getTHUDWidth(target);
             this.width = currentTargetWidth;
             if (count > 9) continue;
-            TargetHUD targetHUD = new TargetHUD((float) (renderX + ((count % 3) * (lastTargetWidth + 4)) * setting.animationEntityPlayerMap.get(target).getOutput()), (float) (this.renderY + ((count / 3) * (this.height + 4)) * setting.animationEntityPlayerMap.get(target).getOutput()), target, setting.animationEntityPlayerMap.get(target), true, setting.targetHudMode);
+            TargetDisplay targetHUD = new TargetDisplay((float) (renderX + ((count % 3) * (lastTargetWidth + 4)) * setting.animationEntityPlayerMap.get(target).getOutput()), (float) (this.renderY + ((count / 3) * (this.height + 4)) * setting.animationEntityPlayerMap.get(target).getOutput()), target, setting.animationEntityPlayerMap.get(target), true, Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudMode);
             targetHUD.render();
             lastTargetWidth = currentTargetWidth;
             count++;
@@ -78,7 +80,7 @@ public class TargetHUDWidget extends Widget {
     }
 
     public float getTHUDWidth(Entity entity) {
-        return switch (setting.targetHudMode.getValue()) {
+        return switch (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudMode.getValue()) {
             case "Type 1" -> Math.max(120, Fonts.interBold.get(18).getStringWidth(entity.getName()) + 50);
             case "Astolfo" -> Math.max(130, mc.fontRendererObj.getStringWidth(entity.getName()) + 60);
             case "Type 2" -> Math.max(100, mc.fontRendererObj.getStringWidth(entity.getDisplayName().getFormattedText())) + 11;
@@ -100,7 +102,7 @@ public class TargetHUDWidget extends Widget {
     }
 
     public float getTHUDHeight() {
-        return switch (setting.targetHudMode.getValue()) {
+        return switch (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudMode.getValue()) {
             case "Type 1" -> 44;
             case "Astolfo" -> 56;
             case "Type 2" -> 38.0F;
@@ -120,13 +122,13 @@ public class TargetHUDWidget extends Widget {
 
     @Override
     public boolean shouldRender() {
-        return setting.isEnabled() && setting.elements.isEnabled("Target HUD");
+        return setting.isEnabled() && Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).isEnabled();
     }
 }
 
 @Getter
 @Setter
-class TargetHUD implements InstanceAccess {
+class TargetDisplay implements InstanceAccess {
     private float x, y, width, height;
     private EntityPlayer target;
     private Animation animation;
@@ -135,7 +137,7 @@ class TargetHUD implements InstanceAccess {
     private Interface setting = INSTANCE.getModuleManager().getModule(Interface.class);
     private final DecimalFormat decimalFormat = new DecimalFormat("0.0");
 
-    public TargetHUD(float x, float y, EntityPlayer target, Animation animation, boolean shader, ListValue style) {
+    public TargetDisplay(float x, float y, EntityPlayer target, Animation animation, boolean shader, ListValue style) {
         this.x = x;
         this.y = y;
         this.target = target;
@@ -191,7 +193,7 @@ class TargetHUD implements InstanceAccess {
                 }
             }
 
-            if (setting.targetHudParticle.get()) {
+            if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
                 ParticleRenderer.renderParticle(target, x + 4, y + 4);
             }
             break;
@@ -232,7 +234,7 @@ class TargetHUD implements InstanceAccess {
                     RoundedUtils.drawGradientHorizontal(x, y, width, height, 4, new Color(setting.color(0)), new Color(setting.color(90)));
                 }
 
-                if (setting.targetHudParticle.get()) {
+                if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
                     ParticleRenderer.renderParticle(target, x + 5, y + 6.8f);
                 }
             }
@@ -353,7 +355,7 @@ class TargetHUD implements InstanceAccess {
                     }
                 }
 
-                if (setting.targetHudParticle.get()) {
+                if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
                     ParticleRenderer.renderParticle(target, x + padding, y + padding);
                 }
             }
@@ -380,7 +382,7 @@ class TargetHUD implements InstanceAccess {
                     RoundedUtils.drawRound(x, y, width, height, 8, new Color(setting.color()));
                 }
 
-                if (setting.targetHudParticle.get()) {
+                if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
                     ParticleRenderer.renderParticle(target, x + 2.5f, y + 2.5f);
                 }
             }
@@ -408,7 +410,7 @@ class TargetHUD implements InstanceAccess {
                     RoundedUtils.drawRound(x, y, width, height, 8, new Color(setting.color()));
                 }
 
-                if (setting.targetHudParticle.get()) {
+                if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
                     ParticleRenderer.renderParticle(target, x + 3f, y + 1.5f);
                 }
 
@@ -435,7 +437,7 @@ class TargetHUD implements InstanceAccess {
                     RoundedUtils.drawRound(x, y, width, height, 8, new Color(setting.color()));
                 }
 
-                if (setting.targetHudParticle.get()) {
+                if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
                     ParticleRenderer.renderParticle(target, x + 2.5f, y + 2.5f);
                 }
             }
@@ -463,7 +465,7 @@ class TargetHUD implements InstanceAccess {
                     RoundedUtils.drawRoundOutline(x, y, this.width, this.height, 5, 0.1f, new Color(0, 0, 0, 0), new Color(setting.color(0)));
                 }
 
-                if (setting.targetHudParticle.get()) {
+                if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
                     ParticleRenderer.renderParticle(target, x + 2.5f, y + 2.5f);
                 }
             }
@@ -508,7 +510,7 @@ class TargetHUD implements InstanceAccess {
                     mc.fontRendererObj.drawStringWithShadow(target.getName(), x + 40f, y + 4, -1);
                 }
 
-                if (setting.targetHudParticle.get()) {
+                if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
                     ParticleRenderer.renderParticle(target, (x + 1.5f + 1), (float) (y + 0.4));
                 }
             }
@@ -534,7 +536,7 @@ class TargetHUD implements InstanceAccess {
                 }
             }
 
-            if (setting.targetHudParticle.get()) {
+            if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
                 ParticleRenderer.renderParticle(target, (x + 1.5f + 1f), (float) (y + 0.4));
             }
 
@@ -574,7 +576,7 @@ class TargetHUD implements InstanceAccess {
                     RenderUtils.drawGradientRect(x + 3.2f, y + 39, target.healthAnimation.getOutput(), 4, true, setting.color(0), setting.color(90));
                     RenderUtils.renderItemStack(target, x + 40f, y + 15, 1, false, true);
 
-                    if (setting.targetHudParticle.get()) {
+                    if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
                         ParticleRenderer.renderParticle(target, x + 3.2f, y + 3.2f);
                     }
 
