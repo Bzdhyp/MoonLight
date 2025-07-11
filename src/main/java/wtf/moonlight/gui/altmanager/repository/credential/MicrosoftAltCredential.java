@@ -1,0 +1,52 @@
+/*
+ * MoonLight Hacked Client
+ *
+ * A free and open-source hacked client for Minecraft.
+ * Developed using Minecraft's resources.
+ *
+ * Repository: https://github.com/randomguy3725/MoonLight
+ *
+ * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
+ */
+package wtf.moonlight.gui.altmanager.repository.credential;
+
+import java.util.Objects;
+import java.util.UUID;
+
+public class MicrosoftAltCredential extends AltCredential {
+    private final String name;
+    private final String refreshToken;
+    private final UUID uuid;
+
+    public MicrosoftAltCredential(String name, String refreshToken, UUID uuid) {
+        super("", "");
+        this.name = name;
+        this.refreshToken = refreshToken;
+        this.uuid = uuid;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MicrosoftAltCredential that)) return false;
+        if (!super.equals(o)) return false;
+        return name.equals(that.name) && refreshToken.equals(that.refreshToken) && uuid.equals(that.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, refreshToken, uuid);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public UUID getUUID() {
+        return uuid;
+    }
+}
