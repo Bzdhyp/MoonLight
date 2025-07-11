@@ -5,7 +5,7 @@ import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.client.gui.achievement.GuiStats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.realms.RealmsBridge;
-import wtf.moonlight.gui.mainmenu.GuiMainMenu;
+import wtf.moonlight.gui.main.GuiMainMenu;
 
 public class GuiIngameMenu extends GuiScreen
 {

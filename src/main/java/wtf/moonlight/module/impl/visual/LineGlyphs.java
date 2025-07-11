@@ -17,7 +17,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
 import org.lwjgl.opengl.GL11;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.events.render.Render3DEvent;
@@ -28,7 +28,7 @@ import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.utils.animations.advanced.Direction;
 import wtf.moonlight.utils.animations.advanced.impl.SmoothStepAnimation;
-import wtf.moonlight.utils.math.MathUtils;
+import wtf.moonlight.utils.MathUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -278,7 +278,7 @@ public class LineGlyphs extends Module {
             tessellator.getWorldRenderer().begin(3, DefaultVertexFormats.POSITION_COLOR);
             int colorIndex = objIndex;
             for (Vec3 vec3d : gliphVecGen.getPosVectors(pTicks)) {
-                tessellator.getWorldRenderer().pos(vec3d).color(Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).color(colorIndex, (int) (alphaPC * 255))).endVertex();
+                tessellator.getWorldRenderer().pos(vec3d).color(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(colorIndex, (int) (alphaPC * 255))).endVertex();
                 colorIndex += 180;
             }
             tessellator.draw();
@@ -286,7 +286,7 @@ public class LineGlyphs extends Module {
             tessellator.getWorldRenderer().begin(0, DefaultVertexFormats.POSITION_COLOR);
             colorIndex = objIndex;
             for (Vec3 vec3d : gliphVecGen.getPosVectors(pTicks)) {
-                tessellator.getWorldRenderer().pos(vec3d).color(Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).color(colorIndex, (int) (alphaPC * 255))).endVertex();
+                tessellator.getWorldRenderer().pos(vec3d).color(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(colorIndex, (int) (alphaPC * 255))).endVertex();
                 colorIndex += 180;
             }
             tessellator.draw();

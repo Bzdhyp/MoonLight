@@ -15,7 +15,7 @@ import lombok.Setter;
 import org.lwjgl.opengl.GL11;
 import org.lwjglx.input.Keyboard;
 import org.lwjglx.input.Mouse;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.config.Config;
 import wtf.moonlight.module.ModuleCategory;
 import wtf.moonlight.gui.click.neverlose.panel.Panel;
@@ -24,7 +24,7 @@ import wtf.moonlight.utils.animations.advanced.Animation;
 import wtf.moonlight.utils.animations.advanced.Direction;
 import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
 import wtf.moonlight.utils.animations.advanced.impl.SmoothStepAnimation;
-import wtf.moonlight.utils.math.MathUtils;
+import wtf.moonlight.utils.MathUtils;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.MouseUtils;
 import wtf.moonlight.utils.render.RenderUtils;
@@ -59,7 +59,7 @@ public class ConfigPanel extends Panel {
         //set default selection
         if (configMap.keySet().stream().filter(ConfigRect::isSelected).findAny().orElse(null) == null) {
             if (!configMap.keySet().stream().toList().isEmpty()) {
-                Objects.requireNonNull(configMap.keySet().stream().filter(configRect -> configRect.getConfig().getName().equals(Moonlight.INSTANCE.getConfigManager().getCurrentConfig())).findFirst().orElse(null)).setSelected(true);
+                Objects.requireNonNull(configMap.keySet().stream().filter(configRect -> configRect.getConfig().getName().equals(Client.INSTANCE.getConfigManager().getCurrentConfig())).findFirst().orElse(null)).setSelected(true);
             }
         }
         //update coordinate
@@ -122,7 +122,7 @@ public class ConfigPanel extends Panel {
             refresh();
         }
         if (MouseUtils.isHovered2(posX + 228,posY + 14,70, 22, mouseX, mouseY)) {
-            Moonlight.INSTANCE.getConfigManager().saveConfig(new Config(text + ".json"));
+            Client.INSTANCE.getConfigManager().saveConfig(new Config(text + ".json"));
             refresh();
         }
         for (ConfigRect configRect : configMap.keySet()) {
@@ -134,7 +134,7 @@ public class ConfigPanel extends Panel {
                 configRect.setSelected(true);
             }
             if (mouseButton == 2 && configRect.isHovered(mouseX,mouseY)){
-                Moonlight.INSTANCE.getConfigManager().loadConfig(configRect.getConfig());
+                Client.INSTANCE.getConfigManager().loadConfig(configRect.getConfig());
             }
         }
 
@@ -142,7 +142,7 @@ public class ConfigPanel extends Panel {
     }
     public void refresh(){
         configMap.clear();
-        Arrays.stream(Objects.requireNonNull(Moonlight.INSTANCE.getMainDir().listFiles())).filter(file -> file.isFile() && file.getName().endsWith(".json")).forEach(file -> configMap.put(new ConfigRect(new Config(file.getName().replaceFirst(".json",""))),new Config(file.getName().replaceFirst(".json",""))));
+        Arrays.stream(Objects.requireNonNull(Client.INSTANCE.getMainDir().listFiles())).filter(file -> file.isFile() && file.getName().endsWith(".json")).forEach(file -> configMap.put(new ConfigRect(new Config(file.getName().replaceFirst(".json",""))),new Config(file.getName().replaceFirst(".json",""))));
         configMap = configMap.values().stream()
                 .sorted(Comparator.comparing(Config::getName))
                 .collect(LinkedHashMap::new, (map, file) -> map.put(new ConfigRect(new Config(file.getName().replaceFirst(".json",""))),new Config(file.getName().replaceFirst(".json",""))), LinkedHashMap::putAll);

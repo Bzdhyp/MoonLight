@@ -31,7 +31,7 @@ import net.optifine.shaders.Shaders;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.events.render.RenderNameTagEvent;
 import wtf.moonlight.module.impl.visual.Chams;
 
@@ -334,7 +334,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 
         if (flag || flag1)
         {
-            final Chams instance = Moonlight.INSTANCE.getModuleManager().getModule(Chams.class);
+            final Chams instance = Client.INSTANCE.getModuleManager().getModule(Chams.class);
             if (!this.bindEntityTexture(entitylivingbaseIn))
             {
                 return;
@@ -644,7 +644,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
         {
             if (this.canRenderName(entity)) {
                 RenderNameTagEvent event = new RenderNameTagEvent(entity);
-                Moonlight.INSTANCE.getEventManager().call(event);
+                Client.INSTANCE.getEventManager().call(event);
                 if (!event.isCancelled()) {
                     double d0 = entity.getDistanceSqToEntity(this.renderManager.livingPlayer);
                     float f = entity.isSneaking() ? NAME_TAG_RANGE_SNEAK : NAME_TAG_RANGE;

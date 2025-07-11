@@ -50,9 +50,9 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import org.lwjglx.input.Mouse;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.events.player.*;
-import wtf.moonlight.module.impl.visual.FreeLook;
+import wtf.moonlight.module.impl.misc.FreeLook;
 
 public abstract class Entity implements ICommandSender
 {
@@ -265,7 +265,7 @@ public abstract class Entity implements ICommandSender
     {
         float f = rotationPitch;
         float f1 = rotationYaw;
-        FreeLook freeLook = Moonlight.INSTANCE.getModuleManager().getModule(FreeLook.class);
+        FreeLook freeLook = Client.INSTANCE.getModuleManager().getModule(FreeLook.class);
         if (!(freeLook.isEnabled() && Mouse.isButtonDown(2))) {
             this.rotationYaw = (float) ((double) rotationYaw + (double) yaw * 0.15D);
             this.rotationPitch = (float) ((double) rotationPitch - (double) pitch * 0.15D);
@@ -487,7 +487,7 @@ public abstract class Entity implements ICommandSender
             double d5 = z;
             SafeWalkEvent safeWalkEvent = new SafeWalkEvent();
             if (this instanceof EntityPlayerSP)
-                Moonlight.INSTANCE.getEventManager().call(safeWalkEvent);
+                Client.INSTANCE.getEventManager().call(safeWalkEvent);
             boolean flag = (this.onGround && this.isSneaking() || safeWalkEvent.isCancelled()) && this instanceof EntityPlayer;
 
             if (flag)
@@ -597,7 +597,7 @@ public abstract class Entity implements ICommandSender
                     ticksSinceStep = 0;
                     PreStepEvent event = new PreStepEvent(this.stepHeight);
 
-                    Moonlight.INSTANCE.getEventManager().call(event);
+                    Client.INSTANCE.getEventManager().call(event);
 
                     y = event.getHeight();
                 } else {
@@ -690,7 +690,7 @@ public abstract class Entity implements ICommandSender
                 }
 
                 if(isPlayer) {
-                    Moonlight.INSTANCE.getEventManager().call(new PostStepEvent((float) (this.getEntityBoundingBox().minY - this.posY)));
+                    Client.INSTANCE.getEventManager().call(new PostStepEvent((float) (this.getEntityBoundingBox().minY - this.posY)));
                 }
             }
 
@@ -1065,7 +1065,7 @@ public abstract class Entity implements ICommandSender
         if (this == Minecraft.getMinecraft().thePlayer) {
 
             StrafeEvent strafeEvent = new StrafeEvent(strafe, forward, friction, rotationYaw);
-            Moonlight.INSTANCE.getEventManager().call(strafeEvent);
+            Client.INSTANCE.getEventManager().call(strafeEvent);
 
             strafe = strafeEvent.getStrafe();
             forward = strafeEvent.getForward();
@@ -1100,7 +1100,7 @@ public abstract class Entity implements ICommandSender
         if (this == Minecraft.getMinecraft().thePlayer) {
             final PostStrafeEvent event = new PostStrafeEvent();
 
-            Moonlight.INSTANCE.getEventManager().call(event);
+            Client.INSTANCE.getEventManager().call(event);
         }
     }
 
@@ -1290,7 +1290,7 @@ public abstract class Entity implements ICommandSender
 
         if(this == Minecraft.getMinecraft().thePlayer){
             LookEvent lookEvent = new LookEvent(rotationYaw, rotationPitch,prevRotationYaw,prevRotationPitch);
-            Moonlight.INSTANCE.getEventManager().call(lookEvent);
+            Client.INSTANCE.getEventManager().call(lookEvent);
 
             if (partialTicks == 1.0F)
             {

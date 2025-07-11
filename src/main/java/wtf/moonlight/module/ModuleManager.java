@@ -13,12 +13,11 @@ package wtf.moonlight.module;
 import kotlin.collections.CollectionsKt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.misc.KeyPressEvent;
 import wtf.moonlight.module.impl.combat.*;
-import wtf.moonlight.module.impl.exploit.*;
-import wtf.moonlight.module.impl.exploit.Timer;
+import wtf.moonlight.module.impl.misc.Timer;
 import wtf.moonlight.module.impl.misc.*;
 import wtf.moonlight.module.impl.movement.*;
 import wtf.moonlight.module.impl.player.*;
@@ -51,7 +50,6 @@ public final class ModuleManager {
 
         addModules(
                 // Combat
-                Annoy.class,
                 AntiBot.class,
                 AutoGap.class,
                 AutoPot.class,
@@ -62,32 +60,23 @@ public final class ModuleManager {
                 Critical.class,
                 KeepSprint.class,
                 KillAura.class,
-                Reach.class,
                 TargetStrafe.class,
                 TickBase.class,
                 Velocity.class,
-
-                // Legit
-                AutoClicker.class,
-                AutoRod.class,
                 MoreKB.class,
-                BlockHit.class,
-                KeepRange.class,
+                AutoRod.class,
 
-                // Exploit
+
+                // Misc
                 Blink.class,
                 ClientSpoofer.class,
                 Disabler.class,
                 FakeLag.class,
                 NoRotate.class,
                 Timer.class,
-                AntiHunger.class,
-
-                // Misc
                 AutoAuthenticate.class,
                 AutoPlay.class,
                 HackerDetector.class,
-                ItemAlerts.class,
                 KillSults.class,
                 RawMouseInput.class,
 
@@ -104,12 +93,10 @@ public final class ModuleManager {
                 Sprint.class,
                 Step.class,
                 Strafe.class,
-                VClip.class,
                 Fly.class,
                 Scaffold.class,
                 NoFluid.class,
                 NoWeb.class,
-                SaveMoveKey.class,
 
                 // Player
                 AntiFireball.class,
@@ -135,7 +122,6 @@ public final class ModuleManager {
                 DashTrail.class,
                 DeadEffect.class,
                 ESP.class,
-                FinalKills.class,
                 FireFlies.class,
                 FreeLook.class,
                 FullBright.class,
@@ -159,7 +145,7 @@ public final class ModuleManager {
         );
 
         // Register the ModuleManager to listen for events
-        Moonlight.INSTANCE.getEventManager().register(this);
+        Client.INSTANCE.getEventManager().register(this);
         //  Moonlight.LOGGER.INFO("ModuleManager initialized with {} modules.", modules.size());
     }
 
@@ -181,7 +167,7 @@ public final class ModuleManager {
                 categories.put(category, categoryModules);
                 //  Moonlight.LOGGER.INFO("Added module: {}", module.getName());
             } catch (Exception e) {
-                Moonlight.LOGGER.error("Failed to instantiate module: {}", moduleClass.getSimpleName(), e);
+                Client.LOGGER.error("Failed to instantiate module: {}", moduleClass.getSimpleName(), e);
             }
         }
     }
@@ -207,6 +193,10 @@ public final class ModuleManager {
     @Nullable
     public Module getModule(String name) {
         return CollectionsKt.firstOrNull(modules, m -> m.getName().equalsIgnoreCase(name));
+    }
+
+    public Collection<Module> getAllModules() {
+        return Collections.unmodifiableCollection(modules);
     }
 
     /**

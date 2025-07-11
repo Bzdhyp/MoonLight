@@ -28,7 +28,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.events.player.TeleportEvent;
@@ -101,7 +101,7 @@ public class BedNuker extends Module {
 
         setTag(swap.get() ? "Swap" : "Vanilla");
 
-        if (Moonlight.INSTANCE.getModuleManager().getModule(Scaffold.class).isEnabled() && Moonlight.INSTANCE.getModuleManager().getModule(Scaffold.class).data == null && mc.thePlayer.getHeldItem().getItem() instanceof ItemBlock) {
+        if (Client.INSTANCE.getModuleManager().getModule(Scaffold.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Scaffold.class).data == null && mc.thePlayer.getHeldItem().getItem() instanceof ItemBlock) {
             reset(true);
             return;
         }

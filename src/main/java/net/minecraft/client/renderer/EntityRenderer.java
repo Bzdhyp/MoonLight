@@ -23,8 +23,8 @@ import wtf.moonlight.module.impl.movement.Speed;
 import wtf.moonlight.module.impl.visual.AspectRatio;
 import wtf.moonlight.module.impl.visual.Atmosphere;
 import wtf.moonlight.module.impl.visual.Camera;
-import wtf.moonlight.module.impl.visual.FreeLook;
-import wtf.moonlight.gui.mainmenu.GuiMainMenu;
+import wtf.moonlight.module.impl.misc.FreeLook;
+import wtf.moonlight.gui.main.GuiMainMenu;
 import net.minecraft.client.gui.MapItemRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.particle.EffectRenderer;
@@ -101,7 +101,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjglx.opengl.GLContext;
 import org.lwjglx.util.glu.Project;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.utils.render.shader.impl.Sky;
 
@@ -417,7 +417,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
 
             MouseOverEvent mouseOverEvent = new MouseOverEvent(i);
-            Moonlight.INSTANCE.getEventManager().call(mouseOverEvent);
+            Client.INSTANCE.getEventManager().call(mouseOverEvent);
 
             i = mouseOverEvent.getRange();
 
@@ -596,7 +596,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
     {
         if (this.mc.getRenderViewEntity() instanceof EntityLivingBase entitylivingbase)
         {
-            if (Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).setting.isEnabled("No Hurt Cam"))
+            if (Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Camera.class).setting.isEnabled("No Hurt Cam"))
                 return;
 
             float f = (float)entitylivingbase.hurtTime - partialTicks;
@@ -622,8 +622,8 @@ public class EntityRenderer implements IResourceManagerReloadListener
     }
 
     private void setupViewBobbing(float partialTicks) {
-        if (Moonlight.INSTANCE.getModuleManager().getModule(Speed.class).isEnabled() &&
-                Moonlight.INSTANCE.getModuleManager().getModule(Speed.class).noBob.get())
+        if (Client.INSTANCE.getModuleManager().getModule(Speed.class).isEnabled() &&
+                Client.INSTANCE.getModuleManager().getModule(Speed.class).noBob.get())
             return;
 
         if (this.mc.getRenderViewEntity() instanceof EntityPlayer entityplayer) {
@@ -645,8 +645,8 @@ public class EntityRenderer implements IResourceManagerReloadListener
     private void orientCamera(float partialTicks)
     {
         Entity entity = this.mc.getRenderViewEntity();
-        Camera camera = Moonlight.INSTANCE.getModuleManager().getModule(Camera.class);
-        FreeLook freeLook = Moonlight.INSTANCE.getModuleManager().getModule(FreeLook.class);
+        Camera camera = Client.INSTANCE.getModuleManager().getModule(Camera.class);
+        FreeLook freeLook = Client.INSTANCE.getModuleManager().getModule(FreeLook.class);
         float f = entity.getEyeHeight();
         double d0 = entity.prevPosX + (entity.posX - entity.prevPosX) * (double)partialTicks;
         double d1 = entity.prevPosY + (entity.posY - entity.prevPosY) * (double)partialTicks + (double)f;
@@ -683,7 +683,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         }
         else if (this.mc.gameSettings.thirdPersonView > 0)
         {
-            double d3 = Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled()?Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).cameraDistance.getValue():4.0;
+            double d3 = Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled()? Client.INSTANCE.getModuleManager().getModule(Camera.class).cameraDistance.getValue():4.0;
 
 
             if (this.mc.gameSettings.debugCamEnable)
@@ -839,7 +839,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             GlStateManager.scale(this.cameraZoom, this.cameraZoom, 1.0D);
         }
 
-        float aspect = Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.getValue() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
+        float aspect = Client.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Client.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.getValue() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
         Project.gluPerspective(this.getFOVModifier(partialTicks, true), aspect, 0.05F, this.clipDistance);
         GlStateManager.matrixMode(5888);
         GlStateManager.loadIdentity();
@@ -851,7 +851,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
         this.hurtCameraEffect(partialTicks);
 
-        if (this.mc.gameSettings.viewBobbing && !Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).canMinimalBobbing()) {
+        if (this.mc.gameSettings.viewBobbing && !Client.INSTANCE.getModuleManager().getModule(Camera.class).canMinimalBobbing()) {
             this.setupViewBobbing(partialTicks);
         }
 
@@ -924,7 +924,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 Shaders.applyHandDepth();
             }
 
-            float aspect = Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.getValue() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
+            float aspect = Client.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Client.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.getValue() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
             Project.gluPerspective(this.getFOVModifier(p_renderHand_1_, false), aspect, 0.05F, this.farPlaneDistance * 2.0F);
             GlStateManager.matrixMode(5888);
             GlStateManager.loadIdentity();
@@ -1171,7 +1171,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                     int k = (int)(f8 * 255.0F);
                     int l = (int)(f9 * 255.0F);
                     int i1 = (int)(f10 * 255.0F);
-                    Atmosphere atmosphere = Moonlight.INSTANCE.getModuleManager().getModule(Atmosphere.class);
+                    Atmosphere atmosphere = Client.INSTANCE.getModuleManager().getModule(Atmosphere.class);
                     this.lightmapColors[i] = atmosphere.isEnabled() && atmosphere.worldColor.get() ? atmosphere.worldColorRGB.getValue().getRGB() : j << 24 | k << 16 | l << 8 | i1;
                 }
 
@@ -1290,8 +1290,8 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 if (!this.mc.gameSettings.hideGUI || this.mc.currentScreen != null)
                 {
 
-                    if (Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).setting.isEnabled("World Bloom")) {
-                        Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).drawWorldBloom();
+                    if (Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Camera.class).setting.isEnabled("World Bloom")) {
+                        Client.INSTANCE.getModuleManager().getModule(Camera.class).drawWorldBloom();
                     }
 
                     GlStateManager.alphaFunc(516, 0.1F);
@@ -1521,24 +1521,24 @@ public class EntityRenderer implements IResourceManagerReloadListener
             icamera.setPosition(d0, d1, d2);
         }
 
-        if (Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).setting.isEnabled("Shader Sky")){
-            Sky.draw(Moonlight.INSTANCE.getStartTime());
+        if (Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Camera.class).setting.isEnabled("Shader Sky")){
+            Sky.draw(Client.INSTANCE.getStartTime());
         }
 
         if ((Config.isSkyEnabled() || Config.isSunMoonEnabled() || Config.isStarsEnabled()) && !Shaders.isShadowPass)
         {
 
             this.setupFog(-1, partialTicks);
-            if (Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && !Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).setting.isEnabled("Shader Sky") || !Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled()) {
+            if (Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && !Client.INSTANCE.getModuleManager().getModule(Camera.class).setting.isEnabled("Shader Sky") || !Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled()) {
                 this.mc.mcProfiler.endStartSection("sky");
             }
             GlStateManager.matrixMode(5889);
             GlStateManager.loadIdentity();
-            float aspect = Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.getValue() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
+            float aspect = Client.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Client.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.getValue() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
             Project.gluPerspective(this.getFOVModifier(partialTicks, true), aspect ,0.05F, this.clipDistance);
             GlStateManager.matrixMode(5888);
 
-            if (Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && !Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).setting.isEnabled("Shader Sky") || !Moonlight.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled()) {
+            if (Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && !Client.INSTANCE.getModuleManager().getModule(Camera.class).setting.isEnabled("Shader Sky") || !Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled()) {
 
                 if (flag) {
                     Shaders.beginSky();
@@ -1824,7 +1824,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
         this.mc.mcProfiler.endStartSection("hand");
 
-        Moonlight.INSTANCE.getEventManager().call(new Render3DEvent(partialTicks,new ScaledResolution(mc)));
+        Client.INSTANCE.getEventManager().call(new Render3DEvent(partialTicks,new ScaledResolution(mc)));
 
         if (this.renderHand && !Shaders.isShadowPass)
         {
@@ -1859,7 +1859,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         if (this.mc.gameSettings.renderDistanceChunks >= 4 && !Config.isCloudsOff() && Shaders.shouldRenderClouds(this.mc.gameSettings))
         {
 
-            float aspect = Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Moonlight.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.getValue() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
+            float aspect = Client.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Client.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.getValue() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
             this.mc.mcProfiler.endStartSection("clouds");
             GlStateManager.matrixMode(5889);
             GlStateManager.loadIdentity();
@@ -2429,7 +2429,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             }
             else
             {
-                Atmosphere atmosphere = Moonlight.INSTANCE.getModuleManager().getModule(Atmosphere.class);
+                Atmosphere atmosphere = Client.INSTANCE.getModuleManager().getModule(Atmosphere.class);
                 boolean isWorldFogEnabled = atmosphere.isEnabled() && atmosphere.worldFog.get();
                 float fogStartDistance = isWorldFogEnabled ? atmosphere.worldFogDistance.getValue() : Config.getFogStart();
                 GlStateManager.setFogStart(f3 * fogStartDistance);
@@ -2461,7 +2461,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             }
         }
 
-        Atmosphere atmosphere = Moonlight.INSTANCE.getModuleManager().getModule(Atmosphere.class);
+        Atmosphere atmosphere = Client.INSTANCE.getModuleManager().getModule(Atmosphere.class);
         if(atmosphere.isEnabled() && atmosphere.worldFog.get()){
             fogColorRed = (float) atmosphere.worldFogRGB.getValue().getRed() / 255;
             fogColorGreen = (float) atmosphere.worldFogRGB.getValue().getGreen() / 255;

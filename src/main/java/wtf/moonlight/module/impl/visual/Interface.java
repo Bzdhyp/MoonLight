@@ -41,7 +41,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.misc.TickEvent;
 import wtf.moonlight.events.misc.WorldEvent;
@@ -86,50 +86,34 @@ public class Interface extends Module {
     public final MultiBoolValue elements = new MultiBoolValue("Elements", Arrays.asList(
             new BoolValue("Watermark",true),
             new BoolValue("Island",true),
-            new BoolValue("Module List",true),
-            new BoolValue("Armor",true),
-            new BoolValue("Info",true),
             new BoolValue("Health",true),
+            new BoolValue("Arraylist",true),
+            new BoolValue("Key Bind", true),
             new BoolValue("Potion HUD",true),
             new BoolValue("Target HUD",true),
-            new BoolValue("Inventory",true),
-            new BoolValue("Notification",true),
-            new BoolValue("Pointer", true),
-            new BoolValue("Session Info",true),
-            new BoolValue("Key Bind", true),
-            new BoolValue("Version Info", true),
-            new BoolValue("Radar", true)
-    ), this);
+            new BoolValue("Notification",true)), this);
 
-    public final BoolValue cFont = new BoolValue("C Fonts",true,this, () -> elements.isEnabled("Module List"));
+    public final BoolValue cFont = new BoolValue("C Fonts",true,this, () -> elements.isEnabled("Arraylist"));
     public final ListValue fontMode = new ListValue("C Fonts Mode", new String[]{"Bold","Semi Bold","Medium","Regular","Tahoma", "SFUI"}, "Semi Bold", this,() -> cFont.canDisplay() && cFont.get());
     public final SliderValue fontSize = new SliderValue("Font Size",15,10,25,this,cFont::get);
-    public final SliderValue animSpeed = new SliderValue("anim Speed", 200, 100, 400, 25, this, () -> elements.isEnabled("Module List"));
+    public final SliderValue animSpeed = new SliderValue("anim Speed", 200, 100, 400, 25, this, () -> elements.isEnabled("Arraylist"));
     public final ListValue watemarkMode = new ListValue("Watermark Mode", new String[]{"Text","Styles","Styles 2","Rect","Nursultan","Exhi","Exhi 2","Exhi 3","Nursultan 2","NeverLose","Novo","Novo 2","Novo 3","OneTap"}, "Text", this,() -> elements.isEnabled("Watermark"));
-    public final ListValue animation = new ListValue("Animation", new String[]{"ScaleIn", "MoveIn","Slide In"}, "ScaleIn", this, () -> elements.isEnabled("Module List"));
-    public final SliderValue textHeight = new SliderValue("Text Height", 2, 0, 10, this, () -> elements.isEnabled("Module List"));
-    public final ListValue tags = new ListValue("Suffix", new String[]{"None", "Simple", "Bracket", "Dash"}, "None", this, () -> elements.isEnabled("Module List"));
-    public final BoolValue line = new BoolValue("Line",true,this, () -> elements.isEnabled("Module List"));
+    public final ListValue animation = new ListValue("Animation", new String[]{"ScaleIn", "MoveIn","Slide In"}, "ScaleIn", this, () -> elements.isEnabled("Arraylist"));
+    public final SliderValue textHeight = new SliderValue("Text Height", 2, 0, 10, this, () -> elements.isEnabled("Arraylist"));
+    public final ListValue tags = new ListValue("Suffix", new String[]{"None", "Simple", "Bracket", "Dash"}, "None", this, () -> elements.isEnabled("Arraylist"));
+    public final BoolValue line = new BoolValue("Line",true,this, () -> elements.isEnabled("Arraylist"));
     public final BoolValue outLine = new BoolValue("Outline",true,this, () -> line.canDisplay() && line.get());
-    public final BoolValue armorBg = new BoolValue("Armor Background",true,this, () -> elements.isEnabled("Armor"));
-    public final BoolValue armorEnchanted = new BoolValue("Armor Enchanted",true,this, () -> elements.isEnabled("Armor"));
-    public final BoolValue armorInfo = new BoolValue("Armor Info",true,this, () -> elements.isEnabled("Armor"));
-    public final ListValue infoMode = new ListValue("Info Mode", new String[]{"Exhi", "Exhi 2", "Moon", "Moon 2","Tenacity", "Astolfo"}, "Default", this,() -> elements.isEnabled("Info"));
-    public final ListValue versionMode = new ListValue("Version Mode", new String[]{"Default", "Exhi"}, "Default",this,() -> elements.isEnabled("Version Info"));
     public final ListValue potionHudMode = new ListValue("Potion Mode", new String[]{"Default","Nursultan","Exhi","Moon","Sexy","Type 1","NeverLose","Mod"}, "Default", this,() -> elements.isEnabled("Potion HUD"));
-    public final ListValue targetHudMode = new ListValue("TargetHUD Mode", new String[]{"Astolfo", "Type 1", "Type 2", "Type 3","Felix","Exhi","Adjust","Moon","Augustus","New","Novo 1","Novo 2","Novo 3","Novo 4","Novo 5","Akrien","Innominate"}, "Astolfo", this,() -> elements.isEnabled("Target HUD"));
+    public final ListValue targetHudMode = new ListValue("TargetHUD Mode", new String[]{"Astolfo", "Type 1", "Type 2", "Type 3", "Type 4", "Felix","Exhi","Adjust","Moon","Augustus","New","Novo 1","Novo 2","Novo 3","Novo 4","Novo 5","Akrien","Innominate"}, "Astolfo", this,() -> elements.isEnabled("Target HUD"));
     public final BoolValue targetHudParticle = new BoolValue("TargetHUD Particle",true,this,() -> elements.isEnabled("Target HUD"));
     public final ListValue notificationMode = new ListValue("Notification Mode", new String[]{"Default", "Test","Type 2","Type 3","Type 4","Type 5", "Test2","Exhi"}, "Default", this,() -> elements.isEnabled("Notification"));
     public final ListValue keyBindMode = new ListValue("Key Bind Mode", new String[]{"Type 1"}, "Type 1", this,() -> elements.isEnabled("Key Bind"));
-    public final ListValue sessionInfoMode = new ListValue("Session Info Mode", new String[]{"Default","Exhi","Rise","Moon","Opai","Novo","Novo 2"}, "Default", this,() -> elements.isEnabled("Session Info"));
     public final BoolValue centerNotif = new BoolValue("Center Notification",true,this,() -> notificationMode.is("Exhi"));
-    public final SliderValue radarSize = new SliderValue("Radar Size",70, 25, 200,this,() -> elements.isEnabled("Radar"));
-    public final ListValue radarMode = new ListValue("Radar Mode", new String[]{"Default", "Exhi", "Astolfo"}, "Default", this,() -> elements.isEnabled("Radar"));
     public final ListValue color = new ListValue("Color Setting", new String[]{"Custom", "Rainbow", "Dynamic", "Fade","Astolfo","NeverLose"}, "NeverLose", this);
     private final ColorValue mainColor = new ColorValue("Main Color", new Color(128, 128, 255), this,() -> !color.is("NeverLose"));
     private final ColorValue secondColor = new ColorValue("Second Color", new Color(128, 255, 255), this, () -> color.is("Fade"));
     public final SliderValue fadeSpeed = new SliderValue("Fade Speed", 1, 1, 10, 1, this, () -> color.is("Dynamic") || color.is("Fade"));
-    public final BoolValue background = new BoolValue("Background",true,this, () -> elements.isEnabled("Module List"));
+    public final BoolValue background = new BoolValue("Background",true,this, () -> elements.isEnabled("Arraylist"));
     public final ListValue bgColor = new ListValue("Background Color", new String[]{"Dark", "Synced","Custom","NeverLose"}, "Synced", this,background::get);
     private final ColorValue bgCustomColor = new ColorValue("Background Custom Color", new Color(32, 32, 64), this,() -> bgColor.canDisplay() && bgColor.is("Custom"));
     private final SliderValue bgAlpha = new SliderValue("Background Alpha",100,1,255,1,this);
@@ -147,7 +131,6 @@ public class Interface extends Module {
     public final BoolValue wavey = new BoolValue("Wavey Cape", true, this);
     public final BoolValue enchanted = new BoolValue("Enchanted", true, this, () -> cape.get() && !wavey.get());
     private final DecimalFormat bpsFormat = new DecimalFormat("0.00");
-    private final DecimalFormat xyzFormat = new DecimalFormat("0");
     private final DecimalFormat fpsFormat = new DecimalFormat("0");
     private final DecimalFormat healthFormat = new DecimalFormat("0.#", new DecimalFormatSymbols(Locale.ENGLISH));
     private final DateFormat dateFormat = new SimpleDateFormat("hh:mm");
@@ -161,7 +144,6 @@ public class Interface extends Module {
 
     @EventTarget
     public void onRender2D(Render2DEvent event) {
-
         if (elements.isEnabled("Island")) {
             IslandRenderer.INSTANCE.render(event.scaledResolution(),false);
         }
@@ -175,7 +157,7 @@ public class Interface extends Module {
                 case "Styles": {
                     String dateString = dateFormat.format(new Date());
 
-                    String name = " | " + Moonlight.INSTANCE.getVersion() +
+                    String name = " | " + Client.INSTANCE.getVersion() +
                             EnumChatFormatting.GRAY + " | " + EnumChatFormatting.WHITE + dateString +
                             EnumChatFormatting.GRAY + " | " + EnumChatFormatting.WHITE + mc.thePlayer.getName() +
                             EnumChatFormatting.GRAY + " | " + EnumChatFormatting.WHITE + mc.getCurrentServerData().serverIP;
@@ -416,7 +398,7 @@ public class Interface extends Module {
                 case "OneTap": {
                     String dateString3 = dateFormat2.format(new Date());
                     String serverip = mc.isSingleplayer() ? "localhost:25565" : !mc.getCurrentServerData().serverIP.contains(":") ? mc.getCurrentServerData().serverIP + ":25565" : mc.getCurrentServerData().serverIP;
-                    String onetapinfo = "moonlight | " + Moonlight.INSTANCE.getDiscordRP().getName() + " | " + serverip + " | " + "delay: " + mc.getNetHandler().getPlayerInfo(mc.thePlayer.getUniqueID()).getResponseTime() + "ms | " + dateString3;
+                    String onetapinfo = "moonlight | " + Client.INSTANCE.getDiscordRP().getName() + " | " + serverip + " | " + "delay: " + mc.getNetHandler().getPlayerInfo(mc.thePlayer.getUniqueID()).getResponseTime() + "ms | " + dateString3;
 
                     RenderUtils.drawRect(5, 5, Fonts.interSemiBold.get(14).getStringWidth(onetapinfo) + 4, 12.5f, bgColor());
                     RenderUtils.drawRoundedRect(5, 5, Fonts.interSemiBold.get(14).getStringWidth(onetapinfo) + 4, 2f, 1, color(0));
@@ -435,79 +417,6 @@ public class Interface extends Module {
                 }
                 break;
             }
-        }
-
-        if (infoMode.canDisplay()) {
-            switch (infoMode.getValue()) {
-                case "Exhi":
-                    float textY = (event.scaledResolution().getScaledHeight() - 9) + (mc.currentScreen instanceof GuiChat ? -14.0f : -3.0f);
-                    mc.fontRendererObj.drawStringWithShadow("XYZ: " +  EnumChatFormatting.WHITE +
-                                    xyzFormat.format(mc.thePlayer.posX) + " " +
-                                    xyzFormat.format(mc.thePlayer.posY) + " " +
-                                    xyzFormat.format(mc.thePlayer.posZ) + " " + EnumChatFormatting.RESET + "BPS: " + EnumChatFormatting.WHITE + this.bpsFormat.format(MovementUtils.getBPS())
-                            , 2, textY, color(0));
-                    break;
-                case "Exhi 2":
-                    textY = (event.scaledResolution().getScaledHeight() - 9) + (mc.currentScreen instanceof GuiChat ? -14.0f : -3.0f);
-                    mc.fontRendererObj.drawStringWithShadow("§7XYZ: " +  EnumChatFormatting.WHITE +
-                                    xyzFormat.format(mc.thePlayer.posX) + " " +
-                                    xyzFormat.format(mc.thePlayer.posY) + " " +
-                                    xyzFormat.format(mc.thePlayer.posZ) + " " + "§7b/s: " + EnumChatFormatting.WHITE + this.bpsFormat.format(MovementUtils.getBPS())
-                            , 2, textY + 3f, -1);
-                    break;    
-                case "Moon":
-                    textY = (event.scaledResolution().getScaledHeight() - 9) + (mc.currentScreen instanceof GuiChat ? -14.0f : -3.0f);
-                    mc.fontRendererObj.drawStringWithShadow("FPS: " + EnumChatFormatting.WHITE + Minecraft.getDebugFPS(), 2, textY, color(0));
-                    break;
-                case "Moon 2":
-                    textY = (event.scaledResolution().getScaledHeight() - 6.5F) + (mc.currentScreen instanceof GuiChat ? -14.0f : -3.0f);
-                    Fonts.interSemiBold.get(19).drawStringWithShadow("FPS: " + EnumChatFormatting.WHITE + Minecraft.getDebugFPS(), 1.5F, textY, color(0));
-                    break;
-                case "Astolfo":
-                    float xyz = (event.scaledResolution().getScaledHeight() - 8);
-                    float bps = (event.scaledResolution().getScaledHeight() - 16.5f);
-                    float fps = (event.scaledResolution().getScaledHeight() - 24);
-
-                    Fonts.sfui.get(18).drawStringWithShadow(xyzFormat.format(mc.thePlayer.posX) + ", " + xyzFormat.format(mc.thePlayer.posY) + ", " + xyzFormat.format(mc.thePlayer.posZ), 2, xyz, -1 );
-                    Fonts.sfui.get(18).drawStringWithShadow(bpsFormat.format(MovementUtils.getBPS()) + " blocks/sec", 2, bps, -1);
-                    Fonts.sfui.get(18).drawStringWithShadow("FPS: " + fpsFormat.format(Minecraft.getDebugFPS()), 2, fps, -1);
-                    break;
-                case "Tenacity":
-                    float XYZText = (event.scaledResolution().getScaledHeight() - 9);
-                    float SpeedText = (event.scaledResolution().getScaledHeight() - 18);
-                    float FPSText = (event.scaledResolution().getScaledHeight() - 27);
-
-                    Fonts.psBold.get(19).drawStringWithShadow("XYZ: ", 2, XYZText, color(0));
-                    Fonts.psRegular.get(19).drawStringWithShadow(EnumChatFormatting.WHITE + xyzFormat.format(mc.thePlayer.posX) + " " + xyzFormat.format(mc.thePlayer.posY) + " " + xyzFormat.format(mc.thePlayer.posZ), 26, XYZText, color(0));
-                    Fonts.psBold.get(19).drawStringWithShadow("Speed:", 2, SpeedText, color(0));
-                    Fonts.psRegular.get(19).drawStringWithShadow(EnumChatFormatting.WHITE + bpsFormat.format(MovementUtils.getBPS()), 35, SpeedText, color(0));
-                    Fonts.psBold.get(19).drawStringWithShadow("FPS:", 2, FPSText, color(0));
-                    Fonts.psRegular.get(19).drawStringWithShadow(EnumChatFormatting.WHITE + fpsFormat.format(Minecraft.getDebugFPS()), 24, FPSText, color(0));
-            }
-        }
-        if (versionMode.canDisplay()) {
-            switch (versionMode.getValue()) {
-                case "Default":
-                    float textY = (event.scaledResolution().getScaledHeight() - 9) + (mc.currentScreen instanceof GuiChat ? -14.0f : -3.0f);
-
-                    Fonts.interMedium.get(17).drawStringWithShadow(EnumChatFormatting.WHITE + Moonlight.INSTANCE.getVersion() + " §7- " + EnumChatFormatting.WHITE + Moonlight.INSTANCE.getDiscordRP().getName() + " §7- " + EnumChatFormatting.WHITE + "1.0", (float) event.scaledResolution().getScaledWidth() - Fonts.interMedium.get(17).getStringWidth(Moonlight.INSTANCE.getVersion() + " - "  + Moonlight.INSTANCE.getDiscordRP().getName() + " §7- " + EnumChatFormatting.WHITE + "1.0") - 2.0f, textY + 3.5, color (0));
-                    break;
-                case "Exhi":
-                    textY = (event.scaledResolution().getScaledHeight() - 9) + (mc.currentScreen instanceof GuiChat ? -15.0f : -3.0f);
-
-                    mc.fontRendererObj.drawStringWithShadow(
-                            GRAY + INSTANCE.getVersion() +  " Build" + " - §f§l112519§r §7- " + INSTANCE.getDiscordRP().getName().replace(".", "").replace("_", "").replace("eoniann", "Eonian"),
-                            (float) event.scaledResolution().getScaledWidth() - mc.fontRendererObj.getStringWidth(
-                            GRAY + INSTANCE.getVersion() +  " Build" + " - §f§l112519§r §7- " + INSTANCE.getDiscordRP().getName().replace(".", "").replace("_", "").replace("eoniann", "Eonian")) - 1.0f,
-                            textY + 3.5f,
-                            color(0));
-                break;    
-            }
-        }
-
-        if (elements.isEnabled("Armor")) {
-            boolean onWater = mc.thePlayer.isEntityAlive() && mc.thePlayer.isInsideOfMaterial(Material.water);
-            RenderUtils.renderItemStack(mc.thePlayer, (float) event.scaledResolution().getScaledWidth() / 2 - 4, event.scaledResolution().getScaledHeight() - (onWater ? 65 : 55) + (mc.thePlayer.capabilities.isCreativeMode ? 14 : 0), 1, armorEnchanted.get(), 0.5f,armorBg.get(),armorInfo.get());
         }
 
         if (elements.isEnabled("Potion HUD") && potionHudMode.is("Exhi")) {
@@ -533,8 +442,8 @@ public class Interface extends Module {
                     type = type + " §7" + Potion.getDurationString(potionEffect);
                 }
                 GlStateManager.pushMatrix();
-                mc.fontRendererObj.drawString(potionName, (float) event.scaledResolution().getScaledWidth() - mc.fontRendererObj.getStringWidth(type + potionName) - 1.0f, (event.scaledResolution().getScaledHeight()  - (elements.isEnabled("Version Info") ? 15 : 9)) + y, new Color(potionType.getLiquidColor()).getRGB(), true);
-                mc.fontRendererObj.drawString(type, (float) event.scaledResolution().getScaledWidth() - mc.fontRendererObj.getStringWidth(type) - 1.0f, (event.scaledResolution().getScaledHeight() - (elements.isEnabled("Version Info") ? 15 : 9)) + y, new Color(255, 255, 255).getRGB(), true);
+                mc.fontRendererObj.drawString(potionName, (float) event.scaledResolution().getScaledWidth() - mc.fontRendererObj.getStringWidth(type + potionName) - 1.0f, (event.scaledResolution().getScaledHeight()  - 9) + y, new Color(potionType.getLiquidColor()).getRGB(), true);
+                mc.fontRendererObj.drawString(type, (float) event.scaledResolution().getScaledWidth() - mc.fontRendererObj.getStringWidth(type) - 1.0f, (event.scaledResolution().getScaledHeight() - 9) + y, new Color(255, 255, 255).getRGB(), true);
                 GlStateManager.popMatrix();
                 y -= 9.0f;
             }
@@ -618,12 +527,8 @@ public class Interface extends Module {
             renderHealth();
         }
 
-        if (elements.isEnabled("Session Info") && sessionInfoMode.is("Exhi")) {
-            mc.fontRendererObj.drawStringWithShadow(RenderUtils.sessionTime(), event.scaledResolution().getScaledWidth() / 2.0f - mc.fontRendererObj.getStringWidth(RenderUtils.sessionTime()) / 2.0f,BossStatus.bossName != null && BossStatus.statusBarTime > 0 ? 47 : 30.0f, -1);
-        }
-
         if (elements.isEnabled("Notification")) {
-            Moonlight.INSTANCE.getNotificationManager().publish(new ScaledResolution(mc),false);
+            Client.INSTANCE.getNotificationManager().publish(new ScaledResolution(mc),false);
         }
     }
 
@@ -642,7 +547,7 @@ public class Interface extends Module {
                 case "Styles":
                     String dateString = dateFormat.format(new Date());
 
-                    String name = " | " + Moonlight.INSTANCE.getVersion() +
+                    String name = " | " + Client.INSTANCE.getVersion() +
                             EnumChatFormatting.GRAY + " | " + EnumChatFormatting.WHITE + dateString +
                             EnumChatFormatting.GRAY + " | " + EnumChatFormatting.WHITE + mc.thePlayer.getName() +
                             EnumChatFormatting.GRAY + " | " + EnumChatFormatting.WHITE + mc.getCurrentServerData().serverIP;
@@ -715,7 +620,7 @@ public class Interface extends Module {
         }
 
         if (elements.isEnabled("Notification")) {
-            Moonlight.INSTANCE.getNotificationManager().publish(new ScaledResolution(mc),true);
+            Client.INSTANCE.getNotificationManager().publish(new ScaledResolution(mc),true);
         }
     }
 
@@ -933,14 +838,14 @@ public class Interface extends Module {
                 drawRect(l1 - 2, k, l, k + mc.fontRendererObj.FONT_HEIGHT, 1342177280);
 
             final Matcher linkMatcher = LINK_PATTERN.matcher(s1);
-            if(Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && linkMatcher.find()) {
+            if(Client.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && linkMatcher.find()) {
                 s1 = "MoonLight@github";
-                mc.fontRendererObj.drawGradientWithShadow(s1, l1, k,(index) -> new Color(Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).color(index)));
+                mc.fontRendererObj.drawGradientWithShadow(s1, l1, k,(index) -> new Color(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(index)));
             } else {
                 mc.fontRendererObj.drawString(s1, l1, k, 553648127, true);
             }
 
-            if(!(Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).
+            if(!(Client.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Interface.class).
                     hideScoreRed.get()))
                 mc.fontRendererObj.drawString(s2, l - mc.fontRendererObj.getStringWidth(s2), k, 553648127);
 
@@ -973,7 +878,7 @@ public class Interface extends Module {
 
     public FontRenderer getFr() {
 
-        FontRenderer fr = switch (fontMode.getValue()) {
+        return switch (fontMode.getValue()) {
             case "Bold" -> Fonts.interBold.get(fontSize.getValue());
             case "Semi Bold" -> Fonts.interSemiBold.get(fontSize.getValue());
             case "Medium" -> Fonts.interMedium.get(fontSize.getValue());
@@ -982,8 +887,6 @@ public class Interface extends Module {
             case "SFUI" -> Fonts.sfui.get(fontSize.getValue());
             default -> null;
         };
-
-        return fr;
     }
 
     public Color getMainColor() {

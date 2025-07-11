@@ -34,10 +34,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.*;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.combat.AntiBot;
 import wtf.moonlight.module.impl.combat.KillAura;
-import wtf.moonlight.utils.InstanceAccess;
+import wtf.moonlight.utils.misc.InstanceAccess;
 import com.google.common.base.Predicate;
 
 import java.util.ArrayList;
@@ -221,7 +221,7 @@ public class PlayerUtils implements InstanceAccess {
             if (isInTeam(entity))
                 continue;
 
-            if (Moonlight.INSTANCE.getModuleManager().getModule(AntiBot.class).isEnabled() && Moonlight.INSTANCE.getModuleManager().getModule(AntiBot.class).bots.contains(entity))
+            if (Client.INSTANCE.getModuleManager().getModule(AntiBot.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(AntiBot.class).bots.contains(entity))
                 continue;
 
             float tempDistance = mc.thePlayer.getDistanceToEntity(entity);

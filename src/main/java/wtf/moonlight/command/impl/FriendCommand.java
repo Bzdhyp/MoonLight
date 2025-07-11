@@ -10,12 +10,12 @@
  */
 package wtf.moonlight.command.impl;
 
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.command.Command;
 import wtf.moonlight.command.CommandExecutionException;
-import wtf.moonlight.utils.misc.DebugUtils;
+import wtf.moonlight.utils.DebugUtils;
 
-import static wtf.moonlight.utils.InstanceAccess.mc;
+import static wtf.moonlight.utils.misc.InstanceAccess.mc;
 
 public class FriendCommand extends Command {
     @Override
@@ -34,12 +34,12 @@ public class FriendCommand extends Command {
             switch (lowerCase) {
                 case "clear": {
                     DebugUtils.sendMessage("Cleared all friended players");
-                    Moonlight.INSTANCE.getFriendManager().getFriends().clear();
+                    Client.INSTANCE.getFriendManager().getFriends().clear();
                     break;
                 }
                 case "list": {
-                    if (!Moonlight.INSTANCE.getFriendManager().getFriends().isEmpty()) {
-                        DebugUtils.sendMessage("Friend§7[§f" + Moonlight.INSTANCE.getFriendManager().getFriends().size() + "§7]§f : §a" + Moonlight.INSTANCE.getFriendManager().getFriendsName());
+                    if (!Client.INSTANCE.getFriendManager().getFriends().isEmpty()) {
+                        DebugUtils.sendMessage("Friend§7[§f" + Client.INSTANCE.getFriendManager().getFriends().size() + "§7]§f : §a" + Client.INSTANCE.getFriendManager().getFriendsName());
                         break;
                     }
                     DebugUtils.sendMessage("The friend list is empty");
@@ -58,12 +58,12 @@ public class FriendCommand extends Command {
             switch (lowerCase2) {
                 case "add": {
                     DebugUtils.sendMessage("§b" + arguments[2] + " §7has been §2friended");
-                    Moonlight.INSTANCE.getFriendManager().add(arguments[2]);
+                    Client.INSTANCE.getFriendManager().add(arguments[2]);
                     break;
                 }
                 case "remove": {
                     DebugUtils.sendMessage("§b" + arguments[2] + " §7has been §2unfriended");
-                    Moonlight.INSTANCE.getFriendManager().remove(arguments[2]);
+                    Client.INSTANCE.getFriendManager().remove(arguments[2]);
                     break;
                 }
             }

@@ -32,9 +32,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.events.packet.PacketEvent;
-import wtf.moonlight.module.impl.exploit.Disabler;
+import wtf.moonlight.module.impl.misc.Disabler;
 
 import javax.crypto.SecretKey;
 import java.net.InetAddress;
@@ -135,7 +135,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
     public void sendPacket(Packet packetIn) {
 
         PacketEvent event = new PacketEvent(packetIn, PacketEvent.State.OUTGOING);
-        if (direction == CLIENTBOUND) Moonlight.INSTANCE.getEventManager().call(event);
+        if (direction == CLIENTBOUND) Client.INSTANCE.getEventManager().call(event);
 
         if(event.isCancelled())
             return;
@@ -444,14 +444,14 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
         if (this.channel.isOpen()) {
             Packet<INetHandler> p = (Packet<INetHandler>) p_channelRead0_2_;
             try {
-                if (Moonlight.INSTANCE.getModuleManager().getModule(Disabler.class).isEnabled() && Moonlight.INSTANCE.getModuleManager().getModule(Disabler.class).options.isEnabled("GrimAC") && Moonlight.INSTANCE.getModuleManager().getModule(Disabler.class).grim.isEnabled("Post") && Moonlight.INSTANCE.getModuleManager().getModule(Disabler.class).getPost() && Moonlight.INSTANCE.getModuleManager().getModule(Disabler.class).postDelay(p)) {
+                if (Client.INSTANCE.getModuleManager().getModule(Disabler.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Disabler.class).options.isEnabled("GrimAC") && Client.INSTANCE.getModuleManager().getModule(Disabler.class).grim.isEnabled("Post") && Client.INSTANCE.getModuleManager().getModule(Disabler.class).getPost() && Client.INSTANCE.getModuleManager().getModule(Disabler.class).postDelay(p)) {
                     Minecraft.getMinecraft().addScheduledTask(() -> {
-                        Moonlight.INSTANCE.getModuleManager().getModule(Disabler.class).getStoredPackets().add(p);
+                        Client.INSTANCE.getModuleManager().getModule(Disabler.class).getStoredPackets().add(p);
                     });
                 } else {
 
                     PacketEvent event = new PacketEvent(p_channelRead0_2_, PacketEvent.State.INCOMING);
-                    Moonlight.INSTANCE.getEventManager().call(event);
+                    Client.INSTANCE.getEventManager().call(event);
 
                     if (event.isCancelled()) {
                         return;

@@ -10,11 +10,11 @@
  */
 package wtf.moonlight.command;
 
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.misc.SendMessageEvent;
 import wtf.moonlight.command.impl.*;
-import wtf.moonlight.utils.misc.DebugUtils;
+import wtf.moonlight.utils.DebugUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,12 +27,12 @@ public final class CommandManager {
     public CommandManager() {
         addCommands(new HelpCommand(), new ToggleCommand(), new BindCommand(), new HideCommand(), new FriendCommand(), new ConfigCommand(),new OnlineConfigCommand());
 
-        Moonlight.INSTANCE.getModuleManager().getModules().forEach(module -> {
+        Client.INSTANCE.getModuleManager().getModules().forEach(module -> {
             if(!module.getValues().isEmpty())
                 cmd.add(new ModuleCommand(module,module.getValues()));
         });
 
-        Moonlight.INSTANCE.getEventManager().register(this);
+        Client.INSTANCE.getEventManager().register(this);
     }
 
     @EventTarget

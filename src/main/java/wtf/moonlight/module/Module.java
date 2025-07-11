@@ -16,11 +16,11 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.network.Packet;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.visual.Interface;
 import wtf.moonlight.module.values.Value;
 import wtf.moonlight.gui.notification.NotificationType;
-import wtf.moonlight.utils.InstanceAccess;
+import wtf.moonlight.utils.misc.InstanceAccess;
 import wtf.moonlight.utils.animations.Translate;
 import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
 import wtf.moonlight.utils.packet.PacketUtils;
@@ -130,7 +130,7 @@ public abstract class Module implements InstanceAccess {
      * @return true if enabled, false otherwise.
      */
     public <M extends Module> boolean isEnabled(Class<M> module) {
-        Module mod = Moonlight.INSTANCE.getModuleManager().getModule(module);
+        Module mod = Client.INSTANCE.getModuleManager().getModule(module);
         return mod != null && mod.isEnabled();
     }
 
@@ -142,7 +142,7 @@ public abstract class Module implements InstanceAccess {
      * @return true if disabled, false otherwise.
      */
     public <M extends Module> boolean isDisabled(Class<M> module) {
-        Module mod = Moonlight.INSTANCE.getModuleManager().getModule(module);
+        Module mod = Client.INSTANCE.getModuleManager().getModule(module);
         return mod == null || mod.isDisabled();
     }
 
@@ -173,9 +173,9 @@ public abstract class Module implements InstanceAccess {
      * Enables the module.
      */
     private void enable() {
-        Moonlight.INSTANCE.getEventManager().register(this);
+        Client.INSTANCE.getEventManager().register(this);
         try {
-            Moonlight.INSTANCE.getNotificationManager().post(NotificationType.OKAY, "Module", getName() + EnumChatFormatting.GREEN + " enabled");
+            Client.INSTANCE.getNotificationManager().post(NotificationType.OKAY, "Module", getName() + EnumChatFormatting.GREEN + " enabled");
             onEnable();
             playClickSound(1.0F);
         } catch (Exception e) {
@@ -187,9 +187,9 @@ public abstract class Module implements InstanceAccess {
      * Disables the module.
      */
     private void disable() {
-        Moonlight.INSTANCE.getEventManager().unregister(this);
+        Client.INSTANCE.getEventManager().unregister(this);
         try {
-            Moonlight.INSTANCE.getNotificationManager().post(NotificationType.WARNING, "Module", getName() + EnumChatFormatting.RED + " disabled");
+            Client.INSTANCE.getNotificationManager().post(NotificationType.WARNING, "Module", getName() + EnumChatFormatting.RED + " disabled");
             onDisable();
             playClickSound(0.8F);
         } catch (Exception e) {
@@ -227,7 +227,7 @@ public abstract class Module implements InstanceAccess {
      * @return The module instance or null if not found.
      */
     public <M extends Module> M getModule(Class<M> clazz) {
-        return Moonlight.INSTANCE.getModuleManager().getModule(clazz);
+        return Client.INSTANCE.getModuleManager().getModule(clazz);
     }
 
     /**

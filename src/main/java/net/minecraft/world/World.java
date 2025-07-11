@@ -54,7 +54,7 @@ import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.WorldInfo;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.movement.NoFluid;
 import wtf.moonlight.module.impl.visual.DashTrail;
 
@@ -1668,7 +1668,7 @@ public abstract class World implements IBlockAccess
                     entityIn.onUpdate();
                     if (entityIn instanceof EntityPlayerSP base) {
                         if (prevPosX != entityIn.posX || prevPosY != entityIn.posY || prevPosZ != entityIn.posZ) {
-                            Moonlight.INSTANCE.getModuleManager().getModule(DashTrail.class).onEntityMove(base, new Vec3(prevPosX, prevPosY, prevPosZ));
+                            Client.INSTANCE.getModuleManager().getModule(DashTrail.class).onEntityMove(base, new Vec3(prevPosX, prevPosY, prevPosZ));
                         }
                     }
                 }
@@ -1878,10 +1878,10 @@ public abstract class World implements IBlockAccess
                         IBlockState iblockstate = this.getBlockState(blockpos$mutableblockpos);
                         Block block = iblockstate.getBlock();
 
-                        if(Moonlight.INSTANCE.getModuleManager().getModule(NoFluid.class).shouldCancel && (block == Blocks.water || block == Blocks.flowing_water)){
+                        if(Client.INSTANCE.getModuleManager().getModule(NoFluid.class).shouldCancel && (block == Blocks.water || block == Blocks.flowing_water)){
                             continue;
                         }
-                        if(Moonlight.INSTANCE.getModuleManager().getModule(NoFluid.class).shouldCancel && (block == Blocks.lava || block == Blocks.flowing_lava)){
+                        if(Client.INSTANCE.getModuleManager().getModule(NoFluid.class).shouldCancel && (block == Blocks.lava || block == Blocks.flowing_lava)){
                             continue;
                         }
 

@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.visual.Interface;
 
 import java.util.Iterator;
@@ -24,11 +24,11 @@ public class LayerCape implements LayerRenderer<AbstractClientPlayer>
 
     public void doRenderLayer(AbstractClientPlayer entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale)
     {
-        if (!entitylivingbaseIn.isInvisible() && (entitylivingbaseIn.hasPlayerInfo() && entitylivingbaseIn.isWearing(EnumPlayerModelParts.CAPE) && entitylivingbaseIn.getLocationCape() != null || entitylivingbaseIn.getName().equals(Minecraft.getMinecraft().getSession().getUsername()) && Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).cape.get()))        {
+        if (!entitylivingbaseIn.isInvisible() && (entitylivingbaseIn.hasPlayerInfo() && entitylivingbaseIn.isWearing(EnumPlayerModelParts.CAPE) && entitylivingbaseIn.getLocationCape() != null || entitylivingbaseIn.getName().equals(Minecraft.getMinecraft().getSession().getUsername()) && Client.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Interface.class).cape.get()))        {
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-            if(entitylivingbaseIn.getName().equals(Minecraft.getMinecraft().getSession().getUsername()) && Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).cape.get()){
-                switch (Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).capeMode.getValue()) {
+            if(entitylivingbaseIn.getName().equals(Minecraft.getMinecraft().getSession().getUsername()) && Client.INSTANCE.getModuleManager().getModule(Interface.class).cape.get()){
+                switch (Client.INSTANCE.getModuleManager().getModule(Interface.class).capeMode.getValue()) {
                     case "Default":
                     this.playerRenderer.bindTexture(new ResourceLocation("moonlight/texture/cape/cape.png"));
                     break;
@@ -86,11 +86,11 @@ public class LayerCape implements LayerRenderer<AbstractClientPlayer>
             GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
             this.playerRenderer.getMainModel().renderCape(0.0625F);
 
-            if(entitylivingbaseIn.getName().equals(Minecraft.getMinecraft().getSession().getUsername()) && Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).cape.get()){
-                switch (Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).capeMode.getValue()) {
+            if(entitylivingbaseIn.getName().equals(Minecraft.getMinecraft().getSession().getUsername()) && Client.INSTANCE.getModuleManager().getModule(Interface.class).cape.get()){
+                switch (Client.INSTANCE.getModuleManager().getModule(Interface.class).capeMode.getValue()) {
                     case "Default":
                     this.playerRenderer.bindTexture(new ResourceLocation("moonlight/texture/cape/overlay.png"));
-                    int rgb = Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).color();
+                    int rgb = Client.INSTANCE.getModuleManager().getModule(Interface.class).color();
                     float alpha = 0.3F;
                     float red = (float) (rgb >> 16 & 255) / 255.0F;
                     float green = (float) (rgb >> 8 & 255) / 255.0F;
@@ -98,7 +98,7 @@ public class LayerCape implements LayerRenderer<AbstractClientPlayer>
                     GL11.glColor4f(red, green, blue, alpha);
                     this.playerRenderer.getMainModel().renderCape(0.0625F);
                     GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                    if (Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).enchanted.get()) {
+                    if (Client.INSTANCE.getModuleManager().getModule(Interface.class).enchanted.get()) {
                         for (Iterator<LayerRenderer<AbstractClientPlayer>> var32 = this.playerRenderer.getLayerRenderers().iterator(); var32.hasNext(); GlStateManager.resetColor()) {
                             LayerRenderer var31 = var32.next();
                             if (var31 instanceof LayerArmorBase) {

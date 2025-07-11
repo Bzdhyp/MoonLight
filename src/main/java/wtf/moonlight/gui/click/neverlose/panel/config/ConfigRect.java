@@ -12,7 +12,7 @@ package wtf.moonlight.gui.click.neverlose.panel.config;
 
 import lombok.Getter;
 import lombok.Setter;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.config.Config;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
@@ -51,7 +51,7 @@ public class ConfigRect extends Component {
         hover.setDirection(MouseUtils.isHovered2(getPosX() + 290,y + 20,60,18,mouseX,mouseY) ? Direction.FORWARDS : Direction.BACKWARDS);
         select.setDirection(selected ? Direction.FORWARDS : Direction.BACKWARDS);
         //render
-        String name = config.getName().replace(".json","") + (Moonlight.INSTANCE.getConfigManager().getCurrentConfig().equals(config.getName()) ? " (Current Config)" : "");
+        String name = config.getName().replace(".json","") + (Client.INSTANCE.getConfigManager().getCurrentConfig().equals(config.getName()) ? " (Current Config)" : "");
         RoundedUtils.drawRoundOutline(getPosX(),y + 10,358,getHeight(),4,0.1f,bgColor,new Color(ColorUtils.interpolateColor2(categoryBgColor, categoryBgColor.brighter().brighter(), (float) select.getOutput())));
         Fonts.interSemiBold.get(17).drawString(name,posX + 8,y + 17,-1);
         //button

@@ -6,13 +6,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.opengl.GL11;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.movement.Scaffold;
 import wtf.moonlight.module.impl.visual.Interface;
 import wtf.moonlight.gui.font.FontRenderer;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.notification.Notification;
-import wtf.moonlight.utils.InstanceAccess;
+import wtf.moonlight.utils.misc.InstanceAccess;
 import wtf.moonlight.utils.animations.advanced.Animation;
 import wtf.moonlight.utils.animations.advanced.ContinualAnimation;
 import wtf.moonlight.utils.animations.advanced.Direction;
@@ -61,10 +61,10 @@ public class IslandRenderer implements InstanceAccess {
             this.title = "";
         }
 
-        if (Moonlight.INSTANCE.getModuleManager().getModule(Scaffold.class).isEnabled() && Moonlight.INSTANCE.getModuleManager().getModule(Scaffold.class).getBlockCount() > 0) {
+        if (Client.INSTANCE.getModuleManager().getModule(Scaffold.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Scaffold.class).getBlockCount() > 0) {
 
             title = "Block Counter";
-            int size = Moonlight.INSTANCE.getModuleManager().getModule(Scaffold.class).getBlockCount();
+            int size = Client.INSTANCE.getModuleManager().getModule(Scaffold.class).getBlockCount();
             description = "Stack Size: " + (size > 64 ? EnumChatFormatting.GREEN : size > 32 ? EnumChatFormatting.YELLOW : EnumChatFormatting.RED) + size;
 
             width = Math.max(medium.getStringWidth(description), largest.getStringWidth(title) + 10) + 10;
@@ -88,9 +88,9 @@ public class IslandRenderer implements InstanceAccess {
 
             GL11.glDisable(GL11.GL_SCISSOR_TEST);
         } else {
-            var notifications = Moonlight.INSTANCE.getNotificationManager().getNotifications();
+            var notifications = Client.INSTANCE.getNotificationManager().getNotifications();
             if (!notifications.isEmpty()) {
-                boolean isExhi = Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).notificationMode.is("Exhi");
+                boolean isExhi = Client.INSTANCE.getModuleManager().getModule(Interface.class).notificationMode.is("Exhi");
                 notifications.removeIf(it -> {
                     var animation = it.getAnimation();
                     animation.setDirection(it.getTimerUtils().hasTimeElapsed((long) it.getTime()) ? Direction.BACKWARDS : Direction.FORWARDS);
@@ -140,7 +140,7 @@ public class IslandRenderer implements InstanceAccess {
                 drawBackgroundAuto(0);
 
                 if(!shader) {
-                    titleFont.drawString(title, animatedX.getOutput() + 5, animatedY.getOutput() + 5, Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).color());
+                    titleFont.drawString(title, animatedX.getOutput() + 5, animatedY.getOutput() + 5, Client.INSTANCE.getModuleManager().getModule(Interface.class).color());
                 }
 
                 GL11.glDisable(GL11.GL_SCISSOR_TEST);
@@ -165,6 +165,6 @@ public class IslandRenderer implements InstanceAccess {
         float renderHeight = ((y - animatedY.getOutput()) * 2) + (identifier == 1 ? 10 : 0);
 
         RenderUtils.scissor(animatedX.getOutput() - 1, animatedY.getOutput() - 1, ((x - animatedX.getOutput()) * 2) + 2, renderHeight + 2);
-        RoundedUtils.drawRound(animatedX.getOutput(), animatedY.getOutput(), (x - animatedX.getOutput()) * 2, renderHeight, 7, new Color(Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).bgColor(),true));
+        RoundedUtils.drawRound(animatedX.getOutput(), animatedY.getOutput(), (x - animatedX.getOutput()) * 2, renderHeight, 7, new Color(Client.INSTANCE.getModuleManager().getModule(Interface.class).bgColor(),true));
     }
 }

@@ -40,7 +40,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjglx.input.Keyboard;
 import org.lwjglx.input.Mouse;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.events.render.RenderGuiEvent;
 
 public abstract class GuiScreen extends Gui implements GuiYesNoCallback
@@ -64,7 +64,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
 
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        Moonlight.INSTANCE.getEventManager().call(RenderGuiEvent.INSTANCE);
+        Client.INSTANCE.getEventManager().call(RenderGuiEvent.INSTANCE);
         for (GuiButton guiButton : this.buttonList) {
             guiButton.drawButton(this.mc, mouseX, mouseY);
         }

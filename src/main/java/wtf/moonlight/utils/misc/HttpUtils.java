@@ -12,7 +12,7 @@ package wtf.moonlight.utils.misc;
 
 import kotlin.io.ByteStreamsKt;
 import kotlin.io.TextStreamsKt;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -82,7 +82,7 @@ public class HttpUtils {
             String endStr = BOUNDARY_PREFIX + boundary + BOUNDARY_PREFIX + LINE_END;
             out.write(endStr.getBytes());
         } catch (Exception e) {
-            Moonlight.LOGGER.error("HttpUtils.postFormData 请求异常！", e);
+            Client.LOGGER.error("HttpUtils.postFormData 请求异常！", e);
             response = new HttpResponse(500, e.getMessage());
             return response;
         }
@@ -122,7 +122,7 @@ public class HttpUtils {
             }
             response = new HttpResponse(responseCode, responseContent.toString());
         } catch (Exception e) {
-            Moonlight.LOGGER.error("获取 HTTP 响应异常！", e);
+            Client.LOGGER.error("获取 HTTP 响应异常！", e);
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getErrorStream()))) {
                 StringBuilder responseContent = new StringBuilder();
                 String line;
@@ -152,7 +152,7 @@ public class HttpUtils {
 
             out.write(LINE_END.getBytes());
         } catch (Exception e) {
-            Moonlight.LOGGER.error("写文件类型的表单参数异常", e);
+            Client.LOGGER.error("写文件类型的表单参数异常", e);
         }
     }
 

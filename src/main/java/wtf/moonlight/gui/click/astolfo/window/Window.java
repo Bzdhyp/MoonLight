@@ -13,7 +13,7 @@ package wtf.moonlight.gui.click.astolfo.window;
 
 import kotlin.collections.CollectionsKt;
 import lombok.Getter;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.module.ModuleCategory;
 import wtf.moonlight.gui.click.IComponent;
 import wtf.moonlight.gui.click.astolfo.component.ModuleComponent;
@@ -40,7 +40,7 @@ public class Window implements IComponent {
         this.y = y;
 
         this.moduleComponents = CollectionsKt.map(
-                Moonlight.INSTANCE.getModuleManager().getModulesByCategory(category),
+                Client.INSTANCE.getModuleManager().getModulesByCategory(category),
                 ModuleComponent::new
         );
     }

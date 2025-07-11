@@ -21,7 +21,7 @@ import net.minecraft.world.WorldSettings;
 import net.optifine.player.CapeUtils;
 import net.optifine.player.PlayerConfigurations;
 import net.optifine.reflect.Reflector;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.events.player.LookEvent;
 
 public abstract class AbstractClientPlayer extends EntityPlayer
@@ -212,7 +212,7 @@ public abstract class AbstractClientPlayer extends EntityPlayer
     @Override
     public Vec3 getLook(final float partialTicks) {
         LookEvent lookEvent = new LookEvent(rotationYaw, rotationPitch,prevRotationYaw,prevRotationPitch);
-        Moonlight.INSTANCE.getEventManager().call(lookEvent);
+        Client.INSTANCE.getEventManager().call(lookEvent);
 
         if (partialTicks == 1.0F)
         {

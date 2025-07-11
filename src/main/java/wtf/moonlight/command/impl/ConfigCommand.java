@@ -10,10 +10,10 @@
  */
 package wtf.moonlight.command.impl;
 
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.command.Command;
 import wtf.moonlight.config.impl.ModuleConfig;
-import wtf.moonlight.utils.misc.DebugUtils;
+import wtf.moonlight.utils.DebugUtils;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -102,7 +102,7 @@ public class ConfigCommand extends Command {
     }
 
     private void handleOpenFolder() {
-        File directory = Moonlight.INSTANCE.getMainDir();
+        File directory = Client.INSTANCE.getMainDir();
         if (Desktop.isDesktopSupported()) {
             try {
                 Desktop.getDesktop().open(directory);
@@ -117,7 +117,7 @@ public class ConfigCommand extends Command {
     }
 
     private void handleCurrent() {
-        String currentConfig = Moonlight.INSTANCE.getConfigManager().getCurrentConfig();
+        String currentConfig = Client.INSTANCE.getConfigManager().getCurrentConfig();
         if (currentConfig != null) {
             DebugUtils.sendMessage("Current config: " + currentConfig);
         } else {
@@ -127,8 +127,8 @@ public class ConfigCommand extends Command {
 
     private void handleLoad(String configName) {
         ModuleConfig cfg = new ModuleConfig(configName);
-        if (Moonlight.INSTANCE.getConfigManager().loadConfig(cfg)) {
-            Moonlight.INSTANCE.getConfigManager().setCurrentConfig(configName);
+        if (Client.INSTANCE.getConfigManager().loadConfig(cfg)) {
+            Client.INSTANCE.getConfigManager().setCurrentConfig(configName);
             DebugUtils.sendMessage("Loaded config: " + configName);
         } else {
             DebugUtils.sendMessage("Invalid config: " + configName);
@@ -147,7 +147,7 @@ public class ConfigCommand extends Command {
      */
     private void handleSave(String configName, boolean notify) {
         ModuleConfig cfg = new ModuleConfig(configName);
-        if (Moonlight.INSTANCE.getConfigManager().saveConfig(cfg)) {
+        if (Client.INSTANCE.getConfigManager().saveConfig(cfg)) {
             if (notify) {
                 DebugUtils.sendMessage("Saved config: " + configName);
             }
@@ -159,10 +159,10 @@ public class ConfigCommand extends Command {
     }
 
     private void handleCreate(String configName) {
-        File configFile = new File(Moonlight.INSTANCE.getMainDir(), configName + ".json");
+        File configFile = new File(Client.INSTANCE.getMainDir(), configName + ".json");
         try {
             if (configFile.createNewFile()) {
-                Moonlight.INSTANCE.getConfigManager().setCurrentConfig(configName);
+                Client.INSTANCE.getConfigManager().setCurrentConfig(configName);
                 DebugUtils.sendMessage("Created config and set as current: " + configName);
                 // Automatically save the newly created config
                 handleSave(configName, false); // Pass false to avoid duplicate messages
@@ -177,7 +177,7 @@ public class ConfigCommand extends Command {
     }
 
     private void handleRemove(String configName) {
-        File configFile = new File(Moonlight.INSTANCE.getMainDir(), configName + ".json");
+        File configFile = new File(Client.INSTANCE.getMainDir(), configName + ".json");
         if (configFile.exists()) {
             if (configFile.delete()) {
                 DebugUtils.sendMessage("Removed config: " + configName);
@@ -190,7 +190,7 @@ public class ConfigCommand extends Command {
     }
 
     private String[] getConfigList() {
-        File directory = Moonlight.INSTANCE.getMainDir();
+        File directory = Client.INSTANCE.getMainDir();
         File[] files = directory.listFiles((dir, name) -> name.toLowerCase().endsWith(".json"));
         if (files == null) {
             return new String[0];

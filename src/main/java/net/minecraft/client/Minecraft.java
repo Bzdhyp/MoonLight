@@ -50,7 +50,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GLCapabilities;
 import wtf.moonlight.module.impl.combat.TickBase;
 import wtf.moonlight.module.impl.visual.Animations;
-import wtf.moonlight.gui.mainmenu.GuiMainMenu;
+import wtf.moonlight.gui.main.GuiMainMenu;
 import net.minecraft.client.gui.GuiMemoryErrorScreen;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSleepMP;
@@ -177,7 +177,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjglx.opengl.GLContext;
 import org.lwjglx.opengl.PixelFormat;
 import org.lwjglx.util.glu.GLU;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.events.misc.KeyPressEvent;
 import wtf.moonlight.events.misc.TickEvent;
 import wtf.moonlight.utils.player.MovementInputFromKeyboard;
@@ -477,7 +477,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.checkGLError("Post startup");
         this.ingameGUI = new GuiIngame(this);
 
-        Moonlight.INSTANCE.init();
+        Client.INSTANCE.init();
 
         if (this.serverName != null)
         {
@@ -646,7 +646,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         File file2 = new File(file1, "crash-" + (new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss")).format(new Date()) + "-client.txt");
         Bootstrap.printToSYSOUT(crashReportIn.getCompleteReport());
 
-        Moonlight.INSTANCE.onStop();
+        Client.INSTANCE.onStop();
 
         if (crashReportIn.getFile() != null)
         {
@@ -910,7 +910,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         {
             logger.info("Stopping!");
 
-            Moonlight.INSTANCE.onStop();
+            Client.INSTANCE.onStop();
 
             try
             {
@@ -970,7 +970,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         long l = System.nanoTime();
         this.mcProfiler.startSection("tick");
 
-        TickBase tickBase = Moonlight.INSTANCE.getModuleManager().getModule(TickBase.class);
+        TickBase tickBase = Client.INSTANCE.getModuleManager().getModule(TickBase.class);
 
         for (int j = 0; j < this.timer.elapsedTicks; ++j) {
             if (tickBase.handleTick()) {
@@ -1555,7 +1555,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     public void runTick() throws IOException
     {
         TickEvent tickEvent = new TickEvent();
-        Moonlight.INSTANCE.getEventManager().call(tickEvent);
+        Client.INSTANCE.getEventManager().call(tickEvent);
 
         if (this.rightClickDelayTimer > 0)
         {
@@ -1748,7 +1748,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     }
                     else
                     {
-                        Moonlight.INSTANCE.getEventManager().call(new KeyPressEvent(k));
+                        Client.INSTANCE.getEventManager().call(new KeyPressEvent(k));
                         if (k == 1)
                         {
                             this.displayInGameMenu();
@@ -1929,8 +1929,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 }
 
                 while (this.gameSettings.keyBindAttack.isPressed()) {
-                    if (Moonlight.INSTANCE.getModuleManager().getModule(Animations.class).isEnabled() &&
-                            Moonlight.INSTANCE.getModuleManager().getModule(Animations.class).getSwingWhileUsingItem().get()) {
+                    if (Client.INSTANCE.getModuleManager().getModule(Animations.class).isEnabled() &&
+                            Client.INSTANCE.getModuleManager().getModule(Animations.class).getSwingWhileUsingItem().get()) {
                         if (!thePlayer.isSwingInProgress ||
                                 thePlayer.swingProgressInt >= thePlayer.getArmSwingAnimationEnd() / 2 ||
                                 thePlayer.swingProgressInt < 0) {
@@ -2694,6 +2694,10 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     public Session getSession()
     {
         return this.session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
     }
 
     public PropertyMap getTwitchDetails()

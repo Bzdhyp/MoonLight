@@ -12,7 +12,7 @@ package wtf.moonlight.config.impl;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.config.Config;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.values.Value;
@@ -27,7 +27,7 @@ public class ModuleConfig extends Config {
     }
     @Override
     public void loadConfig(JsonObject object) {
-        for (Module module : Moonlight.INSTANCE.getModuleManager().getModules()) {
+        for (Module module : Client.INSTANCE.getModuleManager().getModules()) {
             if (object.has(module.getName())) {
 
                 JsonObject moduleObject = object.get(module.getName()).getAsJsonObject();
@@ -87,7 +87,7 @@ public class ModuleConfig extends Config {
     @Override
     public JsonObject saveConfig() {
         JsonObject object = new JsonObject();
-        for (Module module : Moonlight.INSTANCE.getModuleManager().getModules()) {
+        for (Module module : Client.INSTANCE.getModuleManager().getModules()) {
             JsonObject moduleObject = new JsonObject();
 
             moduleObject.addProperty("State", module.isEnabled());

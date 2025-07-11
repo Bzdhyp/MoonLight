@@ -13,7 +13,7 @@ package wtf.moonlight.module.impl.misc;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.server.S14PacketEntity;
 import net.minecraft.network.play.server.S18PacketEntityTeleport;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.UpdateEvent;
@@ -65,7 +65,7 @@ public class HackerDetector extends Module {
     public void onUpdate(UpdateEvent event) {
         for (EntityPlayer player : mc.theWorld.playerEntities) {
             for (Check check : checks) {
-                if ((selfCheck.get() || player != mc.thePlayer) && !player.isDead && !Moonlight.INSTANCE.getFriendManager().isFriend(player)) {
+                if ((selfCheck.get() || player != mc.thePlayer) && !player.isDead && !Client.INSTANCE.getFriendManager().isFriend(player)) {
                     if(isEnabled(AntiBot.class) && getModule(AntiBot.class).bots.contains(player))
                         continue;
                     if (options.isEnabled(check.getName())) {
@@ -82,7 +82,7 @@ public class HackerDetector extends Module {
         if (event.getPacket() instanceof S14PacketEntity || event.getPacket() instanceof S18PacketEntityTeleport) {
             for (EntityPlayer player : mc.theWorld.playerEntities) {
                 for (Check check : checks) {
-                    if ((selfCheck.get() || player != mc.thePlayer) && !player.isDead && !Moonlight.INSTANCE.getFriendManager().isFriend(player)) {
+                    if ((selfCheck.get() || player != mc.thePlayer) && !player.isDead && !Client.INSTANCE.getFriendManager().isFriend(player)) {
                         if(isEnabled(AntiBot.class) && getModule(AntiBot.class).isBot(player))
                             continue;
                         if (options.isEnabled(check.getName())) {

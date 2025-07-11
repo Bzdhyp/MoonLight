@@ -6,7 +6,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.visual.Interface;
 import wtf.moonlight.utils.render.GLUtils;
 import wtf.moonlight.utils.render.RenderUtils;
@@ -71,11 +71,11 @@ public class GuiButton extends Gui
             this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
             int i = this.getHoverState(this.hovered);
 
-            if(Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).newButton.get()){
+            if(Client.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Interface.class).newButton.get()){
                 GLUtils.startBlend();
-                final int outlineColour = Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).color();
+                final int outlineColour = Client.INSTANCE.getModuleManager().getModule(Interface.class).color();
                 final int backgroundColour = this.enabled ? 0x800E0E0E : 0x80070707;
-                final int textColour = this.enabled ? this.hovered ? Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).color() : 0xFFFFFFFF : 0xFF878787;
+                final int textColour = this.enabled ? this.hovered ? Client.INSTANCE.getModuleManager().getModule(Interface.class).color() : 0xFFFFFFFF : 0xFF878787;
 
                 RenderUtils.drawBorderedRect(xPosition,yPosition,width,height,0.5f,backgroundColour,outlineColour);
                 this.drawCenteredString(fontrenderer, this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, textColour);

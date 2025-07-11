@@ -13,10 +13,9 @@ package wtf.moonlight.gui.font;
 import com.google.common.base.Preconditions;
 import it.unimi.dsi.fastutil.floats.Float2ObjectArrayMap;
 import it.unimi.dsi.fastutil.floats.Float2ObjectMap;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 
 import java.awt.*;
-import java.io.InputStream;
 
 public enum Fonts {
     interBold("inter/Inter_Bold"),
@@ -33,6 +32,7 @@ public enum Fonts {
     session("others/session"),
     session2("others/session2"),
     neverlose("others/nlicon"),
+    icon("others/icon"),
     sfui("others/sfui");
 
     private final String file;
@@ -65,7 +65,7 @@ public enum Fonts {
     public FontRenderer create(String file, float size, boolean antiAlias) {
         try (
                 var in = Preconditions.checkNotNull(
-                        Moonlight.class.getResourceAsStream("/assets/minecraft/" + Moonlight.INSTANCE.getClientName().toLowerCase() + "/font/" + file + ".ttf"), "Font resource is null"
+                        Client.class.getResourceAsStream("/assets/minecraft/" + Client.INSTANCE.getClientName().toLowerCase() + "/font/" + file + ".ttf"), "Font resource is null"
                 )
         ) {
             var font = Font.createFont(0, in).deriveFont(Font.PLAIN, size);

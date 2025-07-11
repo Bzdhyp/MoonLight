@@ -32,7 +32,7 @@ import net.minecraft.src.Config;
 import net.minecraft.util.*;
 import net.minecraft.world.border.WorldBorder;
 import net.optifine.CustomColors;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.module.impl.visual.Interface;
 import wtf.moonlight.module.impl.visual.Shaders;
@@ -290,8 +290,8 @@ public class GuiIngame extends Gui
             this.overlayPlayerList.updatePlayerList(false);
         }
 
-        Moonlight.INSTANCE.getModuleManager().getModule(Shaders.class).renderShaders();
-        Moonlight.INSTANCE.getEventManager().call(new Render2DEvent(partialTicks, scaledresolution));
+        Client.INSTANCE.getModuleManager().getModule(Shaders.class).renderShaders();
+        Client.INSTANCE.getEventManager().call(new Render2DEvent(partialTicks, scaledresolution));
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
@@ -308,9 +308,9 @@ public class GuiIngame extends Gui
             int i = sr.getScaledWidth() / 2;
             float f = this.zLevel;
             this.zLevel = -90.0F;
-            if(Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).hotBar.get()){
+            if(Client.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Interface.class).hotBar.get()){
                 RoundedUtils.drawRound(i - 91, sr.getScaledHeight() - 22, 182, 22,6 ,new Color(0,0,0,100));
-                RoundedUtils.drawRoundOutline(i - 91 - 1 + SpoofSlotUtils.getSpoofedSlot() * 20, sr.getScaledHeight() - 22 - 1,24,22,6,0.5f,new Color(0,0,0,0),new Color(Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).color(),true));
+                RoundedUtils.drawRoundOutline(i - 91 - 1 + SpoofSlotUtils.getSpoofedSlot() * 20, sr.getScaledHeight() - 22 - 1,24,22,6,0.5f,new Color(0,0,0,0),new Color(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(),true));
             } else {
                 this.drawTexturedModalRect(i - 91, sr.getScaledHeight() - 22, 0, 0, 182, 22);
                 this.drawTexturedModalRect(i - 91 - 1 + SpoofSlotUtils.getSpoofedSlot() * 20, sr.getScaledHeight() - 22 - 1, 0, 22, 24, 22);
@@ -489,12 +489,12 @@ public class GuiIngame extends Gui
 
     private void renderScoreboard(ScoreObjective objective, ScaledResolution scaledRes) {
 
-        if (Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).customScoreboard.get()) {
-            Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).drawScoreboard(scaledRes,objective,objective.getScoreboard(),objective.getScoreboard().getSortedScores(objective));
+        if (Client.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Interface.class).customScoreboard.get()) {
+            Client.INSTANCE.getModuleManager().getModule(Interface.class).drawScoreboard(scaledRes,objective,objective.getScoreboard(),objective.getScoreboard().getSortedScores(objective));
             return;
         }
 
-        if (Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).hideScoreboard.get())
+        if (Client.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Interface.class).hideScoreboard.get())
             return;
 
         Scoreboard scoreboard = objective.getScoreboard();

@@ -12,9 +12,12 @@ package wtf.moonlight.gui.font;
 
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
+import wtf.moonlight.module.impl.visual.Interface;
 import wtf.moonlight.module.impl.visual.NameHider;
 import wtf.moonlight.utils.render.ColorUtils;
+import wtf.moonlight.utils.render.GradientUtils;
+import wtf.moonlight.utils.render.RenderUtils;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
@@ -135,6 +138,25 @@ public class FontRenderer {
         return drawString(str, x, y, color, false);
     }
 
+    public void drawStringDynamic(String text, double x, double y, int tick1, int tick2) {
+        drawStringDynamic(text, x, y, tick1, tick2, 1.0F);
+    }
+
+    public void drawStringDynamic(String text, double x, double y, int tick1, int tick2, float opacity) {
+        GradientUtils.applyGradientHorizontal(
+                (float) x,
+                (float) y,
+                (float) getStringWidth(text),
+                getHeight(),
+                opacity,
+                new Color(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(tick1)),
+                new Color(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(tick2)),
+                () -> {
+                    RenderUtils.setAlphaLimit(0);
+                    drawString(text, (float) x, (float) y, -1);
+                }
+        );
+    }
     public int drawString(String str, double x, double y, int color) {
         return drawString(str, (float) x, (float) y, color, false);
     }
@@ -151,8 +173,8 @@ public class FontRenderer {
     public final int drawStringNoFormat(String str, float x, float y, int color, boolean darken) {
         GlStateManager.color(1F, 1F, 1F, 1F);
         str = str.replace("▬", "=");
-        if (Moonlight.INSTANCE.getModuleManager().getModule(NameHider.class) != null && Moonlight.INSTANCE.getModuleManager().getModule(NameHider.class).isEnabled()) {
-            str = Moonlight.INSTANCE.getModuleManager().getModule(NameHider.class).getFakeName(str);
+        if (Client.INSTANCE.getModuleManager().getModule(NameHider.class) != null && Client.INSTANCE.getModuleManager().getModule(NameHider.class).isEnabled()) {
+            str = Client.INSTANCE.getModuleManager().getModule(NameHider.class).getFakeName(str);
         }
         y = y - 2;
         x *= 2;
@@ -192,8 +214,8 @@ public class FontRenderer {
     public final int drawString(String str, float x, float y, int color, boolean darken) {
         GlStateManager.color(1F, 1F, 1F, 1F);
         str = str.replace("▬", "=");
-        if (Moonlight.INSTANCE.getModuleManager().getModule(NameHider.class) != null && Moonlight.INSTANCE.getModuleManager().getModule(NameHider.class).isEnabled()) {
-            str = Moonlight.INSTANCE.getModuleManager().getModule(NameHider.class).getFakeName(str);
+        if (Client.INSTANCE.getModuleManager().getModule(NameHider.class) != null && Client.INSTANCE.getModuleManager().getModule(NameHider.class).isEnabled()) {
+            str = Client.INSTANCE.getModuleManager().getModule(NameHider.class).getFakeName(str);
         }
         y = y - 2;
         x *= 2;
@@ -245,8 +267,8 @@ public class FontRenderer {
             return 0;
         }
 
-        if (Moonlight.INSTANCE.getModuleManager().getModule(NameHider.class) != null && Moonlight.INSTANCE.getModuleManager().getModule(NameHider.class).isEnabled()) {
-            text = Moonlight.INSTANCE.getModuleManager().getModule(NameHider.class).getFakeName(text);
+        if (Client.INSTANCE.getModuleManager().getModule(NameHider.class) != null && Client.INSTANCE.getModuleManager().getModule(NameHider.class).isEnabled()) {
+            text = Client.INSTANCE.getModuleManager().getModule(NameHider.class).getFakeName(text);
         }
 
         int width = 0;
@@ -374,8 +396,8 @@ public class FontRenderer {
 
         int currentColor = color;
 
-        if (Moonlight.INSTANCE.getModuleManager().getModule(NameHider.class) != null && Moonlight.INSTANCE.getModuleManager().getModule(NameHider.class).isEnabled()) {
-            text = Moonlight.INSTANCE.getModuleManager().getModule(NameHider.class).getFakeName(text);
+        if (Client.INSTANCE.getModuleManager().getModule(NameHider.class) != null && Client.INSTANCE.getModuleManager().getModule(NameHider.class).isEnabled()) {
+            text = Client.INSTANCE.getModuleManager().getModule(NameHider.class).getFakeName(text);
         }
 
         char[] characters = text.toCharArray();

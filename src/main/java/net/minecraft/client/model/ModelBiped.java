@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.combat.KillAura;
 import wtf.moonlight.module.impl.visual.Animations;
 
@@ -150,7 +150,7 @@ public class ModelBiped extends ModelBase
                 this.bipedRightArm.rotateAngleY = -0.5235988F;
         }
 
-        if(Moonlight.INSTANCE.getModuleManager().getModule(KillAura.class).isHoldingSword() && Moonlight.INSTANCE.getModuleManager().getModule(KillAura.class).renderBlocking && entityIn == Minecraft.getMinecraft().thePlayer){
+        if(Client.INSTANCE.getModuleManager().getModule(KillAura.class).isHoldingSword() && Client.INSTANCE.getModuleManager().getModule(KillAura.class).renderBlocking && entityIn == Minecraft.getMinecraft().thePlayer){
             this.bipedRightArm.rotateAngleX = this.bipedRightArm.rotateAngleX * 0.5F - ((float)Math.PI / 10F) * 3;
             this.bipedRightArm.rotateAngleY = -0.5235988F;
         }
@@ -223,7 +223,7 @@ public class ModelBiped extends ModelBase
             this.bipedLeftArm.rotateAngleX -= MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
         }
 
-        Animations animation = Moonlight.INSTANCE.getModuleManager().getModule(Animations.class);
+        Animations animation = Client.INSTANCE.getModuleManager().getModule(Animations.class);
 
         if (animation.isEnabled() && animation.getWalking().get() && entityIn instanceof EntityPlayer) {
             this.bipedRightArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + 3.1415927F) * 2.0F * limbSwingAmount * 0.8F;

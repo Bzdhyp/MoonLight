@@ -7,7 +7,7 @@ import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraft.network.play.server.S0EPacketSpawnObject;
 import net.minecraft.network.play.server.S2APacketParticles;
 import net.minecraft.util.EnumChatFormatting;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.UpdateEvent;
@@ -42,7 +42,7 @@ public class LongJump extends Module {
     @EventTarget
     public void onEnable() {
         if (getFireball() == -1) {
-            Moonlight.INSTANCE.getNotificationManager().post(NotificationType.WARNING,
+            Client.INSTANCE.getNotificationManager().post(NotificationType.WARNING,
                     EnumChatFormatting.RED + "Inventory",
                     "You don't have a Fireball.", 5);
             this.toggle();

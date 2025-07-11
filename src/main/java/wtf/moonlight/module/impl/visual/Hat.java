@@ -14,10 +14,10 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.render.Render3DEvent;
-import wtf.moonlight.friend.Friend;
+import wtf.moonlight.utils.friend.Friend;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.ModuleCategory;
 import wtf.moonlight.module.ModuleInfo;
@@ -26,7 +26,7 @@ import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ColorValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.math.MathUtils;
+import wtf.moonlight.utils.MathUtils;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.GLUtils;
 
@@ -76,8 +76,8 @@ public class Hat extends Module {
 
         drawHat(event, mc.thePlayer);
 
-        if (!Moonlight.INSTANCE.getFriendManager().getFriends().isEmpty())
-            for (Friend friend : Moonlight.INSTANCE.getFriendManager().getFriends()) {
+        if (!Client.INSTANCE.getFriendManager().getFriends().isEmpty())
+            for (Friend friend : Client.INSTANCE.getFriendManager().getFriends()) {
                 drawHat(event, mc.theWorld.getPlayerEntityByName(friend.getUsername()));
             }
 

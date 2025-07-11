@@ -20,7 +20,7 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.*;
 import net.optifine.reflect.Reflector;
 import org.jetbrains.annotations.NotNull;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import com.cubk.EventPriority;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.misc.MouseOverEvent;
@@ -28,8 +28,8 @@ import wtf.moonlight.events.misc.TickEvent;
 import wtf.moonlight.events.misc.WorldEvent;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.*;
-import wtf.moonlight.utils.InstanceAccess;
-import wtf.moonlight.utils.math.MathUtils;
+import wtf.moonlight.utils.misc.InstanceAccess;
+import wtf.moonlight.utils.MathUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -519,7 +519,7 @@ public class RotationUtils implements InstanceAccess {
             double i = range;
 
             MouseOverEvent mouseOverEvent = new MouseOverEvent(i);
-            Moonlight.INSTANCE.getEventManager().call(mouseOverEvent);
+            Client.INSTANCE.getEventManager().call(mouseOverEvent);
 
             i = mouseOverEvent.getRange();
 

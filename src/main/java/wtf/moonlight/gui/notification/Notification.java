@@ -13,14 +13,14 @@ package wtf.moonlight.gui.notification;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.visual.Interface;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.InstanceAccess;
+import wtf.moonlight.utils.misc.InstanceAccess;
 import wtf.moonlight.utils.animations.advanced.Animation;
 import wtf.moonlight.utils.animations.Translate;
 import wtf.moonlight.utils.animations.advanced.impl.EaseOutSine;
-import wtf.moonlight.utils.math.TimerUtils;
+import wtf.moonlight.utils.TimerUtils;
 
 
 @Getter
@@ -34,7 +34,7 @@ public class Notification implements InstanceAccess {
     private final Translate translate;
 
     public Notification(NotificationType type, String title, String description) {
-        this(type, title, description, Moonlight.INSTANCE.getNotificationManager().getToggleTime());
+        this(type, title, description, Client.INSTANCE.getNotificationManager().getToggleTime());
     }
 
     public Notification(NotificationType type, String title, String description, float time) {

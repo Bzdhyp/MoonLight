@@ -16,7 +16,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import org.lwjglx.input.Mouse;
 import org.lwjgl.opengl.GL11;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.ModuleCategory;
 import wtf.moonlight.module.impl.visual.ClickGUI;
@@ -35,7 +35,7 @@ import wtf.moonlight.gui.click.skeet.component.impl.sub.text.box.StringTextCompo
 import wtf.moonlight.gui.font.FontRenderer;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.utils.animations.Translate;
-import wtf.moonlight.utils.misc.StringUtils;
+import wtf.moonlight.utils.StringUtils;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.GLUtils;
 import wtf.moonlight.utils.render.RenderUtils;
@@ -126,7 +126,7 @@ public final class SkeetUI extends GuiScreen {
 
                 // draw Rainbow background
                 ++hue;
-                if (Moonlight.INSTANCE.getModuleManager().getModule(ClickGUI.class).rainbow.get()) {
+                if (Client.INSTANCE.getModuleManager().getModule(ClickGUI.class).rainbow.get()) {
                     drawGradientSideways(left, top, right, bottom, ColorUtils.reAlpha(yes, (int) alpha).getRGB(), ColorUtils.reAlpha(bruh, (int) alpha).getRGB());
                     if (alpha > 20.0) {
                         Gui.drawRect(left, top, right, bottom, new Color(21, 21, 21, 120).getRGB());
@@ -135,7 +135,7 @@ public final class SkeetUI extends GuiScreen {
                     Gui.drawRect(left, top, right, bottom, getSkeetColor(new Color(21, 21, 21).getRGB()));
                 }
 
-                if (Moonlight.INSTANCE.getModuleManager().getModule(ClickGUI.class).rainbow.get()) {
+                if (Client.INSTANCE.getModuleManager().getModule(ClickGUI.class).rainbow.get()) {
                     Gui.drawRect(left, top, right, bottom, new Color(21, 21, 21, 205).getRGB());
                 }
 
@@ -259,7 +259,7 @@ public final class SkeetUI extends GuiScreen {
 
                 @SuppressWarnings("all")
                 public void setupChildren() {
-                    final var modulesInCategory = Moonlight.INSTANCE.getModuleManager().getModulesByCategory(category);
+                    final var modulesInCategory = Client.INSTANCE.getModuleManager().getModulesByCategory(category);
                     for (final Module module : modulesInCategory) {
                         final GroupBoxComponent groupBoxComponent = new GroupBoxComponent(this, module.getName(), 0.0f, 0.0f, 94.333336f, 6.0f);
                         final CheckBoxTextComponent enabledButton = new CheckBoxTextComponent(groupBoxComponent, "Enable", module::isEnabled, module::setEnabled);
@@ -351,7 +351,7 @@ public final class SkeetUI extends GuiScreen {
     }
 
     public static int getSkeetColor() {
-        return getSkeetColor(Moonlight.INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue().getRGB());
+        return getSkeetColor(Client.INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue().getRGB());
     }
 
     public static boolean shouldRenderText() {

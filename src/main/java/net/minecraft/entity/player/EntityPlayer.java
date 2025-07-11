@@ -76,7 +76,7 @@ import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.LockCode;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.combat.KeepSprint;
 import wtf.moonlight.module.impl.visual.Interface;
 import wtf.moonlight.utils.player.RotationUtils;
@@ -201,7 +201,7 @@ public abstract class EntityPlayer extends EntityLivingBase {
 
     public void onUpdate()
     {
-        Interface cape = Moonlight.INSTANCE.getModuleManager().getModule(Interface.class);
+        Interface cape = Client.INSTANCE.getModuleManager().getModule(Interface.class);
         if(cape.wavey.get()){
             simulate(this);
         }
@@ -1221,7 +1221,7 @@ public abstract class EntityPlayer extends EntityLivingBase {
                     {
                         if (i > 0)
                         {
-                            if(!Moonlight.INSTANCE.getModuleManager().getModule(KeepSprint.class).isEnabled()) {
+                            if(!Client.INSTANCE.getModuleManager().getModule(KeepSprint.class).isEnabled()) {
 
                                 float yaw = RotationUtils.currentRotation != null ? RotationUtils.currentRotation[0] : this.rotationYaw;
 

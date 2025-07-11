@@ -20,7 +20,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjglx.input.Keyboard;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.combat.KillAura;
 import wtf.moonlight.module.impl.player.InvManager;
 import wtf.moonlight.module.impl.player.Stealer;
@@ -77,7 +77,7 @@ public abstract class GuiContainer extends GuiScreen
 
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        Stealer stealer = Moonlight.INSTANCE.getModuleManager().getModule(Stealer.class);
+        Stealer stealer = Client.INSTANCE.getModuleManager().getModule(Stealer.class);
         if (stealer.isStealing) {
             if (stealer.silent.get()) {
                 Minecraft mc = Minecraft.getMinecraft();
@@ -352,17 +352,17 @@ public abstract class GuiContainer extends GuiScreen
 
                     switch (guibutton.id) {
                         case 1001:
-                            final KillAura killAura = Moonlight.INSTANCE.getModuleManager().getModule(KillAura.class);
+                            final KillAura killAura = Client.INSTANCE.getModuleManager().getModule(KillAura.class);
 
                             if (killAura.isEnabled()) killAura.toggle();
                             break;
                         case 1002:
-                            final InvManager invManager = Moonlight.INSTANCE.getModuleManager().getModule(InvManager.class);
+                            final InvManager invManager = Client.INSTANCE.getModuleManager().getModule(InvManager.class);
 
                             if (invManager.isEnabled()) invManager.toggle();
                             break;
                         case 1003:
-                            final Stealer stealer = Moonlight.INSTANCE.getModuleManager().getModule(Stealer.class);
+                            final Stealer stealer = Client.INSTANCE.getModuleManager().getModule(Stealer.class);
 
                             if (stealer.isEnabled()) stealer.toggle();
                             break;

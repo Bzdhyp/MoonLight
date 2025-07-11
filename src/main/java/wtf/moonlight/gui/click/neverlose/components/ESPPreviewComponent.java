@@ -13,7 +13,7 @@ package wtf.moonlight.gui.click.neverlose.components;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
 import net.minecraft.client.renderer.GlStateManager;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.visual.ESP;
 import wtf.moonlight.module.values.Value;
 import wtf.moonlight.gui.click.Component;
@@ -21,7 +21,7 @@ import wtf.moonlight.gui.click.neverlose.components.espelements.BoxElement;
 import wtf.moonlight.gui.click.neverlose.components.espelements.HealthElement;
 import wtf.moonlight.gui.click.neverlose.components.espelements.NameElement;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.InstanceAccess;
+import wtf.moonlight.utils.misc.InstanceAccess;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.MouseUtils;
 import wtf.moonlight.utils.render.RenderUtils;
@@ -38,7 +38,7 @@ public class ESPPreviewComponent extends Component implements InstanceAccess {
     private int posX,posY,dragX,dragY;
     private boolean dragging = false;
     private boolean adsorb = true;
-    private final List<Value> values = Moonlight.INSTANCE.getModuleManager().getModule(ESP.class).getValues();
+    private final List<Value> values = Client.INSTANCE.getModuleManager().getModule(ESP.class).getValues();
     private final ObjectArrayList<Component> elements = new ObjectArrayList<>();
 
     public ESPPreviewComponent() {

@@ -12,7 +12,7 @@ package wtf.moonlight.config;
 
 import com.google.gson.JsonObject;
 import lombok.Getter;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 
 import java.io.File;
 
@@ -23,7 +23,7 @@ public class Config {
 
     public Config(String name) {
         this.name = name;
-        this.file = new File(Moonlight.INSTANCE.getMainDir(), name + ".json");
+        this.file = new File(Client.INSTANCE.getMainDir(), name + ".json");
     }
 
     public void loadConfig(JsonObject object){

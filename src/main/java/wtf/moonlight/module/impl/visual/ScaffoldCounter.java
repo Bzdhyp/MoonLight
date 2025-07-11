@@ -21,7 +21,7 @@ import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.events.render.Shader2DEvent;
 import wtf.moonlight.module.impl.movement.Scaffold;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.InstanceAccess;
+import wtf.moonlight.utils.misc.InstanceAccess;
 import wtf.moonlight.utils.animations.advanced.Animation;
 import wtf.moonlight.utils.animations.advanced.Direction;
 import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
@@ -55,7 +55,7 @@ public class ScaffoldCounter implements InstanceAccess {
 
                 float totalWidth = ((textWidth + blockWH + spacing) + 6) * output;
                 x = sr.getScaledWidth() / 2f - (totalWidth / 2f);
-                y = sr.getScaledHeight() - (sr.getScaledHeight() / 2f - 240);
+                y = sr.getScaledHeight() - (sr.getScaledHeight() / 2f - 120);
                 float height = 20;
                 GL11.glPushMatrix();
                 RenderUtils.scissor(x - 1.5, y - 1.5, totalWidth + 3, height + 3);
@@ -145,7 +145,7 @@ public class ScaffoldCounter implements InstanceAccess {
                 float textWidth = Fonts.interBold.get(18).getStringWidth(text);
                 float totalWidth = ((textWidth + blockWH + spacing) + 6) * output;
                 x = sr.getScaledWidth() / 2f - (totalWidth / 2f);
-                y = sr.getScaledHeight() - (sr.getScaledHeight() / 2f - 240);
+                y = sr.getScaledHeight() - (sr.getScaledHeight() / 2f - 120);
                 float height = 20;
                 GL11.glPushMatrix();
                 RenderUtils.scissor(x - 1.5, y - 1.5, totalWidth + 3, height + 3);

@@ -28,8 +28,9 @@ import net.minecraft.util.*;
 import org.apache.commons.lang3.RandomUtils;
 import org.lwjglx.input.Keyboard;
 import org.lwjglx.input.Mouse;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import com.cubk.EventTarget;
+import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.events.player.StrafeEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.events.render.Render2DEvent;
@@ -45,8 +46,8 @@ import wtf.moonlight.module.values.impl.MultiBoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.utils.animations.advanced.Direction;
 import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.utils.math.MathUtils;
-import wtf.moonlight.utils.math.TimerUtils;
+import wtf.moonlight.utils.MathUtils;
+import wtf.moonlight.utils.TimerUtils;
 import wtf.moonlight.component.BlinkComponent;
 import wtf.moonlight.utils.player.*;
 
@@ -55,19 +56,20 @@ import java.util.*;
 
 @ModuleInfo(name = "KillAura", category = ModuleCategory.Combat, key = Keyboard.KEY_R)
 public class KillAura extends Module {
-    private final SliderValue fov = new SliderValue("FOV", 180, 1, 180, this);
+    private final ListValue priority = new ListValue("Priority", new String[]{"Range", "Armor", "Health", "HurtTime", "FOV"}, "Health", this);
     private final ListValue mode = new ListValue("Mode", new String[]{"Switch", "Single"}, "Switch", this);
     public final SliderValue switchDelayValue = new SliderValue("SwitchDelay", 15, 0, 20, this, () -> mode.is("Switch"));
-    private final ListValue priority = new ListValue("Priority", new String[]{"Range", "Armor", "Health", "HurtTime", "FOV"}, "Health", this);
     private final ListValue aimMode = new ListValue("Aim Position", new String[]{"Head", "Torso", "Legs", "Nearest", "Test"}, "Nearest", this);
     private final BoolValue inRange = new BoolValue("Rotation In Range", false, this);
     private final SliderValue minAimRange = new SliderValue("Lowest Aim Range", 1, 0, 1, 0.05f, this, inRange::get);
     private final SliderValue maxAimRange = new SliderValue("Highest Aim Range", 1, 0, 1, 0.05f, this, inRange::get);
+    private final SliderValue fov = new SliderValue("FOV", 180, 1, 180, this);
     private final BoolValue heuristics = new BoolValue("Heuristics", false, this);
     private final BoolValue bruteforce = new BoolValue("Bruteforce", true, this);
     private final BoolValue smartVec = new BoolValue("Smart Vec", true, this);
     private final BoolValue smartRotation = new BoolValue("Smart Rotation", true, this);
     private final BoolValue customRotationSetting = new BoolValue("Custom Rotation Setting", false, this);
+
     private final ListValue smoothMode = new ListValue("Rotations Smooth", RotationUtils.smoothModes, RotationUtils.smoothModes[0], this,() -> customRotationSetting.canDisplay() && customRotationSetting.get());
     private final SliderValue minYawRotSpeed = new SliderValue("Min Yaw Rotation Speed", 45, 1,180,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get());
     private final SliderValue minPitchRotSpeed = new SliderValue("Min Pitch Rotation Speed", 45, 1,180,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get());
@@ -301,31 +303,6 @@ public class KillAura extends Module {
                     }
                 }
             }
-
-            if (shouldBlock()) {
-                renderBlocking = true;
-            }
-
-            if (preTickBlock()) return;
-
-            if (clicks == 0) return;
-
-            if (isBlocking || autoBlock.is("HYT"))
-                if (preAttack()) return;
-
-            if (shouldAttack()) {
-                maxClicks = clicks;
-                for (int i = 0; i < maxClicks; i++) {
-                    attack();
-                    clicks--;
-                }
-            }
-
-            if (!autoBlock.is("None") && (shouldBlock() || autoBlock.is("HYT"))) {
-                if (Mouse.isButtonDown(2))
-                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
-                postAttack();
-            }
         }
     }
 
@@ -379,27 +356,55 @@ public class KillAura extends Module {
         }
     }
 
+    @EventTarget
+    public void onMotion(MotionEvent event) {
+        if (target == null) return;
+
+        if (isEnabled(Scaffold.class)) return;
+
+        if (shouldBlock()) renderBlocking = true;
+
+        if (preTickBlock()) return;
+
+        if (clicks == 0) return;
+
+        if (isBlocking || autoBlock.is("HYT"))
+            if (preAttack()) return;
+
+        if (shouldAttack()) {
+            maxClicks = clicks;
+            for (int i = 0; i < maxClicks; i++) {
+                attack();
+                clicks--;
+            }
+        }
+
+        if (!autoBlock.is("None") && (shouldBlock() || autoBlock.is("HYT"))) {
+            if (Mouse.isButtonDown(2))
+                KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
+            postAttack();
+        }
+    }
+
     private boolean preTickBlock() {
-        switch (autoBlock.getValue()) {
-            case "Watchdog":
-                if (blinkTicks >= 3) {
-                    blinkTicks = 0;
-                }
-                blinkTicks++;
-                switch (blinkTicks) {
-                    case 0:
+        if (autoBlock.is("Watchdog")) {
+            if (blinkTicks >= 3) {
+                blinkTicks = 0;
+            }
+            blinkTicks++;
+            switch (blinkTicks) {
+                case 0:
+                    return true;
+                case 1:
+                    if (isBlocking) {
+                        BlinkComponent.blinking = true;
+                        unblock();
+                        blinked = true;
                         return true;
-                    case 1:
-                        if(isBlocking) {
-                            BlinkComponent.blinking = true;
-                            unblock();
-                            blinked = true;
-                            return true;
-                        }
-                    case 2:
-                        return false;
-                }
-                break;
+                    }
+                case 2:
+                    return false;
+            }
         }
         return false;
     }
@@ -575,7 +580,7 @@ public class KillAura extends Module {
         if (entity instanceof EntityLivingBase && (targetOption.isEnabled("Dead") || entity.isEntityAlive()) && entity != mc.thePlayer) {
             if (targetOption.isEnabled("Invisible") || !entity.isInvisible()) {
                 if (targetOption.isEnabled("Players") && entity instanceof EntityPlayer) {
-                    if (filter.isEnabled("Friends") && Moonlight.INSTANCE.getFriendManager().isFriend((EntityPlayer) entity))
+                    if (filter.isEnabled("Friends") && Client.INSTANCE.getFriendManager().isFriend((EntityPlayer) entity))
                         return false;
                     return !isEnabled(AntiBot.class) || !getModule(AntiBot.class).isBot((EntityPlayer) entity);
                 }

@@ -16,7 +16,7 @@ import wtf.moonlight.events.render.ChatGUIEvent;
 import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.events.render.Shader2DEvent;
 import wtf.moonlight.gui.widget.impl.*;
-import wtf.moonlight.utils.InstanceAccess;
+import wtf.moonlight.utils.misc.InstanceAccess;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,13 +28,9 @@ public class WidgetManager implements InstanceAccess {
     public WidgetManager() {
         INSTANCE.getEventManager().register(this);
         register(new TargetHUDWidget());
-        register(new InventoryWidget());
         register(new PotionHUDWidget());
-        register(new SessionInfoWidget());
-        register(new PointerWidget());
         register(new KeyBindWidget());
         register(new ModuleListWidget());
-        register(new RadarWidget());
     }
 
     public boolean loaded;

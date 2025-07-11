@@ -14,7 +14,7 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.visual.Interface;
 
 public class GuiNewChat extends Gui
@@ -132,7 +132,7 @@ public class GuiNewChat extends Gui
     public void printChatMessage(IChatComponent chatComponent)
     {
 
-        if(Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).chatCombine.get()) {
+        if(Client.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Interface.class).chatCombine.get()) {
 
             String text = fixString(chatComponent.getFormattedText());
             if (text.equals(this.lastMessage)) {

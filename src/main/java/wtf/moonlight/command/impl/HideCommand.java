@@ -11,11 +11,11 @@
 package wtf.moonlight.command.impl;
 
 import net.minecraft.util.EnumChatFormatting;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.command.Command;
 import wtf.moonlight.command.CommandExecutionException;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.utils.misc.DebugUtils;
+import wtf.moonlight.utils.DebugUtils;
 
 import java.util.Optional;
 
@@ -31,19 +31,19 @@ public final class HideCommand extends Command {
         if (arguments.length == 2) {
             final String arg = arguments[1];
             if (arg.equalsIgnoreCase("clear")) {
-                for (final Module module : Moonlight.INSTANCE.getModuleManager().getModules()) {
+                for (final Module module : Client.INSTANCE.getModuleManager().getModules()) {
                     module.setHidden(false);
                 }
                 DebugUtils.sendMessage("Cleared all hidden module.");
             } else if (arg.equalsIgnoreCase("list")) {
                 DebugUtils.sendMessage("Hidden Modules");
-                for (final Module module : Moonlight.INSTANCE.getModuleManager().getModules()) {
+                for (final Module module : Client.INSTANCE.getModuleManager().getModules()) {
                     if (module.isHidden()) {
                         DebugUtils.sendMessage(EnumChatFormatting.GRAY + "- " + EnumChatFormatting.RED + module.getName());
                     }
                 }
             } else {
-                final Optional<Module> module2 = Optional.ofNullable(Moonlight.INSTANCE.getModuleManager().getModule(arg));
+                final Optional<Module> module2 = Optional.ofNullable(Client.INSTANCE.getModuleManager().getModule(arg));
                 if (module2.isPresent()) {
                     final Module m = module2.get();
                     m.setHidden(!m.isHidden());

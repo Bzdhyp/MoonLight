@@ -27,7 +27,7 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.*;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.events.misc.SendMessageEvent;
 import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.events.player.PlayerTickEvent;
@@ -35,7 +35,7 @@ import wtf.moonlight.events.player.SlowDownEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.impl.combat.AutoGap;
 import wtf.moonlight.module.impl.combat.KillAura;
-import wtf.moonlight.module.impl.exploit.Disabler;
+import wtf.moonlight.module.impl.misc.Disabler;
 import wtf.moonlight.utils.player.MovementUtils;
 import wtf.moonlight.utils.player.RotationUtils;
 
@@ -104,7 +104,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
 
             PlayerTickEvent event = new PlayerTickEvent(PlayerTickEvent.State.PRE);
 
-            Moonlight.INSTANCE.getEventManager().call(event);
+            Client.INSTANCE.getEventManager().call(event);
 
             if(event.isCancelled())
                 return;
@@ -112,7 +112,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
             super.onUpdate();
 
             final PlayerTickEvent postTickEvent = new PlayerTickEvent(PlayerTickEvent.State.POST);
-            Moonlight.INSTANCE.getEventManager().call(postTickEvent);
+            Client.INSTANCE.getEventManager().call(postTickEvent);
 
             if (this.isRiding())
             {
@@ -137,7 +137,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
     public void onUpdateWalkingPlayer() {
 
         MotionEvent motionEvent = new MotionEvent(this.posX, this.getEntityBoundingBox().minY, this.posZ, this.rotationYaw, this.rotationPitch,this.onGround, MotionEvent.State.PRE);
-        Moonlight.INSTANCE.getEventManager().call(motionEvent);
+        Client.INSTANCE.getEventManager().call(motionEvent);
 
         ticksSinceStep++;
 
@@ -206,8 +206,8 @@ public class EntityPlayerSP extends AbstractClientPlayer
                 flag2 = false;
             }
 
-            if (Moonlight.INSTANCE.getModuleManager().getModule(Disabler.class).isEnabled() && Moonlight.INSTANCE.getModuleManager().getModule(Disabler.class).options.isEnabled("GrimAC") && Moonlight.INSTANCE.getModuleManager().getModule(Disabler.class).grim.isEnabled("Post")) {
-                Moonlight.INSTANCE.getModuleManager().getModule(Disabler.class).processPackets();
+            if (Client.INSTANCE.getModuleManager().getModule(Disabler.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Disabler.class).options.isEnabled("GrimAC") && Client.INSTANCE.getModuleManager().getModule(Disabler.class).grim.isEnabled("Post")) {
+                Client.INSTANCE.getModuleManager().getModule(Disabler.class).processPackets();
             }
             ++this.positionUpdateTicks;
 
@@ -225,7 +225,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
             mc.thePlayer.rotationYawHead = yaw;
             mc.thePlayer.rotationPitchHead = pitch;
         }
-        Moonlight.INSTANCE.getEventManager().call(new MotionEvent(MotionEvent.State.POST));
+        Client.INSTANCE.getEventManager().call(new MotionEvent(MotionEvent.State.POST));
     }
 
     public EntityItem dropOneItem(boolean dropAll)
@@ -243,7 +243,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
     {
 
         SendMessageEvent event = new SendMessageEvent(message);
-        Moonlight.INSTANCE.getEventManager().call(event);
+        Client.INSTANCE.getEventManager().call(event);
 
         if(event.isCancelled())
             return;
@@ -607,7 +607,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
 
     public void onLivingUpdate()
     {
-        Moonlight.INSTANCE.getEventManager().call(UpdateEvent.INSTANCE);
+        Client.INSTANCE.getEventManager().call(UpdateEvent.INSTANCE);
         if (this.sprintingTicksLeft > 0)
         {
             --this.sprintingTicksLeft;
@@ -680,12 +680,12 @@ public class EntityPlayerSP extends AbstractClientPlayer
         this.movementInput.updatePlayerMoveState();
         this.keyMovementInput.updatePlayerMoveState();
 
-        if ((this.isUsingItem() || Moonlight.INSTANCE.getModuleManager().getModule(KillAura.class).target != null && Moonlight.INSTANCE.getModuleManager().getModule(KillAura.class).slow.get() &&
-                Moonlight.INSTANCE.getModuleManager().getModule(KillAura.class).shouldBlock() && Moonlight.INSTANCE.getModuleManager().getModule(KillAura.class).isBlocking ||
-                Moonlight.INSTANCE.getModuleManager().getModule(AutoGap.class).eating
+        if ((this.isUsingItem() || Client.INSTANCE.getModuleManager().getModule(KillAura.class).target != null && Client.INSTANCE.getModuleManager().getModule(KillAura.class).slow.get() &&
+                Client.INSTANCE.getModuleManager().getModule(KillAura.class).shouldBlock() && Client.INSTANCE.getModuleManager().getModule(KillAura.class).isBlocking ||
+                Client.INSTANCE.getModuleManager().getModule(AutoGap.class).eating
         ) && !this.isRiding()) {
             SlowDownEvent slowDownEvent = new SlowDownEvent(0.2F, 0.2F,isSprinting());
-            Moonlight.INSTANCE.getEventManager().call(slowDownEvent);
+            Client.INSTANCE.getEventManager().call(slowDownEvent);
             this.movementInput.moveStrafe *= slowDownEvent.getStrafe();
             this.movementInput.moveForward *= slowDownEvent.getForward();
             KeyBinding.setKeyBindState(mc.gameSettings.keyBindSprint.getKeyCode(), slowDownEvent.isSprinting());

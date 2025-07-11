@@ -26,10 +26,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 import net.minecraft.util.*;
 import org.lwjgl.opengl.GL11;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.visual.Interface;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.InstanceAccess;
+import wtf.moonlight.utils.misc.InstanceAccess;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -45,9 +45,32 @@ public class RenderUtils implements InstanceAccess {
     private static final Frustum FRUSTUM = new Frustum();
     public static final Pattern COLOR_PATTERN = Pattern.compile("(?i)§[0-9A-FK-OR]");
 
+    public static void startGlScissor(int x, int y, int width, int height) {
+        Minecraft mc = Minecraft.getMinecraft();
+        int scaleFactor = 1;
+        int k = mc.gameSettings.guiScale;
+        if (k == 0) {
+            k = 1000;
+        }
+        while (scaleFactor < k && mc.displayWidth / (scaleFactor + 1) >= 320 && mc.displayHeight / (scaleFactor + 1) >= 240) {
+            ++scaleFactor;
+        }
+        GL11.glPushMatrix();
+        GL11.glEnable(3089);
+        GL11.glScissor((int) (x * scaleFactor), (int) (mc.displayHeight - (y + height) * scaleFactor), (int) (width * scaleFactor), (int) (height * scaleFactor));
+    }
+
+    public static void stopGlScissor() {
+        GL11.glDisable(3089);
+        GL11.glPopMatrix();
+    }
 
     public static void drawRect(float left, float top, float width, float height, Color color) {
         drawRect(left,top,width,height,color.getRGB());
+    }
+
+    public static boolean isHovering(float x, float y, float width, float height, int mouseX, int mouseY) {
+        return mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
     }
 
     public static void drawRect(float left, float top, float width, float height, int color) {
@@ -1081,7 +1104,7 @@ public class RenderUtils implements InstanceAccess {
                     GL11.glRotated(-(mc.getRenderManager()).playerViewY, 0.0D, 1.0D, 0.0D);
                     GL11.glRotated((mc.getRenderManager()).playerViewX, 1.0D, 0.0D, 0.0D);
 
-                    final Color c = new Color(Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).color(0));
+                    final Color c = new Color(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(0));
 
                     drawFilledCircleNoGL(0, 0, 0.7, c.hashCode(), quality);
 

@@ -67,9 +67,9 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import wtf.moonlight.events.player.TeleportEvent;
-import wtf.moonlight.gui.mainmenu.GuiMainMenu;
+import wtf.moonlight.gui.main.GuiMainMenu;
 
 import java.io.File;
 import java.io.IOException;
@@ -466,7 +466,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
                 f1
         );
 
-        Moonlight.INSTANCE.getEventManager().call(event);
+        Client.INSTANCE.getEventManager().call(event);
 
         if (event.isCancelled()) {
             return;
