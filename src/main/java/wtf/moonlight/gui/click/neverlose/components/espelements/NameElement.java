@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import wtf.moonlight.module.impl.visual.ESP;
 import wtf.moonlight.gui.click.Component;
-import wtf.moonlight.utils.math.MathUtils;
+import wtf.moonlight.utils.MathUtils;
 import wtf.moonlight.utils.render.RenderUtils;
 
 import java.util.ArrayList;

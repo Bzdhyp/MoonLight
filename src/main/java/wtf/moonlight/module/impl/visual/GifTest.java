@@ -16,7 +16,7 @@ import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.ModuleCategory;
 import wtf.moonlight.module.ModuleInfo;
-import wtf.moonlight.utils.render.GifRenderer;
+import wtf.moonlight.utils.GifRenderer;
 
 @ModuleInfo(name = "GifTest", category = ModuleCategory.Visual)
 public class GifTest extends Module {

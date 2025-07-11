@@ -12,7 +12,7 @@ package wtf.moonlight.utils.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import wtf.moonlight.utils.InstanceAccess;
+import wtf.moonlight.utils.misc.InstanceAccess;
 import wtf.moonlight.utils.render.shader.ShaderUtils;
 
 import java.awt.*;

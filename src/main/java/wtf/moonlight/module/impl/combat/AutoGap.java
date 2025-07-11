@@ -42,7 +42,7 @@ import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.utils.animations.advanced.ContinualAnimation;
-import wtf.moonlight.utils.math.TimerUtils;
+import wtf.moonlight.utils.TimerUtils;
 import wtf.moonlight.utils.render.RoundedUtils;
 
 import java.awt.*;

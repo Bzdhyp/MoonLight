@@ -8,7 +8,7 @@
  *
  * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
  */
-package wtf.moonlight.module.impl.exploit;
+package wtf.moonlight.module.impl.misc;
 
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
@@ -20,7 +20,7 @@ import wtf.moonlight.module.ModuleCategory;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.ListValue;
 
-@ModuleInfo(name = "NoRotate", category = ModuleCategory.Exploit)
+@ModuleInfo(name = "NoRotate", category = ModuleCategory.Misc)
 public class NoRotate extends Module {
     public final ListValue mode = new ListValue("Mode", new String[]{"Edit","Packet"}, "Edit", this);
     private float yaw, pitch;

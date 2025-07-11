@@ -105,7 +105,7 @@ import net.optifine.entity.model.CustomEntityModels;
 import net.optifine.player.PlayerItemsLayer;
 import net.optifine.reflect.Reflector;
 import net.optifine.shaders.Shaders;
-import wtf.moonlight.utils.math.MathUtils;
+import wtf.moonlight.utils.MathUtils;
 
 public class RenderManager
 {

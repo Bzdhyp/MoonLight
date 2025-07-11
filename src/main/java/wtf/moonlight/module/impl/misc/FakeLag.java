@@ -8,7 +8,7 @@
  *
  * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
  */
-package wtf.moonlight.module.impl.exploit;
+package wtf.moonlight.module.impl.misc;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,14 +22,14 @@ import wtf.moonlight.module.Module;
 import wtf.moonlight.module.ModuleCategory;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.*;
-import wtf.moonlight.utils.math.MathUtils;
-import wtf.moonlight.utils.math.TimerUtils;
+import wtf.moonlight.utils.MathUtils;
+import wtf.moonlight.utils.TimerUtils;
 import wtf.moonlight.component.PingSpoofComponent;
 
 import java.util.Arrays;
 import java.util.List;
 
-@ModuleInfo(name = "FakeLag", category = ModuleCategory.Exploit)
+@ModuleInfo(name = "FakeLag", category = ModuleCategory.Misc)
 public class FakeLag extends Module {
     private final ListValue mode = new ListValue("Mode", new String[]{"Constant", "Dynamic"}, "Dynamic", this);
     private final SliderValue minDelay = new SliderValue("Min Delay", 300, 0, 1000, 1, this);

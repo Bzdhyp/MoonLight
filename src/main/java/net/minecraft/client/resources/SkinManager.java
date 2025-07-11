@@ -21,7 +21,7 @@ import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
-import wtf.moonlight.utils.concurrent.Workers;
+import wtf.moonlight.utils.packet.Workers;
 
 public class SkinManager
 {

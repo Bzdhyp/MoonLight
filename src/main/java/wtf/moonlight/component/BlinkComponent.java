@@ -21,8 +21,8 @@ import com.cubk.EventPriority;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.misc.WorldEvent;
 import wtf.moonlight.events.packet.PacketEvent;
-import wtf.moonlight.utils.InstanceAccess;
-import wtf.moonlight.utils.math.TimerUtils;
+import wtf.moonlight.utils.misc.InstanceAccess;
+import wtf.moonlight.utils.TimerUtils;
 import wtf.moonlight.utils.packet.PacketUtils;
 
 import java.util.ArrayList;

@@ -15,7 +15,7 @@ import wtf.moonlight.command.CommandExecutionException;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.values.Value;
 import wtf.moonlight.module.values.impl.*;
-import wtf.moonlight.utils.misc.DebugUtils;
+import wtf.moonlight.utils.DebugUtils;
 
 import java.awt.*;
 import java.util.Arrays;

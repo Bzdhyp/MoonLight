@@ -20,7 +20,7 @@ import net.minecraft.util.MathHelper;
 import wtf.moonlight.events.player.MoveEvent;
 import wtf.moonlight.events.player.MoveInputEvent;
 import wtf.moonlight.module.impl.combat.TargetStrafe;
-import wtf.moonlight.utils.InstanceAccess;
+import wtf.moonlight.utils.misc.InstanceAccess;
 
 import java.util.Arrays;
 

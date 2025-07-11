@@ -24,7 +24,6 @@ public class ItemESP extends Module {
 
     @EventTarget
     public void onRender3D(Render3DEvent event) {
-        final RenderManager renderManager = mc.getRenderManager();
         for (final Entity entity : mc.theWorld.getLoadedEntityList()) {
             if (!(entity instanceof EntityItem entityItem))
                 continue;

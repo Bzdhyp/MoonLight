@@ -17,8 +17,8 @@ import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.network.play.INetHandlerPlayServer;
 import net.minecraft.network.play.client.*;
 import net.minecraft.network.play.server.*;
-import wtf.moonlight.utils.InstanceAccess;
-import wtf.moonlight.utils.misc.DebugUtils;
+import wtf.moonlight.utils.misc.InstanceAccess;
+import wtf.moonlight.utils.DebugUtils;
 
 import javax.script.ScriptException;
 import java.util.Arrays;

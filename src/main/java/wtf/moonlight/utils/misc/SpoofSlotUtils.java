@@ -14,7 +14,6 @@ import lombok.Getter;
 import net.minecraft.item.ItemStack;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.misc.WorldEvent;
-import wtf.moonlight.utils.InstanceAccess;
 
 public class SpoofSlotUtils implements InstanceAccess {
 

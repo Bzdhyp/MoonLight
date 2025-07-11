@@ -26,7 +26,7 @@ import wtf.moonlight.module.ModuleCategory;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.math.TimerUtils;
+import wtf.moonlight.utils.TimerUtils;
 import wtf.moonlight.utils.render.GLUtils;
 
 import java.util.HashSet;

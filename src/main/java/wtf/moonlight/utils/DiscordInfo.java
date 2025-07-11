@@ -8,7 +8,7 @@
  *
  * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
  */
-package wtf.moonlight.utils.discord;
+package wtf.moonlight.utils;
 
 import lombok.Getter;
 import net.arikia.dev.drpc.DiscordEventHandlers;
@@ -19,8 +19,8 @@ import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.GuiSelectWorld;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.impl.visual.Interface;
-import wtf.moonlight.utils.InstanceAccess;
-import wtf.moonlight.utils.concurrent.Workers;
+import wtf.moonlight.utils.misc.InstanceAccess;
+import wtf.moonlight.utils.packet.Workers;
 import wtf.moonlight.utils.misc.ServerUtils;
 
 public class DiscordInfo implements InstanceAccess {

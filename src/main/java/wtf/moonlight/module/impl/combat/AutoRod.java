@@ -23,7 +23,7 @@ import wtf.moonlight.module.impl.movement.Scaffold;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.math.TimerUtils;
+import wtf.moonlight.utils.TimerUtils;
 import wtf.moonlight.utils.misc.SpoofSlotUtils;
 import wtf.moonlight.utils.player.MovementCorrection;
 import wtf.moonlight.utils.player.PlayerUtils;
@@ -32,7 +32,7 @@ import wtf.moonlight.utils.render.RenderUtils;
 
 import java.util.Objects;
 
-@ModuleInfo(name = "AutoRod", category = ModuleCategory.Legit)
+@ModuleInfo(name = "AutoRod", category = ModuleCategory.Combat)
 public class AutoRod extends Module {
     private final ListValue mode = new ListValue("Mode", new String[]{"Silent", "Always"}, "Silent", this);
     private final SliderValue fov = new SliderValue("FOV",180,1,180,this);

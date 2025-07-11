@@ -2,7 +2,7 @@ package wtf.moonlight.utils.player;
 
 import net.minecraft.util.MovementInput;
 import org.lwjglx.input.Keyboard;
-import wtf.moonlight.utils.InstanceAccess;
+import wtf.moonlight.utils.misc.InstanceAccess;
 
 public class MovementInputFromKeyboard extends MovementInput implements InstanceAccess {
 

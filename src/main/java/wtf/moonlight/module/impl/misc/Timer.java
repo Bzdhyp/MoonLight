@@ -8,7 +8,7 @@
  *
  * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
  */
-package wtf.moonlight.module.impl.exploit;
+package wtf.moonlight.module.impl.misc;
 
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.network.Packet;
@@ -32,8 +32,8 @@ import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.utils.animations.advanced.ContinualAnimation;
-import wtf.moonlight.utils.math.MathUtils;
-import wtf.moonlight.utils.math.TimerUtils;
+import wtf.moonlight.utils.MathUtils;
+import wtf.moonlight.utils.TimerUtils;
 import wtf.moonlight.utils.packet.*;
 import wtf.moonlight.utils.render.RoundedUtils;
 
@@ -41,7 +41,7 @@ import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-@ModuleInfo(name = "Timer", category = ModuleCategory.Exploit)
+@ModuleInfo(name = "Timer", category = ModuleCategory.Misc)
 public class Timer extends Module {
 
     public final ListValue mode = new ListValue("Mode", new String[]{"Vanilla", "Balance", "Hypixel Cancel"}, "Vanilla", this);

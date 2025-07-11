@@ -14,7 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.module.impl.misc.hackerdetector.Check;
-import wtf.moonlight.utils.math.TimerUtils;
+import wtf.moonlight.utils.TimerUtils;
 import wtf.moonlight.utils.player.MovementUtils;
 
 public class LegitScaffoldCheck extends Check {

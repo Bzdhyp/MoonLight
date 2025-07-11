@@ -11,7 +11,7 @@
 package wtf.moonlight.utils.packet;
 
 import net.minecraft.network.Packet;
-import wtf.moonlight.utils.math.TimerUtils;
+import wtf.moonlight.utils.TimerUtils;
 
 public class TimedPacket {
 

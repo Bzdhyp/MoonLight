@@ -1,11 +1,10 @@
-package wtf.moonlight.utils.render;
+package wtf.moonlight.utils;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import wtf.moonlight.module.impl.visual.Interface;
-import wtf.moonlight.utils.InstanceAccess;
-import wtf.moonlight.utils.math.MathUtils;
-import wtf.moonlight.utils.math.TimerUtils;
+import wtf.moonlight.utils.misc.InstanceAccess;
+import wtf.moonlight.utils.render.Particle;
 
 import java.util.ArrayList;
 import java.util.List;

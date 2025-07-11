@@ -8,7 +8,7 @@
  *
  * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
  */
-package wtf.moonlight.module.impl.visual;
+package wtf.moonlight.module.impl.misc;
 
 import org.lwjglx.input.Mouse;
 import com.cubk.EventTarget;

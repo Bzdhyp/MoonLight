@@ -28,7 +28,7 @@ import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.utils.animations.advanced.ContinualAnimation;
-import wtf.moonlight.utils.math.MathUtils;
+import wtf.moonlight.utils.MathUtils;
 import wtf.moonlight.component.PingSpoofComponent;
 import wtf.moonlight.utils.player.PlayerUtils;
 import wtf.moonlight.utils.render.RenderUtils;

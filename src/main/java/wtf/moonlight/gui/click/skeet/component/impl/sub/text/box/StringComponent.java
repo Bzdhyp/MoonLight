@@ -20,7 +20,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;
 import org.lwjglx.input.Keyboard;
-import wtf.moonlight.utils.math.TimerUtils;
+import wtf.moonlight.utils.TimerUtils;
 import wtf.moonlight.utils.render.RenderUtils;
 
 import java.awt.*;

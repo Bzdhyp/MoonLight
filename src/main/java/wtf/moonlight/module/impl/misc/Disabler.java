@@ -8,7 +8,7 @@
  *
  * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
  */
-package wtf.moonlight.module.impl.exploit;
+package wtf.moonlight.module.impl.misc;
 
 import lombok.Getter;
 import net.minecraft.client.gui.GuiDownloadTerrain;
@@ -19,7 +19,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.*;
 import net.minecraft.network.play.server.*;
 import net.minecraft.potion.Potion;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.misc.WorldEvent;
 import wtf.moonlight.events.packet.PacketEvent;
@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-@ModuleInfo(name = "Disabler", category = ModuleCategory.Exploit)
+@ModuleInfo(name = "Disabler", category = ModuleCategory.Misc)
 public class Disabler extends Module {
 
     public final MultiBoolValue options = new MultiBoolValue("Disablers", Arrays.asList(
@@ -172,12 +172,12 @@ public class Disabler extends Module {
                 if (testTicks >= 20) {
                     disabled = false;
                     testTicks = -1;
-                    Moonlight.INSTANCE.getNotificationManager().post(NotificationType.OKAY, "Successfully Disabled Watchdog.", "Enjoy lowhopping yay", 3);
+                    Client.INSTANCE.getNotificationManager().post(NotificationType.OKAY, "Successfully Disabled Watchdog.", "Enjoy lowhopping yay", 3);
                 } else {
                     mc.thePlayer.motionY = mc.thePlayer.motionZ = mc.thePlayer.motionX = 0;
                 }
                 if (disabled) {
-                    Moonlight.INSTANCE.getNotificationManager().post(NotificationType.WARNING, "Don't Move! ", "Disabling Motion Checks", 3);
+                    Client.INSTANCE.getNotificationManager().post(NotificationType.WARNING, "Don't Move! ", "Disabling Motion Checks", 3);
                 }
             }
         }

@@ -8,12 +8,12 @@
  *
  * Author(s): [MukjepScarlet]
  */
-package wtf.moonlight.utils.concurrent;
+package wtf.moonlight.utils.packet;
 
 import net.minecraft.util.MathHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -32,7 +32,7 @@ public final class Workers {
     }
 
     private static void uncaughtExceptionHandler(Thread t, Throwable e) {
-        Moonlight.LOGGER.error("Uncaught Exception in thread {}", t.getName(), e);
+        Client.LOGGER.error("Uncaught Exception in thread {}", t.getName(), e);
     }
 
     private static ExecutorService createWorker(String name) {
@@ -43,9 +43,9 @@ public final class Workers {
             var forkJoinWorkerThread = new ForkJoinWorkerThread(pool) {
                 protected void onTermination(@Nullable Throwable throwable) {
                     if (throwable != null) {
-                        Moonlight.LOGGER.warn("{} died", threadName, throwable);
+                        Client.LOGGER.warn("{} died", threadName, throwable);
                     } else {
-                        Moonlight.LOGGER.debug("{} stopped", threadName);
+                        Client.LOGGER.debug("{} stopped", threadName);
                     }
                 }
             };

@@ -1,6 +1,6 @@
 package net.minecraft.util;
 
-import wtf.moonlight.utils.math.MathUtils;
+import wtf.moonlight.utils.MathUtils;
 
 public class AxisAlignedBB {
     public final double minX;

@@ -11,7 +11,7 @@
 package wtf.moonlight.utils.packet;
 
 import net.minecraft.network.Packet;
-import wtf.moonlight.utils.InstanceAccess;
+import wtf.moonlight.utils.misc.InstanceAccess;
 
 import java.util.Arrays;
 

@@ -8,7 +8,7 @@
  *
  * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
  */
-package wtf.moonlight.module.impl.exploit;
+package wtf.moonlight.module.impl.misc;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -21,7 +21,7 @@ import wtf.moonlight.module.ModuleCategory;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.ListValue;
 
-@ModuleInfo(name = "ClientSpoofer", category = ModuleCategory.Exploit)
+@ModuleInfo(name = "ClientSpoofer", category = ModuleCategory.Misc)
 public class ClientSpoofer extends Module {
     public final ListValue mode = new ListValue("Mode", new String[]{"Lunar", "Feather"}, "Lunar", this);
 

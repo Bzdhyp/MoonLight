@@ -8,7 +8,7 @@
  *
  * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
  */
-package wtf.moonlight.module.impl.exploit;
+package wtf.moonlight.module.impl.movement;
 
 import net.minecraft.util.AxisAlignedBB;
 import com.cubk.EventTarget;
@@ -23,7 +23,7 @@ import wtf.moonlight.utils.render.RenderUtils;
 
 import java.awt.*;
 
-@ModuleInfo(name = "Blink", category = ModuleCategory.Exploit)
+@ModuleInfo(name = "Blink", category = ModuleCategory.Misc)
 public class Blink extends Module {
     private final BoolValue showPrevPos = new BoolValue("Show Prev Pos", true, this);
     private double prevX;

@@ -11,7 +11,7 @@
 package wtf.moonlight.utils.render.shader.impl;
 
 import net.minecraft.client.gui.ScaledResolution;
-import wtf.moonlight.utils.InstanceAccess;
+import wtf.moonlight.utils.misc.InstanceAccess;
 import wtf.moonlight.utils.render.shader.ShaderUtils;
 
 public class MainMenu implements InstanceAccess {

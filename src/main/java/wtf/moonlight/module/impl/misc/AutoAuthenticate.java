@@ -27,8 +27,9 @@ public class AutoAuthenticate extends Module {
     public final StringValue password = new StringValue("Password","12341234",this);
     public final SliderValue delay = new SliderValue("Delay",1000,100,5000,100,this);
     private final String[] PASSWORD_PLACEHOLDERS = {"password", "pass"};
-    private long runAt, startAt;
     private String runCommand;
+    private long runAt;
+
     @EventTarget
     public void onMotion(MotionEvent event) {
         if (this.runAt < System.currentTimeMillis() && this.runCommand != null) {
@@ -75,13 +76,11 @@ public class AutoAuthenticate extends Module {
 
     private void setRun(String runCommand) {
         long currentTimeMillis = System.currentTimeMillis();
-        this.startAt = currentTimeMillis;
         this.runAt = (long) (currentTimeMillis + delay.getValue());
         this.runCommand = runCommand.trim();
     }
 
     private void reset() {
-        this.startAt = this.runAt = 0;
         this.runCommand = null;
     }
 }

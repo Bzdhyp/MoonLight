@@ -338,6 +338,6 @@ public class ModuleListWidget extends Widget {
 
     @Override
     public boolean shouldRender() {
-        return setting.isEnabled() && setting.elements.isEnabled("Module List");
+        return setting.isEnabled() && setting.elements.isEnabled("Arraylist");
     }
 }

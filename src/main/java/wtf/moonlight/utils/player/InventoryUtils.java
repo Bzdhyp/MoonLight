@@ -18,12 +18,10 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.BlockTNT;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,7 +29,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import wtf.moonlight.module.impl.combat.AutoProjectile;
 import wtf.moonlight.module.impl.combat.AutoRod;
-import wtf.moonlight.utils.InstanceAccess;
+import wtf.moonlight.utils.misc.InstanceAccess;
 
 import java.util.Iterator;
 import java.util.List;
@@ -40,54 +38,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class InventoryUtils implements InstanceAccess {
     public static final int INCLUDE_ARMOR_BEGIN = 5;
     public static final int EXCLUDE_ARMOR_BEGIN = 9;
-    public static final int ONLY_HOT_BAR_BEGIN = 36;
     public static final int END = 45;
-
-    public static boolean isValidStack(final ItemStack stack) {
-        if (stack.getItem() instanceof ItemBlock && isGoodBlockStack(stack)) {
-            return true;
-        } else if (stack.getItem() instanceof ItemPotion && isBuffPotion(stack)) {
-            return true;
-        } else if (stack.getItem() instanceof ItemFood && isGoodFood(stack)) {
-            return true;
-        } else if ((stack.getItem() instanceof ItemEgg || stack.getItem() instanceof ItemSnowball) && INSTANCE.getModuleManager().getModule(AutoProjectile.class).isEnabled()) {
-            return true;
-        } else
-        if (stack.getItem() == Items.arrow) {
-            return true;
-        } else if ((stack.getItem() instanceof ItemFishingRod) && INSTANCE.getModuleManager().getModule(AutoRod.class).isEnabled()) {
-            return true;
-        } else {
-            return isGoodItem(stack.getItem());
-        }
-    }
-
-    public static double getBowDamage(final ItemStack stack) {
-        double damage = 0.0;
-        if (stack.getItem() instanceof ItemBow && stack.isItemEnchanted()) {
-            damage += EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, stack);
-        }
-        return damage;
-    }
-
-    public static boolean isBestBow(ItemStack itemStack) {
-        AtomicDouble bestBowDmg = new AtomicDouble(-1.0D);
-        AtomicReference<ItemStack> bestBow = new AtomicReference<>(null);
-
-        forEachInventorySlot(InventoryUtils.EXCLUDE_ARMOR_BEGIN, InventoryUtils.END, ((slot, stack) -> {
-            if (stack.getItem() instanceof ItemBow) {
-                double damage = getBowDamage(stack);
-
-                if (damage > bestBowDmg.get()) {
-                    bestBow.set(stack);
-                    bestBowDmg.set(damage);
-                }
-            }
-        }));
-
-        return itemStack == bestBow.get() ||
-                getBowDamage(itemStack) > bestBowDmg.get();
-    }
 
     public static void forEachInventorySlot(final int begin, final int end, final SlotConsumer consumer) {
         for (int i = begin; i < end; ++i) {
@@ -121,31 +72,6 @@ public class InventoryUtils implements InstanceAccess {
         return food instanceof ItemAppleGold || (food.getHealAmount(stack) >= 4 && food.getSaturationModifier(stack) >= 0.3f);
     }
 
-    public static boolean isBestArmor(final EntityPlayerSP player,
-                                      final ItemStack itemStack) {
-        final ItemArmor itemArmor = (ItemArmor) itemStack.getItem();
-
-        double reduction = 0.0;
-        ItemStack bestStack = null;
-
-        for (int i = INCLUDE_ARMOR_BEGIN; i < END; i++) {
-            final ItemStack stack = player.inventoryContainer.getSlot(i).getStack();
-
-            if (stack != null && stack.getItem() instanceof ItemArmor stackArmor) {
-                if (stackArmor.armorType == itemArmor.armorType) {
-                    final double newReduction = getDamageReduction(stack);
-
-                    if (newReduction > reduction) {
-                        reduction = newReduction;
-                        bestStack = stack;
-                    }
-                }
-            }
-        }
-
-        return bestStack == itemStack || getDamageReduction(itemStack) > reduction;
-    }
-
     public static boolean isBestSword(ItemStack itemStack) {
         AtomicDouble damage = new AtomicDouble(0.0);
         AtomicReference<ItemStack> bestStack = new AtomicReference<>(null);
@@ -164,25 +90,6 @@ public class InventoryUtils implements InstanceAccess {
         return bestStack.get() == itemStack || damage.get() < getItemDamage(itemStack);
     }
 
-    public static boolean isBestTool(final EntityPlayerSP player, final ItemStack itemStack) {
-        final int type = getToolType(itemStack);
-
-        Tool bestTool = new Tool(0, -1, null);
-
-        for (int i = EXCLUDE_ARMOR_BEGIN; i < END; i++) {
-            final ItemStack stack = player.inventoryContainer.getSlot(i).getStack();
-
-            if (stack != null && stack.getItem() instanceof ItemTool && type == getToolType(stack)) {
-                final double efficiency = getToolEfficiency(stack);
-                if (efficiency > bestTool.efficiency())
-                    bestTool = new Tool(0, efficiency, stack);
-            }
-        }
-
-        return bestTool.stack() == itemStack ||
-                getToolEfficiency(itemStack) > bestTool.efficiency();
-    }
-
     public static int getToolType(final ItemStack stack) {
         final ItemTool tool = (ItemTool) stack.getItem();
         if (tool instanceof ItemPickaxe) {
@@ -195,10 +102,6 @@ public class InventoryUtils implements InstanceAccess {
             return 2;
         }
         return -1;
-    }
-
-    public static boolean isGoodItem(final Item item) {
-        return item instanceof ItemEnderPearl;
     }
 
     public static float getToolEfficiency(ItemStack itemStack) {
@@ -340,29 +243,6 @@ public class InventoryUtils implements InstanceAccess {
                 return false;
         }
         return true;
-    }
-
-    public static int findBestBlockStack() {
-        int bestSlot = -1;
-        int blockCount = -1;
-        for (int i = 44; i >= 9; --i) {
-            final ItemStack stack = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
-            if (stack != null && stack.getItem() instanceof ItemBlock && InventoryUtils.isGoodBlockStack(stack) && stack.stackSize > blockCount) {
-                bestSlot = i;
-                blockCount = stack.stackSize;
-            }
-        }
-        return bestSlot;
-    }
-
-    public static int findItem(int startSlot, int endSlot, Item item) {
-        for (int i = startSlot; i <= endSlot; i++) {
-            ItemStack stack = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
-            if (stack != null && stack.getItem() == item) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     public static int getEnchantment(ItemStack itemStack, Enchantment enchantment) {

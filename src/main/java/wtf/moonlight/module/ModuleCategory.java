@@ -18,11 +18,9 @@ import lombok.Getter;
 public enum ModuleCategory {
 
     Combat("Combat"),
-    Legit("Legit"),
     Movement("Movement"),
     Player("Player"),
     Misc("Misc"),
-    Exploit("Exploit"),
     Visual("Visuals"),
     Config("Configs"),
     Search("Search");

@@ -10,7 +10,7 @@
  */
 package wtf.moonlight.utils.animations.advanced;
 
-import wtf.moonlight.utils.math.TimerUtils;
+import wtf.moonlight.utils.TimerUtils;
 
 public abstract class Animation {
 

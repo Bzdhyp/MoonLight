@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.player.UpdateEvent;
-import wtf.moonlight.utils.InstanceAccess;
+import wtf.moonlight.utils.misc.InstanceAccess;
 
 public final class SelectorDetectionComponent implements InstanceAccess {
 

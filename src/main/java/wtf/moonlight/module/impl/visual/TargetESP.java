@@ -36,8 +36,8 @@ import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.utils.animations.advanced.Animation;
 import wtf.moonlight.utils.animations.advanced.Direction;
 import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.utils.math.MathUtils;
-import wtf.moonlight.utils.math.TimerUtils;
+import wtf.moonlight.utils.MathUtils;
+import wtf.moonlight.utils.TimerUtils;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.GLUtils;
 import wtf.moonlight.utils.render.RenderUtils;
@@ -47,7 +47,6 @@ import java.util.Objects;
 
 @ModuleInfo(name = "TargetESP", category = ModuleCategory.Visual)
 public class TargetESP extends Module {
-
     private final ListValue mode = new ListValue("Mark Mode", new String[]{"Points", "Ghost","Image", "Exhi", "Circle"}, "Points", this);
     private final ListValue imageMode = new ListValue("Image Mode",new String[]{"Rectangle", "QuadStapple", "TriangleStapple", "TriangleStipple"},"Rectangle",this,() -> mode.is("Image"));
     private final SliderValue circleSpeed = new SliderValue("Circle Speed",2.0F, 1.0F, 5.0F, 0.1F,this,() -> mode.is("Circle"));

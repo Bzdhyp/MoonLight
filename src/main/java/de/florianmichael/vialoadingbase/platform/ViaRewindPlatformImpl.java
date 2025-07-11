@@ -21,7 +21,7 @@ package de.florianmichael.vialoadingbase.platform;
 import com.viaversion.viarewind.api.ViaRewindPlatform;
 import de.florianmichael.vialoadingbase.ViaLoadingBase;
 import net.minecraft.item.ItemSword;
-import wtf.moonlight.utils.InstanceAccess;
+import wtf.moonlight.utils.misc.InstanceAccess;
 
 import java.io.File;
 import java.util.logging.Logger;

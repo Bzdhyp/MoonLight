@@ -15,9 +15,9 @@ import net.minecraft.util.EnumChatFormatting;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.module.impl.misc.HackerDetector;
 import wtf.moonlight.gui.notification.NotificationType;
-import wtf.moonlight.utils.InstanceAccess;
-import wtf.moonlight.utils.math.TimerUtils;
-import wtf.moonlight.utils.misc.DebugUtils;
+import wtf.moonlight.utils.misc.InstanceAccess;
+import wtf.moonlight.utils.TimerUtils;
+import wtf.moonlight.utils.DebugUtils;
 
 public abstract class Check implements InstanceAccess {
 

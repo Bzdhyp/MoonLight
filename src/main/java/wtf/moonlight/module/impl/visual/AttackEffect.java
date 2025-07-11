@@ -29,7 +29,7 @@ import wtf.moonlight.module.impl.combat.KillAura;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.math.TimerUtils;
+import wtf.moonlight.utils.TimerUtils;
 import wtf.moonlight.utils.render.RenderUtils;
 
 import java.awt.*;

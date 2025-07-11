@@ -18,12 +18,14 @@ import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.ModuleCategory;
 import wtf.moonlight.module.ModuleInfo;
+import wtf.moonlight.module.values.impl.StringValue;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 @ModuleInfo(name = "KillSults", category = ModuleCategory.Misc)
 public class KillSults extends Module {
     private EntityPlayer currentTarget;
+    public final StringValue stringV = new StringValue("Name"," 你已被MoonLight击败",this);
 
     @EventTarget
     private void onUpdate(UpdateEvent event) {
@@ -47,6 +49,6 @@ public class KillSults extends Module {
     public void sendMessage(String name) {
         final String[] text = {"人生自古谁无死，"};
         final int randomIndex = ThreadLocalRandom.current().nextInt(0, text.length);
-        mc.thePlayer.sendChatMessage("@" + name + " " + text[randomIndex] + " 你已被MoonLight击败");
+        mc.thePlayer.sendChatMessage("@" + name + " " + text[randomIndex] + stringV.getValue());
     }
 }

@@ -2,7 +2,7 @@ package net.optifine;
 
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.src.Config;
-import wtf.moonlight.utils.concurrent.Workers;
+import wtf.moonlight.utils.packet.Workers;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;

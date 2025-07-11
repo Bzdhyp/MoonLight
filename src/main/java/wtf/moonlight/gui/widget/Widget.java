@@ -16,7 +16,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import org.lwjglx.input.Mouse;
 import wtf.moonlight.events.render.Shader2DEvent;
 import wtf.moonlight.module.impl.visual.Interface;
-import wtf.moonlight.utils.InstanceAccess;
+import wtf.moonlight.utils.misc.InstanceAccess;
 import wtf.moonlight.utils.render.MouseUtils;
 import wtf.moonlight.utils.render.RoundedUtils;
 

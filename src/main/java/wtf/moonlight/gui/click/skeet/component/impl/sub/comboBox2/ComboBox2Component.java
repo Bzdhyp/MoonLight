@@ -20,7 +20,7 @@ import wtf.moonlight.gui.click.skeet.LockedResolution;
 import net.minecraft.client.gui.Gui;
 import org.lwjgl.opengl.GL11;
 import wtf.moonlight.gui.font.FontRenderer;
-import wtf.moonlight.utils.misc.StringUtils;
+import wtf.moonlight.utils.StringUtils;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.RenderUtils;
 

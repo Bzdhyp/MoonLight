@@ -8,7 +8,7 @@
  *
  * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
  */
-package wtf.moonlight.utils.math;
+package wtf.moonlight.utils;
 
 
 public class TimerUtils {

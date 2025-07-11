@@ -8,15 +8,15 @@
  *
  * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
  */
-package wtf.moonlight.utils;
+package wtf.moonlight.utils.misc;
 
 import net.minecraft.client.Minecraft;
-import wtf.moonlight.Moonlight;
+import wtf.moonlight.Client;
 
 public interface InstanceAccess {
 
     Minecraft mc = Minecraft.getMinecraft();
 
-    Moonlight INSTANCE = Moonlight.INSTANCE;
+    Client INSTANCE = Client.INSTANCE;
 }
 

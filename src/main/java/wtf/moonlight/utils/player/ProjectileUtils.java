@@ -16,8 +16,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.*;
 import org.joml.Vector2f;
-import wtf.moonlight.utils.InstanceAccess;
-import wtf.moonlight.utils.math.MathUtils;
+import wtf.moonlight.utils.misc.InstanceAccess;
+import wtf.moonlight.utils.MathUtils;
 
 import java.util.List;
 import java.util.Objects;

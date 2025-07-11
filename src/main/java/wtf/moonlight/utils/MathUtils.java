@@ -8,14 +8,14 @@
  *
  * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
  */
-package wtf.moonlight.utils.math;
+package wtf.moonlight.utils;
 
 import net.minecraft.util.*;
 
 import java.security.SecureRandom;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static wtf.moonlight.utils.InstanceAccess.mc;
+import static wtf.moonlight.utils.misc.InstanceAccess.mc;
 
 public class MathUtils {
     public static double roundToHalf(double d) {

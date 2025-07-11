@@ -33,7 +33,7 @@ import paulscode.sound.SoundSystemException;
 import paulscode.sound.SoundSystemLogger;
 import paulscode.sound.Source;
 import paulscode.sound.codecs.CodecJOrbis;
-import wtf.moonlight.utils.concurrent.Workers;
+import wtf.moonlight.utils.packet.Workers;
 
 public class SoundManager
 {

@@ -11,7 +11,7 @@
 package wtf.moonlight.utils.render;
 
 import net.minecraft.entity.EntityLivingBase;
-import wtf.moonlight.utils.math.MathUtils;
+import wtf.moonlight.utils.MathUtils;
 
 import java.awt.*;
 

@@ -15,6 +15,7 @@ Found a bug or have an idea for a new feature? You can let us know by clicking [
 - Fix BlinkComponent
 - NoSlowDown bypass Hypixel
 - Prediction LongJump
+- Revise the project structure
 
 ## Play Hypixel
 - use 1.8.9
