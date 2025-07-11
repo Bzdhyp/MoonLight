@@ -36,7 +36,7 @@ public class CategoryPanel implements IComponent, InstanceAccess {
 
     public CategoryPanel(ModuleCategory category) {
         this.category = category;
-        for (Module module : INSTANCE.getModuleManager().getAllModules()){
+        for (Module module : INSTANCE.getModuleManager().getModules()){
             if (module.getCategory().equals(this.category)){
                 moduleComponents.add(new ModuleComponent(module));
             }

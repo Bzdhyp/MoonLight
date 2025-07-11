@@ -138,7 +138,7 @@ public class ArcaneClickGui extends GuiScreen {
 
         RoundedUtils.drawRound((float) (x + w - 30 * moduleAnimation.getOutput() - 38), y + 44, 30, 25, 5, smallbackgroundColor2);
 
-        RoundedUtils.drawRound(x + 10, y + h - 35, 138, 25, 5, smallbackgroundColor);
+        RoundedUtils.drawRound(x + 10, y + h - 35, 158, 25, 5, smallbackgroundColor);
         Fonts.Icon.get(18).drawStringDynamic("R", x + w - 56, y + 55, 1,6);
         Fonts.Icon.get(20).drawStringDynamic("S", x + w - 28, y + 54.5f, 1,6);
         RoundedUtils.drawRound(x + w - 90, y + h - 35, 80, 25, 5, smallbackgroundColor);
@@ -159,7 +159,7 @@ public class ArcaneClickGui extends GuiScreen {
             categoryPanel.drawScreen(mouseX, mouseY);
             if (categoryPanel.getCategory() == ModuleCategory.Search || categoryPanel.getCategory() == ModuleCategory.Config) continue;
             if (categoryPanel.isSelected()) {
-                RoundedUtils.drawRound((categoryPanel.getCategory().ordinal() >= 5 ? x + 5 + categoryPanel.getCategory().ordinal() * 28
+                RoundedUtils.drawRound((categoryPanel.getCategory().ordinal() >= 5 ? x + 3 + categoryPanel.getCategory().ordinal() * 28
                         : categoryPanel.getCategory().ordinal() >= 4 ? x + 8.5f + categoryPanel.getCategory().ordinal() * 28
                         : categoryPanel.getCategory().ordinal() >= 3 ? x + 10.5f + categoryPanel.getCategory().ordinal() * 28
                         : categoryPanel.getCategory().ordinal() >= 2 ? x + 10 + categoryPanel.getCategory().ordinal() * 28
@@ -238,7 +238,7 @@ public class ArcaneClickGui extends GuiScreen {
     }
 
     private boolean handleCategoryPanel(CategoryPanel panel, int mouseX, int mouseY) {
-        if (RenderUtils.isHovering((panel.getCategory().ordinal() >= 5 ? x + 5 + panel.getCategory().ordinal() * 28
+        if (RenderUtils.isHovering((panel.getCategory().ordinal() >= 5 ? x + 3 + panel.getCategory().ordinal() * 28
                 : panel.getCategory().ordinal() >= 4 ? x + 8.5f + panel.getCategory().ordinal() * 28
                 : panel.getCategory().ordinal() >= 3 ? x + 10.5f + panel.getCategory().ordinal() * 28
                 : panel.getCategory().ordinal() >= 2 ? x + 10 + panel.getCategory().ordinal() * 28

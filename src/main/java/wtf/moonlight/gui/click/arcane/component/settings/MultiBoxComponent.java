@@ -28,6 +28,7 @@ import java.util.Map;
 public class MultiBoxComponent extends Component {
     private final MultiBoolValue setting;
     private final Animation open = new DecelerateAnimation(175, 1);
+    private final Animation sb = new DecelerateAnimation(175, 1);
     private float maxScroll = Float.MAX_VALUE, rawScroll, scroll;
     private Animation scrollAnimation = new SmoothStepAnimation(0, 0, Direction.BACKWARDS);
     private boolean opened;
@@ -44,6 +45,7 @@ public class MultiBoxComponent extends Component {
         Fonts.Bold.get(18).drawString(setting.getName(), getX() + 10, getY() + 4, ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(), 0.4f));
 
         open.setDirection(opened ? Direction.FORWARDS : Direction.BACKWARDS);
+        sb.setDirection(opened ? Direction.FORWARDS : Direction.BACKWARDS);
 
         if (open.getOutput() > 0.1) {
             GlStateManager.translate(0, 0, 2f);
@@ -62,16 +64,13 @@ public class MultiBoxComponent extends Component {
                     RoundedUtils.drawRound(getX() + 12, boolValueY, 141, 18, 2,
                             new Color(ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().backgroundColor.getRGB(), (float) select.get(boolValue).getOutput())));
                 }
-                Fonts.Bold.get(16).drawString(boolValue.getName(), getX() + 14, getY() + 40 + (setting.getValues().indexOf(boolValue) * 20 * open.getOutput()) + getScroll(), ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(), (float) select.get(boolValue).getOutput()));
+                Fonts.Bold.get(16).drawString(boolValue.getName(), getX() + 14, getY() + 40 + (setting.getValues().indexOf(boolValue) * 20 * open.getOutput()) + getScroll(), ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(),  (float) (1 * open.getOutput())));
 
             }
 
             onScroll(30,mouseX,mouseY);
             maxScroll = Math.max(0, setting.getValues().isEmpty() ? 0 : (setting.getValues().size() - 6) * 20);
 
-            if (setting.getValues().size() > 6) {
-                GL11.glPopAttrib();
-            }
             GlStateManager.translate(0, 0, -2f);
         }
         RoundedUtils.drawRound(getX() + 10, getY() + 14, 145, 14, 2, INSTANCE.getArcaneClickGui().smallbackgroundColor2);

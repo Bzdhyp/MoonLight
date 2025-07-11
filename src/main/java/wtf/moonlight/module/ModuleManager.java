@@ -143,9 +143,9 @@ public final class ModuleManager {
                 EnchantGlint.class,
 
                 // display
+                Interface.class,
                 TargetHUD.class,
                 KeyBindHUD.class,
-                Interface.class,
                 Watermark.class,
                 PotionHUD.class
         );

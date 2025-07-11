@@ -57,15 +57,11 @@ public class ModeComponent extends Component {
                     RoundedUtils.drawRound(getX() + 12, ((float) (getY() + 34 + (Arrays.asList(setting.getModes()).indexOf(str) * 20) * open.getOutput())) + getScroll(), 141, 18, 2,
                             new Color(ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().backgroundColor.getRGB(), (float) select.get(setting.getValue()).getOutput())));
                 }
-                Fonts.Bold.get(16).drawString(str, getX() + 14, getY() + 40 + (Arrays.asList(setting.getModes()).indexOf(str) * 20) * open.getOutput() + getScroll(), ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(), (float) select.get(str).getOutput()));
+                Fonts.Bold.get(16).drawString(str, getX() + 14, getY() + 40 + (Arrays.asList(setting.getModes()).indexOf(str) * 20) * open.getOutput() + getScroll(), ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(), (float) (1 * open.getOutput())));
             }
 
             onScroll(30, mouseX, mouseY);
             maxScroll = Math.max(0, setting.getModes().length == 0 ? 0 : (setting.getModes().length - 6) * 20);
-
-            if (setting.getModes().length > 6) {
-                GL11.glPopAttrib();
-            }
 
             GlStateManager.translate(0, 0, -2f);
         }
