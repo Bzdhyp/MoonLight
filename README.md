@@ -1,5 +1,5 @@
 <div align="center">
-<h1>MoonLight</h1>
+<h1>MoonLight V2</h1>
 <h3> Welcome to the Moonlight repository, a fully structured client project.</h3>
 Requirements: Java 17 is required to build and run this project.<br>
 QQ Group: 1053561599
