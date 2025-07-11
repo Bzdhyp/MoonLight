@@ -360,29 +360,33 @@ public class KillAura extends Module {
     public void onMotion(MotionEvent event) {
         if (target == null) return;
 
-        if (isEnabled(Scaffold.class)) return;
+        if (event.isPre()) {
+            if (isEnabled(Scaffold.class)) return;
 
-        if (shouldBlock()) renderBlocking = true;
+            if (shouldBlock()) renderBlocking = true;
 
-        if (preTickBlock()) return;
+            if (preTickBlock()) return;
 
-        if (clicks == 0) return;
+            if (clicks == 0) return;
 
-        if (isBlocking || autoBlock.is("HYT"))
-            if (preAttack()) return;
+            if (isBlocking || autoBlock.is("HYT"))
+                if (preAttack()) return;
 
-        if (shouldAttack()) {
-            maxClicks = clicks;
-            for (int i = 0; i < maxClicks; i++) {
-                attack();
-                clicks--;
+            if (shouldAttack()) {
+                maxClicks = clicks;
+                for (int i = 0; i < maxClicks; i++) {
+                    attack();
+                    clicks--;
+                }
             }
         }
 
-        if (!autoBlock.is("None") && (shouldBlock() || autoBlock.is("HYT"))) {
-            if (Mouse.isButtonDown(2))
-                KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
-            postAttack();
+        if (event.isPost()) {
+            if (!autoBlock.is("None") && (shouldBlock() || autoBlock.is("HYT"))) {
+                if (Mouse.isButtonDown(2))
+                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
+                postAttack();
+            }
         }
     }
 
