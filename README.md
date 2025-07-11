@@ -30,6 +30,10 @@ Do the above and share your source code with everyone; just like we do!
 - CCBlueX FakeLag
 - CCBlueX Velocity
 - Fix BlinkComponent
+
+## Play Hypixel
+- use 1.8.9
+- config use "Use the hyp（Config） file from the project." （使用项目中的 hyp 配置文件。）
 ## Acknowledgements
 This project is built upon various inspirations and contributions from the community. Special thanks to:
 
