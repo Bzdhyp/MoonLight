@@ -78,14 +78,14 @@ public class ArcaneClickGui extends GuiScreen {
         }
 
         RoundedUtils.drawRound(x, y, w, h, 7, backgroundColor);
-        RoundedUtils.drawRound(x, y + 34, w, .5f, 0,linecolor);
+        RoundedUtils.drawRound(x, y + 34, w, .5f, 0, linecolor);
         RenderUtils.startGlScissor(x, y + 35, w, h - 35);
-        RoundedUtils.drawGradientVertical(x, y + 30, w, h - 30, 7, backgroundColor2,backgroundColor3);
+        RoundedUtils.drawGradientVertical(x, y + 30, w, h - 30, 7, backgroundColor2, backgroundColor3);
         RenderUtils.stopGlScissor();
 
         Fonts.Bold.get(30).drawString(Client.INSTANCE.clientName, x + 10, y + 10, fontcolor.getRGB());
 
-        Fonts.Bold.get(24).drawStringDynamic("v2", x + w - 32, y + 14,1, 6);
+        Fonts.Bold.get(24).drawStringDynamic("v2", x + w - 32, y + 14, 1, 6);
 
         RoundedUtils.drawRound(x + w - 68, y + 44, 60, 25, 5, smallbackgroundColor);
         RoundedUtils.drawRound(x + 10, y + 44, 96, 25, 5, smallbackgroundColor);
@@ -98,20 +98,20 @@ public class ArcaneClickGui extends GuiScreen {
                     panel.setSelected(panel.getCategory() == ModuleCategory.Visual);
                     sb = true;
                 }
-            }else if (RenderUtils.isHovering(x + 10 + 96 / 2, y + 44, 96 / 2, 25, mouseX, mouseY)){
+            } else if (RenderUtils.isHovering(x + 10 + 96 / 2, y + 44, 96 / 2, 25, mouseX, mouseY)) {
                 animations2.setDirection(Direction.FORWARDS);
                 sb = false;
             }
         }
         RoundedUtils.drawRound((float) (x + 10 + (96 / 2) * animations2.getOutput()), y + 44, 96 / 2, 25, 5, smallbackgroundColor2);
 
-        if (Client.INSTANCE.getModuleManager().getModule(ESP.class).isEnabled() && sb){
+        if (Client.INSTANCE.getModuleManager().getModule(ESP.class).isEnabled() && sb) {
             espPreviewComponent.drawScreen(mouseX, mouseY);
         }
 
         Animation moduleAnimation = animations;
-        if (Mouse.isButtonDown(0)){
-            if (RenderUtils.isHovering(x + w - 38, y + 44, 30, 25, mouseX, mouseY)){
+        if (Mouse.isButtonDown(0)) {
+            if (RenderUtils.isHovering(x + w - 38, y + 44, 30, 25, mouseX, mouseY)) {
                 backgroundColor = new Color(250, 250, 254, 255);
                 backgroundColor2 = new Color(255, 255, 255, 255);
                 backgroundColor3 = new Color(217, 217, 216, 255);
@@ -121,7 +121,7 @@ public class ArcaneClickGui extends GuiScreen {
                 versionColor = new Color(0, 0, 0, 50);
                 fontcolor = new Color(0, 0, 0, 255);
                 moduleAnimation.setDirection(Direction.BACKWARDS);
-            }else if (RenderUtils.isHovering(x + w - 68, y + 44, 30, 25, mouseX, mouseY)){
+            } else if (RenderUtils.isHovering(x + w - 68, y + 44, 30, 25, mouseX, mouseY)) {
                 backgroundColor = new Color(22, 22, 26, 255);
                 backgroundColor2 = new Color(17, 17, 19, 255);
                 backgroundColor3 = new Color(15, 15, 17, 255);
@@ -137,16 +137,16 @@ public class ArcaneClickGui extends GuiScreen {
         RoundedUtils.drawRound((float) (x + w - 30 * moduleAnimation.getOutput() - 38), y + 44, 30, 25, 5, smallbackgroundColor2);
 
         RoundedUtils.drawRound(x + 10, y + h - 35, 158, 25, 5, smallbackgroundColor);
-        Fonts.Icon.get(18).drawStringDynamic("R", x + w - 56, y + 55, 1,6);
-        Fonts.Icon.get(20).drawStringDynamic("S", x + w - 28, y + 54.5f, 1,6);
-        RoundedUtils.drawRound(x + w - 90, y + h - 35, 80, 25, 5, smallbackgroundColor);
-        Fonts.Bold.get(16).drawStringDynamic(mc.thePlayer.getNameClear(), x + w - 86, y + h - 30, 1,6);
-        Fonts.Semibold.get(16).drawString("Time remaining:", x + w - 86, y + h - 20, fontcolor.getRGB());
-        Fonts.Semibold.get(16).drawStringDynamic("Lifetime", x + w - 86 + Fonts.Semibold.get(16).getStringWidth("Time remaining:"), y + h - 20, 1,6);
+        Fonts.Icon.get(18).drawStringDynamic("R", x + w - 56, y + 55, 1, 6);
+        Fonts.Icon.get(20).drawStringDynamic("S", x + w - 28, y + 54.5f, 1, 6);
+        RoundedUtils.drawRound(x + w - 134, y + h - 35, 124, 25, 5, smallbackgroundColor);
+        Fonts.Bold.get(16).drawStringDynamic(mc.thePlayer.getNameClear(), x + w - 132, y + h - 30, 1, 6);
+        RenderUtils.renderPlayer2D(mc.thePlayer, x + w - 34, y + h - 34, 22, 8, -1);
+        Fonts.Semibold.get(16).drawString("Time remaining:", x + w - 132, y + h - 20, fontcolor.getRGB());
+        Fonts.Semibold.get(16).drawStringDynamic("Lifetime", x + w - 132 + Fonts.Semibold.get(16).getStringWidth("Time remaining:"), y + h - 20, 1, 6);
 
-
-        Fonts.Icon.get(25).drawStringDynamic("M", x + 16, y + 53.5f, 1,6);
-        Fonts.Icon.get(20).drawStringDynamic("G", x + 62, y + 54.5f, 1,6);
+        Fonts.Icon.get(25).drawStringDynamic("M", x + 16, y + 53.5f, 1, 6);
+        Fonts.Icon.get(20).drawStringDynamic("G", x + 62, y + 54.5f, 1, 6);
         Fonts.Bold.get(16).drawString("ESP", x + 28, y + 54.5f, fontcolor.getRGB());
 
         Color rectColor = smallbackgroundColor2;
@@ -155,50 +155,38 @@ public class ArcaneClickGui extends GuiScreen {
         for (CategoryPanel categoryPanel : categoryPanels) {
             hoverAnimation.setDirection(hovered ? Direction.FORWARDS : Direction.BACKWARDS);
             categoryPanel.drawScreen(mouseX, mouseY);
-            if (categoryPanel.getCategory() == ModuleCategory.Search || categoryPanel.getCategory() == ModuleCategory.Config) continue;
+            if (categoryPanel.getCategory() == ModuleCategory.Search || categoryPanel.getCategory() == ModuleCategory.Config)
+                continue;
             if (categoryPanel.isSelected()) {
                 RoundedUtils.drawRound((categoryPanel.getCategory().ordinal() >= 5 ? x + 3 + categoryPanel.getCategory().ordinal() * 28
-                        : categoryPanel.getCategory().ordinal() >= 4 ? x + 8.5f + categoryPanel.getCategory().ordinal() * 28
-                        : categoryPanel.getCategory().ordinal() >= 3 ? x + 10.5f + categoryPanel.getCategory().ordinal() * 28
-                        : categoryPanel.getCategory().ordinal() >= 2 ? x + 10 + categoryPanel.getCategory().ordinal() * 28
-                        : categoryPanel.getCategory().ordinal() >= 1 ? x + 13 + categoryPanel.getCategory().ordinal() * 28
-                        : x + 15 + categoryPanel.getCategory().ordinal() * 28),categoryPanel.getCategory().ordinal() >= 6 ? y + 44
-                        : y + h - 30.5f, 15,15, 5, rectColor.brighter());
+                        : categoryPanel.getCategory().ordinal() == 4 ? x + 8.5f + categoryPanel.getCategory().ordinal() * 28
+                        : categoryPanel.getCategory().ordinal() == 3 ? x + 10.5f + categoryPanel.getCategory().ordinal() * 28
+                        : categoryPanel.getCategory().ordinal() == 2 ? x + 10 + categoryPanel.getCategory().ordinal() * 28
+                        : categoryPanel.getCategory().ordinal() == 1 ? x + 13 + categoryPanel.getCategory().ordinal() * 28
+                        : x + 15), categoryPanel.getCategory().ordinal() >= 6 ? y + 44
+                        : y + h - 30.5f, 15, 15, 5, rectColor.brighter());
                 Fonts.Icon.get(22).drawStringDynamic(categoryPanel.getCategory().icon,
                         (categoryPanel.getCategory().ordinal() >= 6 ? x + 62
-                                : categoryPanel.getCategory().ordinal() >= 5 ? x + 6.5f + categoryPanel.getCategory().ordinal() * 28
-                                : categoryPanel.getCategory().ordinal() >= 4 ? x + 10 + categoryPanel.getCategory().ordinal() * 28
-                                : categoryPanel.getCategory().ordinal() >= 3 ? x + 12.5f + categoryPanel.getCategory().ordinal() * 28
-                                : categoryPanel.getCategory().ordinal() >= 2 ? x + 13 + categoryPanel.getCategory().ordinal() * 28
-                                : categoryPanel.getCategory().ordinal() >= 1 ? x + 17 + categoryPanel.getCategory().ordinal() * 28
-                                : x + 18 + categoryPanel.getCategory().ordinal() * 28), categoryPanel.getCategory().ordinal() >= 6 ? y + 54.5f
+                                : categoryPanel.getCategory().ordinal() == 5 ? x + 6.5f + categoryPanel.getCategory().ordinal() * 28
+                                : categoryPanel.getCategory().ordinal() == 4 ? x + 10 + categoryPanel.getCategory().ordinal() * 28
+                                : categoryPanel.getCategory().ordinal() == 3 ? x + 12.5f + categoryPanel.getCategory().ordinal() * 28
+                                : categoryPanel.getCategory().ordinal() == 2 ? x + 13 + categoryPanel.getCategory().ordinal() * 28
+                                : categoryPanel.getCategory().ordinal() == 1 ? x + 17 + categoryPanel.getCategory().ordinal() * 28
+                                : x + 18), categoryPanel.getCategory().ordinal() >= 6 ? y + 54.5f
                                 : y + h - 25
-                        , 1,6);
-            }else {
-
+                        , 1, 6);
+            } else {
                 Fonts.Icon.get(22).drawString(categoryPanel.getCategory().icon,
                         (categoryPanel.getCategory().ordinal() >= 6 ? x + 62
-                                : categoryPanel.getCategory().ordinal() >= 5 ? x + 6.5f + categoryPanel.getCategory().ordinal() * 28
-                                : categoryPanel.getCategory().ordinal() >= 4 ? x + 10 + categoryPanel.getCategory().ordinal() * 28
-                                : categoryPanel.getCategory().ordinal() >= 3 ? x + 12.5f + categoryPanel.getCategory().ordinal() * 28
-                                : categoryPanel.getCategory().ordinal() >= 2 ? x + 13 + categoryPanel.getCategory().ordinal() * 28
-                                : categoryPanel.getCategory().ordinal() >= 1 ? x + 17 + categoryPanel.getCategory().ordinal() * 28
-                                : x + 18 + categoryPanel.getCategory().ordinal() * 28), categoryPanel.getCategory().ordinal() >= 6 ? y + 54.5f
+                                : categoryPanel.getCategory().ordinal() == 5 ? x + 6.5f + categoryPanel.getCategory().ordinal() * 28
+                                : categoryPanel.getCategory().ordinal() == 4 ? x + 10 + categoryPanel.getCategory().ordinal() * 28
+                                : categoryPanel.getCategory().ordinal() == 3 ? x + 12.5f + categoryPanel.getCategory().ordinal() * 28
+                                : categoryPanel.getCategory().ordinal() == 2 ? x + 13 + categoryPanel.getCategory().ordinal() * 28
+                                : categoryPanel.getCategory().ordinal() == 1 ? x + 17 + categoryPanel.getCategory().ordinal() * 28
+                                : x + 18), categoryPanel.getCategory().ordinal() >= 6 ? y + 54.5f
                                 : y + h - 25
                         , versionColor.getRGB());
 
-            }
-
-            if (hovered && categoryPanel.isSelected()) {
-                Fonts.Bold.get(16).drawCenteredString(categoryPanel.getCategory().name(),
-                        (categoryPanel.getCategory().ordinal() >= 6 ? x + 62
-                        : categoryPanel.getCategory().ordinal() >= 5 ? x + 6.5f + categoryPanel.getCategory().ordinal() * 28
-                        : categoryPanel.getCategory().ordinal() >= 4 ? x + 10 + categoryPanel.getCategory().ordinal() * 28
-                        : categoryPanel.getCategory().ordinal() >= 3 ? x + 12.5f + categoryPanel.getCategory().ordinal() * 28
-                        : categoryPanel.getCategory().ordinal() >= 2 ? x + 13 + categoryPanel.getCategory().ordinal() * 28
-                        : categoryPanel.getCategory().ordinal() >= 1 ? x + 17 + categoryPanel.getCategory().ordinal() * 28
-                        : x + 18 + categoryPanel.getCategory().ordinal() * 28) + 5,categoryPanel.getCategory().ordinal() >= 6 ? y + 54.5f
-                                : y + h - 45, rectColor.getRGB());
             }
         }
         Fonts.Bold.get(16).drawString("Display", x + 73, y + 54.5f, fontcolor.getRGB());
