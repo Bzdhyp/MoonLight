@@ -17,14 +17,14 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ModuleCategory {
 
-    Combat("Combat"),
-    Movement("Movement"),
-    Player("Player"),
-    Misc("Misc"),
-    Visual("Visuals"),
-    Config("Configs"),
-    Search("Search");
+    Combat("Combat","A"),
+    Movement("Movement","B"),
+    Player("Player","D"),
+    Misc("Misc","C"),
+    Visual("Visuals","F"),
+    Config("Configs","A"),
+    Search("Search","A");
 
     private final String name;
-
+    public String icon;
 }

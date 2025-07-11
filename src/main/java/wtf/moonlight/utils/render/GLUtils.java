@@ -19,6 +19,8 @@ import org.lwjglx.util.glu.GLU;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import static net.minecraft.client.renderer.GlStateManager.glBegin;
+import static net.minecraft.client.renderer.GlStateManager.glEnd;
 import static org.lwjgl.opengl.GL11.*;
 
 public class GLUtils {
@@ -38,7 +40,11 @@ public class GLUtils {
         GlStateManager.disableDepth();
         GlStateManager.depthMask(false);
     }
-
+    public static void setupRendering(int mode, Runnable runnable) {
+        glBegin(mode);
+        runnable.run();
+        glEnd();
+    }
     public static int[] enabledCaps = new int[32];
 
     public static void enableCaps(int... caps) {

@@ -13,6 +13,7 @@ package wtf.moonlight.module.impl.visual;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import de.florianmichael.vialoadingbase.ViaLoadingBase;
+import lombok.Getter;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -110,7 +111,7 @@ public class Interface extends Module {
     public final ListValue keyBindMode = new ListValue("Key Bind Mode", new String[]{"Type 1"}, "Type 1", this,() -> elements.isEnabled("Key Bind"));
     public final BoolValue centerNotif = new BoolValue("Center Notification",true,this,() -> notificationMode.is("Exhi"));
     public final ListValue color = new ListValue("Color Setting", new String[]{"Custom", "Rainbow", "Dynamic", "Fade","Astolfo","NeverLose"}, "NeverLose", this);
-    private final ColorValue mainColor = new ColorValue("Main Color", new Color(128, 128, 255), this,() -> !color.is("NeverLose"));
+    public final ColorValue mainColor = new ColorValue("Main Color", new Color(128, 128, 255), this,() -> !color.is("NeverLose"));
     private final ColorValue secondColor = new ColorValue("Second Color", new Color(128, 255, 255), this, () -> color.is("Fade"));
     public final SliderValue fadeSpeed = new SliderValue("Fade Speed", 1, 1, 10, 1, this, () -> color.is("Dynamic") || color.is("Fade"));
     public final BoolValue background = new BoolValue("Background",true,this, () -> elements.isEnabled("Arraylist"));

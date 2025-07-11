@@ -33,7 +33,12 @@ public enum Fonts {
     session2("others/session2"),
     neverlose("others/nlicon"),
     icon("others/icon"),
-    sfui("others/sfui");
+    sfui("others/sfui"),
+    Bold("bold"),
+    Icon("icon"),
+    Regular("regular"),
+    Light("light"),
+    Semibold("semibold");
 
     private final String file;
     private final Float2ObjectMap<FontRenderer> fontMap = new Float2ObjectArrayMap<>();

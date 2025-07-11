@@ -23,7 +23,7 @@ import java.awt.*;
 
 @ModuleInfo(name = "ClickGUI", category = ModuleCategory.Visual, key = Keyboard.KEY_RSHIFT)
 public class ClickGUI extends Module {
-    public final ListValue mode = new ListValue("Mode", new String[]{"NeverLose", "DropDown","Exhi","Astolfo"}, "NeverLose", this);
+    public final ListValue mode = new ListValue("Mode", new String[]{"NeverLose", "DropDown","Exhi","Astolfo","Arcane"}, "Arcane", this);
 
     public final ColorValue color = new ColorValue("Color", new Color(128, 128, 255), this);
     public final BoolValue rainbow = new BoolValue("Rainbow",true,this,() -> mode.is("Exhi"));
@@ -35,6 +35,7 @@ public class ClickGUI extends Module {
             case "DropDown" -> INSTANCE.getDropdownGUI();
             case "Exhi" -> INSTANCE.getSkeetGUI();
             case "Astolfo" -> INSTANCE.getAstolfoGui();
+            case "Arcane" -> INSTANCE.getArcaneClickGui();
             default -> null;
         };
         mc.displayGuiScreen(guiScreen);

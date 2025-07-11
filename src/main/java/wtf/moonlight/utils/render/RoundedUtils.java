@@ -12,6 +12,9 @@ package wtf.moonlight.utils.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.MathHelper;
+import org.lwjgl.opengl.GL11;
 import wtf.moonlight.utils.misc.InstanceAccess;
 import wtf.moonlight.utils.render.shader.ShaderUtils;
 
@@ -34,7 +37,55 @@ public class RoundedUtils implements InstanceAccess {
     public static void drawGradientHorizontal(float x, float y, float width, float height, float radius, Color left, Color right) {
         drawGradientRound(x, y, width, height, radius, left, left, right, right);
     }
+    public static void drawCircle(float x, float y, float start, float end, float radius, float width, boolean filled, int color) {
+        float i;
+        float endOffset;
+        if (start > end) {
+            endOffset = end;
+            end = start;
+            start = endOffset;
+        }
 
+        GlStateManager.enableBlend();
+        GL11.glDisable(GL_TEXTURE_2D);
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+
+        GL11.glEnable(GL11.GL_LINE_SMOOTH);
+        GL11.glLineWidth(width);
+        GL11.glBegin(GL11.GL_LINE_STRIP);
+        for (i = end; i >= start; i--) {
+            setColor(color);
+            float cos = MathHelper.cos((float) (i * Math.PI / 180)) * radius;
+            float sin = MathHelper.sin((float) (i * Math.PI / 180)) * radius;
+            GL11.glVertex2f(x + cos, y + sin);
+        }
+        GL11.glEnd();
+        GL11.glDisable(GL11.GL_LINE_SMOOTH);
+
+        if (filled) {
+            GL11.glBegin(GL11.GL_TRIANGLE_FAN);
+            for (i = end; i >= start; i--) {
+                setColor(color);
+                float cos = MathHelper.cos((float) (i * Math.PI / 180)) * radius;
+                float sin = MathHelper.sin((float) (i * Math.PI / 180)) * radius;
+                GL11.glVertex2f(x + cos, y + sin);
+            }
+            GL11.glEnd();
+        }
+
+        GL11.glEnable(GL_TEXTURE_2D);
+        GlStateManager.disableBlend();
+        resetColor();
+    }
+    public static void setColor(int color) {
+        GL11.glColor4ub((byte) (color >> 16 & 0xFF), (byte) (color >> 8 & 0xFF), (byte) (color & 0xFF), (byte) (color >> 24 & 0xFF));
+    }
+    public static void resetColor() {
+        color(1, 1, 1, 1);
+    }
+    public static void color(double red, double green, double blue, double alpha) {
+        GL11.glColor4d(red, green, blue, alpha);
+    }
     public static void drawGradientVertical(float x, float y, float width, float height, float radius, Color top, Color bottom) {
         drawGradientRound(x, y, width, height, radius, bottom, top, bottom, top);
     }

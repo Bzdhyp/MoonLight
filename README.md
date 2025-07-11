@@ -7,6 +7,8 @@ Requirements: Java 17 is required to build and run this project.<br>
 ## Issues
 Found a bug or have an idea for a new feature? You can let us know by clicking [here](https://github.com/Bzdhyp/MoonLight/issues) to open an issue.
 
+## ClickGui
+ArcaneClickGui By GuyueMang
 ## What changes were made?
 - TargetHUD Mode
 - Scaffold bypass Hypixel?

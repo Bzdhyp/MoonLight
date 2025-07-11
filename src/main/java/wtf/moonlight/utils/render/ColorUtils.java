@@ -10,6 +10,7 @@
  */
 package wtf.moonlight.utils.render;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import wtf.moonlight.utils.MathUtils;
 
@@ -29,6 +30,10 @@ public class ColorUtils {
 
     public static Color reAlpha(Color color, int alpha) {
         return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
+    }
+
+    public static Color getRainbow() {
+        return new Color(Color.HSBtoRGB((float) ((double) Minecraft.getMinecraft().thePlayer.ticksExisted / 50.0 + Math.sin((double) 1 / 50.0 * 1.6)) % 1.0f, 0.5f, 1.0f));
     }
 
     public static int interpolateInt(int oldValue, int newValue, double interpolationValue) {

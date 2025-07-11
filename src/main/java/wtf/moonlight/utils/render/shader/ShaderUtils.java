@@ -35,6 +35,7 @@ public class ShaderUtils implements InstanceAccess {
                 case "roundedRectGradient" ->
                         createShader(new ByteArrayInputStream(roundedRectGradient.getBytes()), GL_FRAGMENT_SHADER);
                 case "gradient" -> createShader(new ByteArrayInputStream(gradient.getBytes()), GL_FRAGMENT_SHADER);
+                case "gradientMask" -> createShader(new ByteArrayInputStream(gradientMask.getBytes()), GL_FRAGMENT_SHADER);
                 case "mainmenu" -> createShader(new ByteArrayInputStream(mainmenu.getBytes()), GL_FRAGMENT_SHADER);
                 case "kawaseUp" -> createShader(new ByteArrayInputStream(kawaseUp.getBytes()), GL_FRAGMENT_SHADER);
                 case "kawaseDown" -> createShader(new ByteArrayInputStream(kawaseDown.getBytes()), GL_FRAGMENT_SHADER);
@@ -200,7 +201,27 @@ public class ShaderUtils implements InstanceAccess {
                 gl_FragColor = vec4(0.0, 0.0, 0.0, blr);
             }
             """;
-
+    private String gradientMask = "#version 120\n" +
+            "\n" +
+            "uniform vec2 location, rectSize;\n" +
+            "uniform sampler2D tex;\n" +
+            "uniform vec3 color1, color2, color3, color4;\n" +
+            "uniform float alpha;\n" +
+            "\n" +
+            "#define NOISE .5/255.0\n" +
+            "\n" +
+            "vec3 createGradient(vec2 coords, vec3 color1, vec3 color2, vec3 color3, vec3 color4){\n" +
+            "    vec3 color = mix(mix(color1.rgb, color2.rgb, coords.y), mix(color3.rgb, color4.rgb, coords.y), coords.x);\n" +
+            "    //Dithering the color from https://shader-tutorial.dev/advanced/color-banding-dithering/\n" +
+            "    color += mix(NOISE, -NOISE, fract(sin(dot(coords.xy, vec2(12.9898,78.233))) * 43758.5453));\n" +
+            "    return color;\n" +
+            "}\n" +
+            "\n" +
+            "void main() {\n" +
+            "    vec2 coords = (gl_FragCoord.xy - location) / rectSize;\n" +
+            "    float texColorAlpha = texture2D(tex, gl_TexCoord[0].st).a;\n" +
+            "    gl_FragColor = vec4(createGradient(coords, color1, color2, color3, color4), texColorAlpha * alpha);\n" +
+            "}";
     private final String roundRectTexture = """
             #version 120
             

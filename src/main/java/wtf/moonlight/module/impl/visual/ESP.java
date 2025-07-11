@@ -19,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
 import com.cubk.EventTarget;
+import org.lwjgl.opengl.GL11;
 import wtf.moonlight.events.misc.WorldEvent;
 import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.events.render.Render3DEvent;
@@ -608,7 +609,17 @@ public class ESP extends Module {
                 {model.bipedLeftLeg.rotateAngleX, model.bipedLeftLeg.rotateAngleY, model.bipedLeftLeg.rotateAngleZ}
         });
     }
+    public static void color(double red, double green, double blue, double alpha) {
+        GL11.glColor4d(red, green, blue, alpha);
+    }
 
+    public static void color(int color) {
+        glColor4ub(
+                (byte) (color >> 16 & 0xFF),
+                (byte) (color >> 8 & 0xFF),
+                (byte) (color & 0xFF),
+                (byte) (color >> 24 & 0xFF));
+    }
     public BoolValue getFontTags() {
         return fontTags;
     }

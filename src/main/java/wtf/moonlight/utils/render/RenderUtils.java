@@ -59,7 +59,35 @@ public class RenderUtils implements InstanceAccess {
         GL11.glEnable(3089);
         GL11.glScissor((int) (x * scaleFactor), (int) (mc.displayHeight - (y + height) * scaleFactor), (int) (width * scaleFactor), (int) (height * scaleFactor));
     }
-
+    public static void drawCircleCGUI(double x, double y, float radius, int color) {
+        if (radius == 0)
+            return;
+        final float correctRadius = radius * 2;
+        setup2DRendering(() -> {
+            glColor(color);
+            glEnable(GL_POINT_SMOOTH);
+            glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+            glPointSize(correctRadius);
+            GLUtils.setupRendering(GL_POINTS, () -> glVertex2d(x, y));
+            glDisable(GL_POINT_SMOOTH);
+            GlStateManager.resetColor();
+        });
+    }
+    public static void glColor(int hex) {
+        float alpha = (hex >> 24 & 0xFF) / 255.0F;
+        float red = (hex >> 16 & 0xFF) / 255.0F;
+        float green = (hex >> 8 & 0xFF) / 255.0F;
+        float blue = (hex & 0xFF) / 255.0F;
+        GL11.glColor4f(red, green, blue, alpha);
+    }
+    public static void setup2DRendering(Runnable f) {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_TEXTURE_2D);
+        f.run();
+        glEnable(GL_TEXTURE_2D);
+        GlStateManager.disableBlend();
+    }
     public static void stopGlScissor() {
         GL11.glDisable(3089);
         GL11.glPopMatrix();

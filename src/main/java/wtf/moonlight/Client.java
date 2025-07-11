@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import com.cubk.EventManager;
 import wtf.moonlight.command.CommandManager;
 import wtf.moonlight.config.ConfigManager;
+import wtf.moonlight.gui.click.arcane.ArcaneClickGui;
 import wtf.moonlight.utils.friend.FriendManager;
 import wtf.moonlight.module.ModuleManager;
 import wtf.moonlight.module.impl.visual.ScaffoldCounter;
@@ -72,6 +73,7 @@ public class Client {
 
     private NeverLose neverLose;
     private DropdownGUI dropdownGUI;
+    private ArcaneClickGui arcaneClickGui;
     private SkeetUI skeetGUI;
     private AstolfoGui astolfoGui;
 
@@ -134,6 +136,7 @@ public class Client {
 
         neverLose = new NeverLose();
         dropdownGUI = new DropdownGUI();
+        arcaneClickGui = new ArcaneClickGui();
         skeetGUI = new SkeetUI();
         astolfoGui = new AstolfoGui();
     }
