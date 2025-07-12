@@ -50,6 +50,10 @@ public class MovementUtil implements InstanceAccess {
     public static final double UNLOADED_CHUNK_MOTION = -0.09800000190735147;
     public static final double HEAD_HITTER_MOTION = -0.0784000015258789;
 
+    public static float getMovingYaw() {
+        return (float) (getDirection() * 180F / Math.PI);
+    }
+
     public static boolean isMoving() {
         return isMoving(mc.thePlayer);
     }

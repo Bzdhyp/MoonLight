@@ -128,7 +128,6 @@ public final class ModuleManager {
                 ChinaHat.class,
                 MotionBlur.class,
                 HitBubbles.class,
-                Indicators.class,
                 JumpCircles.class,
                 LineGlyphs.class,
                 SilentView.class,

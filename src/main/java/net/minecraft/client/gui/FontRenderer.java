@@ -21,7 +21,7 @@ import net.optifine.util.FontUtils;
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Client;
-import wtf.moonlight.module.impl.visual.NameHider;
+import wtf.moonlight.module.impl.misc.NameHider;
 import wtf.moonlight.gui.font.GradientApplier;
 import wtf.moonlight.util.render.RenderUtil;
 

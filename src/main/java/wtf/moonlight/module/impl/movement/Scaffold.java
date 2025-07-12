@@ -644,14 +644,8 @@ public class Scaffold extends Module {
                     rotation = RotationUtil.getRotations(getHitVecOptimized(data.blockPos, data.facing));
             }
             case "Back": {
-                float yaw = 180;
-                rotation[0] = yaw;
-
-                if (data != null) {
-                    rotation[1] = getBestRotation(data.blockPos, data.facing)[1];
-                } else {
-                    rotation = new float[]{yaw, previousRotation[1]};
-                }
+                if (data != null)
+                    rotation = new float[]{mc.thePlayer.rotationYaw + 180, 80};
             }
             break;
 

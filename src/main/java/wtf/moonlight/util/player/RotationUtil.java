@@ -20,6 +20,7 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.*;
 import net.optifine.reflect.Reflector;
 import org.jetbrains.annotations.NotNull;
+import org.lwjglx.util.vector.Vector2f;
 import wtf.moonlight.Client;
 import com.cubk.EventPriority;
 import com.cubk.EventTarget;
@@ -390,20 +391,15 @@ public class RotationUtil implements InstanceAccess {
         return (float) hypot(Math.abs(getAngleDifference(a[0], b[0])), Math.abs(a[1] - b[1]));
     }
 
-    public static Vec3 getNearestPointBB(Vec3 eye, AxisAlignedBB box) {
-        double[] origin = {eye.xCoord, eye.yCoord, eye.zCoord};
-        double[] destMins = {box.minX, box.minY, box.minZ};
-        double[] destMaxs = {box.maxX, box.maxY, box.maxZ};
-
-        for (int i = 0; i < 3; i++) {
-            if (origin[i] > destMaxs[i]) {
-                origin[i] = destMaxs[i];
-            } else if (origin[i] < destMins[i]) {
-                origin[i] = destMins[i];
-            }
+    public static float oppositeYaw(float yaw) {
+        Vector2f from = new Vector2f((float)mc.thePlayer.lastTickPosX, (float)mc.thePlayer.lastTickPosZ);
+        Vector2f to = new Vector2f((float)mc.thePlayer.posX, (float)mc.thePlayer.posZ);
+        Vector2f difference = new Vector2f(to.x - from.x, to.y - from.y);
+        float x = difference.x, z = difference.y;
+        if (x != 0f && z != 0f) {
+            yaw = (float) Math.toDegrees((Math.atan2(-x, z) + MathHelper.PI2) % MathHelper.PI2);
         }
-
-        return new Vec3(origin[0], origin[1], origin[2]);
+        return yaw - 180f;
     }
 
     public static MovingObjectPosition rayTrace(float[] rot, double blockReachDistance, float partialTicks) {

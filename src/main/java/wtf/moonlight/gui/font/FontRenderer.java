@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.display.Interface;
-import wtf.moonlight.module.impl.visual.NameHider;
+import wtf.moonlight.module.impl.misc.NameHider;
 import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.render.GradientUtil;
 import wtf.moonlight.util.render.RenderUtil;
