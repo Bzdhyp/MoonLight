@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 public class StringUtils
 {
     private static final Pattern patternControlCode = Pattern.compile("(?i)\\u00A7[0-9A-FK-OR]");
+    private static final Pattern colorPatternCodes = Pattern.compile("(?i)\\u00A7[\\dA-F]");
 
     public static String ticksToElapsedTime(int ticks)
     {
@@ -13,7 +14,9 @@ public class StringUtils
         i = i % 60;
         return i < 10 ? j + ":0" + i : j + ":" + i;
     }
-
+    public static String stripColorCodes(String text) {
+        return colorPatternCodes.matcher(text).replaceAll("");
+    }
     public static String stripControlCodes(String text)
     {
         return patternControlCode.matcher(text).replaceAll("");

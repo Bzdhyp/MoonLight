@@ -82,22 +82,35 @@ public abstract class Module implements InstanceAccess {
      */
     public void setTag(String tag) {
         if (tag != null && !tag.isEmpty()) {
-            String tagStyle = Optional.ofNullable(getModule(Interface.class))
-                    .map(m -> m.tags.getValue())
-                    .orElse("")
-                    .toLowerCase();
-            switch (tagStyle) {
-                case "simple":
-                    this.tag = "§7 " + tag;
-                    break;
-                case "dash":
-                    this.tag = "§7 - " + tag;
-                    break;
-                case "bracket":
-                    this.tag = "§7 [" + tag + "]";
-                    break;
-                default:
-                    this.tag = "";
+            String tagStyle = Optional.ofNullable(getModule(wtf.moonlight.module.impl.display.ArrayList.class)).map(m -> m.tags.getValue()).orElse("").toLowerCase();
+            if (getModule(wtf.moonlight.module.impl.display.ArrayList.class).suffixColor.get()){
+                switch (tagStyle) {
+                    case "simple":
+                        this.tag  = " " + tag;
+                        break;
+                    case "dash":
+                        this.tag = " - " + tag;
+                        break;
+                    case "bracket":
+                        this.tag = " [" + tag + "]";
+                        break;
+                    default:
+                        this.tag = "";
+                }
+            }else {
+                switch (tagStyle) {
+                    case "simple":
+                        this.tag = "§f " + tag;
+                        break;
+                    case "dash":
+                        this.tag = "§f - " + tag;
+                        break;
+                    case "bracket":
+                        this.tag = "§f [" + tag + "]";
+                        break;
+                    default:
+                        this.tag = "";
+                }
             }
         } else {
             this.tag = "";

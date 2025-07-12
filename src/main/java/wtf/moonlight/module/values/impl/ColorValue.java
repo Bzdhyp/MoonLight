@@ -41,6 +41,9 @@ public class ColorValue extends Value {
     public Color getValue() {
         return ColorUtils.applyOpacity(Color.getHSBColor(hue, saturation, brightness), alpha);
     }
+    public Color get() {
+        return ColorUtils.applyOpacity(Color.getHSBColor(hue, saturation, brightness), alpha);
+    }
 
     public void setValue(Color color) {
         float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);

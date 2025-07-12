@@ -26,7 +26,9 @@ public class MathUtils {
         double one = 1.0 / inc;
         return Math.round(val * one) / one;
     }
-
+    public static float interpolateFloat(float oldValue, float newValue, double interpolationValue){
+        return interpolate(oldValue, newValue, (float) interpolationValue);
+    }
     public static double interpolate(double old,
                                      double now,
                                      float partialTicks) {

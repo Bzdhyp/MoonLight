@@ -18,6 +18,7 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.misc.KeyPressEvent;
 import wtf.moonlight.module.impl.combat.*;
 import wtf.moonlight.module.impl.display.*;
+import wtf.moonlight.module.impl.display.ArrayList;
 import wtf.moonlight.module.impl.misc.Timer;
 import wtf.moonlight.module.impl.misc.*;
 import wtf.moonlight.module.impl.movement.*;
@@ -144,6 +145,7 @@ public final class ModuleManager {
 
                 // display
                 Interface.class,
+                ArrayList.class,
                 TargetHUD.class,
                 KeyBindHUD.class,
                 Watermark.class,

@@ -30,6 +30,7 @@ public class WidgetManager implements InstanceAccess {
         register(new TargetHUDWidget());
         register(new PotionHUDWidget());
         register(new KeyBindWidget());
+        register(new ArrayListGui());
         register(new ModuleListWidget());
     }
 
