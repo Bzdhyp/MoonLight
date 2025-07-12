@@ -5,7 +5,7 @@ Requirements: Java 17 is required to build and run this project.<br>
 QQ Group: 1053561599
 </div>
 
-&& Build
+## Build
 [Moonlight构建教程]([https://github.com/Bzdhyp/MoonLight/issues](https://www.bilibili.com/video/BV18cu3z9Es9))
 
 ## Issues
