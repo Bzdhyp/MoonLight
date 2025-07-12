@@ -6,7 +6,7 @@ QQ Group: 1053561599
 </div>
 
 ## Build
-[Moonlight构建教程]([https://github.com/Bzdhyp/MoonLight/issues](https://www.bilibili.com/video/BV18cu3z9Es9))
+ [Moonlight构建教程](https://www.bilibili.com/video/BV18cu3z9Es9)
 
 ## Issues
 Found a bug or have an idea for a new feature? You can let us know by clicking [here](https://github.com/Bzdhyp/MoonLight/issues) to open an issue.
