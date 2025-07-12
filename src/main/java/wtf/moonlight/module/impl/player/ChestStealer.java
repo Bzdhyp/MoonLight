@@ -41,20 +41,20 @@ import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.combat.KillAura;
 import wtf.moonlight.module.impl.movement.Scaffold;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.TimerUtils;
-import wtf.moonlight.utils.player.InventoryUtils;
-import wtf.moonlight.utils.player.MovementCorrection;
-import wtf.moonlight.utils.player.RotationUtils;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.TimerUtil;
+import wtf.moonlight.util.player.InventoryUtil;
+import wtf.moonlight.util.player.MovementCorrection;
+import wtf.moonlight.util.player.RotationUtil;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 import java.util.Comparator;
@@ -63,8 +63,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-@ModuleInfo(name = "Stealer", category = ModuleCategory.Player, key = Keyboard.KEY_L)
-public final class Stealer extends Module {
+@ModuleInfo(name = "ChestStealer", category = Categor.Player, key = Keyboard.KEY_L)
+public final class ChestStealer extends Module {
     private final SliderValue minDelay = new SliderValue("Min Delay", 1, 0, 5, 1, this);
     private final SliderValue maxDelay = new SliderValue("Max Delay", 1, 0, 5, 1, this);
     public final BoolValue menuCheck = new BoolValue("Menu Check", true, this);
@@ -77,7 +77,7 @@ public final class Stealer extends Module {
     public final BoolValue brewingStand = new BoolValue("Brewing Stand", false, this);
     public final BoolValue avoid = new BoolValue("Avoid", false, this, aura::get);
     private final SliderValue range = new SliderValue("Range", 4f, 1.5f, 4f, this);
-    private final TimerUtils timer = new TimerUtils(), timerAura = new TimerUtils(), timerAvoid = new TimerUtils();
+    private final TimerUtil timer = new TimerUtil(), timerAura = new TimerUtil(), timerAvoid = new TimerUtil();
     public boolean isStealing;
     private final List<BlockPos> posList = new CopyOnWriteArrayList<>();
     private int chestIndex;
@@ -90,9 +90,9 @@ public final class Stealer extends Module {
             "user", "preference", "compass", "cake", "wars", "buy", "upgrade", "ranged", "potions", "utility"};
 
     public void rotate(BlockPos blockPos) {
-        rotation = RotationUtils.getRotations(blockPos);
+        rotation = RotationUtil.getRotations(blockPos);
 
-        RotationUtils.setRotation(rotation, MovementCorrection.SILENT);
+        RotationUtil.setRotation(rotation, MovementCorrection.SILENT);
     }
 
     @Override
@@ -123,7 +123,7 @@ public final class Stealer extends Module {
             for (TileEntity chest : tileEntityList()) {
                 if (!posList.contains(chest.getPos()) && timerAura.hasTimeElapsed(300)) {
                     rotate(chest.getPos());
-                    if (RotationUtils.rayTrace(RotationUtils.currentRotation, range.getValue(), 1).getBlockPos().equals(chest.getPos()) && (chest instanceof TileEntityChest || brewingStand.get() && chest instanceof TileEntityBrewingStand || furnace.get() && chest instanceof TileEntityFurnace)) {
+                    if (RotationUtil.rayTrace(RotationUtil.currentRotation, range.getValue(), 1).getBlockPos().equals(chest.getPos()) && (chest instanceof TileEntityChest || brewingStand.get() && chest instanceof TileEntityBrewingStand || furnace.get() && chest instanceof TileEntityFurnace)) {
                         mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem(), chest.getPos(), Block.getFacingDirection(chest.getPos()), getVec3(chest.getPos()));
                         posList.add(chest.getPos());
                         timerAura.reset();
@@ -149,7 +149,7 @@ public final class Stealer extends Module {
                     int prevItem = mc.thePlayer.inventory.currentItem;
                     mc.thePlayer.inventory.currentItem = getBlockSlot();
                     rotate(pos);
-                    if (RotationUtils.rayTrace(RotationUtils.currentRotation, range.getValue(), 1).getBlockPos().equals(pos)) {
+                    if (RotationUtil.rayTrace(RotationUtil.currentRotation, range.getValue(), 1).getBlockPos().equals(pos)) {
                         if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem(), up, Block.getFacingDirection(up), getVec3(up))) {
                             mc.thePlayer.swingItem();
                         }
@@ -168,7 +168,7 @@ public final class Stealer extends Module {
     @EventTarget
     public void onRender3D(Render3DEvent event) {
         for (BlockPos blockPos : posList) {
-            RenderUtils.renderBlock(blockPos, getModule(Interface.class).color(), true, true);
+            RenderUtil.renderBlock(blockPos, getModule(Interface.class).color(), true, true);
         }
     }
 
@@ -192,7 +192,7 @@ public final class Stealer extends Module {
                 GlStateManager.translate(roundX + 82, roundY + 30, 0);
                 GlStateManager.translate(-(roundX + 82), -(roundY + 30), 0);
 
-                RoundedUtils.drawRound(roundX, roundY, 164, 60, 3, new Color(0, 0, 0, 120));
+                RoundedUtil.drawRound(roundX, roundY, 164, 60, 3, new Color(0, 0, 0, 120));
 
                 double startX = roundX + 5;
                 double startY = roundY + 5;
@@ -269,13 +269,13 @@ public final class Stealer extends Module {
                     }
 
                     for (int i = 0; i < container.getLowerChestInventory().getSizeInventory(); ++i) {
-                        if (container.getLowerChestInventory().getStackInSlot(i) != null && (timer.hasTimeElapsed((long) (MathUtils.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue())) * 100L) || MathUtils.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) == 0) && InventoryUtils.isValid(container.getLowerChestInventory().getStackInSlot(i))) {
+                        if (container.getLowerChestInventory().getStackInSlot(i) != null && (timer.hasTimeElapsed((long) (MathUti.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue())) * 100L) || MathUti.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) == 0) && InventoryUtil.isValid(container.getLowerChestInventory().getStackInSlot(i))) {
                             slot = i;
                             mc.playerController.windowClick(container.windowId, i, 0, 1, mc.thePlayer);
                             timer.reset();
                         }
                     }
-                    if (InventoryUtils.isInventoryFull() || InventoryUtils.isInventoryEmpty(container.getLowerChestInventory())) {
+                    if (InventoryUtil.isInventoryFull() || InventoryUtil.isInventoryEmpty(container.getLowerChestInventory())) {
                         mc.thePlayer.closeScreen();
                         isStealing = false;
                     }
@@ -287,7 +287,7 @@ public final class Stealer extends Module {
                 if (mc.thePlayer.openContainer instanceof ContainerFurnace container) {
                     if (isStealing) {
                         for (index = 0; index < container.tileFurnace.getSizeInventory(); ++index) {
-                            if (container.tileFurnace.getStackInSlot(index) != null || (timer.hasTimeElapsed(MathUtils.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) * 100L) || MathUtils.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) == 0)) {
+                            if (container.tileFurnace.getStackInSlot(index) != null || (timer.hasTimeElapsed(MathUti.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) * 100L) || MathUti.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) == 0)) {
                                 mc.playerController.windowClick(container.windowId, index, 0, 1, mc.thePlayer);
                                 timer.reset();
                             }
@@ -305,7 +305,7 @@ public final class Stealer extends Module {
                 if (mc.thePlayer.openContainer instanceof ContainerBrewingStand container) {
                     if (isStealing) {
                         for (index = 0; index < container.tileBrewingStand.getSizeInventory(); ++index) {
-                            if (container.tileBrewingStand.getStackInSlot(index) != null || (timer.hasTimeElapsed(MathUtils.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) * 100L) || MathUtils.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) == 0)) {
+                            if (container.tileBrewingStand.getStackInSlot(index) != null || (timer.hasTimeElapsed(MathUti.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) * 100L) || MathUti.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) == 0)) {
                                 mc.playerController.windowClick(container.windowId, index, 0, 1, mc.thePlayer);
                                 timer.reset();
                             }

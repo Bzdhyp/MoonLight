@@ -23,7 +23,7 @@ import org.lwjglx.input.Keyboard;
 import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.combat.KillAura;
 import wtf.moonlight.module.impl.player.InvManager;
-import wtf.moonlight.module.impl.player.Stealer;
+import wtf.moonlight.module.impl.player.ChestStealer;
 import wtf.moonlight.gui.font.Fonts;
 
 public abstract class GuiContainer extends GuiScreen
@@ -77,7 +77,7 @@ public abstract class GuiContainer extends GuiScreen
 
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        Stealer stealer = Client.INSTANCE.getModuleManager().getModule(Stealer.class);
+        ChestStealer stealer = Client.INSTANCE.getModuleManager().getModule(ChestStealer.class);
         if (stealer.isStealing) {
             if (stealer.silent.get()) {
                 Minecraft mc = Minecraft.getMinecraft();
@@ -362,7 +362,7 @@ public abstract class GuiContainer extends GuiScreen
                             if (invManager.isEnabled()) invManager.toggle();
                             break;
                         case 1003:
-                            final Stealer stealer = Client.INSTANCE.getModuleManager().getModule(Stealer.class);
+                            final ChestStealer stealer = Client.INSTANCE.getModuleManager().getModule(ChestStealer.class);
 
                             if (stealer.isEnabled()) stealer.toggle();
                             break;

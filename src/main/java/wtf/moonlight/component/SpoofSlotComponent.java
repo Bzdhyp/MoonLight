@@ -8,15 +8,15 @@
  *
  * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
  */
-package wtf.moonlight.utils.misc;
+package wtf.moonlight.component;
 
 import lombok.Getter;
 import net.minecraft.item.ItemStack;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.misc.WorldEvent;
+import wtf.moonlight.util.misc.InstanceAccess;
 
-public class SpoofSlotUtils implements InstanceAccess {
-
+public class SpoofSlotComponent implements InstanceAccess {
     private static int spoofedSlot;
 
     @Getter
