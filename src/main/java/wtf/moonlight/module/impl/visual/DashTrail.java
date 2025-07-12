@@ -171,7 +171,7 @@ public class DashTrail extends Module {
     }
 
     private int getRandomTimeAnimationPerTime() {
-        return (int) this.time.getValue();
+        return this.time.getValue().intValue();
     }
 
     public void onEntityMove(EntityLivingBase baseIn, Vec3 prev) {
@@ -309,7 +309,7 @@ public class DashTrail extends Module {
     }
 
     private class DashCubic {
-        public SmoothStepAnimation animation = new SmoothStepAnimation((int) animTime.getValue(),1);
+        public SmoothStepAnimation animation = new SmoothStepAnimation(animTime.getValue().intValue(),1);
         private final DashTrail.DashBase base;
         private final float[] rotate = new float[]{0.0f, 0.0f};
         List<DashTrail.DashSpark> DASH_SPARKS_LIST = new ArrayList<>();

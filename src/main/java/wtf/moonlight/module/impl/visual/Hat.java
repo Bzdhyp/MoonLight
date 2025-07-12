@@ -71,7 +71,7 @@ public class Hat extends Module {
 
         if (this.lastSize != this.size.getValue() || this.lastPoints != this.points.getValue()) {
             this.lastSize = this.size.getValue();
-            this.computeChineseHatPoints(this.lastPoints = (int) this.points.getValue(), this.lastSize);
+            this.computeChineseHatPoints(this.lastPoints = this.points.getValue().intValue(), this.lastSize);
         }
 
         drawHat(event, mc.thePlayer);
@@ -111,7 +111,7 @@ public class Hat extends Module {
         final double y = player.lastTickPosY + (player.posY - player.lastTickPosY) * event.partialTicks();
         final double z = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * event.partialTicks();
 
-        final int points = (int) this.points.getValue();
+        final int points = this.points.getValue().intValue();
         final double radius = this.size.getValue();
 
         Color[] colors = new Color[181];

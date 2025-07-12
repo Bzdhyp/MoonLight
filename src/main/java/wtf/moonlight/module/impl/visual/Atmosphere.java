@@ -39,7 +39,7 @@ public class Atmosphere extends Module {
     @EventTarget
     private void onUpdate(UpdateEvent event) {
         if(time.get())
-            mc.theWorld.setWorldTime((long) timeValue.getValue());
+            mc.theWorld.setWorldTime(timeValue.getValue().longValue());
         if (weather.get()) {
             switch (weatherValue.getValue()) {
                 case "Rain":

@@ -12,12 +12,13 @@ Found a bug or have an idea for a new feature? You can let us know by clicking [
 ArcaneClickGui By GuyueMang
 ## What changes were made?
 - TargetHUD Mode
-- Scaffold bypass Hypixel?
+- Scaffold bypass Hypixel? (10% lag)
 - CCBlueX FakeLag
-- CCBlueX Velocity
+- Delay Velocity
 - Fix BlinkComponent
 - NoSlowDown bypass Hypixel
 - Prediction LongJump
+- new AltManger
 - Revise the project structure
 
 ## Play Hypixel

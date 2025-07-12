@@ -412,7 +412,7 @@ public class InvManager extends Module {
     }
 
     private void updateNextClick() {
-        this.nextClick = Math.round((float) MathUtils.getRandom((int) this.delay.getValue(), (int) this.delay.getValue()));
+        this.nextClick = Math.round((float) MathUtils.getRandom(this.delay.getValue().intValue(), this.delay.getValue().intValue()));
         this.timerUtil.reset();
         moved = true;
     }

@@ -60,7 +60,7 @@ public class SliderValue extends Value {
         this.increment = 1;
     }
 
-    public float getValue() {
+    public Float getValue() {
         return MathHelper.clamp_float(value, getMin(), getMax());
     }
 

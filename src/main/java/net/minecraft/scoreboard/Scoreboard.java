@@ -177,27 +177,24 @@ public class Scoreboard
         return map;
     }
 
-    public void removeObjective(ScoreObjective p_96519_1_)
-    {
+    public void removeObjective(ScoreObjective p_96519_1_) {
+        if (p_96519_1_ == null) return;
+
         this.scoreObjectives.remove(p_96519_1_.getName());
 
-        for (int i = 0; i < 19; ++i)
-        {
-            if (this.getObjectiveInDisplaySlot(i) == p_96519_1_)
-            {
-                this.setObjectiveInDisplaySlot(i, null);
+        for (int i = 0; i < 19; ++i) {
+            if (this.getObjectiveInDisplaySlot(i) == p_96519_1_) {
+                this.setObjectiveInDisplaySlot(i, (ScoreObjective)null);
             }
         }
 
-        List<ScoreObjective> list = this.scoreObjectiveCriterias.get(p_96519_1_.getCriteria());
+        List<ScoreObjective> list = (List)this.scoreObjectiveCriterias.get(p_96519_1_.getCriteria());
 
-        if (list != null)
-        {
+        if (list != null) {
             list.remove(p_96519_1_);
         }
 
-        for (Map<ScoreObjective, Score> map : this.entitiesScoreObjectives.values())
-        {
+        for (Map<ScoreObjective, Score> map : this.entitiesScoreObjectives.values()) {
             map.remove(p_96519_1_);
         }
 
@@ -219,28 +216,20 @@ public class Scoreboard
         return this.teams.get(p_96508_1_);
     }
 
-    public ScorePlayerTeam createTeam(String name)
-    {
-        if (name.length() > 16)
-        {
+    public ScorePlayerTeam createTeam(String name) {
+        if (name.length() > 16) {
             throw new IllegalArgumentException("The team name '" + name + "' is too long!");
         }
-        else
-        {
-            ScorePlayerTeam scoreplayerteam = this.getTeam(name);
 
-            if (scoreplayerteam != null)
-            {
-                throw new IllegalArgumentException("A team with the name '" + name + "' already exists!");
-            }
-            else
-            {
-                scoreplayerteam = new ScorePlayerTeam(this, name);
-                this.teams.put(name, scoreplayerteam);
-                this.broadcastTeamCreated(scoreplayerteam);
-                return scoreplayerteam;
-            }
+        ScorePlayerTeam existingTeam = this.getTeam(name);
+        if (existingTeam != null) {
+            return existingTeam;
         }
+
+        ScorePlayerTeam newTeam = new ScorePlayerTeam(this, name);
+        this.teams.put(name, newTeam);
+        this.broadcastTeamCreated(newTeam);
+        return newTeam;
     }
 
     public void removeTeam(ScorePlayerTeam p_96511_1_)

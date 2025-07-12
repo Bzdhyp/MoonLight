@@ -111,7 +111,6 @@ public final class Stealer extends Module {
 
     @EventTarget
     public void onMotion(MotionEvent event) {
-        setTag(String.valueOf(maxDelay.getValue()));
         rotation = null;
 
         if (!event.isPre())
@@ -270,7 +269,7 @@ public final class Stealer extends Module {
                     }
 
                     for (int i = 0; i < container.getLowerChestInventory().getSizeInventory(); ++i) {
-                        if (container.getLowerChestInventory().getStackInSlot(i) != null && (timer.hasTimeElapsed((long) (MathUtils.nextInt((int) minDelay.getValue(), (int) maxDelay.getValue())) * 100L) || MathUtils.nextInt((int) minDelay.getValue(), (int) maxDelay.getValue()) == 0) && InventoryUtils.isValid(container.getLowerChestInventory().getStackInSlot(i))) {
+                        if (container.getLowerChestInventory().getStackInSlot(i) != null && (timer.hasTimeElapsed((long) (MathUtils.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue())) * 100L) || MathUtils.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) == 0) && InventoryUtils.isValid(container.getLowerChestInventory().getStackInSlot(i))) {
                             slot = i;
                             mc.playerController.windowClick(container.windowId, i, 0, 1, mc.thePlayer);
                             timer.reset();
@@ -288,7 +287,7 @@ public final class Stealer extends Module {
                 if (mc.thePlayer.openContainer instanceof ContainerFurnace container) {
                     if (isStealing) {
                         for (index = 0; index < container.tileFurnace.getSizeInventory(); ++index) {
-                            if (container.tileFurnace.getStackInSlot(index) != null || (timer.hasTimeElapsed((long) (MathUtils.nextInt((int) minDelay.getValue(), (int) maxDelay.getValue()) * 100L)) || MathUtils.nextInt((int) minDelay.getValue(), (int) maxDelay.getValue()) == 0)) {
+                            if (container.tileFurnace.getStackInSlot(index) != null || (timer.hasTimeElapsed(MathUtils.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) * 100L) || MathUtils.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) == 0)) {
                                 mc.playerController.windowClick(container.windowId, index, 0, 1, mc.thePlayer);
                                 timer.reset();
                             }
@@ -306,7 +305,7 @@ public final class Stealer extends Module {
                 if (mc.thePlayer.openContainer instanceof ContainerBrewingStand container) {
                     if (isStealing) {
                         for (index = 0; index < container.tileBrewingStand.getSizeInventory(); ++index) {
-                            if (container.tileBrewingStand.getStackInSlot(index) != null || (timer.hasTimeElapsed((long) (MathUtils.nextInt((int) minDelay.getValue(), (int) maxDelay.getValue()) * 100L)) || MathUtils.nextInt((int) minDelay.getValue(), (int) maxDelay.getValue()) == 0)) {
+                            if (container.tileBrewingStand.getStackInSlot(index) != null || (timer.hasTimeElapsed(MathUtils.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) * 100L) || MathUtils.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) == 0)) {
                                 mc.playerController.windowClick(container.windowId, index, 0, 1, mc.thePlayer);
                                 timer.reset();
                             }

@@ -34,6 +34,7 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import wtf.moonlight.Client;
 import wtf.moonlight.events.packet.PacketEvent;
+import wtf.moonlight.module.impl.combat.Velocity;
 import wtf.moonlight.module.impl.misc.Disabler;
 
 import javax.crypto.SecretKey;
@@ -444,18 +445,19 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
         if (this.channel.isOpen()) {
             Packet<INetHandler> p = (Packet<INetHandler>) p_channelRead0_2_;
             try {
+                if (Velocity.getGrimPost()) {
+                    Minecraft.getMinecraft().addScheduledTask(() -> Velocity.storedPackets.add((Packet<INetHandler>) p_channelRead0_2_));
+                }
+
                 if (Client.INSTANCE.getModuleManager().getModule(Disabler.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Disabler.class).options.isEnabled("GrimAC") && Client.INSTANCE.getModuleManager().getModule(Disabler.class).grim.isEnabled("Post") && Client.INSTANCE.getModuleManager().getModule(Disabler.class).getPost() && Client.INSTANCE.getModuleManager().getModule(Disabler.class).postDelay(p)) {
                     Minecraft.getMinecraft().addScheduledTask(() -> {
                         Client.INSTANCE.getModuleManager().getModule(Disabler.class).getStoredPackets().add(p);
                     });
                 } else {
-
                     PacketEvent event = new PacketEvent(p_channelRead0_2_, PacketEvent.State.INCOMING);
                     Client.INSTANCE.getEventManager().call(event);
 
-                    if (event.isCancelled()) {
-                        return;
-                    }
+                    if (event.isCancelled()) return;
 
                     p_channelRead0_2_.processPacket(this.packetListener);
                 }

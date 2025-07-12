@@ -70,7 +70,7 @@ public class BedPlates extends Module {
         if (mc.thePlayer == null || mc.theWorld == null)
             return;
 
-        int radius = (int) distance.getValue();
+        int radius = distance.getValue().intValue();
         int ind = 0;
 
         var center = new BlockPos(mc.thePlayer);
@@ -198,7 +198,7 @@ public class BedPlates extends Module {
         }
 
         final var pos = new BlockPos.MutableBlockPos();
-        final int layer = (int) layers.getValue();
+        final int layer = layers.getValue().intValue();
         for (int yOffset = 0; yOffset <= layer; ++yOffset) {
             for (int xOffset = -layer; xOffset <= layer; ++xOffset) {
                 for (int zOffset = -layer; zOffset <= layer; ++zOffset) {

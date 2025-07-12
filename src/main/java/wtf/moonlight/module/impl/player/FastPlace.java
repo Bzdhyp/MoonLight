@@ -33,6 +33,6 @@ public class FastPlace extends Module {
         if (mc.thePlayer.getHeldItem() == null)
             return;
         if (mc.thePlayer.getHeldItem().getItem() instanceof ItemBlock)
-            mc.rightClickDelayTimer = (int) speed.getValue();
+            mc.rightClickDelayTimer = speed.getValue().intValue();
     }
 }

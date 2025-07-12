@@ -72,7 +72,7 @@ public class AutoPot extends Module {
 
                 mc.getNetHandler().addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
 
-                this.nextThrow = (long) delay.getValue();
+                this.nextThrow = delay.getValue().longValue();
                 timer.reset();
                 break;
             }

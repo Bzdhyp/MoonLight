@@ -60,7 +60,7 @@ public class LineGlyphs extends Module {
     }
 
     private int maxObjCount() {
-        return (int) this.glyphsCount.getValue();
+        return this.glyphsCount.getValue().intValue();
     }
 
     private int getR360X() {

@@ -119,7 +119,7 @@ public class Speed extends Module {
 
                 switch (mc.thePlayer.offGroundTicks) {
                     case 1: {
-                        switch ((int) mTicks.getValue()) {
+                        switch (mTicks.getValue().intValue()) {
                             case 1:
                                 mc.thePlayer.motionY -= 0.76;
                                 break;
@@ -244,7 +244,7 @@ public class Speed extends Module {
             case "Miniblox": {
                 if (MovementUtils.isMoving()) {
                     if (mc.thePlayer.onGround) {
-                        switch ((int) mTicks.getValue()) {
+                        switch (mTicks.getValue().intValue()) {
                             case 1:
                                 MovementUtils.strafe(0.07);
                                 break;

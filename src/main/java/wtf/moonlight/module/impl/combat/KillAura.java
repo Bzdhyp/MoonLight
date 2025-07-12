@@ -281,9 +281,9 @@ public class KillAura extends Module {
                             bezierP7.getValue(),
                             elasticity.getValue(),
                             dampingFactor.getValue(),
-                            (int) keepLength.getValue(), smoothlyResetRotation.get());
+                            keepLength.getValue().intValue(), smoothlyResetRotation.get());
                 } else {
-                    RotationUtils.setRotation(rotation, addons.isEnabled("Movement Fix") ? movementFix.is("Strict") ? MovementCorrection.STRICT : MovementCorrection.SILENT : MovementCorrection.OFF, (int) keepLength.getValue());
+                    RotationUtils.setRotation(rotation, addons.isEnabled("Movement Fix") ? movementFix.is("Strict") ? MovementCorrection.STRICT : MovementCorrection.SILENT : MovementCorrection.OFF, keepLength.getValue().intValue());
                 }
 
 

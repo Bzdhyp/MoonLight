@@ -90,7 +90,7 @@ public class AutoProjectile extends Module {
             }
 
             if (usingProjectile) {
-                if (this.projectilePullTimer.hasTimeElapsed((long) this.switchBackDelay.getValue()) || switchBackDelay.getValue() == 0) {
+                if (this.projectilePullTimer.hasTimeElapsed(this.switchBackDelay.getValue().longValue()) || switchBackDelay.getValue() == 0) {
                     if (this.switchBack != -1 && mc.thePlayer.inventory.currentItem != this.switchBack) {
                         mc.thePlayer.inventory.currentItem = this.switchBack;
                         mc.playerController.updateController();
@@ -123,7 +123,7 @@ public class AutoProjectile extends Module {
             }
         }
 
-        if ((this.projectilePullTimer.hasTimeElapsed((long) this.switchBackDelay.getValue()) || switchBackDelay.getValue() == 0) && wasThrowing) {
+        if ((this.projectilePullTimer.hasTimeElapsed(this.switchBackDelay.getValue().longValue()) || switchBackDelay.getValue() == 0) && wasThrowing) {
             if (this.switchBack != -1 && mc.thePlayer.inventory.currentItem != this.switchBack) {
                 mc.thePlayer.inventory.currentItem = this.switchBack;
                 mc.playerController.updateController();
@@ -157,7 +157,7 @@ public class AutoProjectile extends Module {
             rotate();
         }
 
-        if (delayTimer.hasTimeElapsed((long) delay.getValue())) {
+        if (delayTimer.hasTimeElapsed(delay.getValue().longValue())) {
             mc.thePlayer.inventory.currentItem = projectile - 36;
 
             mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventoryContainer.getSlot(projectile).getStack());

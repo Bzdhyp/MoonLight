@@ -35,7 +35,7 @@ public class ModuleListWidget extends Widget {
 
         for (int i = 0; i < enabledModules.size(); i++) {
             Module module = enabledModules.get(i);
-            module.getAnimation().setDuration((int) setting.animSpeed.getValue());
+            module.getAnimation().setDuration(setting.animSpeed.getValue().intValue());
             int width = getModuleWidth(module);
             int height = getModuleHeight() - 2;
 
@@ -80,7 +80,7 @@ public class ModuleListWidget extends Widget {
 
         for (int i = 0; i < enabledModules.size(); i++) {
             Module module = enabledModules.get(i);
-            module.getAnimation().setDuration((int) setting.animSpeed.getValue());
+            module.getAnimation().setDuration(setting.animSpeed.getValue().intValue());
             int width = getModuleWidth(module);
             int height = getModuleHeight() - 2;
 

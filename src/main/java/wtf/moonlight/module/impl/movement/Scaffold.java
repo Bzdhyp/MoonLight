@@ -237,7 +237,7 @@ public class Scaffold extends Module {
         }
 
         if (mode.is("Telly") && mc.thePlayer.onGround) {
-            tellyTicks = MathUtils.randomizeInt((int) minTellyTicks.getValue(), (int) maxTellyTicks.getValue());
+            tellyTicks = MathUtils.randomizeInt(minTellyTicks.getValue().intValue(), maxTellyTicks.getValue().intValue());
         }
 
         double posX = mc.thePlayer.posX;
@@ -261,7 +261,7 @@ public class Scaffold extends Module {
         }
 
         if (mode.is("Telly") && mc.thePlayer.onGround) {
-            tellyTicks = MathUtils.randomizeInt((int) minTellyTicks.getValue(), (int) maxTellyTicks.getValue());
+            tellyTicks = MathUtils.randomizeInt(minTellyTicks.getValue().intValue(), maxTellyTicks.getValue().intValue());
         }
 
         if (addons.isEnabled("Sprint")) {

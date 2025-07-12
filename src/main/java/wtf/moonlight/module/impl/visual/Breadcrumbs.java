@@ -34,7 +34,7 @@ public final class Breadcrumbs extends Module {
             }
 
             if (timeoutBool.get()) {
-                while (path.size() > (int) timeout.getValue()) {
+                while (path.size() > timeout.getValue().intValue()) {
                     path.removeFirst();
                 }
             }

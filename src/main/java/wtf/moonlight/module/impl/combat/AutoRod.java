@@ -153,7 +153,7 @@ public class AutoRod extends Module {
             rotate();
         }
 
-        if (delayTimer.hasTimeElapsed((long) delay.getValue())) {
+        if (delayTimer.hasTimeElapsed(delay.getValue().longValue())) {
             mc.thePlayer.inventory.currentItem = projectile - 36;
 
             mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventoryContainer.getSlot(projectile).getStack());

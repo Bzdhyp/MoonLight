@@ -89,7 +89,7 @@ public class FakeLag extends Module {
         Packet<?> packet = event.getPacket();
 
         if (event.getState() == PacketEvent.State.INCOMING || mc.thePlayer.isDead || mc.thePlayer.isInWater() ||
-                mc.currentScreen != null || !chronometer.hasTimeElapsed((long) recoilTime.getValue())) {
+                mc.currentScreen != null || !chronometer.hasTimeElapsed(recoilTime.getValue().longValue())) {
             return;
         }
 
