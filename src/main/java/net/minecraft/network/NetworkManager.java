@@ -445,15 +445,13 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
         if (this.channel.isOpen()) {
             Packet<INetHandler> p = (Packet<INetHandler>) p_channelRead0_2_;
             try {
-                if (Velocity.getGrimPost() && Velocity.grimPostDelay(p_channelRead0_2_)){
-                    Minecraft.getMinecraft().addScheduledTask(() -> Velocity.storedPackets.add((Packet<INetHandler>)p_channelRead0_2_));
-                } else if (Velocity.getGrimPost() && Velocity.grimPostDelay(p_channelRead0_2_)) {
-                    Minecraft.getMinecraft().addScheduledTask(() -> Velocity.storedPackets.add((Packet<INetHandler>) p_channelRead0_2_));
-                }
+
                 if (Client.INSTANCE.getModuleManager().getModule(Disabler.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Disabler.class).options.isEnabled("GrimAC") && Client.INSTANCE.getModuleManager().getModule(Disabler.class).grim.isEnabled("Post") && Client.INSTANCE.getModuleManager().getModule(Disabler.class).getPost() && Client.INSTANCE.getModuleManager().getModule(Disabler.class).postDelay(p)) {
                     Minecraft.getMinecraft().addScheduledTask(() -> {
                         Client.INSTANCE.getModuleManager().getModule(Disabler.class).getStoredPackets().add(p);
                     });
+                } else if (Velocity.getGrimPost() && Velocity.grimPostDelay(p_channelRead0_2_)) {
+                    Minecraft.getMinecraft().addScheduledTask(() -> Velocity.storedPackets.add((Packet<INetHandler>) p_channelRead0_2_));
                 } else {
                     PacketEvent event = new PacketEvent(p_channelRead0_2_, PacketEvent.State.INCOMING);
                     Client.INSTANCE.getEventManager().call(event);
@@ -461,6 +459,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
                     if (event.isCancelled()) return;
 
                     p_channelRead0_2_.processPacket(this.packetListener);
+
                 }
             } catch (final ThreadQuickExitException var4) {
             }

@@ -35,7 +35,8 @@
     "Key": 0,
     "Hidden": false,
     "Values": {
-      "Mode": "Universal"
+      "Mode": "Hypixel",
+      "Fall Distance": 3.0
     }
   },
   "AntiFireball": {
@@ -216,7 +217,7 @@
   "AutoTool": {
     "State": true,
     "Key": 0,
-    "Hidden": false,
+    "Hidden": true,
     "Values": {
       "Ignore Using Item": true,
       "Spoof": true,
@@ -337,8 +338,7 @@
       "Option": "View Clip, Third Person Distance, Motion Blur",
       "Distance": 4.0,
       "Motion Interpolation": 0.15,
-      "Motion Blur Amount": 7.0,
-      "Bloom Amount": 0.75
+      "Motion Blur Amount": 7.0
     }
   },
   "Chams": {
@@ -372,6 +372,26 @@
         "RGB": -128,
         "Alpha": 1.0
       }
+    }
+  },
+  "ChinaHat": {
+    "State": false,
+    "Key": 0,
+    "Hidden": false,
+    "Values": {
+      "Mode": "Sexy",
+      "Points": 30.0,
+      "Size": 0.5,
+      "Off Set": 2000.0,
+      "Color": {
+        "RGB": -1,
+        "Alpha": 1.0
+      },
+      "Second Color": {
+        "RGB": -16777216,
+        "Alpha": 1.0
+      },
+      "Target": true
     }
   },
   "ClickGUI": {
@@ -416,12 +436,12 @@
     "Values": {
       "Dash Segments": true,
       "Dash Dots": true,
-      "Anim Time": 100.0,
-      "Time": 400.0
+      "Anim Time": 140.0,
+      "Time": 600.0
     }
   },
   "DeadEffect": {
-    "State": true,
+    "State": false,
     "Key": 0,
     "Hidden": true,
     "Values": {
@@ -445,16 +465,16 @@
       "Singleplayer Check": true
     }
   },
-  "ESP": {
+  "ESP2D": {
     "State": true,
     "Key": 0,
-    "Hidden": true,
+    "Hidden": false,
     "Values": {
-      "Tags": false,
-      "Font Tags": true,
-      "Font Tags Background": true,
+      "Tags": true,
+      "Font Tags": false,
+      "Font Tags Background": false,
       "Font Tags Health": true,
-      "Tags Size": 1.0,
+      "Tags Size": 0.5,
       "Tags Health": true,
       "Tags Background": true,
       "Tags Health Bar": true,
@@ -516,17 +536,6 @@
     "Hidden": false,
     "Values": {
       "Speed": 0.0
-    }
-  },
-  "FireFlies": {
-    "State": true,
-    "Key": 0,
-    "Hidden": true,
-    "Values": {
-      "Dark Imprint": true,
-      "Lighting": true,
-      "Spawn Delay": 3.0,
-      "Max Alive Time": 2000.0
     }
   },
   "Fly": {
@@ -594,28 +603,8 @@
       "Self": false
     }
   },
-  "Hat": {
-    "State": true,
-    "Key": 0,
-    "Hidden": true,
-    "Values": {
-      "Mode": "Astolfo",
-      "Points": 30.0,
-      "Size": 0.5,
-      "Off Set": 4700.0,
-      "Color": {
-        "RGB": -1,
-        "Alpha": 1.0
-      },
-      "Second Color": {
-        "RGB": -16777216,
-        "Alpha": 1.0
-      },
-      "Target": true
-    }
-  },
   "HitBubbles": {
-    "State": true,
+    "State": false,
     "Key": 0,
     "Hidden": true,
     "Values": {}
@@ -649,9 +638,9 @@
       "C Fonts Mode": "Medium",
       "Font Size": 16.0,
       "anim Speed": 250.0,
-      "Animation": "Slide In",
+      "Animation": "ScaleIn",
       "Text Height": 3.0,
-      "Suffix": "Dash",
+      "Suffix": "Bracket",
       "Line": false,
       "Outline": false,
       "Notification Mode": "Type 4",
@@ -672,7 +661,7 @@
         "RGB": -14669760,
         "Alpha": 1.0
       },
-      "Background Alpha": 175.0,
+      "Background Alpha": 187.0,
       "Custom Scoreboard": true,
       "Hide Scoreboard": false,
       "Hide Scoreboard Red Points": true,
@@ -696,24 +685,21 @@
       "Keep Sync": false,
       "Drop Items": true,
       "Sword Slot": 1.0,
-      "Gapple Slot": 2.0,
-      "Pickaxe Slot": 4.0,
-      "Axe Slot": 5.0,
-      "Block Slot": 6.0,
+      "Gapple Slot": 3.0,
+      "Pickaxe Slot": 5.0,
+      "Axe Slot": 6.0,
+      "Block Slot": 7.0,
       "Potion Slot": 8.0,
-      "Delay": 0.0,
-      "Mode": "OpenInv"
+      "Delay": 90.0,
+      "Mode": "Basic"
     }
   },
   "InvMove": {
     "State": true,
     "Key": 0,
-    "Hidden": true,
+    "Hidden": false,
     "Values": {
-      "NoInv": true,
-      "No Chest": true,
-      "Watchdog Chest": false,
-      "Watchdog Inv": true
+      "Mode": "Hypixel"
     }
   },
   "ItemESP": {
@@ -723,7 +709,7 @@
     "Values": {}
   },
   "JumpCircles": {
-    "State": true,
+    "State": false,
     "Key": 0,
     "Hidden": true,
     "Values": {
@@ -750,14 +736,14 @@
     }
   },
   "KillAura": {
-    "State": false,
+    "State": true,
     "Key": 19,
     "Hidden": false,
     "Values": {
       "Priority": "Health",
       "Mode": "Switch",
-      "SwitchDelay": 2.0,
-      "Aim Position": "Nearest",
+      "SwitchDelay": 1.0,
+      "Aim Position": "Legs",
       "Rotation In Range": false,
       "Lowest Aim Range": 1.0,
       "Highest Aim Range": 1.0,
@@ -766,10 +752,10 @@
       "Bruteforce": false,
       "Smart Vec": false,
       "Smart Rotation": false,
-      "Custom Rotation Setting": false,
-      "Rotations Smooth": "Slerp",
-      "Min Yaw Rotation Speed": 180.0,
-      "Min Pitch Rotation Speed": 180.0,
+      "Custom Rotation Setting": true,
+      "Rotations Smooth": "Adaptive Slerp",
+      "Min Yaw Rotation Speed": 90.0,
+      "Min Pitch Rotation Speed": 90.0,
       "Max Yaw Rotation Speed": 180.0,
       "Max Pitch Rotation Speed": 180.0,
       "Bezier P0": 0.0,
@@ -785,33 +771,33 @@
       "Keep Length": 0.0,
       "Smoothly Reset Rotation": false,
       "Randomize": false,
-      "RandomizeRotation": "Random",
+      "RandomizeRotation": "Advanced",
       "YawStrength": 5.0,
       "PitchStrength": 5.0,
       "Random Addons": "",
-      "SpeedSinCos": 1.5,
-      "YStrengthAmplitudeSinCos": 3.5,
-      "XStrengthAmplitudeSinCos": 3.5,
-      "Yaw Strength Randomize": 1.0,
-      "Pitch Strength Randomize": 1.0,
+      "SpeedSinCos": 0.35,
+      "YStrengthAmplitudeSinCos": 0.59,
+      "XStrengthAmplitudeSinCos": 0.45,
+      "Yaw Strength Randomize": 2.0,
+      "Pitch Strength Randomize": 4.0,
       "Min Aps": 4.0,
       "Max Aps": 6.0,
       "Aps Mode": "Random",
-      "Range Mode": "Client",
+      "Range Mode": "Client 3",
       "Search Range": 5.0,
       "Pause Rotations": false,
-      "Pause Range": 3.4,
+      "Pause Range": 3.5,
       "Rotation Range": 5.0,
       "Pre Swing With Rotation Range": false,
-      "Addons": "Movement Fix",
-      "Attack Range": 3.3,
+      "Addons": "Movement Fix, Ray Cast",
+      "Attack Range": 3.2,
       "Hit Select Range": 3.7,
       "Auto": false,
       "Sprint Check": false,
       "Wall Attack Range": 3.0,
       "Block Range": 5.0,
       "AutoBlock": "Release",
-      "Interact": true,
+      "Interact": false,
       "Via": false,
       "Slowdown": false,
       "Block Rate": 100.0,
@@ -833,7 +819,7 @@
     }
   },
   "LineGlyphs": {
-    "State": true,
+    "State": false,
     "Key": 0,
     "Hidden": true,
     "Values": {
@@ -862,7 +848,7 @@
   "NameHider": {
     "State": true,
     "Key": 0,
-    "Hidden": false,
+    "Hidden": true,
     "Values": {
       "Name": "Bzdhyp"
     }
@@ -887,7 +873,7 @@
   "NoJumpDelay": {
     "State": true,
     "Key": 0,
-    "Hidden": false,
+    "Hidden": true,
     "Values": {}
   },
   "NoRotate": {
@@ -921,8 +907,21 @@
       "Up And Down": true
     }
   },
-  "Phase": {
+  "Particles": {
     "State": true,
+    "Key": 0,
+    "Hidden": true,
+    "Values": {
+      "Physics": "Drop",
+      "Mode": "SnowFlake",
+      "Lime": false,
+      "Lighting": true,
+      "Size": 19.0,
+      "Count": 283.0
+    }
+  },
+  "Phase": {
+    "State": false,
     "Key": 0,
     "Hidden": false,
     "Values": {
@@ -932,7 +931,7 @@
   "PotionHUD": {
     "State": true,
     "Key": 0,
-    "Hidden": false,
+    "Hidden": true,
     "Values": {
       "Potion Mode": "Default"
     }
@@ -942,18 +941,6 @@
     "Key": 0,
     "Hidden": false,
     "Values": {}
-  },
-  "Rotation": {
-    "State": true,
-    "Key": 0,
-    "Hidden": false,
-    "Values": {
-      "Render Body": true,
-      "Realistic": true,
-      "Fix Aim": true,
-      "Aim Point": false,
-      "Size": 0.1
-    }
   },
   "SafeWalk": {
     "State": false,
@@ -975,16 +962,16 @@
       "Switch Block": "Switch",
       "Biggest Stack": true,
       "Mode": "Telly",
-      "Min Telly Ticks": 1.0,
-      "Max Telly Ticks": 3.0,
-      "Rotations": "Normal",
+      "Min Telly Ticks": 2.0,
+      "Max Telly Ticks": 2.0,
+      "Rotations": "Hypixel",
       "Custom Yaw": 91.0,
       "Min Pitch Range": 54.0,
       "Max Pitch Range": 74.6,
       "Custom Rotation Setting": true,
-      "Rotations Smooth": "Cosine Interpolation",
-      "Min Yaw Rotation Speed": 90.0,
-      "Min Pitch Rotation Speed": 90.0,
+      "Rotations Smooth": "Adaptive Slerp",
+      "Min Yaw Rotation Speed": 120.0,
+      "Min Pitch Rotation Speed": 120.0,
       "Max Yaw Rotation Speed": 180.0,
       "Max Pitch Rotation Speed": 180.0,
       "Bezier P0": 0.0,
@@ -998,7 +985,7 @@
       "Elasticity": 0.38,
       "Damping Factor": 0.5,
       "Smoothly Reset Rotation": true,
-      "Addons": "Sprint, Swing, Movement Fix, Keep Y",
+      "Addons": "Sprint, Swing, Movement Fix",
       "Blocks To Jump": 4.0,
       "Blocks To Sneak": 5.0,
       "Sneak Distance": 0.0,
@@ -1028,10 +1015,19 @@
       "Blur Compression": 8.0,
       "Shadow": true,
       "Shadow Radius": 10.0,
-      "Shadow Offset": 3.0,
-      "Bloom": false,
-      "Bloom Radius": 3.0,
-      "Bloom Offset": 2.0
+      "Shadow Offset": 3.0
+    }
+  },
+  "SilentView": {
+    "State": true,
+    "Key": 0,
+    "Hidden": false,
+    "Values": {
+      "Render Body": true,
+      "Realistic": true,
+      "Fix Aim": true,
+      "Aim Point": false,
+      "Size": 0.1
     }
   },
   "Speed": {
@@ -1072,7 +1068,7 @@
     "Values": {
       "Omni": false,
       "Silent": false,
-      "Rotate": true,
+      "Rotate": false,
       "Only On Ground": false
     }
   },
@@ -1116,7 +1112,7 @@
   "TargetESP": {
     "State": true,
     "Key": 0,
-    "Hidden": false,
+    "Hidden": true,
     "Values": {
       "Mark Mode": "Image",
       "Image Mode": "Rectangle",
@@ -1127,7 +1123,7 @@
   "TargetHUD": {
     "State": true,
     "Key": 0,
-    "Hidden": false,
+    "Hidden": true,
     "Values": {
       "Mode": "Type 3",
       "Particle": true
@@ -1182,16 +1178,16 @@
     "Hidden": false,
     "Values": {
       "Mode": "Delay",
-      "Delay Mode": "Packet",
-      "Hurt Delay": 2.0,
-      "Ping Delay": 2.2,
-      "Jump Rest": false,
+      "Delay Mode": "Ping Spoof",
+      "Hurt Delay": 1.2,
+      "Ping Delay": 2.0,
+      "Jump Rest": true,
       "Boost Tick": 1.0,
       "Boost Strength": 1.0,
-      "Jump Reset Mode": "Hurt Time",
-      "Jump Reset Hurt Time": 6.0,
+      "Jump Reset Mode": "Packet",
+      "Jump Reset Hurt Time": 2.0,
       "Jump Reset Chance": 100.0,
-      "Hits Until Jump": 1.0,
+      "Hits Until Jump": 2.0,
       "Ticks Until Jump": 3.0
     }
   },

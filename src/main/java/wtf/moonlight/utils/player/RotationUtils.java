@@ -148,7 +148,6 @@ public class RotationUtils implements InstanceAccess {
     @EventTarget
     @EventPriority(-100)
     public void onRotationUpdate(UpdateEvent event) {
-
         if (!enabled && currentRotation != null) {
 
             double distanceToPlayerRotation = getRotationDifference(currentRotation, new float[]{mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch});

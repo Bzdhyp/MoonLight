@@ -1,101 +1,78 @@
-/*
- * MoonLight Hacked Client
- *
- * A free and open-source hacked client for Minecraft.
- * Developed using Minecraft's resources.
- *
- * Repository: https://github.com/randomguy3725/MoonLight
- *
- * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
- */
 package wtf.moonlight.module.impl.movement;
 
+import net.minecraft.block.BlockAir;
+import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
-import net.minecraft.network.play.server.S08PacketPlayerPosLook;
-import net.minecraft.util.Vec3;
 import com.cubk.EventTarget;
+import net.minecraft.util.AxisAlignedBB;
+import wtf.moonlight.Client;
 import wtf.moonlight.events.packet.PacketEvent;
-import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.ModuleCategory;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.ListValue;
-import wtf.moonlight.component.BlinkComponent;
+import wtf.moonlight.module.values.impl.SliderValue;
+import wtf.moonlight.utils.packet.PacketUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @ModuleInfo(name = "AntiFall", category = ModuleCategory.Movement)
 public class AntiFall extends Module {
+    private final ListValue mode = new ListValue("Mode", new String[]{"Hypixel"},"Hypixel", this);
+    private final SliderValue fallDist = new SliderValue("Fall Distance", 3F, 1F, 20F, 0.5F, this);
+    private double lastGroundY;
 
-    public final ListValue mode = new ListValue("Mode", new String[]{"Universal"}, "Universal", this);
-    private double groundX = 0.0;
-    private double groundY = 0.0;
-    private double groundZ = 0.0;
-    private boolean universalStarted = false;
-    private boolean universalFlag = false;
+    private final List<Packet<?>> packets = new ArrayList<>();
 
-    @Override
-    public void onEnable() {
-        universalStarted = false;
-    }
-
-    @Override
-    public void onDisable() {
-        BlinkComponent.dispatch();
+    public boolean isActive() {
+        return !packets.isEmpty() && mc.thePlayer.fallDistance >= fallDist.getValue();
     }
 
     @EventTarget
-    public void onUpdate(UpdateEvent event) {
-        setTag(mode.getValue());
+    public void onPacketSend(PacketEvent event) {
+        if(mode.is("Hypixel")) {
+            if(event.getPacket() instanceof C03PacketPlayer) {
+                Scaffold scaffold = Client.INSTANCE.getModuleManager().getModule(Scaffold.class);
+                if (scaffold.data == null || scaffold.data.blockPos == null || scaffold.data.facing == null && !(mc.theWorld.getBlockState(scaffold.targetBlock).getBlock() instanceof BlockAir))
+                    return;
 
-        if (isEnabled(LongJump.class) || isEnabled(Scaffold.class))
-            return;
+                if (isEnabled(LongJump.class) || scaffold.isEnabled() && scaffold.data.blockPos != null)
+                    return;
 
-        switch (mode.getValue()) {
-            case "Universal":
-                if (universalStarted) {
-                    if (mc.thePlayer.onGround || mc.thePlayer.fallDistance > 8f) {
-                        BlinkComponent.dispatch();
-                        universalStarted = false;
-                        universalFlag = false;
-                    } else if (mc.thePlayer.fallDistance > 6f && !universalFlag) {
-                        universalFlag = true;
-                        sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(groundX, groundY + 1, groundZ, false));
+                if(!isBlockUnder()) {
+                    if(mc.thePlayer.fallDistance < fallDist.getValue()) {
+                        event.setCancelled(true);
+                        packets.add(event.getPacket());
+                    } else {
+                        if(!packets.isEmpty()) {
+                            for(Packet<?> packet : packets) {
+                                C03PacketPlayer c03 = (C03PacketPlayer) packet;
+                                c03.setY(lastGroundY);
+                                PacketUtils.sendPacketNoEvent(packet);
+                            }
+                            packets.clear();
+                        }
                     }
-                } else if (mc.thePlayer.fallDistance > 0f && !mc.thePlayer.onGround && mc.thePlayer.motionY < 0) {
-                    if (isOverVoid()) {
-                        universalStarted = true;
-                        universalFlag = false;
-                        BlinkComponent.blinking = true;
-                        groundX = mc.thePlayer.posX;
-                        groundY = mc.thePlayer.posY;
-                        groundZ = mc.thePlayer.posZ;
+                } else {
+                    lastGroundY = mc.thePlayer.posY;
+                    if(!packets.isEmpty()) {
+                        packets.forEach(PacketUtils::sendPacketNoEvent);
+                        packets.clear();
                     }
-                }
-                break;
-        }
-    }
-
-    @EventTarget
-    public void onPacket(PacketEvent event) {
-
-        if (isEnabled(LongJump.class) || isEnabled(Scaffold.class) && getModule(Scaffold.class).data.blockPos != null)
-            return;
-
-        if (mode.is("Universal")) {
-            if (event.getPacket() instanceof S08PacketPlayerPosLook s08PacketPlayerPosLook) {
-                if (s08PacketPlayerPosLook.getX() == groundX && s08PacketPlayerPosLook.getY() == groundY && s08PacketPlayerPosLook.getZ() == groundZ) {
-                    BlinkComponent.blinking = false;
-                    mc.thePlayer.setPosition(groundX, groundY, groundZ);
-                    universalFlag = false;
-                    universalStarted = false;
                 }
             }
         }
     }
 
-    private boolean isOverVoid() {
-        return mc.theWorld.rayTraceBlocks(
-                new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ),
-                new Vec3(mc.thePlayer.posX, mc.thePlayer.posY - 40, mc.thePlayer.posZ),
-                true, true, false) == null;
+    private boolean isBlockUnder() {
+        if (mc.thePlayer.posY < 0) return false;
+        for (int offset = 0; offset < (int) mc.thePlayer.posY + 2; offset += 2) {
+            AxisAlignedBB bb = mc.thePlayer.getEntityBoundingBox().offset(0, -offset, 0);
+            if (!mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, bb).isEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

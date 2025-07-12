@@ -109,7 +109,7 @@ public class Scaffold extends Module {
     public PlaceData data;
     private int oloSlot = -1;
     private double onGroundY;
-    private BlockPos targetBlock;
+    BlockPos targetBlock;
     private float[] rotation;
     private float[] previousRotation;
     private boolean canPlace = true;
