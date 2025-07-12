@@ -5,7 +5,7 @@
     "Hidden": false,
     "Values": {
       "Old": false,
-      "Block Anim": "Virtue",
+      "Block Anim": "Smooth",
       "Block When Swing": false,
       "Hit": "Vanilla",
       "Slow Down": 0.0,
@@ -19,34 +19,6 @@
       "Block-Z": 0.0,
       "Funny": false,
       "Swing While Using Item": false
-    }
-  },
-  "Annoy": {
-    "State": false,
-    "Key": 0,
-    "Hidden": false,
-    "Values": {
-      "FOV": 180.0,
-      "Delay": 1000.0,
-      "Custom Rotation Setting": false,
-      "Rotations Smooth": "Slerp",
-      "Min Yaw Rotation Speed": 45.0,
-      "Min Pitch Rotation Speed": 45.0,
-      "Max Yaw Rotation Speed": 90.0,
-      "Max Pitch Rotation Speed": 90.0,
-      "Bezier P0": 0.0,
-      "Bezier P1": 0.05,
-      "Bezier P2": 0.2,
-      "Bezier P3": 0.4,
-      "Bezier P4": 0.6,
-      "Bezier P5": 0.8,
-      "Bezier P6": 0.95,
-      "Bezier P7": 0.1,
-      "Elasticity": 0.3,
-      "Damping Factor": 0.5,
-      "Smoothly Reset Rotation": true,
-      "Move Fix": true,
-      "Movement": "Silent"
     }
   },
   "AntiBot": {
@@ -93,15 +65,6 @@
       "Move Fix": false
     }
   },
-  "AntiHunger": {
-    "State": false,
-    "Key": 0,
-    "Hidden": false,
-    "Values": {
-      "No Sprint": true,
-      "Float": true
-    }
-  },
   "AspectRatio": {
     "State": false,
     "Key": 0,
@@ -138,7 +101,7 @@
     "Hidden": false,
     "Values": {
       "Mode": "Triangle",
-      "Amount": 3.0,
+      "Amount": 4.0,
       "Physics": true
     }
   },
@@ -151,22 +114,12 @@
       "Delay": 1000.0
     }
   },
-  "AutoClicker": {
-    "State": false,
-    "Key": 0,
-    "Hidden": false,
-    "Values": {
-      "Min Aps": 10.0,
-      "Max Aps": 12.0,
-      "Break Blocks": true
-    }
-  },
   "AutoGap": {
     "State": false,
     "Key": 0,
     "Hidden": false,
     "Values": {
-      "Delay": 1000.0,
+      "Delay": 1500.0,
       "Health": 15.0,
       "Stop Move When Eating": false,
       "Always Attack": false,
@@ -236,8 +189,8 @@
     "Values": {
       "Mode": "Silent",
       "FOV": 180.0,
-      "Range": 8.0,
-      "Delay": 100.0,
+      "Range": 1.0,
+      "Delay": 400.0,
       "Predict Size": 2.0,
       "Custom Rotation Setting": false,
       "Rotations Smooth": "Slerp",
@@ -324,14 +277,6 @@
       "Show Prev Pos": true
     }
   },
-  "BlockHit": {
-    "State": false,
-    "Key": 0,
-    "Hidden": false,
-    "Values": {
-      "Swing Check": true
-    }
-  },
   "BlockOverlay": {
     "State": false,
     "Key": 0,
@@ -391,7 +336,7 @@
     "Values": {
       "Option": "View Clip, Third Person Distance, Motion Blur",
       "Distance": 4.0,
-      "Motion Interpolation": 0.2,
+      "Motion Interpolation": 0.15,
       "Motion Blur Amount": 7.0,
       "Bloom Amount": 0.75
     }
@@ -467,7 +412,7 @@
   "DashTrail": {
     "State": true,
     "Key": 0,
-    "Hidden": false,
+    "Hidden": true,
     "Values": {
       "Dash Segments": true,
       "Dash Dots": true,
@@ -478,7 +423,7 @@
   "DeadEffect": {
     "State": true,
     "Key": 0,
-    "Hidden": false,
+    "Hidden": true,
     "Values": {
       "Color": {
         "RGB": -16744193,
@@ -493,9 +438,9 @@
     "Key": 0,
     "Hidden": false,
     "Values": {
-      "Disablers": "Watchdog Inventory",
+      "Disablers": "GrimAC",
       "Tick": 3.0,
-      "Grim Addons": "",
+      "Grim Addons": "Post",
       "Verus Addons": "",
       "Singleplayer Check": true
     }
@@ -573,12 +518,6 @@
       "Speed": 0.0
     }
   },
-  "FinalKills": {
-    "State": false,
-    "Key": 0,
-    "Hidden": false,
-    "Values": {}
-  },
   "FireFlies": {
     "State": true,
     "Key": 0,
@@ -595,8 +534,8 @@
     "Key": 0,
     "Hidden": false,
     "Values": {
-      "Mode": "Vanilla",
-      "Speed": 2.0,
+      "Mode": "Miniblox",
+      "Speed": 2.3,
       "Up Speed": 2.0,
       "Down Speed": 2.0,
       "Cancel Setback": false,
@@ -663,7 +602,7 @@
       "Mode": "Astolfo",
       "Points": 30.0,
       "Size": 0.5,
-      "Off Set": 2000.0,
+      "Off Set": 4700.0,
       "Color": {
         "RGB": -1,
         "Alpha": 1.0
@@ -705,31 +644,18 @@
     "Hidden": true,
     "Values": {
       "Client Name": "Moonlight",
-      "Elements": "Watermark, Module List, Info, Potion HUD, Target HUD, Notification",
+      "Elements": "Arraylist, Notification",
       "C Fonts": true,
-      "C Fonts Mode": "Semi Bold",
-      "Font Size": 15.0,
-      "anim Speed": 200.0,
-      "Watermark Mode": "Nursultan",
+      "C Fonts Mode": "Medium",
+      "Font Size": 16.0,
+      "anim Speed": 250.0,
       "Animation": "Slide In",
-      "Text Height": 5.0,
+      "Text Height": 3.0,
       "Suffix": "Dash",
       "Line": false,
       "Outline": false,
-      "Armor Background": true,
-      "Armor Enchanted": true,
-      "Armor Info": false,
-      "Info Mode": "Tenacity",
-      "Version Mode": "Exhi",
-      "Potion Mode": "Default",
-      "TargetHUD Mode": "Type 3",
-      "TargetHUD Particle": true,
       "Notification Mode": "Type 4",
-      "Key Bind Mode": "Type 1",
-      "Session Info Mode": "Rise",
       "Center Notification": true,
-      "Radar Size": 70.0,
-      "Radar Mode": "Default",
       "Color Setting": "Fade",
       "Main Color": {
         "RGB": -457467,
@@ -754,7 +680,7 @@
       "Hide Background": false,
       "Chat Combine": true,
       "New Button": false,
-      "New Hot Bar": true,
+      "New Hot Bar": false,
       "Cape": true,
       "Cape Mode": "Sexy 2",
       "Wavey Cape": false,
@@ -787,22 +713,7 @@
       "NoInv": true,
       "No Chest": true,
       "Watchdog Chest": false,
-      "Watchdog Inv": false
-    }
-  },
-  "ItemAlerts": {
-    "State": false,
-    "Key": 0,
-    "Hidden": false,
-    "Values": {
-      "Swords": true,
-      "Include Stone": true,
-      "Armor": true,
-      "Tools": true,
-      "Enchant": true,
-      "Items": true,
-      "Invisible Check": true,
-      "Invisibility Status": true
+      "Watchdog Inv": true
     }
   },
   "ItemESP": {
@@ -822,18 +733,6 @@
       "Deepest Light": true
     }
   },
-  "KeepRange": {
-    "State": false,
-    "Key": 0,
-    "Hidden": false,
-    "Values": {
-      "Range": 3.0,
-      "Disable Near Edge": true,
-      "Edge Range": 5.0,
-      "Mode": "Stop",
-      "Combo To Start": 2.0
-    }
-  },
   "KeepSprint": {
     "State": false,
     "Key": 0,
@@ -842,19 +741,27 @@
       "Mode": "Vanilla"
     }
   },
+  "KeyBindHUD": {
+    "State": false,
+    "Key": 0,
+    "Hidden": false,
+    "Values": {
+      "Key Bind Mode": "Type 1"
+    }
+  },
   "KillAura": {
-    "State": true,
+    "State": false,
     "Key": 19,
     "Hidden": false,
     "Values": {
-      "FOV": 180.0,
+      "Priority": "Health",
       "Mode": "Switch",
       "SwitchDelay": 2.0,
-      "Priority": "Health",
       "Aim Position": "Nearest",
       "Rotation In Range": false,
       "Lowest Aim Range": 1.0,
       "Highest Aim Range": 1.0,
+      "FOV": 180.0,
       "Heuristics": false,
       "Bruteforce": false,
       "Smart Vec": false,
@@ -890,13 +797,13 @@
       "Min Aps": 4.0,
       "Max Aps": 6.0,
       "Aps Mode": "Random",
-      "Range Mode": "Client 3",
+      "Range Mode": "Client",
       "Search Range": 5.0,
       "Pause Rotations": false,
-      "Pause Range": 6.0,
+      "Pause Range": 3.4,
       "Rotation Range": 5.0,
-      "Pre Swing With Rotation Range": true,
-      "Addons": "Movement Fix, Ray Cast",
+      "Pre Swing With Rotation Range": false,
+      "Addons": "Movement Fix",
       "Attack Range": 3.3,
       "Hit Select Range": 3.7,
       "Auto": false,
@@ -904,7 +811,7 @@
       "Wall Attack Range": 3.0,
       "Block Range": 5.0,
       "AutoBlock": "Release",
-      "Interact": false,
+      "Interact": true,
       "Via": false,
       "Slowdown": false,
       "Block Rate": 100.0,
@@ -921,7 +828,9 @@
     "State": false,
     "Key": 0,
     "Hidden": false,
-    "Values": {}
+    "Values": {
+      "Name": " ���ѱ�MoonLight����\u0000"
+    }
   },
   "LineGlyphs": {
     "State": true,
@@ -997,9 +906,9 @@
       "Mode": "Blink",
       "Sprint": true,
       "Food": true,
-      "Potion": true,
+      "Potion": false,
       "Sword": true,
-      "Bow": true
+      "Bow": false
     }
   },
   "NoWeb": {
@@ -1020,20 +929,19 @@
       "Mode": "Watchdog Auto"
     }
   },
+  "PotionHUD": {
+    "State": true,
+    "Key": 0,
+    "Hidden": false,
+    "Values": {
+      "Potion Mode": "Default"
+    }
+  },
   "RawMouseInput": {
     "State": false,
     "Key": 0,
     "Hidden": false,
     "Values": {}
-  },
-  "Reach": {
-    "State": false,
-    "Key": 0,
-    "Hidden": false,
-    "Values": {
-      "Min Range": 3.0,
-      "Max Range": 3.3
-    }
   },
   "Rotation": {
     "State": true,
@@ -1059,12 +967,6 @@
       "Max Pitch": 75.0
     }
   },
-  "SaveMoveKey": {
-    "State": false,
-    "Key": 0,
-    "Hidden": false,
-    "Values": {}
-  },
   "Scaffold": {
     "State": false,
     "Key": 48,
@@ -1074,13 +976,13 @@
       "Biggest Stack": true,
       "Mode": "Telly",
       "Min Telly Ticks": 1.0,
-      "Max Telly Ticks": 2.0,
+      "Max Telly Ticks": 3.0,
       "Rotations": "Normal",
       "Custom Yaw": 91.0,
       "Min Pitch Range": 54.0,
       "Max Pitch Range": 74.6,
       "Custom Rotation Setting": true,
-      "Rotations Smooth": "Adaptive Slerp",
+      "Rotations Smooth": "Cosine Interpolation",
       "Min Yaw Rotation Speed": 90.0,
       "Min Pitch Rotation Speed": 90.0,
       "Max Yaw Rotation Speed": 180.0,
@@ -1096,7 +998,7 @@
       "Elasticity": 0.38,
       "Damping Factor": 0.5,
       "Smoothly Reset Rotation": true,
-      "Addons": "Sprint, Swing, Movement Fix, Keep Y, AD Strafe",
+      "Addons": "Sprint, Swing, Movement Fix, Keep Y",
       "Blocks To Jump": 4.0,
       "Blocks To Sneak": 5.0,
       "Sneak Distance": 0.0,
@@ -1212,14 +1114,23 @@
     }
   },
   "TargetESP": {
-    "State": false,
+    "State": true,
     "Key": 0,
     "Hidden": false,
     "Values": {
-      "Mark Mode": "Points",
+      "Mark Mode": "Image",
       "Image Mode": "Rectangle",
       "Circle Speed": 2.0,
       "Only Player": true
+    }
+  },
+  "TargetHUD": {
+    "State": true,
+    "Key": 0,
+    "Hidden": false,
+    "Values": {
+      "Mode": "Type 3",
+      "Particle": true
     }
   },
   "TargetStrafe": {
@@ -1265,32 +1176,31 @@
     "Hidden": false,
     "Values": {}
   },
-  "VClip": {
-    "State": false,
-    "Key": 0,
-    "Hidden": false,
-    "Values": {
-      "Mode": "Down",
-      "Up Blocks": 1.0,
-      "Down Blocks": 1.0
-    }
-  },
   "Velocity": {
     "State": true,
     "Key": 0,
     "Hidden": false,
     "Values": {
-      "Mode": "Jump Reset",
-      "Grim Mode": "Reduce",
+      "Mode": "Delay",
+      "Delay Mode": "Packet",
+      "Hurt Delay": 2.0,
+      "Ping Delay": 2.2,
+      "Jump Rest": false,
       "Boost Tick": 1.0,
       "Boost Strength": 1.0,
-      "Jump Reset Mode": "Advanced",
-      "Jump Reset Hurt Time": 1.0,
+      "Jump Reset Mode": "Hurt Time",
+      "Jump Reset Hurt Time": 6.0,
       "Jump Reset Chance": 100.0,
-      "Hits Until Jump": 2.0,
-      "Ticks Until Jump": 4.0,
-      "Reduce Hurt Time": 4.0,
-      "Reduce Factor": 0.6
+      "Hits Until Jump": 1.0,
+      "Ticks Until Jump": 3.0
+    }
+  },
+  "Watermark": {
+    "State": true,
+    "Key": 0,
+    "Hidden": false,
+    "Values": {
+      "Watermark Mode": "Nursultan"
     }
   }
 }
