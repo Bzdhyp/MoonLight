@@ -363,7 +363,7 @@ public class Velocity extends Module {
         return mc.thePlayer != null &&
                 !mc.thePlayer.isDead &&
                 !mc.thePlayer.isRiding() &&
-                mc.thePlayer.hurtResistantTime <= 10;
+                mc.thePlayer.hurtResistantTime <= 10 && (isEnabled(KillAura.class) && Client.INSTANCE.getModuleManager().getModule(KillAura.class).target != null);
     }
 
     public static boolean getGrimPost() {

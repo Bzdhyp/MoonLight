@@ -454,13 +454,13 @@
     }
   },
   "Disabler": {
-    "State": false,
+    "State": true,
     "Key": 0,
     "Hidden": false,
     "Values": {
-      "Disablers": "GrimAC",
+      "Disablers": "Watchdog Inventory",
       "Tick": 3.0,
-      "Grim Addons": "Post",
+      "Grim Addons": "",
       "Verus Addons": "",
       "Singleplayer Check": true
     }
@@ -640,7 +640,7 @@
       "anim Speed": 250.0,
       "Animation": "ScaleIn",
       "Text Height": 3.0,
-      "Suffix": "Bracket",
+      "Suffix": "Dash",
       "Line": false,
       "Outline": false,
       "Notification Mode": "Type 4",
@@ -677,7 +677,7 @@
     }
   },
   "InvManager": {
-    "State": true,
+    "State": false,
     "Key": 34,
     "Hidden": false,
     "Values": {
@@ -736,7 +736,7 @@
     }
   },
   "KillAura": {
-    "State": true,
+    "State": false,
     "Key": 19,
     "Hidden": false,
     "Values": {
@@ -912,12 +912,12 @@
     "Key": 0,
     "Hidden": true,
     "Values": {
-      "Physics": "Drop",
+      "Physics": "Fly",
       "Mode": "SnowFlake",
       "Lime": false,
       "Lighting": true,
-      "Size": 19.0,
-      "Count": 283.0
+      "Size": 13.0,
+      "Count": 800.0
     }
   },
   "Phase": {
@@ -962,16 +962,16 @@
       "Switch Block": "Switch",
       "Biggest Stack": true,
       "Mode": "Telly",
-      "Min Telly Ticks": 2.0,
-      "Max Telly Ticks": 2.0,
+      "Min Telly Ticks": 3.0,
+      "Max Telly Ticks": 4.0,
       "Rotations": "Hypixel",
       "Custom Yaw": 91.0,
       "Min Pitch Range": 54.0,
       "Max Pitch Range": 74.6,
       "Custom Rotation Setting": true,
       "Rotations Smooth": "Adaptive Slerp",
-      "Min Yaw Rotation Speed": 120.0,
-      "Min Pitch Rotation Speed": 120.0,
+      "Min Yaw Rotation Speed": 125.0,
+      "Min Pitch Rotation Speed": 125.0,
       "Max Yaw Rotation Speed": 180.0,
       "Max Pitch Rotation Speed": 180.0,
       "Bezier P0": 0.0,
@@ -981,11 +981,11 @@
       "Bezier P4": 0.6,
       "Bezier P5": 0.8,
       "Bezier P6": 0.95,
-      "Bezier P7": 0.1,
+      "Bezier P7": 1.0,
       "Elasticity": 0.38,
       "Damping Factor": 0.5,
       "Smoothly Reset Rotation": true,
-      "Addons": "Sprint, Swing, Movement Fix",
+      "Addons": "Sprint, Swing, Movement Fix, Keep Y, AD Strafe",
       "Blocks To Jump": 4.0,
       "Blocks To Sneak": 5.0,
       "Sneak Distance": 0.0,
@@ -1073,7 +1073,7 @@
     }
   },
   "Stealer": {
-    "State": true,
+    "State": false,
     "Key": 34,
     "Hidden": false,
     "Values": {
@@ -1178,13 +1178,13 @@
     "Hidden": false,
     "Values": {
       "Mode": "Delay",
-      "Delay Mode": "Ping Spoof",
-      "Hurt Delay": 1.2,
-      "Ping Delay": 2.0,
+      "Delay Mode": "Packet",
+      "Hurt Delay": 1.6,
+      "Ping Delay": 2.4,
       "Jump Rest": true,
       "Boost Tick": 1.0,
       "Boost Strength": 1.0,
-      "Jump Reset Mode": "Packet",
+      "Jump Reset Mode": "Advanced",
       "Jump Reset Hurt Time": 2.0,
       "Jump Reset Chance": 100.0,
       "Hits Until Jump": 2.0,
