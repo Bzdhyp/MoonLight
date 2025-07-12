@@ -1,6 +1,7 @@
 package net.minecraft.client.entity;
 
 import com.mojang.authlib.GameProfile;
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
@@ -13,9 +14,12 @@ public class EntityOtherPlayerMP extends AbstractClientPlayer
 {
     private boolean isItemInUse;
     private int otherPlayerMPPosRotationIncrements;
-    public double otherPlayerMPX;
-    public double otherPlayerMPY;
-    public double otherPlayerMPZ;
+    @Getter
+    private double otherPlayerMPX;
+    @Getter
+    private double otherPlayerMPY;
+    @Getter
+    private double otherPlayerMPZ;
     private double otherPlayerMPYaw;
     private double otherPlayerMPPitch;
 

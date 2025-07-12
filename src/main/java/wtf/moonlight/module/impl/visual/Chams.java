@@ -12,17 +12,17 @@ package wtf.moonlight.module.impl.visual;
 
 import net.minecraft.client.renderer.OpenGlHelper;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ColorValue;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.render.RenderUtil;
 
 import java.awt.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
-@ModuleInfo(name = "Chams", category = ModuleCategory.Visual)
+@ModuleInfo(name = "Chams", category = Categor.Visual)
 public class Chams extends Module {
 
     public final BoolValue occludedFlatProperty = new BoolValue("Occluded Flat", true, this);
@@ -43,7 +43,7 @@ public class Chams extends Module {
         glPolygonOffset(0.0F, -1000000.0F);
         OpenGlHelper.setLightmapTextureCoords(1, 240.0F, 240.0F);
         glDepthMask(false);
-        RenderUtils.color(occludedColor);
+        RenderUtil.color(occludedColor);
     }
 
     public static void preRenderVisible(boolean disableTexture, boolean enableTexture, int visibleColor, boolean visibleFlat, boolean occludedFlat) {
@@ -58,7 +58,7 @@ public class Chams extends Module {
         else if (!occludedFlat && visibleFlat)
             glDisable(GL_LIGHTING);
 
-        RenderUtils.color(visibleColor);
+        RenderUtil.color(visibleColor);
         glDisable(GL_POLYGON_OFFSET_FILL);
     }
 

@@ -23,7 +23,7 @@ import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.visual.NameHider;
 import wtf.moonlight.gui.font.GradientApplier;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.render.RenderUtil;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -384,10 +384,10 @@ public class FontRenderer implements IResourceManagerReloadListener
         GlStateManager.pushMatrix();
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
-        this.drawOutlinedString(RenderUtils.stripColor(string), x - width, y, outlineColor);
-        this.drawOutlinedString(RenderUtils.stripColor(string), x, y - width, outlineColor);
-        this.drawOutlinedString(RenderUtils.stripColor(string), x + width, y, outlineColor);
-        this.drawOutlinedString(RenderUtils.stripColor(string), x, y + width, outlineColor);
+        this.drawOutlinedString(RenderUtil.stripColor(string), x - width, y, outlineColor);
+        this.drawOutlinedString(RenderUtil.stripColor(string), x, y - width, outlineColor);
+        this.drawOutlinedString(RenderUtil.stripColor(string), x + width, y, outlineColor);
+        this.drawOutlinedString(RenderUtil.stripColor(string), x, y + width, outlineColor);
         this.drawOutlinedString(string, x, y, color);
         GlStateManager.disableBlend();
         GlStateManager.disableAlpha();

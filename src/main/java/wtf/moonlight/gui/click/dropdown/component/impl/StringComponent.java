@@ -15,12 +15,12 @@ import org.lwjglx.input.Keyboard;
 import wtf.moonlight.module.values.impl.StringValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.advanced.Animation;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.MouseUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.MouseUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class StringComponent extends Component {
             text = text.replaceAll("[a-zA-Z]", "");
         }
         String textToDraw = setting.getValue().isEmpty() && !inputting ? "Empty..." : setting.getText();
-        RoundedUtils.drawRound(getX(),getY() + Fonts.interRegular.get(14).getHeight() - 2,getWidth() ,Fonts.interRegular.get(14).getHeight() + 4,2,new Color(ColorUtils.darker(getColorRGB(),0.5f)));
+        RoundedUtil.drawRound(getX(),getY() + Fonts.interRegular.get(14).getHeight() - 2,getWidth() ,Fonts.interRegular.get(14).getHeight() + 4,2,new Color(ColorUtil.darker(getColorRGB(),0.5f)));
         Fonts.interRegular.get(14).drawString(setting.getName(),getX() + 4,getY(),-1);
         drawTextWithLineBreaks(textToDraw + (inputting && text.length() < 59 && System.currentTimeMillis() % 1000 > 500 ? "|" : ""),getX() + 6,getY() + Fonts.interRegular.get(14).getHeight() + 2,getWidth() - 12);
         super.drawScreen(mouseX, mouseY);
@@ -53,7 +53,7 @@ public class StringComponent extends Component {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (MouseUtils.isHovered2(getX(),getY() + Fonts.interRegular.get(14).getHeight() + 4,getWidth(),4,mouseX,mouseY) && mouseButton == 0){
+        if (MouseUtil.isHovered2(getX(),getY() + Fonts.interRegular.get(14).getHeight() + 4,getWidth(),4,mouseX,mouseY) && mouseButton == 0){
             inputting = !inputting;
         } else {
             inputting = false;
@@ -91,7 +91,7 @@ public class StringComponent extends Component {
             java.util.List<String> wrappedLines = wrapText(line, 0, maxWidth);
             for (String wrappedLine : wrappedLines) {
 
-                Fonts.interRegular.get(14).drawString(wrappedLine, x, currentY,ColorUtils.interpolateColor2(Color.GRAY,Color.WHITE, (float) input.getOutput()));
+                Fonts.interRegular.get(14).drawString(wrappedLine, x, currentY, ColorUtil.interpolateColor2(Color.GRAY,Color.WHITE, (float) input.getOutput()));
                 currentY += Fonts.interRegular.get(14).getHeight();
             }
         }

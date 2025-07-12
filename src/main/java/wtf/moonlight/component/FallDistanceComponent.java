@@ -13,7 +13,7 @@ package wtf.moonlight.component;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.player.MotionEvent;
 
-import static wtf.moonlight.utils.misc.InstanceAccess.mc;
+import static wtf.moonlight.util.misc.InstanceAccess.mc;
 
 public final class FallDistanceComponent {
     public static float distance;

@@ -4,10 +4,10 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjglx.input.Mouse;
 import org.lwjglx.opengl.Display;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 
-@ModuleInfo(name = "RawMouseInput",category = ModuleCategory.Misc)
+@ModuleInfo(name = "RawMouseInput",category = Categor.Misc)
 public class RawMouseInput extends Module {
 
     @Override

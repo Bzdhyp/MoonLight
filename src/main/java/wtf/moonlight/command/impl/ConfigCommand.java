@@ -13,7 +13,7 @@ package wtf.moonlight.command.impl;
 import wtf.moonlight.Client;
 import wtf.moonlight.command.Command;
 import wtf.moonlight.config.impl.ModuleConfig;
-import wtf.moonlight.utils.DebugUtils;
+import wtf.moonlight.util.DebugUtil;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -46,13 +46,13 @@ public class ConfigCommand extends Command {
     @Override
     public void execute(String[] args) {
         if (args.length < 2) {
-            DebugUtils.sendMessage("Usage: " + getUsage());
+            DebugUtil.sendMessage("Usage: " + getUsage());
             return;
         }
 
         Action action = Action.fromString(args[1]);
         if (action == null) {
-            DebugUtils.sendMessage("Invalid action. Usage: " + getUsage());
+            DebugUtil.sendMessage("Invalid action. Usage: " + getUsage());
             return;
         }
 
@@ -68,7 +68,7 @@ public class ConfigCommand extends Command {
                 break;
             default:
                 if (args.length < 3) {
-                    DebugUtils.sendMessage("Action '" + action.name().toLowerCase() + "' requires an additional argument. Usage: " + getUsage());
+                    DebugUtil.sendMessage("Action '" + action.name().toLowerCase() + "' requires an additional argument. Usage: " + getUsage());
                     return;
                 }
                 String configName = args[2];
@@ -86,7 +86,7 @@ public class ConfigCommand extends Command {
                         handleRemove(configName);
                         break;
                     default:
-                        DebugUtils.sendMessage("Unknown action. Usage: " + getUsage());
+                        DebugUtil.sendMessage("Unknown action. Usage: " + getUsage());
                 }
                 break;
         }
@@ -95,9 +95,9 @@ public class ConfigCommand extends Command {
     private void handleList() {
         var configs = getConfigList();
         if (configs.length == 0) {
-            DebugUtils.sendMessage("No configurations found.");
+            DebugUtil.sendMessage("No configurations found.");
         } else {
-            DebugUtils.sendMessage("Configs: " + String.join(", ", configs));
+            DebugUtil.sendMessage("Configs: " + String.join(", ", configs));
         }
     }
 
@@ -106,22 +106,22 @@ public class ConfigCommand extends Command {
         if (Desktop.isDesktopSupported()) {
             try {
                 Desktop.getDesktop().open(directory);
-                DebugUtils.sendMessage("Opened config folder.");
+                DebugUtil.sendMessage("Opened config folder.");
             } catch (IOException e) {
-                DebugUtils.sendMessage("Failed to open config folder.");
+                DebugUtil.sendMessage("Failed to open config folder.");
                 e.printStackTrace();
             }
         } else {
-            DebugUtils.sendMessage("Opening folder is not supported on this system.");
+            DebugUtil.sendMessage("Opening folder is not supported on this system.");
         }
     }
 
     private void handleCurrent() {
         String currentConfig = Client.INSTANCE.getConfigManager().getCurrentConfig();
         if (currentConfig != null) {
-            DebugUtils.sendMessage("Current config: " + currentConfig);
+            DebugUtil.sendMessage("Current config: " + currentConfig);
         } else {
-            DebugUtils.sendMessage("No config is currently loaded.");
+            DebugUtil.sendMessage("No config is currently loaded.");
         }
     }
 
@@ -129,9 +129,9 @@ public class ConfigCommand extends Command {
         ModuleConfig cfg = new ModuleConfig(configName);
         if (Client.INSTANCE.getConfigManager().loadConfig(cfg)) {
             Client.INSTANCE.getConfigManager().setCurrentConfig(configName);
-            DebugUtils.sendMessage("Loaded config: " + configName);
+            DebugUtil.sendMessage("Loaded config: " + configName);
         } else {
-            DebugUtils.sendMessage("Invalid config: " + configName);
+            DebugUtil.sendMessage("Invalid config: " + configName);
         }
     }
 
@@ -149,11 +149,11 @@ public class ConfigCommand extends Command {
         ModuleConfig cfg = new ModuleConfig(configName);
         if (Client.INSTANCE.getConfigManager().saveConfig(cfg)) {
             if (notify) {
-                DebugUtils.sendMessage("Saved config: " + configName);
+                DebugUtil.sendMessage("Saved config: " + configName);
             }
         } else {
             if (notify) {
-                DebugUtils.sendMessage("Failed to save config: " + configName);
+                DebugUtil.sendMessage("Failed to save config: " + configName);
             }
         }
     }
@@ -163,15 +163,15 @@ public class ConfigCommand extends Command {
         try {
             if (configFile.createNewFile()) {
                 Client.INSTANCE.getConfigManager().setCurrentConfig(configName);
-                DebugUtils.sendMessage("Created config and set as current: " + configName);
+                DebugUtil.sendMessage("Created config and set as current: " + configName);
                 // Automatically save the newly created config
                 handleSave(configName, false); // Pass false to avoid duplicate messages
-                DebugUtils.sendMessage("Automatically saved config: " + configName);
+                DebugUtil.sendMessage("Automatically saved config: " + configName);
             } else {
-                DebugUtils.sendMessage("Config already exists: " + configName);
+                DebugUtil.sendMessage("Config already exists: " + configName);
             }
         } catch (IOException e) {
-            DebugUtils.sendMessage("Failed to create config: " + configName);
+            DebugUtil.sendMessage("Failed to create config: " + configName);
             e.printStackTrace();
         }
     }
@@ -180,12 +180,12 @@ public class ConfigCommand extends Command {
         File configFile = new File(Client.INSTANCE.getMainDir(), configName + ".json");
         if (configFile.exists()) {
             if (configFile.delete()) {
-                DebugUtils.sendMessage("Removed config: " + configName);
+                DebugUtil.sendMessage("Removed config: " + configName);
             } else {
-                DebugUtils.sendMessage("Failed to remove config: " + configName);
+                DebugUtil.sendMessage("Failed to remove config: " + configName);
             }
         } else {
-            DebugUtils.sendMessage("Config does not exist: " + configName);
+            DebugUtil.sendMessage("Config does not exist: " + configName);
         }
     }
 

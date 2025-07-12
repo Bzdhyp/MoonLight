@@ -25,16 +25,16 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.SmoothStepAnimation;
-import wtf.moonlight.utils.player.RotationUtils;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.SmoothStepAnimation;
+import wtf.moonlight.util.player.RotationUtil;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.RenderUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-@ModuleInfo(name = "DashTrail", category = ModuleCategory.Visual)
+@ModuleInfo(name = "DashTrail", category = Categor.Visual)
 public class DashTrail extends Module {
     private final BoolValue dashSegments = new BoolValue("Dash Segments", false, this);
     private final BoolValue dashDots = new BoolValue("Dash Dots", true, this);
@@ -214,8 +214,8 @@ public class DashTrail extends Module {
                         double[] renderDashPos = new double[]{dashCubic.getRenderPosX(partialTicks), dashCubic.getRenderPosY(partialTicks), dashCubic.getRenderPosZ(partialTicks)};
                         dashCubic.DASH_SPARKS_LIST.forEach(spark -> {
                             double[] renderSparkPos = new double[]{spark.getRenderPosX(partialTicks), spark.getRenderPosY(partialTicks), spark.getRenderPosZ(partialTicks)};
-                            int c = ColorUtils.interpolateColor(getColorDashCubic(dashCubic,255), -1, (float) dashCubic.animation.getOutput());
-                            RenderUtils.color(c);
+                            int c = ColorUtil.interpolateColor(getColorDashCubic(dashCubic,255), -1, (float) dashCubic.animation.getOutput());
+                            RenderUtil.color(c);
                             GL11.glVertex3d(renderSparkPos[0] + renderDashPos[0], renderSparkPos[1] + renderDashPos[1], renderSparkPos[2] + renderDashPos[2]);
                             GL11.glVertex3d(-renderSparkPos[0] + renderDashPos[0], -renderSparkPos[1] + renderDashPos[1], -renderSparkPos[2] + renderDashPos[2]);
                         });
@@ -229,8 +229,8 @@ public class DashTrail extends Module {
                     GL11.glBegin(7);
                     dashCubic.DASH_SPARKS_LIST.forEach(spark -> {
                         double[] renderSparkPos = new double[]{spark.getRenderPosX(partialTicks), spark.getRenderPosY(partialTicks), spark.getRenderPosZ(partialTicks)};
-                        int c = ColorUtils.interpolateColor(getColorDashCubic(dashCubic,255), -1, (float) (1 - dashCubic.animation.getOutput()));
-                        RenderUtils.color(c);
+                        int c = ColorUtil.interpolateColor(getColorDashCubic(dashCubic,255), -1, (float) (1 - dashCubic.animation.getOutput()));
+                        RenderUtil.color(c);
                         GL11.glVertex3d(renderSparkPos[0] + renderDashPos[0], renderSparkPos[1] + renderDashPos[1], renderSparkPos[2] + renderDashPos[2]);
                         GL11.glVertex3d(-renderSparkPos[0] + renderDashPos[0], -renderSparkPos[1] + renderDashPos[1], -renderSparkPos[2] + renderDashPos[2]);
                     });
@@ -324,7 +324,7 @@ public class DashTrail extends Module {
             } else {
                 float motionYaw = base.getMotionYaw();
                 this.rotate[0] = motionYaw - 45.0f - 15.0f - (base.entity.prevRotationYaw - base.entity.rotationYaw) * 3.0f;
-                float yawDiff = RotationUtils.getAngleDifference(motionYaw + 26.3f, base.entity.rotationYaw);
+                float yawDiff = RotationUtil.getAngleDifference(motionYaw + 26.3f, base.entity.rotationYaw);
                 this.rotate[1] = yawDiff < 10.0f || yawDiff > 160.0f ? -90.0f : Module.mc.getRenderManager().playerViewX;
             }
         }
@@ -365,7 +365,7 @@ public class DashTrail extends Module {
 
             dashSparksRemoveAuto(this);
 
-            if(animation.timerUtils.hasTimeElapsed(getRandomTimeAnimationPerTime()))
+            if(animation.timerUtil.hasTimeElapsed(getRandomTimeAnimationPerTime()))
                 animation.setDirection(Direction.BACKWARDS);
         }
 
@@ -386,7 +386,7 @@ public class DashTrail extends Module {
             } else {
                 set3dDashPos(renderPos, () -> {
                     bindResource(texureSized.getResource());
-                    drawBindedTexture(-extX / 2.0f, -extY / 2.0f, extX / 2.0f, extY / 2.0f, ColorUtils.darker(getColorDashCubic(this,64), 1.0f));
+                    drawBindedTexture(-extX / 2.0f, -extY / 2.0f, extX / 2.0f, extY / 2.0f, ColorUtil.darker(getColorDashCubic(this,64), 1.0f));
                 }, this.rotate);
             }
         }

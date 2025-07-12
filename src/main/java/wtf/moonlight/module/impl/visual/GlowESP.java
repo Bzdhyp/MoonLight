@@ -22,14 +22,14 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.player.PlayerUtils;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.shader.ShaderUtils;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.player.PlayerUtil;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.shader.ShaderUtil;
 
 import java.awt.*;
 import java.nio.FloatBuffer;
@@ -38,13 +38,13 @@ import java.util.List;
 
 import static net.minecraft.client.renderer.OpenGlHelper.glUniform1;
 
-@ModuleInfo(name = "GlowESP",category = ModuleCategory.Visual)
+@ModuleInfo(name = "GlowESP",category = Categor.Visual)
 public class GlowESP extends Module {
 
     private final SliderValue exposure = new SliderValue("Exposure", 2.2f, .5f, 3.5f, .1f,this);
     public SliderValue radius = new SliderValue("Radius", 4, 2, 30, 1,this);
-    private final ShaderUtils outlineShader = new ShaderUtils("outline");
-    private final ShaderUtils glowShader = new ShaderUtils("glow");
+    private final ShaderUtil outlineShader = new ShaderUtil("outline");
+    private final ShaderUtil glowShader = new ShaderUtil("glow");
 
     public Framebuffer framebuffer;
     public Framebuffer outlineFrameBuffer;
@@ -58,9 +58,9 @@ public class GlowESP extends Module {
     }
 
     public void createFrameBuffers() {
-        framebuffer = RenderUtils.createFrameBuffer(framebuffer, true);
-        outlineFrameBuffer = RenderUtils.createFrameBuffer(outlineFrameBuffer, true);
-        glowFrameBuffer = RenderUtils.createFrameBuffer(glowFrameBuffer, true);
+        framebuffer = RenderUtil.createFrameBuffer(framebuffer, true);
+        outlineFrameBuffer = RenderUtil.createFrameBuffer(outlineFrameBuffer, true);
+        glowFrameBuffer = RenderUtil.createFrameBuffer(glowFrameBuffer, true);
     }
 
     @EventTarget
@@ -89,12 +89,12 @@ public class GlowESP extends Module {
             outlineFrameBuffer.bindFramebuffer(true);
             outlineShader.init();
             setupOutlineUniforms(0, 1);
-            RenderUtils.bindTexture(framebuffer.framebufferTexture);
-            ShaderUtils.drawQuads();
+            RenderUtil.bindTexture(framebuffer.framebufferTexture);
+            ShaderUtil.drawQuads();
             outlineShader.init();
             setupOutlineUniforms(1, 0);
-            RenderUtils.bindTexture(framebuffer.framebufferTexture);
-            ShaderUtils.drawQuads();
+            RenderUtil.bindTexture(framebuffer.framebufferTexture);
+            ShaderUtil.drawQuads();
             outlineShader.unload();
             outlineFrameBuffer.unbindFramebuffer();
 
@@ -103,8 +103,8 @@ public class GlowESP extends Module {
             glowFrameBuffer.bindFramebuffer(true);
             glowShader.init();
             setupGlowUniforms(1, 0);
-            RenderUtils.bindTexture(outlineFrameBuffer.framebufferTexture);
-            ShaderUtils.drawQuads();
+            RenderUtil.bindTexture(outlineFrameBuffer.framebufferTexture);
+            ShaderUtil.drawQuads();
             glowShader.unload();
             glowFrameBuffer.unbindFramebuffer();
 
@@ -112,8 +112,8 @@ public class GlowESP extends Module {
             glowShader.init();
             setupGlowUniforms(0, 1);
             GL13.glActiveTexture(GL13.GL_TEXTURE0);
-            RenderUtils.bindTexture(glowFrameBuffer.framebufferTexture);
-            ShaderUtils.drawQuads();
+            RenderUtil.bindTexture(glowFrameBuffer.framebufferTexture);
+            ShaderUtil.drawQuads();
             glowShader.unload();
 
         }
@@ -131,7 +131,7 @@ public class GlowESP extends Module {
 
         final FloatBuffer buffer = BufferUtils.createFloatBuffer(256);
         for (int i = 1; i <= radius.getValue(); i++) {
-            buffer.put(MathUtils.calculateGaussianValue(i, radius.getValue() / 2));
+            buffer.put(MathUti.calculateGaussianValue(i, radius.getValue() / 2));
         }
         buffer.rewind();
 
@@ -153,7 +153,7 @@ public class GlowESP extends Module {
     }
 
     public void collectEntities() {
-        livingEntities = PlayerUtils.getLivingPlayers(entity -> RenderUtils.isBBInFrustum(entity) && entity != mc.thePlayer || entity == mc.thePlayer && mc.gameSettings.thirdPersonView != 0);
+        livingEntities = PlayerUtil.getLivingPlayers(entity -> RenderUtil.isBBInFrustum(entity) && entity != mc.thePlayer || entity == mc.thePlayer && mc.gameSettings.thirdPersonView != 0);
     }
 
     private Color getColor() {

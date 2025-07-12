@@ -13,8 +13,8 @@ package wtf.moonlight.gui.click;
 import lombok.Getter;
 import lombok.Setter;
 import wtf.moonlight.module.impl.visual.ClickGUI;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 
@@ -27,10 +27,10 @@ public class Component implements IComponent {
     private int colorRGB = color.getRGB();
 
     public void drawBackground(Color color) {
-        RenderUtils.drawRect(x, y, width, height, color.getRGB());
+        RenderUtil.drawRect(x, y, width, height, color.getRGB());
     }
     public void drawRoundBackground(Color color) {
-        RoundedUtils.drawRound(x, y, width, height,3, color);
+        RoundedUtil.drawRound(x, y, width, height,3, color);
     }
     public boolean isHovered(float mouseX, float mouseY) {
         return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;

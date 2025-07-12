@@ -12,13 +12,13 @@ package wtf.moonlight.module.impl.visual;
 
 import lombok.Getter;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 
-@ModuleInfo(name = "Animations", category = ModuleCategory.Visual)
+@ModuleInfo(name = "Animations", category = Categor.Visual)
 @Getter
 public class Animations extends Module {
 

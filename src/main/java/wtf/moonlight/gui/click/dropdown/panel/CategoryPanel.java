@@ -16,17 +16,17 @@ import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import wtf.moonlight.Client;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.impl.visual.ClickGUI;
 import wtf.moonlight.gui.click.IComponent;
 import wtf.moonlight.gui.click.dropdown.component.ModuleComponent;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.EaseInOutQuad;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.MouseUtils;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.EaseInOutQuad;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.MouseUtil;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 import java.util.List;
@@ -38,10 +38,10 @@ public class CategoryPanel implements IComponent {
     private float width = 115, height;
     private boolean dragging, opened;
     private final EaseInOutQuad openAnimation = new EaseInOutQuad(250, 1);
-    private final ModuleCategory category;
+    private final Categor category;
     private final List<ModuleComponent> moduleComponents;
 
-    public CategoryPanel(ModuleCategory category) {
+    public CategoryPanel(Categor category) {
         this.category = category;
         this.openAnimation.setDirection(Direction.BACKWARDS);
 
@@ -55,9 +55,9 @@ public class CategoryPanel implements IComponent {
     public void drawScreen(int mouseX, int mouseY) {
         update(mouseX, mouseY);
 
-        RenderUtils.scaleStart((float) new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() / 2, (float) new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight() / 2, (float) INSTANCE.getDropdownGUI().getOpeningAnimation().getOutput());
+        RenderUtil.scaleStart((float) new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() / 2, (float) new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight() / 2, (float) INSTANCE.getDropdownGUI().getOpeningAnimation().getOutput());
 
-        RoundedUtils.drawRound(x, y - 2, width, (float) (19 + ((height - 19) * openAnimation.getOutput())), 6, new Color(ColorUtils.darker(INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue().getRGB(),0.2f)));
+        RoundedUtil.drawRound(x, y - 2, width, (float) (19 + ((height - 19) * openAnimation.getOutput())), 6, new Color(ColorUtil.darker(INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue().getRGB(),0.2f)));
         //RoundedUtils.drawRound(x, y - 2, width, 19, 3, ColorUtils.reAlpha(INSTANCE.getModuleManager().getModule(ClickGUI.class).color.get(), 25));
         //RoundedUtils.drawRound(x, y - 2, width, (float) (19 + ((height - 19) * openAnimation.getOutput())), 3, ColorUtils.reAlpha(INSTANCE.getModuleManager().getModule(ClickGUI.class).color.get(), 50));
 
@@ -77,13 +77,13 @@ public class CategoryPanel implements IComponent {
         }
         height = componentOffsetY + 4;
 
-        RenderUtils.scaleEnd();
+        RenderUtil.scaleEnd();
         IComponent.super.drawScreen(mouseX, mouseY);
     }
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (MouseUtils.isHovered2(x, y - 2, width, 19, mouseX, mouseY)) {
+        if (MouseUtil.isHovered2(x, y - 2, width, 19, mouseX, mouseY)) {
             switch (mouseButton) {
                 case 0 -> {
                     dragging = true;
@@ -93,7 +93,7 @@ public class CategoryPanel implements IComponent {
                 case 1 -> opened = !opened;
             }
         }
-        if (opened && !MouseUtils.isHovered2(x, y - 2, width, 19, mouseX, mouseY)) {
+        if (opened && !MouseUtil.isHovered2(x, y - 2, width, 19, mouseX, mouseY)) {
             moduleComponents.forEach(component -> component.mouseClicked(mouseX, mouseY, mouseButton));
         }
         IComponent.super.mouseClicked(mouseX, mouseY, mouseButton);

@@ -17,7 +17,7 @@ import wtf.moonlight.config.Config;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.values.Value;
 import wtf.moonlight.module.values.impl.*;
-import wtf.moonlight.utils.render.ColorUtils;
+import wtf.moonlight.util.render.ColorUtil;
 
 import java.awt.*;
 
@@ -72,7 +72,7 @@ public class ModuleConfig extends Config {
                             }
                             if (value instanceof ColorValue colorValue) {
                                 JsonObject colorValues = theValue.getAsJsonObject();
-                                colorValue.setValue(ColorUtils.applyOpacity(new Color(colorValues.get("RGB").getAsInt()), colorValues.get("Alpha").getAsFloat()));
+                                colorValue.setValue(ColorUtil.applyOpacity(new Color(colorValues.get("RGB").getAsInt()), colorValues.get("Alpha").getAsFloat()));
                             }
                             if (value instanceof StringValue textValue) {
                                 textValue.setText(theValue.getAsString());

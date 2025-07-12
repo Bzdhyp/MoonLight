@@ -5,7 +5,7 @@ import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.client.gui.achievement.GuiStats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.realms.RealmsBridge;
-import wtf.moonlight.gui.main.GuiMainMenu;
+import wtf.moonlight.gui.main.MainMenu;
 
 public class GuiIngameMenu extends GuiScreen
 {
@@ -51,16 +51,16 @@ public class GuiIngameMenu extends GuiScreen
 
                 if (flag)
                 {
-                    this.mc.displayGuiScreen(new GuiMainMenu());
+                    this.mc.displayGuiScreen(new MainMenu());
                 }
                 else if (flag1)
                 {
                     RealmsBridge realmsbridge = new RealmsBridge();
-                    realmsbridge.switchToRealms(new GuiMainMenu());
+                    realmsbridge.switchToRealms(new MainMenu());
                 }
                 else
                 {
-                    this.mc.displayGuiScreen(new GuiMultiplayer(new GuiMainMenu()));
+                    this.mc.displayGuiScreen(new GuiMultiplayer(new MainMenu()));
                 }
 
             case 2:

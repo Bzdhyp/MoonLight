@@ -2,18 +2,17 @@ package wtf.moonlight.gui.click.arcane.component.settings;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.MathHelper;
-import org.lwjgl.opengl.GL11;
 import org.lwjglx.input.Mouse;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.module.values.impl.ListValue;
-import wtf.moonlight.utils.animations.advanced.Animation;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.utils.animations.advanced.impl.SmoothStepAnimation;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.animations.advanced.impl.SmoothStepAnimation;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -38,7 +37,7 @@ public class ModeComponent extends Component {
     }
     @Override
     public void drawScreen(int mouseX, int mouseY) {
-        Fonts.Bold.get(18).drawString(setting.getName(), getX() + 10, getY() + 4, ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(), 0.4f));
+        Fonts.Bold.get(18).drawString(setting.getName(), getX() + 10, getY() + 4, ColorUtil.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(), 0.4f));
         open.setDirection(opened ? Direction.FORWARDS : Direction.BACKWARDS);
         if (open.getOutput() > 0.1) {
             float totalHeight = (float) ((setting.getModes().length * 20 + 2) * open.getOutput());
@@ -47,16 +46,16 @@ public class ModeComponent extends Component {
             GlStateManager.translate(0, 0, 2f);
 
 
-            RoundedUtils.drawRound(getX() + 10, getY() + 32, 145, totalHeight, 2, INSTANCE.getArcaneClickGui().smallbackgroundColor2);
+            RoundedUtil.drawRound(getX() + 10, getY() + 32, 145, totalHeight, 2, INSTANCE.getArcaneClickGui().smallbackgroundColor2);
             for (String str : setting.getModes()) {
                 select.putIfAbsent(str, new DecelerateAnimation(250, 1));
                 select.get(str).setDirection(str.equals(setting.getValue()) ? Direction.FORWARDS : Direction.BACKWARDS);
 
                 if (str.equals(setting.getValue())) {
-                    RoundedUtils.drawRound(getX() + 12, ((float) (getY() + 34 + (Arrays.asList(setting.getModes()).indexOf(str) * 20) * open.getOutput())) + getScroll(), 141, 18, 2,
-                            new Color(ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().backgroundColor.getRGB(), (float) select.get(setting.getValue()).getOutput())));
+                    RoundedUtil.drawRound(getX() + 12, ((float) (getY() + 34 + (Arrays.asList(setting.getModes()).indexOf(str) * 20) * open.getOutput())) + getScroll(), 141, 18, 2,
+                            new Color(ColorUtil.applyOpacity(INSTANCE.getArcaneClickGui().backgroundColor.getRGB(), (float) select.get(setting.getValue()).getOutput())));
                 }
-                Fonts.Bold.get(16).drawString(str, getX() + 14, getY() + 40 + (Arrays.asList(setting.getModes()).indexOf(str) * 20) * open.getOutput() + getScroll(), ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(), (float) (1 * open.getOutput())));
+                Fonts.Bold.get(16).drawString(str, getX() + 14, getY() + 40 + (Arrays.asList(setting.getModes()).indexOf(str) * 20) * open.getOutput() + getScroll(), ColorUtil.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(), (float) (1 * open.getOutput())));
             }
 
             onScroll(30, mouseX, mouseY);
@@ -64,19 +63,19 @@ public class ModeComponent extends Component {
 
             GlStateManager.translate(0, 0, -2f);
         }
-        RoundedUtils.drawRound(getX() + 10, getY() + 14, 145, 14, 2, INSTANCE.getArcaneClickGui().smallbackgroundColor2);
-        Fonts.Bold.get(16).drawString(setting.getValue(), getX() + 14, getY() + 15 + Fonts.Bold.get(16).getMiddleOfBox(17), ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(), 1));
-        Fonts.Icon.get(16).drawString("U", getX() + 145, getY() + 20, ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(), 1));
+        RoundedUtil.drawRound(getX() + 10, getY() + 14, 145, 14, 2, INSTANCE.getArcaneClickGui().smallbackgroundColor2);
+        Fonts.Bold.get(16).drawString(setting.getValue(), getX() + 14, getY() + 15 + Fonts.Bold.get(16).getMiddleOfBox(17), ColorUtil.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(), 1));
+        Fonts.Icon.get(16).drawString("U", getX() + 145, getY() + 20, ColorUtil.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(), 1));
         super.drawScreen(mouseX, mouseY);
     }
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouse) {
-        if (RenderUtils.isHovering(getX() + 10, getY() + 14, 145, 14,mouseX,mouseY) && mouse == 1){
+        if (RenderUtil.isHovering(getX() + 10, getY() + 14, 145, 14,mouseX,mouseY) && mouse == 1){
             opened = !opened;
         }
         if (opened){
             for (String str : setting.getModes()) {
-                if (RenderUtils.isHovering(getX() + 12, ((float) (getY() + 34 + (Arrays.asList(setting.getModes()).indexOf(str) * 20) * open.getOutput())) + getScroll(), 141, 18, mouseX, mouseY) && mouse == 0) {
+                if (RenderUtil.isHovering(getX() + 12, ((float) (getY() + 34 + (Arrays.asList(setting.getModes()).indexOf(str) * 20) * open.getOutput())) + getScroll(), 141, 18, mouseX, mouseY) && mouse == 0) {
                     setting.setValue(str);
                 }
             }
@@ -89,7 +88,7 @@ public class ModeComponent extends Component {
         float y = (getY() + 12 - halfTotalHeight / 2f) < INSTANCE.getArcaneClickGui().getY() + 49 ? INSTANCE.getArcaneClickGui().getY() + 49 : (getY() + 12 - halfTotalHeight);
         float visibleHeight = getVisibleHeight();
 
-        if (RenderUtils.isHovering(getX() + 115,
+        if (RenderUtil.isHovering(getX() + 115,
                 y,
                 80f,
                 visibleHeight, mx, my)) {
@@ -114,7 +113,7 @@ public class ModeComponent extends Component {
     }
     @Override
     public boolean isHovered(float mouseX, float mouseY) {
-        return opened && RenderUtils.isHovering(getX() + 115,
+        return opened && RenderUtil.isHovering(getX() + 115,
                 (getY() + 12 - getHalfTotalHeight()) < INSTANCE.getArcaneClickGui().getY() + 49 ? INSTANCE.getArcaneClickGui().getY() + 49 : (getY() + 12 - getHalfTotalHeight()),
                 80f,
                 (float) ((getY() + 12 - getSize() * 20 * open.getOutput() / 2f < INSTANCE.getArcaneClickGui().getY() + 49 ? MathHelper.clamp_double(getY() + 12 - getHalfTotalHeight() - INSTANCE.getArcaneClickGui().getY() + 49,0,999) : 122) * open.getOutput()), (int) mouseX, (int) mouseY);

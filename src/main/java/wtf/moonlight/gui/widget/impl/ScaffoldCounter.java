@@ -22,13 +22,13 @@ import wtf.moonlight.events.render.Shader2DEvent;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.impl.movement.Scaffold;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.misc.InstanceAccess;
-import wtf.moonlight.utils.animations.advanced.Animation;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.misc.InstanceAccess;
+import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 
@@ -59,9 +59,9 @@ public class ScaffoldCounter implements InstanceAccess {
                 y = sr.getScaledHeight() - (sr.getScaledHeight() / 2f - 120);
                 float height = 20;
                 GL11.glPushMatrix();
-                RenderUtils.scissor(x - 1.5, y - 1.5, totalWidth + 3, height + 3);
+                RenderUtil.scissor(x - 1.5, y - 1.5, totalWidth + 3, height + 3);
                 GL11.glEnable(GL11.GL_SCISSOR_TEST);
-                RoundedUtils.drawRound(x, y, totalWidth, height, 5, new Color(INSTANCE.getModuleManager().getModule(Interface.class).bgColor(), true));
+                RoundedUtil.drawRound(x, y, totalWidth, height, 5, new Color(INSTANCE.getModuleManager().getModule(Interface.class).bgColor(), true));
 
                 Fonts.interBold.get(18).drawString(text, x + 3 + blockWH + spacing, y + height / 2F - Fonts.interBold.get(18).getHeight() / 2F + 2.5f, -1);
 
@@ -76,11 +76,11 @@ public class ScaffoldCounter implements InstanceAccess {
             }
             case "exhibition": {
                 if (!scaffold.isEnabled()) return;
-                int c = ColorUtils.getColor(255, 0, 0, 150);
+                int c = ColorUtil.getColor(255, 0, 0, 150);
                 if (scaffold.getBlockCount() >= 64 && 128 > scaffold.getBlockCount()) {
-                    c = ColorUtils.getColor(255, 255, 0, 150);
+                    c = ColorUtil.getColor(255, 255, 0, 150);
                 } else if (scaffold.getBlockCount() >= 128) {
-                    c = ColorUtils.getColor(0, 255, 0, 150);
+                    c = ColorUtil.getColor(0, 255, 0, 150);
                 }
                 ScaledResolution scaledResolution = new ScaledResolution(mc);
                 mc.fontRendererObj.drawString(String.valueOf(scaffold.getBlockCount()), scaledResolution.getScaledWidth() / 2f - (mc.fontRendererObj.getStringWidth(String.valueOf(scaffold.getBlockCount())) / 2f) - 1, scaledResolution.getScaledHeight() / 2f - 36, 0xff000000, false);
@@ -99,11 +99,11 @@ public class ScaffoldCounter implements InstanceAccess {
                 break;
             case "simple": {
                 if (!scaffold.isEnabled()) return;
-                int c = ColorUtils.getColor(255, 0, 0, 150);
+                int c = ColorUtil.getColor(255, 0, 0, 150);
                 if (scaffold.getBlockCount() >= 64 && 128 > scaffold.getBlockCount()) {
-                    c = ColorUtils.getColor(255, 255, 0, 150);
+                    c = ColorUtil.getColor(255, 255, 0, 150);
                 } else if (scaffold.getBlockCount() >= 128) {
-                    c = ColorUtils.getColor(0, 255, 0, 150);
+                    c = ColorUtil.getColor(0, 255, 0, 150);
                 }
                 Fonts.interMedium.get(18).drawCenteredStringWithShadow(String.valueOf(scaffold.getBlockCount()), sr.getScaledWidth() / 2f, sr.getScaledHeight() / 2f + 10, new Color(c).brighter().getRGB());
                 break;
@@ -117,7 +117,7 @@ public class ScaffoldCounter implements InstanceAccess {
                     float width = Fonts.interRegular.get(18).getStringWidth("/" + scaffold.getBlockCount());
                     float x = sr.getScaledWidth() / 2f - width / 2, y = sr.getScaledHeight() / 2f;
 
-                    RenderUtils.renderItemStack(stack, x - 5.0F, y + 11, 1);
+                    RenderUtil.renderItemStack(stack, x - 5.0F, y + 11, 1);
                     Fonts.interRegular.get(18).drawStringWithShadow(Integer.toString(scaffold.getBlockCount()), x + 11.0F, y + 16, -1);
                 }
             }
@@ -149,9 +149,9 @@ public class ScaffoldCounter implements InstanceAccess {
                 y = sr.getScaledHeight() - (sr.getScaledHeight() / 2f - 120);
                 float height = 20;
                 GL11.glPushMatrix();
-                RenderUtils.scissor(x - 1.5, y - 1.5, totalWidth + 3, height + 3);
+                RenderUtil.scissor(x - 1.5, y - 1.5, totalWidth + 3, height + 3);
                 GL11.glEnable(GL11.GL_SCISSOR_TEST);
-                RoundedUtils.drawRound(x, y, totalWidth, height, 5, new Color(INSTANCE.getModuleManager().getModule(Interface.class).bgColor(),true));
+                RoundedUtil.drawRound(x, y, totalWidth, height, 5, new Color(INSTANCE.getModuleManager().getModule(Interface.class).bgColor(),true));
                 GL11.glDisable(GL11.GL_SCISSOR_TEST);
                 GL11.glPopMatrix();
                 break;

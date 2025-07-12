@@ -15,15 +15,15 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.component.PingSpoofComponent;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.render.RenderUtil;
 
 import java.awt.*;
 
-@ModuleInfo(name = "Blink", category = ModuleCategory.Misc)
+@ModuleInfo(name = "Blink", category = Categor.Misc)
 public class Blink extends Module {
     private final BoolValue showPrevPos = new BoolValue("Show Prev Pos", true, this);
     private double prevX;
@@ -53,7 +53,7 @@ public class Blink extends Module {
         double z = prevZ - mc.getRenderManager().viewerPosZ;
         AxisAlignedBB box = mc.thePlayer.getEntityBoundingBox().expand(0.1D, 0.1, 0.1);
         AxisAlignedBB axis = new AxisAlignedBB(box.minX - mc.thePlayer.posX + x, box.minY - mc.thePlayer.posY + y, box.minZ - mc.thePlayer.posZ + z, box.maxX - mc.thePlayer.posX + x, box.maxY - mc.thePlayer.posY + y, box.maxZ - mc.thePlayer.posZ + z);
-        RenderUtils.drawAxisAlignedBB(axis, true, new Color(255, 255, 255, 150).getRGB());
+        RenderUtil.drawAxisAlignedBB(axis, true, new Color(255, 255, 255, 150).getRGB());
     }
 
     @Override

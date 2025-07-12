@@ -14,14 +14,14 @@ import net.minecraft.client.settings.KeyBinding;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
-import wtf.moonlight.utils.player.MovementCorrection;
-import wtf.moonlight.utils.player.MovementUtils;
-import wtf.moonlight.utils.player.RotationUtils;
+import wtf.moonlight.util.player.MovementCorrection;
+import wtf.moonlight.util.player.MovementUtil;
+import wtf.moonlight.util.player.RotationUtil;
 
-@ModuleInfo(name = "Sprint", category = ModuleCategory.Movement)
+@ModuleInfo(name = "Sprint", category = Categor.Movement)
 public class Sprint extends Module {
 
     private final BoolValue omni = new BoolValue("Omni", false, this);
@@ -35,7 +35,7 @@ public class Sprint extends Module {
             KeyBinding.setKeyBindState(mc.gameSettings.keyBindSprint.getKeyCode(), true);
 
         if(omni.get()){
-            mc.thePlayer.omniSprint = MovementUtils.isMoving();
+            mc.thePlayer.omniSprint = MovementUtil.isMoving();
         }
 
         if (silent.get()) {
@@ -47,9 +47,9 @@ public class Sprint extends Module {
                 return;
             }
 
-            float[] finalRotation = new float[]{MovementUtils.getRawDirection(), mc.thePlayer.rotationPitch};
+            float[] finalRotation = new float[]{MovementUtil.getRawDirection(), mc.thePlayer.rotationPitch};
 
-            RotationUtils.setRotation(finalRotation, MovementCorrection.SILENT);
+            RotationUtil.setRotation(finalRotation, MovementCorrection.SILENT);
         }
 
     }

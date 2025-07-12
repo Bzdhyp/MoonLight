@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.ListValue;
 
@@ -22,7 +22,7 @@ import java.util.Comparator;
 
 import static net.minecraft.client.gui.Gui.drawTexturedModalRect;
 
-@ModuleInfo(name = "PotionHUD", category = ModuleCategory.Display)
+@ModuleInfo(name = "PotionHUD", category = Categor.Display)
 public class PotionHUD extends Module {
     public final ListValue potionHudMode = new ListValue("Potion Mode", new String[]{"Default","Nursultan","Exhi","Moon","Sexy","Type 1","NeverLose","Mod"}, "Default", this);
 

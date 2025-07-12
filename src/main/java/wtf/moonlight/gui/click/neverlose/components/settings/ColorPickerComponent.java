@@ -15,13 +15,13 @@ import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.ColorValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.advanced.Animation;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.MouseUtils;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.MouseUtil;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 
@@ -42,10 +42,10 @@ public class ColorPickerComponent extends Component {
     public void drawScreen(int mouseX, int mouseY) {
         open.setDirection(opened ? Direction.FORWARDS : Direction.BACKWARDS);
         setHeight((float) (24 + 90 * open.getOutput()));
-        RoundedUtils.drawRound(getX() + 4, getY() + 10, 172, .5f, 4, lineColor2);
+        RoundedUtil.drawRound(getX() + 4, getY() + 10, 172, .5f, 4, lineColor2);
 
         Fonts.interSemiBold.get(17).drawString(setting.getName(), getX() + 6, getY() + 20, textRGB);
-        RenderUtils.drawCircle(getX() + 164, getY() + 22, 0, 360, 7, 2, true, (setting.isRainbow() ? INSTANCE.getModuleManager().getModule(Interface.class).getRainbow(0) : setting.getValue().getRGB()));
+        RenderUtil.drawCircle(getX() + 164, getY() + 22, 0, 360, 7, 2, true, (setting.isRainbow() ? INSTANCE.getModuleManager().getModule(Interface.class).getRainbow(0) : setting.getValue().getRGB()));
         //picker
         if (open.getOutput() > 0) {
             float colorAlpha = 1;
@@ -56,18 +56,18 @@ public class ColorPickerComponent extends Component {
             float[] hsb = {setting.getHue(), setting.getSaturation(), setting.getBrightness()};
             //RenderUtils.drawRect(getX() + 64,getY() + 34,
             //        10, 78 * open.getOutput(), Color.BLACK.getRGB());
-            RenderUtils.drawRect(getX() + 77, getY() + 34,
+            RenderUtil.drawRect(getX() + 77, getY() + 34,
                     10, (float) (78 * open.getOutput()), Color.BLACK.getRGB());
             for (float i = 0; i <= 78 * open.getOutput(); i++) {
-                RenderUtils.drawRect(getX() + 78, getY() + 34 + i, 8, 1, Color.getHSBColor((float) (i / 78 * open.getOutput()), 1f, 1f).getRGB());
+                RenderUtil.drawRect(getX() + 78, getY() + 34 + i, 8, 1, Color.getHSBColor((float) (i / 78 * open.getOutput()), 1f, 1f).getRGB());
             }
 
-            RenderUtils.drawRect(getX() + 77, (float) (getY() + 34 + (setting.isRainbow() ? INSTANCE.getModuleManager().getModule(Interface.class).getRainbowHSB(0)[0] : setting.getHue()) * 78 * open.getOutput()),
+            RenderUtil.drawRect(getX() + 77, (float) (getY() + 34 + (setting.isRainbow() ? INSTANCE.getModuleManager().getModule(Interface.class).getRainbowHSB(0)[0] : setting.getHue()) * 78 * open.getOutput()),
                     10, 1, Color.WHITE.getRGB());
             for (float i = 0; i <= 78 * open.getOutput(); i++) {
-                RenderUtils.drawRect(getX() + 65, getY() + 34 + i, 8, 1, ColorUtils.applyOpacity(new Color(setting.isRainbow() ? (INSTANCE.getModuleManager().getModule(Interface.class).getRainbow(0)) : (Color.HSBtoRGB(setting.getHue(), setting.getSaturation(), setting.getBrightness()))), setting.getAlpha() - i / 78).getRGB());
+                RenderUtil.drawRect(getX() + 65, getY() + 34 + i, 8, 1, ColorUtil.applyOpacity(new Color(setting.isRainbow() ? (INSTANCE.getModuleManager().getModule(Interface.class).getRainbow(0)) : (Color.HSBtoRGB(setting.getHue(), setting.getSaturation(), setting.getBrightness()))), setting.getAlpha() - i / 78).getRGB());
             }
-            RenderUtils.drawRect(getX() + 64, (float) (getY() + 34 + (1 - setting.getAlpha()) * 78 * open.getOutput()),
+            RenderUtil.drawRect(getX() + 64, (float) (getY() + 34 + (1 - setting.getAlpha()) * 78 * open.getOutput()),
                     10, 1, Color.WHITE.getRGB());
 
             float pickerY = (gradientY + 2) + (gradientHeight * (1 - hsb[2]));
@@ -86,19 +86,19 @@ public class ColorPickerComponent extends Component {
                 setting.setSaturation(MathHelper.clamp_float((mouseX - gradientX) / 80, 0, 1));
             }
 
-            Color firstColor = (setting.isRainbow() ? new Color(INSTANCE.getModuleManager().getModule(Interface.class).getRainbow(0)) : ColorUtils.applyOpacity(Color.getHSBColor(hsb[0], 1, 1), colorAlpha));
-            RoundedUtils.drawRound(gradientX, gradientY, gradientWidth, gradientHeight, 2,
-                    ColorUtils.applyOpacity(firstColor, colorAlpha));
+            Color firstColor = (setting.isRainbow() ? new Color(INSTANCE.getModuleManager().getModule(Interface.class).getRainbow(0)) : ColorUtil.applyOpacity(Color.getHSBColor(hsb[0], 1, 1), colorAlpha));
+            RoundedUtil.drawRound(gradientX, gradientY, gradientWidth, gradientHeight, 2,
+                    ColorUtil.applyOpacity(firstColor, colorAlpha));
             Color secondColor = Color.getHSBColor(hsb[0], 0, 1);
-            RoundedUtils.drawGradientHorizontal(gradientX, gradientY, gradientWidth, gradientHeight, 2 + .5f,
-                    ColorUtils.applyOpacity(secondColor, colorAlpha),
-                    ColorUtils.applyOpacity(secondColor, 0));
+            RoundedUtil.drawGradientHorizontal(gradientX, gradientY, gradientWidth, gradientHeight, 2 + .5f,
+                    ColorUtil.applyOpacity(secondColor, colorAlpha),
+                    ColorUtil.applyOpacity(secondColor, 0));
             Color thirdColor = Color.getHSBColor(hsb[0], 1, 0);
-            RoundedUtils.drawGradientVertical(gradientX, gradientY, gradientWidth, gradientHeight, 2,
-                    ColorUtils.applyOpacity(thirdColor, 0),
-                    ColorUtils.applyOpacity(thirdColor, colorAlpha));
+            RoundedUtil.drawGradientVertical(gradientX, gradientY, gradientWidth, gradientHeight, 2,
+                    ColorUtil.applyOpacity(thirdColor, 0),
+                    ColorUtil.applyOpacity(thirdColor, colorAlpha));
 
-            RenderUtils.drawCircle((int) pickerX, (int) pickerY, 0, 360, 2, .1f, false, -1);
+            RenderUtil.drawCircle((int) pickerX, (int) pickerY, 0, 360, 2, .1f, false, -1);
 
         }
         super.drawScreen(mouseX, mouseY);
@@ -106,18 +106,18 @@ public class ColorPickerComponent extends Component {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (MouseUtils.isHovered2(getX() + 157, getY() + 15f, 14, 14, mouseX, mouseY) && mouseButton == 1) {
+        if (MouseUtil.isHovered2(getX() + 157, getY() + 15f, 14, 14, mouseX, mouseY) && mouseButton == 1) {
             opened = !opened;
         }
         if (opened) {
             if (mouseButton == 0) {
-                if (MouseUtils.isHovered2(getX() + 78, getY() + 34, 8, 78, mouseX, mouseY)) {
+                if (MouseUtil.isHovered2(getX() + 78, getY() + 34, 8, 78, mouseX, mouseY)) {
                     pickingHue = true;
                 }
-                if (MouseUtils.isHovered2(getX() + 90, getY() + 34, 80, 80, mouseX, mouseY)) {
+                if (MouseUtil.isHovered2(getX() + 90, getY() + 34, 80, 80, mouseX, mouseY)) {
                     picking = true;
                 }
-                if (MouseUtils.isHovered2(getX() + 65, getY() + 34, 8, 78, mouseX, mouseY)) {
+                if (MouseUtil.isHovered2(getX() + 65, getY() + 34, 8, 78, mouseX, mouseY)) {
                     pickingAlpha = true;
                 }
             }

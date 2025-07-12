@@ -16,12 +16,12 @@ import wtf.moonlight.Client;
 import wtf.moonlight.config.Config;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.advanced.Animation;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.MouseUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.MouseUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 
 import java.awt.*;
@@ -48,14 +48,14 @@ public class ConfigRect extends Component {
         //coordinate
         float y = getPosY() + scroll;
         //anim
-        hover.setDirection(MouseUtils.isHovered2(getPosX() + 290,y + 20,60,18,mouseX,mouseY) ? Direction.FORWARDS : Direction.BACKWARDS);
+        hover.setDirection(MouseUtil.isHovered2(getPosX() + 290,y + 20,60,18,mouseX,mouseY) ? Direction.FORWARDS : Direction.BACKWARDS);
         select.setDirection(selected ? Direction.FORWARDS : Direction.BACKWARDS);
         //render
         String name = config.getName().replace(".json","") + (Client.INSTANCE.getConfigManager().getCurrentConfig().equals(config.getName()) ? " (Current Config)" : "");
-        RoundedUtils.drawRoundOutline(getPosX(),y + 10,358,getHeight(),4,0.1f,bgColor,new Color(ColorUtils.interpolateColor2(categoryBgColor, categoryBgColor.brighter().brighter(), (float) select.getOutput())));
+        RoundedUtil.drawRoundOutline(getPosX(),y + 10,358,getHeight(),4,0.1f,bgColor,new Color(ColorUtil.interpolateColor2(categoryBgColor, categoryBgColor.brighter().brighter(), (float) select.getOutput())));
         Fonts.interSemiBold.get(17).drawString(name,posX + 8,y + 17,-1);
         //button
-        RoundedUtils.drawRoundOutline(getPosX() + 290,y + 20,60,18,2,0.1f, new Color(ColorUtils.interpolateColor2(categoryBgColor, categoryBgColor.brighter().brighter(), (float) hover.getOutput())), new Color(iconRGB));
+        RoundedUtil.drawRoundOutline(getPosX() + 290,y + 20,60,18,2,0.1f, new Color(ColorUtil.interpolateColor2(categoryBgColor, categoryBgColor.brighter().brighter(), (float) hover.getOutput())), new Color(iconRGB));
         Fonts.neverlose.get(20).drawString("k",getPosX() + 296,y + 27,-1);
         Fonts.interSemiBold.get(16).drawString("Save",getPosX() + 302 + Fonts.neverlose.get(20).getStringWidth("k"),y + 27,-1);
         super.drawScreen(mouseX, mouseY);
@@ -63,7 +63,7 @@ public class ConfigRect extends Component {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (MouseUtils.isHovered2(getPosX() + 290,getPosY() + scroll + 20,60,18,mouseX,mouseY) && mouseButton == 0) {
+        if (MouseUtil.isHovered2(getPosX() + 290,getPosY() + scroll + 20,60,18,mouseX,mouseY) && mouseButton == 0) {
             config.saveConfig();
         }
         super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -82,6 +82,6 @@ public class ConfigRect extends Component {
         return (int) (INSTANCE.getNeverLose().getPosY() + 80 + getHeight());
     }
     public boolean isHovered(int mouseX,int mouseY) {
-        return MouseUtils.isHovered2(getPosX(),getPosY() + scroll + 10,358,getHeight(),mouseX,mouseY);
+        return MouseUtil.isHovered2(getPosX(),getPosY() + scroll + 10,358,getHeight(),mouseX,mouseY);
     }
 }

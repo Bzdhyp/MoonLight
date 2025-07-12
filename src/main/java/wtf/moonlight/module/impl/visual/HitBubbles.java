@@ -24,16 +24,16 @@ import wtf.moonlight.events.player.AttackEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.combat.KillAura;
 import wtf.moonlight.module.impl.display.Interface;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.RenderUtil;
 
 import java.util.ArrayList;
 
-@ModuleInfo(name = "HitBubbles", category = ModuleCategory.Visual)
+@ModuleInfo(name = "HitBubbles", category = Categor.Visual)
 public class HitBubbles extends Module {
     private static final ArrayList<Bubble> bubbles = new ArrayList<>();
     private final Tessellator tessellator = Tessellator.getInstance();
@@ -122,12 +122,12 @@ public class HitBubbles extends Module {
         float r = 50.0f * bubble.getDeltaTime() * (1.0f - bubble.getDeltaTime());
         int speedRotate = 3;
         float III = (float) (System.currentTimeMillis() % (long) (3600 / speedRotate)) / 10.0f * (float) speedRotate;
-        RenderUtils.customRotatedObject2D(-1.0f, -1.0f, 2.0f, 2.0f, -III);
+        RenderUtil.customRotatedObject2D(-1.0f, -1.0f, 2.0f, 2.0f, -III);
         this.buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        this.buffer.pos(0.0, 0.0, 0.0).tex(0.0, 0.0).color(ColorUtils.applyOpacity(getModule(Interface.class).color(0), alphaPC)).endVertex();
-        this.buffer.pos(0.0, r, 0.0).tex(0.0, 1.0).color(ColorUtils.applyOpacity(getModule(Interface.class).color(90), alphaPC)).endVertex();
-        this.buffer.pos(r, r, 0.0).tex(1.0, 1.0).color(ColorUtils.applyOpacity(getModule(Interface.class).color(180), alphaPC)).endVertex();
-        this.buffer.pos(r, 0.0, 0.0).tex(1.0, 0.0).color(ColorUtils.applyOpacity(getModule(Interface.class).color(270), alphaPC)).endVertex();
+        this.buffer.pos(0.0, 0.0, 0.0).tex(0.0, 0.0).color(ColorUtil.applyOpacity(getModule(Interface.class).color(0), alphaPC)).endVertex();
+        this.buffer.pos(0.0, r, 0.0).tex(0.0, 1.0).color(ColorUtil.applyOpacity(getModule(Interface.class).color(90), alphaPC)).endVertex();
+        this.buffer.pos(r, r, 0.0).tex(1.0, 1.0).color(ColorUtil.applyOpacity(getModule(Interface.class).color(180), alphaPC)).endVertex();
+        this.buffer.pos(r, 0.0, 0.0).tex(1.0, 0.0).color(ColorUtil.applyOpacity(getModule(Interface.class).color(270), alphaPC)).endVertex();
         GlStateManager.blendFunc(770, 772);
         GlStateManager.translate(-r / 2.0f, -r / 2.0f, 0.0f);
         GlStateManager.shadeModel(7425);

@@ -46,11 +46,14 @@ import net.minecraft.client.gui.GuiControls;
 import net.minecraft.client.gui.GuiGameOver;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.GuiIngameMenu;
+import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GLCapabilities;
+import wtf.moonlight.gui.SplashScreen;
+import wtf.moonlight.gui.video.VideoPlayer;
 import wtf.moonlight.module.impl.combat.TickBase;
 import wtf.moonlight.module.impl.visual.Animations;
-import wtf.moonlight.gui.main.GuiMainMenu;
+import wtf.moonlight.gui.main.MainMenu;
 import net.minecraft.client.gui.GuiMemoryErrorScreen;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSleepMP;
@@ -180,7 +183,7 @@ import org.lwjglx.util.glu.GLU;
 import wtf.moonlight.Client;
 import wtf.moonlight.events.misc.KeyPressEvent;
 import wtf.moonlight.events.misc.TickEvent;
-import wtf.moonlight.utils.player.MovementInputFromKeyboard;
+import wtf.moonlight.util.player.MovementInputFromKeyboard;
 
 public class Minecraft implements IThreadListener, IPlayerUsage
 {
@@ -411,7 +414,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.refreshResources();
         this.renderEngine = new TextureManager(this.mcResourceManager);
         this.mcResourceManager.registerReloadListener(this.renderEngine);
-        this.drawSplashScreen(this.renderEngine);
         this.skinManager = new SkinManager(this.renderEngine, new File(this.fileAssets, "skins"), this.sessionService);
         this.saveLoader = new AnvilSaveConverter(new File(this.mcDataDir, "saves"));
         this.mcSoundHandler = new SoundHandler(this.mcResourceManager, this.gameSettings);
@@ -478,14 +480,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.ingameGUI = new GuiIngame(this);
 
         Client.INSTANCE.init();
-
-        if (this.serverName != null)
-        {
-            this.displayGuiScreen(new GuiConnecting(new GuiMainMenu(), this, this.serverName, this.serverPort));
-        }
-        else
-        {
-            this.displayGuiScreen(new GuiMainMenu());
+        SplashScreen.drawScreen();
+        if (this.serverName != null) {
+            this.displayGuiScreen(new GuiConnecting(new MainMenu(), this, this.serverName, this.serverPort));
+        } else {
+            this.displayGuiScreen(new MainMenu());
         }
 
         this.renderEngine.deleteTexture(this.mojangLogo);
@@ -857,14 +856,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
         if (guiScreenIn == null && this.theWorld == null)
         {
-            guiScreenIn = new GuiMainMenu();
+            guiScreenIn = new MainMenu();
         }
         else if (guiScreenIn == null && this.thePlayer.getHealth() <= 0.0F)
         {
             guiScreenIn = new GuiGameOver();
         }
 
-        if (guiScreenIn instanceof GuiMainMenu)
+        if (guiScreenIn instanceof MainMenu)
         {
             this.gameSettings.showDebugInfo = false;
             this.ingameGUI.getChatGUI().clearChatMessages();
@@ -904,10 +903,13 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         }
     }
 
-    public void shutdownMinecraftApplet()
-    {
-        try
-        {
+    public void shutdownMinecraftApplet() {
+        try {
+            try {
+                VideoPlayer.stop();
+            } catch (FFmpegFrameGrabber.Exception e) {
+                throw new RuntimeException(e);
+            }
             logger.info("Stopping!");
 
             Client.INSTANCE.onStop();
@@ -942,6 +944,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
         if (Display.isCreated() && Display.isCloseRequested())
         {
+            try {
+                VideoPlayer.stop();
+            } catch (FFmpegFrameGrabber.Exception e) {
+                throw new RuntimeException(e);
+            }
             this.shutdown();
         }
 

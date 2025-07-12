@@ -7,11 +7,11 @@ import net.minecraft.util.EnumChatFormatting;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.module.impl.visual.ESP2D;
 import wtf.moonlight.module.impl.display.Interface;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.GLUtils;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.GLUtil;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 
@@ -33,7 +33,7 @@ public class ESPComponent extends Component {
             posX = mouseX + dragX;
             posY = mouseY + dragY;
         }
-        RoundedUtils.drawRound(posX - 10, posY, 120, 200, 7, ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().backgroundColor,0.6f));
+        RoundedUtil.drawRound(posX - 10, posY, 120, 200, 7, ColorUtil.applyOpacity(INSTANCE.getArcaneClickGui().backgroundColor,0.6f));
         GlStateManager.pushMatrix();
         drawEntityOnScreen((int) posX + 50, (int) posY + 180, 80, 0, 0, mc.thePlayer);
         GlStateManager.popMatrix();
@@ -43,7 +43,7 @@ public class ESPComponent extends Component {
             float x2 = x + 90;
             float y2 = y + 170;
             glDisable(GL_TEXTURE_2D);
-            GLUtils.startBlend();
+            GLUtil.startBlend();
 
             glColor4ub((byte) 0, (byte) 0, (byte) 0, (byte) 0x96);
             glBegin(GL_QUADS);
@@ -108,12 +108,12 @@ public class ESPComponent extends Component {
                 glVertex2f(x2 - 0.5F, y2 - 1);
             }
 
-            RenderUtils.resetColor();
+            RenderUtil.resetColor();
 
             glEnd();
 
             glEnable(GL_TEXTURE_2D);
-            GLUtils.endBlend();
+            GLUtil.endBlend();
         }
         int x = posX + 4;
         int y = (int) posY + 20;
@@ -122,7 +122,7 @@ public class ESPComponent extends Component {
         if (INSTANCE.getModuleManager().getModule(ESP2D.class).healthBar.get()) {
 
             glDisable(GL_TEXTURE_2D);
-            GLUtils.startBlend();
+            GLUtil.startBlend();
 
             float healthBarLeft = x - 2.5F;
             float healthBarRight = x - 0.5F;
@@ -156,7 +156,7 @@ public class ESPComponent extends Component {
 
                 INSTANCE.getModuleManager().getModule(ESP2D.class).color(syncedcolor);
             } else {
-                final int color = ColorUtils.getColorFromPercentage(healthPercentage);
+                final int color = ColorUtil.getColorFromPercentage(healthPercentage);
 
                 INSTANCE.getModuleManager().getModule(ESP2D.class).color(color);
             }
@@ -196,18 +196,18 @@ public class ESPComponent extends Component {
                 glVertex2f(healthBarRight, topOfAbsorptionBar);
             }
 
-            RenderUtils.resetColor();
+            RenderUtil.resetColor();
 
             glEnd();
 
             glEnable(GL_TEXTURE_2D);
-            GLUtils.endBlend();
+            GLUtil.endBlend();
         }
         x = posX;
         y = posY;
 
         if (INSTANCE.getModuleManager().getModule(ESP2D.class).fontTags.get()) {
-            final String healthString = INSTANCE.getModuleManager().getModule(ESP2D.class).fonttagsHealth.get() ? " |" + EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + " " + (MathUtils.roundToHalf(mc.thePlayer.getHealth())) + "❤" + EnumChatFormatting.RESET + "" : "";
+            final String healthString = INSTANCE.getModuleManager().getModule(ESP2D.class).fonttagsHealth.get() ? " |" + EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + " " + (MathUti.roundToHalf(mc.thePlayer.getHealth())) + "❤" + EnumChatFormatting.RESET + "" : "";
             final String name = mc.thePlayer.getDisplayName().getFormattedText() + healthString;
             float halfWidth = (float) mc.fontRendererObj.getStringWidth(name) * 0.5f;
             final float middle = x + halfWidth;
@@ -227,7 +227,7 @@ public class ESPComponent extends Component {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (RenderUtils.isHovering(posX, posY, 100, 200, mouseX, mouseY) && mouseButton == 0) {
+        if (RenderUtil.isHovering(posX, posY, 100, 200, mouseX, mouseY) && mouseButton == 0) {
             dragging = true;
             dragX = posX - mouseX;
             dragY = posY - mouseY;

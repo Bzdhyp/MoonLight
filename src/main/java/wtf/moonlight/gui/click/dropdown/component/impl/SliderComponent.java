@@ -15,10 +15,10 @@ import wtf.moonlight.module.impl.visual.ClickGUI;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.render.MouseUtils;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.render.MouseUtil;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 
@@ -37,12 +37,12 @@ public class SliderComponent extends Component {
     public void drawScreen(int mouseX, int mouseY) {
         Fonts.interRegular.get(15).drawString(setting.getName(), getX() + 4, getY(), -1);
 
-        anim = RenderUtils.animate(anim, (getWidth() - 8) * (setting.getValue() - setting.getMin()) / (setting.getMax() - setting.getMin()), 15);
+        anim = RenderUtil.animate(anim, (getWidth() - 8) * (setting.getValue() - setting.getMin()) / (setting.getMax() - setting.getMin()), 15);
         float sliderWidth = anim;
 
-        RoundedUtils.drawRound(getX() + 4, getY() + Fonts.interRegular.get(15).getHeight() + 2, getWidth() - 8, 2, 2, INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue().darker().darker().darker());
-        RoundedUtils.drawGradientHorizontal(getX() + 4, getY() + Fonts.interRegular.get(15).getHeight() + 2, sliderWidth, 2, 2, INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue(), INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue().darker().darker());
-        RenderUtils.drawCircle(getX() + 4 + sliderWidth, getY() + Fonts.interRegular.get(15).getHeight() + 3, 0, 360, 2, 0.1f, false, -1);
+        RoundedUtil.drawRound(getX() + 4, getY() + Fonts.interRegular.get(15).getHeight() + 2, getWidth() - 8, 2, 2, INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue().darker().darker().darker());
+        RoundedUtil.drawGradientHorizontal(getX() + 4, getY() + Fonts.interRegular.get(15).getHeight() + 2, sliderWidth, 2, 2, INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue(), INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue().darker().darker());
+        RenderUtil.drawCircle(getX() + 4 + sliderWidth, getY() + Fonts.interRegular.get(15).getHeight() + 3, 0, 360, 2, 0.1f, false, -1);
 
         Fonts.interRegular.get(15).drawString(setting.getMin() + "", getX() + 2, getY() + Fonts.interRegular.get(15).getHeight() * 2 + 2, new Color(160, 160, 160).getRGB());
         Fonts.interRegular.get(15).drawCenteredString(setting.getValue() + "", getX() + getWidth() / 2, getY() + Fonts.interRegular.get(15).getHeight() * 2 + 2, -1);
@@ -50,13 +50,13 @@ public class SliderComponent extends Component {
 
         if (dragging) {
             final double difference = setting.getMax() - setting.getMin(), value = setting.getMin() + MathHelper.clamp_float((mouseX - getX()) / getWidth(), 0, 1) * difference;
-            setting.setValue((float) MathUtils.incValue(value, setting.getIncrement()));
+            setting.setValue((float) MathUti.incValue(value, setting.getIncrement()));
         }
     }
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (mouseButton == 0 && MouseUtils.isHovered2(getX() + 2, getY() + Fonts.interRegular.get(15).getHeight() + 2, getWidth(), 2, mouseX, mouseY))
+        if (mouseButton == 0 && MouseUtil.isHovered2(getX() + 2, getY() + Fonts.interRegular.get(15).getHeight() + 2, getWidth(), 2, mouseX, mouseY))
             dragging = true;
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }

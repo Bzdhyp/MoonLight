@@ -13,9 +13,9 @@ package wtf.moonlight.command.impl;
 import wtf.moonlight.Client;
 import wtf.moonlight.command.Command;
 import wtf.moonlight.command.CommandExecutionException;
-import wtf.moonlight.utils.DebugUtils;
+import wtf.moonlight.util.DebugUtil;
 
-import static wtf.moonlight.utils.misc.InstanceAccess.mc;
+import static wtf.moonlight.util.misc.InstanceAccess.mc;
 
 public class FriendCommand extends Command {
     @Override
@@ -26,23 +26,23 @@ public class FriendCommand extends Command {
     @Override
     public void execute(final String[] arguments) throws CommandExecutionException {
         if (arguments.length == 1) {
-            DebugUtils.sendMessage("Usage: " + getUsage());
+            DebugUtil.sendMessage("Usage: " + getUsage());
             return;
         }
         final String lowerCase = arguments[1].toLowerCase();
         if (arguments.length == 2) {
             switch (lowerCase) {
                 case "clear": {
-                    DebugUtils.sendMessage("Cleared all friended players");
+                    DebugUtil.sendMessage("Cleared all friended players");
                     Client.INSTANCE.getFriendManager().getFriends().clear();
                     break;
                 }
                 case "list": {
                     if (!Client.INSTANCE.getFriendManager().getFriends().isEmpty()) {
-                        DebugUtils.sendMessage("Friend§7[§f" + Client.INSTANCE.getFriendManager().getFriends().size() + "§7]§f : §a" + Client.INSTANCE.getFriendManager().getFriendsName());
+                        DebugUtil.sendMessage("Friend§7[§f" + Client.INSTANCE.getFriendManager().getFriends().size() + "§7]§f : §a" + Client.INSTANCE.getFriendManager().getFriendsName());
                         break;
                     }
-                    DebugUtils.sendMessage("The friend list is empty");
+                    DebugUtil.sendMessage("The friend list is empty");
                     break;
                 }
             }
@@ -51,18 +51,18 @@ public class FriendCommand extends Command {
                 throw new CommandExecutionException(this.getUsage());
             }
             if (arguments[2].contains(mc.thePlayer.getName())) {
-                DebugUtils.sendMessage("§c§lNO");
+                DebugUtil.sendMessage("§c§lNO");
                 return;
             }
             final String lowerCase2 = arguments[1].toLowerCase();
             switch (lowerCase2) {
                 case "add": {
-                    DebugUtils.sendMessage("§b" + arguments[2] + " §7has been §2friended");
+                    DebugUtil.sendMessage("§b" + arguments[2] + " §7has been §2friended");
                     Client.INSTANCE.getFriendManager().add(arguments[2]);
                     break;
                 }
                 case "remove": {
-                    DebugUtils.sendMessage("§b" + arguments[2] + " §7has been §2unfriended");
+                    DebugUtil.sendMessage("§b" + arguments[2] + " §7has been §2unfriended");
                     Client.INSTANCE.getFriendManager().remove(arguments[2]);
                     break;
                 }

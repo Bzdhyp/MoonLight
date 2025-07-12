@@ -12,9 +12,9 @@ package wtf.moonlight.gui.click.neverlose.components.espelements;
 
 import wtf.moonlight.module.impl.visual.ESP2D;
 import wtf.moonlight.gui.click.Component;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.GLUtils;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.GLUtil;
+import wtf.moonlight.util.render.RenderUtil;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -30,7 +30,7 @@ public class HealthElement extends Component {
         if (INSTANCE.getModuleManager().getModule(ESP2D.class).healthBar.get()) {
 
             glDisable(GL_TEXTURE_2D);
-            GLUtils.startBlend();
+            GLUtil.startBlend();
 
             float healthBarLeft = x - 2.5F;
             float healthBarRight = x - 0.5F;
@@ -59,9 +59,9 @@ public class HealthElement extends Component {
 
             final float topOfHealthBar = y2 + 0.5F + healthBarHeight;
 
-            final int color = ColorUtils.getColorFromPercentage(healthPercentage);
+            final int color = ColorUtil.getColorFromPercentage(healthPercentage);
 
-            RenderUtils.color(color);
+            RenderUtil.color(color);
 
             // Bar
             {
@@ -83,7 +83,7 @@ public class HealthElement extends Component {
 
             final float topOfAbsorptionBar = y2 + 0.5F + absorptionHeight;
 
-            RenderUtils.color(absorptionColor);
+            RenderUtil.color(absorptionColor);
 
             // Absorption Bar
             {
@@ -94,12 +94,12 @@ public class HealthElement extends Component {
                 glVertex2f(healthBarRight, topOfAbsorptionBar);
             }
 
-            RenderUtils.resetColor();
+            RenderUtil.resetColor();
 
             glEnd();
 
             glEnable(GL_TEXTURE_2D);
-            GLUtils.endBlend();
+            GLUtil.endBlend();
         }
 
         super.drawScreen(mouseX, mouseY);

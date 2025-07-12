@@ -59,9 +59,9 @@ import wtf.moonlight.events.player.*;
 import wtf.moonlight.module.impl.movement.NoFluid;
 import wtf.moonlight.module.impl.visual.Animations;
 import wtf.moonlight.module.impl.misc.SilentView;
-import wtf.moonlight.utils.animations.advanced.ContinualAnimation;
-import wtf.moonlight.utils.player.MovementUtils;
-import wtf.moonlight.utils.player.RotationUtils;
+import wtf.moonlight.util.animations.advanced.ContinualAnimation;
+import wtf.moonlight.util.player.MovementUtil;
+import wtf.moonlight.util.player.RotationUtil;
 
 import static net.minecraft.potion.Potion.digSlowdown;
 import static net.minecraft.potion.Potion.digSpeed;
@@ -1364,7 +1364,7 @@ public abstract class EntityLivingBase extends Entity
 
             final Minecraft mc = Minecraft.getMinecraft();
             if (mc.thePlayer.omniSprint) {
-                f = MovementUtils.getRawDirection() * 0.017453292F;
+                f = MovementUtil.getRawDirection() * 0.017453292F;
             }
 
             this.motionX -= MathHelper.sin(f) * 0.2F;
@@ -1643,7 +1643,7 @@ public abstract class EntityLivingBase extends Entity
         if (this.swingProgress > 0.0F)
         {
             //f1 = this.rotationYaw;
-            f1 = RotationUtils.shouldRotate() && this ==  Minecraft.getMinecraft().thePlayer && Client.INSTANCE.getModuleManager().getModule(SilentView.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(SilentView.class).realistic.get() ? RotationUtils.currentRotation[0] : this.rotationYaw;
+            f1 = RotationUtil.shouldRotate() && this ==  Minecraft.getMinecraft().thePlayer && Client.INSTANCE.getModuleManager().getModule(SilentView.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(SilentView.class).realistic.get() ? RotationUtil.currentRotation[0] : this.rotationYaw;
         }
 
         if (!this.onGround)
@@ -1705,8 +1705,8 @@ public abstract class EntityLivingBase extends Entity
     {
         float rotationYaw = this.rotationYaw;
         if (this instanceof EntityPlayerSP) {
-            if (RotationUtils.shouldRotate() && this ==  Minecraft.getMinecraft().thePlayer && Client.INSTANCE.getModuleManager().getModule(SilentView.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(SilentView.class).body.get()) {
-                rotationYaw = RotationUtils.currentRotation[0];
+            if (RotationUtil.shouldRotate() && this ==  Minecraft.getMinecraft().thePlayer && Client.INSTANCE.getModuleManager().getModule(SilentView.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(SilentView.class).body.get()) {
+                rotationYaw = RotationUtil.currentRotation[0];
             }
         }
         float f = MathHelper.wrapAngleTo180_float(p_110146_1_ - this.renderYawOffset);
@@ -1724,7 +1724,7 @@ public abstract class EntityLivingBase extends Entity
             f1 = 75.0F;
         }
 
-        if(RotationUtils.shouldRotate() && Client.INSTANCE.getModuleManager().getModule(SilentView.class).isEnabled() && !Client.INSTANCE.getModuleManager().getModule(SilentView.class).realistic.get())
+        if(RotationUtil.shouldRotate() && Client.INSTANCE.getModuleManager().getModule(SilentView.class).isEnabled() && !Client.INSTANCE.getModuleManager().getModule(SilentView.class).realistic.get())
             f1 = 0;
 
         this.renderYawOffset = rotationYaw - f1;
@@ -1791,7 +1791,7 @@ public abstract class EntityLivingBase extends Entity
         {
             this.worldObj.theProfiler.startSection("newAi");
             this.updateEntityActionState();
-            this.rotationYawHead = RotationUtils.shouldRotate() && this ==  Minecraft.getMinecraft().thePlayer && Client.INSTANCE.getModuleManager().getModule(SilentView.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(SilentView.class).realistic.get() ? RotationUtils.currentRotation[0] : this.rotationYawHead;
+            this.rotationYawHead = RotationUtil.shouldRotate() && this ==  Minecraft.getMinecraft().thePlayer && Client.INSTANCE.getModuleManager().getModule(SilentView.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(SilentView.class).realistic.get() ? RotationUtil.currentRotation[0] : this.rotationYawHead;
             this.worldObj.theProfiler.endSection();
         }
 

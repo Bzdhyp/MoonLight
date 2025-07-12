@@ -25,20 +25,20 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.*;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.DebugUtils;
-import wtf.moonlight.utils.player.MovementUtils;
-import wtf.moonlight.utils.player.PlayerUtils;
-import wtf.moonlight.utils.player.RotationUtils;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.DebugUtil;
+import wtf.moonlight.util.player.MovementUtil;
+import wtf.moonlight.util.player.PlayerUtil;
+import wtf.moonlight.util.player.RotationUtil;
 
 import java.util.Objects;
 
-@ModuleInfo(name = "Speed", category = ModuleCategory.Movement, key = Keyboard.KEY_V)
+@ModuleInfo(name = "Speed", category = Categor.Movement, key = Keyboard.KEY_V)
 public class Speed extends Module {
     private final ListValue mode = new ListValue("Mode", new String[]{"Vanilla","Watchdog", "EntityCollide", "BlocksMC", "Intave", "NCP", "Miniblox"}, "Watchdog", this);
     private final ListValue wdMode = new ListValue("Watchdog Mode", new String[]{"Fast", "Glide","Ground Test"}, "Basic", this, () -> mode.is("Watchdog"));
@@ -97,7 +97,7 @@ public class Speed extends Module {
         disable = false;
         couldStrafe = false;
         if(forceStop.get()){
-            MovementUtils.stopXZ();
+            MovementUtil.stopXZ();
         }
     }
 
@@ -109,11 +109,11 @@ public class Speed extends Module {
             return;
 
         if (printOffGroundTicks.get())
-            DebugUtils.sendMessage(mc.thePlayer.offGroundTicks + "Tick");
+            DebugUtil.sendMessage(mc.thePlayer.offGroundTicks + "Tick");
 
         switch (mode.getValue()) {
             case "Miniblox": {
-                if (mc.thePlayer.onGround && MovementUtils.isMoving()) {
+                if (mc.thePlayer.onGround && MovementUtil.isMoving()) {
                     mc.thePlayer.jump();
                 }
 
@@ -152,7 +152,7 @@ public class Speed extends Module {
 
             case "NCP": {
                 if (mc.thePlayer.offGroundTicks == onTick.getValue() && pullDown.get()) {
-                    MovementUtils.strafe();
+                    MovementUtil.strafe();
                     mc.thePlayer.motionY -= 0.1523351824467155;
                 }
 
@@ -160,7 +160,7 @@ public class Speed extends Module {
                     mc.thePlayer.motionY -= 0.1;
                 }
 
-                if (airBoost.get() && MovementUtils.isMoving()) {
+                if (airBoost.get() && MovementUtil.isMoving()) {
                     mc.thePlayer.motionX *= 1f + 0.00718;
                     mc.thePlayer.motionZ *= 1f + 0.00718;
                 }
@@ -168,7 +168,7 @@ public class Speed extends Module {
             break;
 
             case "Vanilla": {
-                MovementUtils.strafe(1 * vanilla.getValue());
+                MovementUtil.strafe(1 * vanilla.getValue());
                 couldStrafe = true;
 
                 if (vanillaPullDown.get()) {
@@ -178,7 +178,7 @@ public class Speed extends Module {
             break;
 
             case "Intave": {
-                if (mc.thePlayer.onGround && MovementUtils.isMoving()) {
+                if (mc.thePlayer.onGround && MovementUtil.isMoving()) {
                     mc.thePlayer.jump();
                 }
 
@@ -199,7 +199,7 @@ public class Speed extends Module {
                     return;
                 }
 
-                if (!MovementUtils.isMoving())
+                if (!MovementUtil.isMoving())
                     return;
 
                 int collisions = 0;
@@ -212,7 +212,7 @@ public class Speed extends Module {
                     }
                 }
 
-                double yaw = Math.toRadians(RotationUtils.shouldRotate() ? RotationUtils.currentRotation[0] : mc.thePlayer.rotationYaw);
+                double yaw = Math.toRadians(RotationUtil.shouldRotate() ? RotationUtil.currentRotation[0] : mc.thePlayer.rotationYaw);
 
                 double boost = 0.078 * collisions;
                 mc.thePlayer.addVelocity(-Math.sin(yaw) * boost, 0.0, Math.cos(yaw) * boost);
@@ -221,10 +221,10 @@ public class Speed extends Module {
 
             case "Watchdog":
                 if(wdMode.is("Fast")) {
-                    if (mc.thePlayer.onGround && MovementUtils.isMoving()) {
+                    if (mc.thePlayer.onGround && MovementUtil.isMoving()) {
                         mc.thePlayer.jump();
                         if(!isEnabled(Scaffold.class))
-                            MovementUtils.strafe(0.47 + MovementUtils.getSpeedEffect() * 0.042);
+                            MovementUtil.strafe(0.47 + MovementUtil.getSpeedEffect() * 0.042);
                         couldStrafe = true;
                     }
                 }
@@ -242,55 +242,55 @@ public class Speed extends Module {
 
         switch (mode.getValue()) {
             case "Miniblox": {
-                if (MovementUtils.isMoving()) {
+                if (MovementUtil.isMoving()) {
                     if (mc.thePlayer.onGround) {
                         switch (mTicks.getValue().intValue()) {
                             case 1:
-                                MovementUtils.strafe(0.07);
+                                MovementUtil.strafe(0.07);
                                 break;
                             case 2:
-                                MovementUtils.strafe(0.08);
+                                MovementUtil.strafe(0.08);
                                 break;
                             case 3:
-                                MovementUtils.strafe(0.09);
+                                MovementUtil.strafe(0.09);
                                 break;
                             case 4:
-                                MovementUtils.strafe(0.1);
+                                MovementUtil.strafe(0.1);
                                 break;
                             case 5:
-                                MovementUtils.strafe(0.115);
+                                MovementUtil.strafe(0.115);
                                 break;
                             case 6:
-                                MovementUtils.strafe(0.13);
+                                MovementUtil.strafe(0.13);
                                 break;
                         }
                     } else {
-                        MovementUtils.strafe(0.35f);
+                        MovementUtil.strafe(0.35f);
                     }
                 }
             }
             break;
 
             case "NCP": {
-                if (MovementUtils.isMoving()) {
+                if (MovementUtil.isMoving()) {
                     couldStrafe = true;
-                    MovementUtils.strafe();
+                    MovementUtil.strafe();
                     if (mc.thePlayer.onGround) {
                         mc.thePlayer.jump();
-                        MovementUtils.strafe(0.48 + MovementUtils.getSpeedEffect() * 0.07);
+                        MovementUtil.strafe(0.48 + MovementUtil.getSpeedEffect() * 0.07);
                     }
                 }
 
                 if (damageBoost.get() && mc.thePlayer.hurtTime > 0) {
-                    MovementUtils.strafe(Math.max(MovementUtils.getSpeed(), 0.5));
+                    MovementUtil.strafe(Math.max(MovementUtil.getSpeed(), 0.5));
                 }
             }
             break;
 
             case "Vanilla": {
-                if (MovementUtils.isMoving()) {
+                if (MovementUtil.isMoving()) {
                     couldStrafe = true;
-                    MovementUtils.strafe();
+                    MovementUtil.strafe();
                     if (mc.thePlayer.onGround) {
                         mc.thePlayer.jump();
                     }
@@ -312,11 +312,11 @@ public class Speed extends Module {
                         if (mc.thePlayer.onGround) {
                             disable3 = false;
                         }
-                        if (PlayerUtils.blockRelativeToPlayer(0, mc.thePlayer.motionY, 0) != Blocks.air) {
+                        if (PlayerUtil.blockRelativeToPlayer(0, mc.thePlayer.motionY, 0) != Blocks.air) {
                             disable = false;
                         }
 
-                        if (mc.thePlayer.isCollidedVertically && !mc.thePlayer.onGround && PlayerUtils.isBlockOver(2.0)) {
+                        if (mc.thePlayer.isCollidedVertically && !mc.thePlayer.onGround && PlayerUtil.isBlockOver(2.0)) {
                             disable = true;
                         }
 
@@ -339,11 +339,11 @@ public class Speed extends Module {
                             return;
                         }
 
-                        if (PlayerUtils.blockRelativeToPlayer(0, mc.thePlayer.motionY, 0) != Blocks.air) {
+                        if (PlayerUtil.blockRelativeToPlayer(0, mc.thePlayer.motionY, 0) != Blocks.air) {
                             disable = false;
                         }
 
-                        if (mc.thePlayer.isCollidedVertically && !mc.thePlayer.onGround && PlayerUtils.isBlockOver(2.0)) {
+                        if (mc.thePlayer.isCollidedVertically && !mc.thePlayer.onGround && PlayerUtil.isBlockOver(2.0)) {
                             disable = true;
                         }
                     }
@@ -352,9 +352,9 @@ public class Speed extends Module {
                         if (valued) {
                             if (mc.thePlayer.onGround) {
                                 event.setY(event.getY() + 1E-13F);
-                                mc.thePlayer.motionX *= 1.14 - MovementUtils.getSpeedEffect() * .01;
-                                mc.thePlayer.motionZ *= 1.14 - MovementUtils.getSpeedEffect() * .01;
-                                MovementUtils.strafe();
+                                mc.thePlayer.motionX *= 1.14 - MovementUtil.getSpeedEffect() * .01;
+                                mc.thePlayer.motionZ *= 1.14 - MovementUtil.getSpeedEffect() * .01;
+                                MovementUtil.strafe();
                                 couldStrafe = true;
                             }
                         }
@@ -379,8 +379,8 @@ public class Speed extends Module {
 
             switch (wdMode.getValue()) {
                 case "Glide":
-                    if (MovementUtils.isMoving() && mc.thePlayer.onGround) {
-                        MovementUtils.strafe(MovementUtils.getAllowedHorizontalDistance());
+                    if (MovementUtil.isMoving() && mc.thePlayer.onGround) {
+                        MovementUtil.strafe(MovementUtil.getAllowedHorizontalDistance());
                         mc.thePlayer.jump();
                     }
 
@@ -394,7 +394,7 @@ public class Speed extends Module {
                         for (final int allowedAirTick : allowedAirTicks) {
                             if (mc.thePlayer.offGroundTicks == allowedAirTick && allowedAirTick <= 11) {
                                 mc.thePlayer.motionY = 0;
-                                MovementUtils.strafe(MovementUtils.getAllowedHorizontalDistance() * speed);
+                                MovementUtil.strafe(MovementUtil.getAllowedHorizontalDistance() * speed);
                                 couldStrafe = true;
 
                                 speed *= 0.98F;
@@ -449,9 +449,9 @@ public class Speed extends Module {
                     if (mc.thePlayer.offGroundTicks == 1 && !disable) {
                         if (isEnabled(Scaffold.class)) {
                             if (getModule(Scaffold.class).towerMoving())
-                                MovementUtils.strafe(0.3);
+                                MovementUtil.strafe(0.3);
                         } else {
-                            MovementUtils.strafe(Math.max(MovementUtils.getSpeed(), 0.33f + MovementUtils.getSpeedEffect() * 0.075));
+                            MovementUtil.strafe(Math.max(MovementUtil.getSpeed(), 0.33f + MovementUtil.getSpeedEffect() * 0.075));
                             couldStrafe = true;
                         }
                     }
@@ -463,36 +463,36 @@ public class Speed extends Module {
                         mc.thePlayer.motionX = (mc.thePlayer.motionX * 1 + motionX3 * 2) / 3;
                     }
 
-                    if (mc.thePlayer.offGroundTicks == 6 && wdFastFallMode.is("8 Tick Strafe") && !disable && PlayerUtils.blockRelativeToPlayer(0, mc.thePlayer.motionY * 3, 0) != Blocks.air && PlayerUtils.blockRelativeToPlayer(0, mc.thePlayer.motionY * 3, 0).isFullBlock() && (disableWhileScaffold.get() && !isEnabled(Scaffold.class) || !disableWhileScaffold.get())) {
+                    if (mc.thePlayer.offGroundTicks == 6 && wdFastFallMode.is("8 Tick Strafe") && !disable && PlayerUtil.blockRelativeToPlayer(0, mc.thePlayer.motionY * 3, 0) != Blocks.air && PlayerUtil.blockRelativeToPlayer(0, mc.thePlayer.motionY * 3, 0).isFullBlock() && (disableWhileScaffold.get() && !isEnabled(Scaffold.class) || !disableWhileScaffold.get())) {
                         mc.thePlayer.motionY += 0.0754;
-                        MovementUtils.strafe();
+                        MovementUtil.strafe();
                         couldStrafe = true;
                     }
 
                     if ((mc.thePlayer.motionX == 0 || mc.thePlayer.motionZ == 0) && !disable && (!recentlyCollided && mc.thePlayer.isPotionActive(Potion.moveSpeed)) && !getModule(Scaffold.class).isEnabled()) {
-                        MovementUtils.strafe();
+                        MovementUtil.strafe();
                         couldStrafe = true;
                     }
 
-                    if (mc.thePlayer.offGroundTicks < 7 && (PlayerUtils.blockRelativeToPlayer(0, mc.thePlayer.motionY, 0) != Blocks.air) && mc.thePlayer.isPotionActive(Potion.moveSpeed) && !slab) {
+                    if (mc.thePlayer.offGroundTicks < 7 && (PlayerUtil.blockRelativeToPlayer(0, mc.thePlayer.motionY, 0) != Blocks.air) && mc.thePlayer.isPotionActive(Potion.moveSpeed) && !slab) {
                         boostTicks = mc.thePlayer.ticksExisted + 9;
                         recentlyCollided = true;
                     }
 
-                    if (mc.thePlayer.offGroundTicks == 7 && !disable && (PlayerUtils.blockRelativeToPlayer(0, mc.thePlayer.motionY * 2, 0) != Blocks.air) && !getModule(Scaffold.class).isEnabled()) {
-                        MovementUtils.strafe(MovementUtils.getSpeed());
+                    if (mc.thePlayer.offGroundTicks == 7 && !disable && (PlayerUtil.blockRelativeToPlayer(0, mc.thePlayer.motionY * 2, 0) != Blocks.air) && !getModule(Scaffold.class).isEnabled()) {
+                        MovementUtil.strafe(MovementUtil.getSpeed());
                         couldStrafe = true;
                     }
 
-                    if (PlayerUtils.blockRelativeToPlayer(0, mc.thePlayer.motionY, 0) != Blocks.air && mc.thePlayer.offGroundTicks > 5 && !disable3) {
-                        MovementUtils.strafe();
+                    if (PlayerUtil.blockRelativeToPlayer(0, mc.thePlayer.motionY, 0) != Blocks.air && mc.thePlayer.offGroundTicks > 5 && !disable3) {
+                        MovementUtil.strafe();
                         couldStrafe = true;
                         disable3 = true;
                     }
 
                     double speed2 = Math.hypot((mc.thePlayer.motionX - (mc.thePlayer.lastTickPosX - mc.thePlayer.lastLastTickPosX)), (mc.thePlayer.motionZ - (mc.thePlayer.lastTickPosZ - mc.thePlayer.lastLastTickPosZ)));
                     if (speed2 < .0125 && frictionOverride.get()) {
-                        MovementUtils.strafe();
+                        MovementUtil.strafe();
                         couldStrafe = true;
                     }
 
@@ -512,10 +512,10 @@ public class Speed extends Module {
     public void onPostStrafe(PostStrafeEvent event) {
         if (mode.is("Watchdog") && wdMode.is("Fast")) {
             if (extraStrafe.get()) {
-                double attempt_angle = MathHelper.wrapAngleTo180_double(Math.toDegrees(MovementUtils.getDirection()));
+                double attempt_angle = MathHelper.wrapAngleTo180_double(Math.toDegrees(MovementUtil.getDirection()));
                 double movement_angle = MathHelper.wrapAngleTo180_double(Math.toDegrees(Math.atan2(mc.thePlayer.motionZ, mc.thePlayer.motionX)) - 90);
-                if (MathUtils.wrappedDifference(attempt_angle, movement_angle) > 90) {
-                    MovementUtils.strafe(MovementUtils.getSpeed(), (float) movement_angle - 180);
+                if (MathUti.wrappedDifference(attempt_angle, movement_angle) > 90) {
+                    MovementUtil.strafe(MovementUtil.getSpeed(), (float) movement_angle - 180);
                 }
             }
         }

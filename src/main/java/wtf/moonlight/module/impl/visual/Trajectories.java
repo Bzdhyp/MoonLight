@@ -22,13 +22,13 @@ import org.lwjgl.opengl.GL11;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.render.RenderUtil;
 
 import java.awt.*;
 
-@ModuleInfo(name = "Trajectories", category = ModuleCategory.Visual)
+@ModuleInfo(name = "Trajectories", category = Categor.Visual)
 public class Trajectories extends Module {
 
     @EventTarget
@@ -114,13 +114,13 @@ public class Trajectories extends Module {
         GL11.glDisable(3042);
         GlStateManager.resetColor();
         if (landingPosition != null && landingPosition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-            RenderUtils.renderBlock(landingPosition.getBlockPos(), new Color(255, 255, 255, 64).getRGB(), true, true);
+            RenderUtil.renderBlock(landingPosition.getBlockPos(), new Color(255, 255, 255, 64).getRGB(), true, true);
         }
         if (landingPosition != null && landingPosition.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
             final double n11 = -mc.getRenderManager().renderPosX;
             final double n12 = -mc.getRenderManager().renderPosY;
             GL11.glTranslated(n11, n12, -mc.getRenderManager().renderPosZ);
-            RenderUtils.drawAxisAlignedBB(landingPosition.entityHit.getEntityBoundingBox().expand(0.225, 0.125, 0.225).offset(0.0, 0.1, 0.0), true, new Color(235, 40, 40, 75).getRGB());
+            RenderUtil.drawAxisAlignedBB(landingPosition.entityHit.getEntityBoundingBox().expand(0.225, 0.125, 0.225).offset(0.0, 0.1, 0.0), true, new Color(235, 40, 40, 75).getRGB());
             final double renderPosX = mc.getRenderManager().renderPosX;
             final double renderPosY = mc.getRenderManager().renderPosY;
             GL11.glTranslated(renderPosX, renderPosY, mc.getRenderManager().renderPosZ);

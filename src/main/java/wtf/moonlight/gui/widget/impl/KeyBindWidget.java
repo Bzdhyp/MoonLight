@@ -16,8 +16,8 @@ import wtf.moonlight.events.render.Shader2DEvent;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.widget.Widget;
 import wtf.moonlight.module.impl.display.KeyBindHUD;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 import wtf.moonlight.module.Module;
 
 import java.awt.*;
@@ -33,7 +33,7 @@ public class KeyBindWidget extends Widget {
     @Override
     public void onShader(Shader2DEvent event) {
         if(Client.INSTANCE.getModuleManager().getModule(KeyBindHUD.class).keyBindMode.is("Type 1")) {
-            RoundedUtils.drawRound(renderX, renderY, width, height, 4, new Color(setting.bgColor(),true));
+            RoundedUtil.drawRound(renderX, renderY, width, height, 4, new Color(setting.bgColor(),true));
         }
     }
 
@@ -50,7 +50,7 @@ public class KeyBindWidget extends Widget {
 
             String name = "HotKeys";
 
-            RoundedUtils.drawRound(posX, posY, width, height, 4, new Color(setting.bgColor(),true));
+            RoundedUtil.drawRound(posX, posY, width, height, 4, new Color(setting.bgColor(),true));
             Fonts.interMedium.get(fontSize).drawCenteredString(name, posX - 22 + width / 2, posY + padding + 0.5f + 2, -1);
 
             float imagePosX = posX + width - iconSizeX - padding;
@@ -61,7 +61,7 @@ public class KeyBindWidget extends Widget {
             float maxWidth = Fonts.interMedium.get(fontSize).getStringWidth(name) + padding * 2;
             float localHeight = Fonts.interMedium.get(fontSize).getHeight() + padding * 2;
 
-            RoundedUtils.drawRound(posX + 0.5f, posY, width - 1, 1.25f, 3, new Color(ColorUtils.darker(setting.color(),0.4f)));
+            RoundedUtil.drawRound(posX + 0.5f, posY, width - 1, 1.25f, 3, new Color(ColorUtil.darker(setting.color(),0.4f)));
             posY += 3f;
 
             for (Module module : Client.INSTANCE.getModuleManager().getModules()) {

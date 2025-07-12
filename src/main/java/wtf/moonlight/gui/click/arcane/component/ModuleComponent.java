@@ -11,12 +11,12 @@ import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.Value;
 import wtf.moonlight.module.values.impl.*;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.utils.animations.advanced.Animation;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 
@@ -57,20 +57,20 @@ public class ModuleComponent extends Component {
     public void drawScreen(int mouseX, int mouseY) {
         float y = getY() + 6 + scroll;
         enabled.setDirection(module.isEnabled() ? Direction.FORWARDS : Direction.BACKWARDS);
-        hover.setDirection(RenderUtils.isHovering(getX() + 135, y + 4, 22, 12,mouseX,mouseY) ? Direction.FORWARDS : Direction.BACKWARDS);
+        hover.setDirection(RenderUtil.isHovering(getX() + 135, y + 4, 22, 12,mouseX,mouseY) ? Direction.FORWARDS : Direction.BACKWARDS);
         Animation moduleAnimation = module.getAnimation();
         moduleAnimation.setDirection(module.isEnabled() ? Direction.FORWARDS : Direction.BACKWARDS);
         if (!module.isEnabled() && moduleAnimation.finished(Direction.BACKWARDS));
 
-        RoundedUtils.drawRound(getX(), y, 165, getHeight(), 2, INSTANCE.getArcaneClickGui().backgroundColor);
-        Fonts.Bold.get(18).drawString(module.getName(), getX() + 10, y + 5,ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(),1f));
+        RoundedUtil.drawRound(getX(), y, 165, getHeight(), 2, INSTANCE.getArcaneClickGui().backgroundColor);
+        Fonts.Bold.get(18).drawString(module.getName(), getX() + 10, y + 5, ColorUtil.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(),1f));
 
         Color bgColor = module.isEnabled()
-                ? new Color(ColorUtils.applyOpacity(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(), 0.4f))
+                ? new Color(ColorUtil.applyOpacity(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(), 0.4f))
                 : new Color(0, 0, 0, 80);
-        RoundedUtils.drawRound(getX() + 135, y + 4, 20, 10, 4, bgColor);
+        RoundedUtil.drawRound(getX() + 135, y + 4, 20, 10, 4, bgColor);
 
-        RenderUtils.drawCircleCGUI(getX() + 141 + moduleAnimation.getOutput() * 9f, y + 9, 8, new Color(Client.INSTANCE.getModuleManager().getModule(Interface.class).color()).darker().getRGB());
+        RenderUtil.drawCircleCGUI(getX() + 141 + moduleAnimation.getOutput() * 9f, y + 9, 8, new Color(Client.INSTANCE.getModuleManager().getModule(Interface.class).color()).darker().getRGB());
 
         float componentY = y + 22;
         ObjectArrayList<Component> filtered = components.stream()
@@ -86,7 +86,7 @@ public class ModuleComponent extends Component {
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         float y = getY() + 6 + scroll;
-        if (RenderUtils.isHovering(getX() + 135, y + 4, 20, 10,mouseX,mouseY) && mouseButton == 0){
+        if (RenderUtil.isHovering(getX() + 135, y + 4, 20, 10,mouseX,mouseY) && mouseButton == 0){
             module.toggle();
         }
         for (Component component : components) {

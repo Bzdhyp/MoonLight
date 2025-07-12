@@ -21,21 +21,21 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.animations.advanced.impl.SmoothStepAnimation;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.animations.advanced.impl.SmoothStepAnimation;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.RenderUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@ModuleInfo(name = "Particles", category = ModuleCategory.Visual)
+@ModuleInfo(name = "Particles", category = Categor.Visual)
 public class Particles extends Module {
     private final ListValue physics = new ListValue("Physics", new String[]{"Drop", "Fly"}, "Fly", this);
     public final ListValue mode = new ListValue("Mode", new String[]{"Bloom", "Stars", "Hearts", "Dollars", "SnowFlake"}, "SnowFlake", this);
@@ -43,7 +43,7 @@ public class Particles extends Module {
     private final BoolValue lime = new BoolValue("Lime", false, this);
     private final BoolValue lighting = new BoolValue("Lighting", false, this);
     private final SliderValue size = new SliderValue("Size", 7.0f, 1.0f, 200.0f, this);
-    private final SliderValue count = new SliderValue("Count", 100, 20, 800, this);
+    private final SliderValue count = new SliderValue("Count", 100, 20, 1000, this);
 
     private final ArrayList<Particles.FirePart> FIRE_PARTS_LIST = new ArrayList<>();
     private final Tessellator tessellator = Tessellator.getInstance();
@@ -67,21 +67,21 @@ public class Particles extends Module {
             FirePart newPart;
 
             spawnPos = mc.thePlayer.getPositionVector().addVector(
-                    MathUtils.randomizeDouble(-85.0, 85.0),
-                    MathUtils.randomizeDouble(-20.0, 30.0),
-                    MathUtils.randomizeDouble(-45.0, 45.0)
+                    MathUti.randomizeDouble(-72.0, 72.0), // X
+                    MathUti.randomizeDouble(-40.0, 80.0), // Y
+                    MathUti.randomizeDouble(-85.0, 85.0) // Z
             );
 
             if (physics.is("Drop")) {
                 newPart = new FirePart(spawnPos);
                 newPart.motionX = 0;
                 newPart.motionZ = 0;
-                newPart.motionY = (float) MathUtils.randomizeDouble(-0.08f, -0.03f);
+                newPart.motionY = (float) MathUti.randomizeDouble(-0.08f, -0.03f);
             } else {
                 newPart = new FirePart(spawnPos);
-                newPart.motionX = (float) MathUtils.randomizeDouble(-0.4f, 0.4f);
-                newPart.motionZ = (float) MathUtils.randomizeDouble(-0.4f, 0.4f);
-                newPart.motionY = (float) MathUtils.randomizeDouble(-0.1f, 0.1f);
+                newPart.motionX = (float) MathUti.randomizeDouble(-0.4f, 0.4f);
+                newPart.motionZ = (float) MathUti.randomizeDouble(-0.4f, 0.4f);
+                newPart.motionY = (float) MathUti.randomizeDouble(-0.1f, 0.1f);
             }
 
             FIRE_PARTS_LIST.add(newPart);
@@ -150,7 +150,7 @@ public class Particles extends Module {
         float scale = size.getValue();
         this.drawBindedTexture(-scale / 2.0f, -scale / 2.0f, scale / 2.0f, scale / 2.0f, getPartColor(part));
         if (this.lighting.get()) {
-            this.drawBindedTexture(-(scale *= 3.0f) / 2.0f, -scale / 2.0f, scale / 2.0f, scale / 2.0f, ColorUtils.applyOpacity(ColorUtils.darker(getPartColor(part), 0.2f), (float) (part.animation.getOutput() / 7.0f)));
+            this.drawBindedTexture(-(scale *= 3.0f) / 2.0f, -scale / 2.0f, scale / 2.0f, scale / 2.0f, ColorUtil.applyOpacity(ColorUtil.darker(getPartColor(part), 0.2f), (float) (part.animation.getOutput() / 7.0f)));
         }
         GL11.glPopMatrix();
     }
@@ -166,7 +166,7 @@ public class Particles extends Module {
         GL11.glPointSize(1.5f + 6.0f * MathHelper.clamp_float(1.0f - (mc.thePlayer.getSmoothDistanceToCoord((float) firePart.getPosVec().xCoord, (float) firePart.getPosVec().yCoord + 1.6f, (float) firePart.getPosVec().zCoord) - 3.0f) / 10.0f, 0.0f, 1.0f));
         GL11.glBegin(0);
         for (Particles.SparkPart spark : firePart.SPARK_PARTS) {
-            RenderUtils.color(color);
+            RenderUtil.color(color);
             double x = spark.prevPosX + (spark.posX - spark.prevPosX) * partialTicks;
             double y = spark.prevPosY + (spark.posY - spark.prevPosY) * partialTicks;
             double z = spark.prevPosZ + (spark.posZ - spark.prevPosZ) * partialTicks;
@@ -220,7 +220,7 @@ public class Particles extends Module {
         GL11.glHint(3154, 4354);
         GL11.glBegin(3);
         for (Particles.TrailPart trail : firePart.TRAIL_PARTS) {
-            RenderUtils.color(color);
+            RenderUtil.color(color);
             GL11.glVertex3d(trail.x, trail.y, trail.z);
         }
         GL11.glEnd();
@@ -239,7 +239,7 @@ public class Particles extends Module {
         Vec3 pos;
         public SmoothStepAnimation animation = new SmoothStepAnimation(400,1);
         float motionX, motionY, motionZ;
-        protected int age = (int) MathUtils.randomizeDouble(100, 300);
+        protected int age = (int) MathUti.randomizeDouble(100, 300);
         @Getter
         boolean toRemove;
 

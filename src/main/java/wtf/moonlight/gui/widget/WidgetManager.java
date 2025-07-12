@@ -16,7 +16,7 @@ import wtf.moonlight.events.render.ChatGUIEvent;
 import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.events.render.Shader2DEvent;
 import wtf.moonlight.gui.widget.impl.*;
-import wtf.moonlight.utils.misc.InstanceAccess;
+import wtf.moonlight.util.misc.InstanceAccess;
 
 import java.util.ArrayList;
 import java.util.Iterator;

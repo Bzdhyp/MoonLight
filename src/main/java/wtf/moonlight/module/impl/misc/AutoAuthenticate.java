@@ -17,12 +17,12 @@ import wtf.moonlight.events.misc.WorldEvent;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.module.values.impl.StringValue;
 
-@ModuleInfo(name = "AutoAuthenticate", category = ModuleCategory.Misc)
+@ModuleInfo(name = "AutoAuthenticate", category = Categor.Misc)
 public class AutoAuthenticate extends Module {
     public final StringValue password = new StringValue("Password","12341234",this);
     public final SliderValue delay = new SliderValue("Delay",1000,100,5000,100,this);

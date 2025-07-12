@@ -69,7 +69,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wtf.moonlight.Client;
 import wtf.moonlight.events.player.TeleportEvent;
-import wtf.moonlight.gui.main.GuiMainMenu;
+import wtf.moonlight.gui.main.MainMenu;
 
 import java.io.File;
 import java.io.IOException;
@@ -592,7 +592,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         }
         else
         {
-            this.gameController.displayGuiScreen(new GuiDisconnected(new GuiMultiplayer(new GuiMainMenu()), "disconnect.lost", reason));
+            this.gameController.displayGuiScreen(new GuiDisconnected(new GuiMultiplayer(new MainMenu()), "disconnect.lost", reason));
         }
     }
 

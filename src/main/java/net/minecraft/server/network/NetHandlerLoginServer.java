@@ -27,7 +27,7 @@ import net.minecraft.util.ITickable;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import wtf.moonlight.utils.packet.Workers;
+import wtf.moonlight.util.packet.Workers;
 
 public class NetHandlerLoginServer implements INetHandlerLoginServer, ITickable
 {

@@ -19,23 +19,18 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.network.play.server.S45PacketTitle;
 import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Client;
 import com.cubk.EventTarget;
@@ -46,18 +41,18 @@ import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.events.render.RenderGuiEvent;
 import wtf.moonlight.events.render.Shader2DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.combat.KillAura;
-import wtf.moonlight.module.impl.player.Stealer;
+import wtf.moonlight.module.impl.player.ChestStealer;
 import wtf.moonlight.module.impl.visual.island.IslandRenderer;
 import wtf.moonlight.module.values.impl.*;
 import wtf.moonlight.gui.click.neverlose.NeverLose;
 import wtf.moonlight.gui.font.FontRenderer;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.utils.render.ColorUtils;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.render.ColorUtil;
 
 import java.awt.*;
 import java.text.DecimalFormat;
@@ -69,7 +64,7 @@ import java.util.regex.Pattern;
 
 import static wtf.moonlight.gui.click.neverlose.NeverLose.*;
 
-@ModuleInfo(name = "Interface", category = ModuleCategory.Display)
+@ModuleInfo(name = "Interface", category = Categor.Display)
 public class Interface extends Module {
     public final StringValue clientName = new StringValue("Client Name", "Moonlight", this);
 
@@ -104,7 +99,6 @@ public class Interface extends Module {
     public final BoolValue fixHeight = new BoolValue("Fix Height", true, this, customScoreboard::get);
     public final BoolValue hideBackground = new BoolValue("Hide Background", true, this, customScoreboard::get);
     public final BoolValue chatCombine = new BoolValue("Chat Combine", true, this);
-    public final BoolValue newButton = new BoolValue("New Button", true, this);
     public final BoolValue hotBar = new BoolValue("New Hot Bar", false, this);
 
     public final BoolValue cape = new BoolValue("Cape", true, this);
@@ -149,7 +143,7 @@ public class Interface extends Module {
     @EventTarget
     public void onRenderGui(RenderGuiEvent event){
         if(elements.isEnabled("Health")) {
-            if (mc.currentScreen instanceof GuiInventory || mc.currentScreen instanceof GuiChest && !getModule(Stealer.class).isStealing || mc.currentScreen instanceof GuiContainerCreative) {
+            if (mc.currentScreen instanceof GuiInventory || mc.currentScreen instanceof GuiChest && !getModule(ChestStealer.class).isStealing || mc.currentScreen instanceof GuiContainerCreative) {
                 renderHealth();
             }
         }
@@ -258,7 +252,7 @@ public class Interface extends Module {
         }
         int x = new ScaledResolution(mc).getScaledWidth() / 2 - xWidth;
         int y = new ScaledResolution(mc).getScaledHeight() / 2 + 25 + offsetY;
-        Color color = new Color(ColorUtils.getHealthColor(mc.thePlayer));
+        Color color = new Color(ColorUtil.getHealthColor(mc.thePlayer));
         mc.fontRendererObj.drawString(string, absorptionHealth > 0.0f ? x - 15.5f : x - 3.5f, y, color.getRGB(), true);
         GL11.glPushMatrix();
         mc.getTextureManager().bindTexture(Gui.icons);
@@ -432,15 +426,15 @@ public class Interface extends Module {
     public int color(int counter, int alpha) {
         int colors = getMainColor().getRGB();
         colors = switch (color.getValue()) {
-            case "Rainbow" -> ColorUtils.swapAlpha(getRainbow(counter), alpha);
+            case "Rainbow" -> ColorUtil.swapAlpha(getRainbow(counter), alpha);
             case "Dynamic" ->
-                    ColorUtils.swapAlpha(ColorUtils.colorSwitch(getMainColor(), new Color(ColorUtils.darker(getMainColor().getRGB(), 0.25F)), 2000.0F, counter, 75L, fadeSpeed.getValue()).getRGB(), alpha);
+                    ColorUtil.swapAlpha(ColorUtil.colorSwitch(getMainColor(), new Color(ColorUtil.darker(getMainColor().getRGB(), 0.25F)), 2000.0F, counter, 75L, fadeSpeed.getValue()).getRGB(), alpha);
             case "Fade" ->
-                    ColorUtils.swapAlpha((ColorUtils.colorSwitch(getMainColor(), getSecondColor(), 2000.0F, counter, 75L, fadeSpeed.getValue()).getRGB()), alpha);
+                    ColorUtil.swapAlpha((ColorUtil.colorSwitch(getMainColor(), getSecondColor(), 2000.0F, counter, 75L, fadeSpeed.getValue()).getRGB()), alpha);
             case "Astolfo" ->
-                    ColorUtils.swapAlpha(astolfoRainbow(counter, mainColor.getSaturation(), mainColor.getBrightness()), alpha);
-            case "NeverLose" -> ColorUtils.swapAlpha(iconRGB, alpha);
-            case "Custom" -> ColorUtils.swapAlpha(mainColor.getValue().getRGB(), alpha);
+                    ColorUtil.swapAlpha(astolfoRainbow(counter, mainColor.getSaturation(), mainColor.getBrightness()), alpha);
+            case "NeverLose" -> ColorUtil.swapAlpha(iconRGB, alpha);
+            case "Custom" -> ColorUtil.swapAlpha(mainColor.getValue().getRGB(), alpha);
             default -> colors;
         };
         return new Color(colors,true).getRGB();
@@ -455,10 +449,10 @@ public class Interface extends Module {
         colors = switch (bgColor.getValue()) {
             case "Dark" -> (new Color(21, 21, 21, alpha)).getRGB();
             case "Synced" ->
-                    new Color(ColorUtils.applyOpacity(color(counter, alpha), alpha / 255f), true).darker().darker().getRGB();
+                    new Color(ColorUtil.applyOpacity(color(counter, alpha), alpha / 255f), true).darker().darker().getRGB();
             case "None" -> new Color(0, 0, 0, 0).getRGB();
-            case "Custom" -> ColorUtils.swapAlpha(bgCustomColor.getValue().getRGB(), alpha);
-            case "NeverLose" -> ColorUtils.swapAlpha(NeverLose.bgColor.getRGB(), alpha);
+            case "Custom" -> ColorUtil.swapAlpha(bgCustomColor.getValue().getRGB(), alpha);
+            case "NeverLose" -> ColorUtil.swapAlpha(NeverLose.bgColor.getRGB(), alpha);
             default -> colors;
         };
         return colors;

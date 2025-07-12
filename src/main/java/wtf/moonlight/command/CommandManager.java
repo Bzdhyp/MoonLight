@@ -14,7 +14,7 @@ import wtf.moonlight.Client;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.misc.SendMessageEvent;
 import wtf.moonlight.command.impl.*;
-import wtf.moonlight.utils.DebugUtils;
+import wtf.moonlight.util.DebugUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,15 +49,15 @@ public final class CommandManager {
                             try {
                                 command.execute(arguments);
                             } catch (CommandExecutionException e) {
-                                DebugUtils.sendMessage("Invalid commands syntax. Hint: " + e.getMessage());
+                                DebugUtil.sendMessage("Invalid commands syntax. Hint: " + e.getMessage());
                             }
                             return;
                         }
                     }
                 }
-                DebugUtils.sendMessage("'" + arguments[0] + "' is not a commands. " + "Try '.help'");
+                DebugUtil.sendMessage("'" + arguments[0] + "' is not a commands. " + "Try '.help'");
             } else {
-                DebugUtils.sendMessage("No arguments were supplied. Try '.help'");
+                DebugUtil.sendMessage("No arguments were supplied. Try '.help'");
             }
         }
     }

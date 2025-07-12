@@ -14,7 +14,7 @@ import lombok.Getter;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.EnumChatFormatting;
 import wtf.moonlight.Client;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.impl.visual.ESP2D;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.gui.click.neverlose.panel.Panel;
@@ -22,13 +22,13 @@ import wtf.moonlight.gui.click.neverlose.components.ESPPreviewComponent;
 import wtf.moonlight.gui.click.neverlose.panel.config.ConfigPanel;
 import wtf.moonlight.gui.click.neverlose.panel.search.SearchPanel;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.advanced.Animation;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.MouseUtils;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.MouseUtil;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 import java.io.IOException;
@@ -63,11 +63,11 @@ public class NeverLose extends GuiScreen {
     public static int textRGB,iconRGB,
             outlineTextRGB,moduleTextRGB;
     public NeverLose() {
-        Arrays.stream(ModuleCategory.values()).filter(moduleCategory -> !(moduleCategory == ModuleCategory.Config || moduleCategory == ModuleCategory.Search))
+        Arrays.stream(Categor.values()).filter(moduleCategory -> !(moduleCategory == Categor.Config || moduleCategory == Categor.Search))
                 .forEach(moduleCategory -> panels
                         .add(new wtf.moonlight.gui.click.neverlose.panel.Panel(moduleCategory)));
-        panels.add(new SearchPanel(ModuleCategory.Search));
-        panels.add(new ConfigPanel(ModuleCategory.Config));
+        panels.add(new SearchPanel(Categor.Search));
+        panels.add(new ConfigPanel(Categor.Config));
         //setting
         sliderBarColor = new Color(0x046190).darker();
         sliderCircleColor = new Color(0x2482ff);
@@ -180,27 +180,27 @@ public class NeverLose extends GuiScreen {
         //blur
         //Moonlight.INSTANCE.getModuleManager().getModule(PostProcessing.class).blurScreen();
         //bg
-        RoundedUtils.drawRound(posX,posY,width,height,6f,bgColor2);
-        RoundedUtils.drawRound(posX + 136,posY,width - 136,height,6f,bgColor);
+        RoundedUtil.drawRound(posX,posY,width,height,6f,bgColor2);
+        RoundedUtil.drawRound(posX + 136,posY,width - 136,height,6f,bgColor);
 
         //top
-        RoundedUtils.drawRound(posX + 136,posY,width - 136,46,6f,topColor);
+        RoundedUtil.drawRound(posX + 136,posY,width - 136,46,6f,topColor);
         //cover
-        RoundedUtils.drawRound(posX + 136,posY,4,height,0,bgColor);
+        RoundedUtil.drawRound(posX + 136,posY,4,height,0,bgColor);
         //top cover
-        RoundedUtils.drawRound(posX + 136,posY,4,46,0,topColor);
-        RoundedUtils.drawRound(posX + 136,posY + 44,width - 136,4,0,topColor);
+        RoundedUtil.drawRound(posX + 136,posY,4,46,0,topColor);
+        RoundedUtil.drawRound(posX + 136,posY + 44,width - 136,4,0,topColor);
 
         //line
-        RoundedUtils.drawRound(posX + 135,posY,.8f,height,0,lineColor);
-        RoundedUtils.drawRound(posX + 136,posY + 48,width - 136,.8f,0,lineColor);
+        RoundedUtil.drawRound(posX + 135,posY,.8f,height,0,lineColor);
+        RoundedUtil.drawRound(posX + 136,posY + 48,width - 136,.8f,0,lineColor);
 
         //title
         Fonts.interBold.get(36).drawCenteredStringWithOutline(Client.INSTANCE.getModuleManager().getModule(Interface.class).clientName.getText(),posX + 65,posY + 12,textRGB,outlineTextRGB);
 
         //user info
-        RoundedUtils.drawRound(posX,posY + 384,134,.8f,0,lineColor);
-        RenderUtils.renderPlayer2D(mc.thePlayer, posX + 5, posY + 389, 27, 10, -1);
+        RoundedUtil.drawRound(posX,posY + 384,134,.8f,0,lineColor);
+        RenderUtil.renderPlayer2D(mc.thePlayer, posX + 5, posY + 389, 27, 10, -1);
         Fonts.interSemiBold.get(16).drawString(mc.thePlayer.getNameClear(),posX + 37,posY + 396,textRGB);
         Fonts.interSemiBold.get(16).drawString(EnumChatFormatting.GRAY + "Till: ",posX + 37,posY + 406,-1);
         Fonts.interSemiBold.get(16).drawString("Lifetime",posX + 37 + Fonts.interSemiBold.get(16).getStringWidth(EnumChatFormatting.GRAY + "Till: "),posY + 406,iconRGB);
@@ -210,27 +210,27 @@ public class NeverLose extends GuiScreen {
         Fonts.interSemiBold.get(14).drawString("Visuals",posX + 14,posY + 103 ,Color.GRAY.getRGB());
         Fonts.interSemiBold.get(14).drawString("Common",posX + 14,posY + 212 ,Color.GRAY.getRGB());
         //search
-        hover.setDirection(MouseUtils.isHovered2(posX + width - 20,posY + 18,10,10,mouseX,mouseY) ? Direction.FORWARDS : Direction.BACKWARDS);
+        hover.setDirection(MouseUtil.isHovered2(posX + width - 20,posY + 18,10,10,mouseX,mouseY) ? Direction.FORWARDS : Direction.BACKWARDS);
 
-        Panel searchPanel = getPanelByCategory(ModuleCategory.Search);
-        Panel configPanel = getPanelByCategory(ModuleCategory.Config);
+        Panel searchPanel = getPanelByCategory(Categor.Search);
+        Panel configPanel = getPanelByCategory(Categor.Config);
 
         if (configPanel != null && !configPanel.isSelected()) {
             if (searchPanel != null && !searchPanel.isSelected()) {
-                Fonts.neverlose.get(20).drawString("j", posX + width - 20, posY + 21, ColorUtils.interpolateColor2(new Color(textRGB), new Color(textRGB).darker().darker(), (float) hover.getOutput()));
+                Fonts.neverlose.get(20).drawString("j", posX + width - 20, posY + 21, ColorUtil.interpolateColor2(new Color(textRGB), new Color(textRGB).darker().darker(), (float) hover.getOutput()));
             } else if (searchPanel != null) {
-                Fonts.neverlose.get(24).drawString("j", posX + width - 21, posY + 20, ColorUtils.interpolateColor2(new Color(textRGB), new Color(textRGB).darker().darker(), (float) hover.getOutput()));
+                Fonts.neverlose.get(24).drawString("j", posX + width - 21, posY + 20, ColorUtil.interpolateColor2(new Color(textRGB), new Color(textRGB).darker().darker(), (float) hover.getOutput()));
             }
         }
 
         for (Panel panel : panels) {
-            categoryBgColor = ColorUtils.applyOpacity(new Color(0, 52, 84), (float) panel.getAnimation().getOutput());
-            if (panel.getCategory() != ModuleCategory.Search) {
+            categoryBgColor = ColorUtil.applyOpacity(new Color(0, 52, 84), (float) panel.getAnimation().getOutput());
+            if (panel.getCategory() != Categor.Search) {
                 panel.drawScreen(mouseX, mouseY);
                 if (panel.isSelected()) {
-                    RoundedUtils.drawRound(posX + 8, panel.getCategory().ordinal() >= 7 ? posY + 92 + panel.getCategory().ordinal() * 24 : panel.getCategory().ordinal() >= 6 ? posY + 78 + panel.getCategory().ordinal() * 24 : panel.getCategory().ordinal() >= 2 ? posY + 65 + panel.getCategory().ordinal() * 24
+                    RoundedUtil.drawRound(posX + 8, panel.getCategory().ordinal() >= 7 ? posY + 92 + panel.getCategory().ordinal() * 24 : panel.getCategory().ordinal() >= 6 ? posY + 78 + panel.getCategory().ordinal() * 24 : panel.getCategory().ordinal() >= 2 ? posY + 65 + panel.getCategory().ordinal() * 24
                             : posY + 52 + panel.getCategory().ordinal() * 24, 120, 19, 5, categoryBgColor);
-                    if (panel.getCategory() == ModuleCategory.Visual && Client.INSTANCE.getModuleManager().getModule(ESP2D.class).isEnabled()) {
+                    if (panel.getCategory() == Categor.Visual && Client.INSTANCE.getModuleManager().getModule(ESP2D.class).isEnabled()) {
                         espPreviewComponent.drawScreen(mouseX, mouseY);
                     }
                 }
@@ -266,7 +266,7 @@ public class NeverLose extends GuiScreen {
                     break;
                 }
             }
-            if (MouseUtils.isHovered2(posX,posY,136,42, mouseX, mouseY)) {
+            if (MouseUtil.isHovered2(posX,posY,136,42, mouseX, mouseY)) {
                 dragging = true;
                 dragX = posX - mouseX;
                 dragY = posY - mouseY;
@@ -275,13 +275,13 @@ public class NeverLose extends GuiScreen {
         Panel selected = getSelected();
         if (selected != null) {
             espPreviewComponent.mouseClicked(mouseX,mouseY,mouseButton);
-            if (!selected.getCategory().getName().equals("Search") && !selected.getCategory().getName().equals("Configs") && !MouseUtils.isHovered2(getPosX() + 140, getPosY() + 49, 380, 368,mouseX,mouseY)) return;
+            if (!selected.getCategory().getName().equals("Search") && !selected.getCategory().getName().equals("Configs") && !MouseUtil.isHovered2(getPosX() + 140, getPosY() + 49, 380, 368,mouseX,mouseY)) return;
             selected.mouseClicked(mouseX, mouseY, mouseButton);
         }
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
-    private Panel getPanelByCategory(ModuleCategory category) {
+    private Panel getPanelByCategory(Categor category) {
         for (Panel panel : panels) {
             if (panel.getCategory() == category) {
                 return panel;
@@ -291,10 +291,10 @@ public class NeverLose extends GuiScreen {
     }
 
     private boolean handleSearchPanel(Panel panel, int mouseX, int mouseY) {
-        if (panel.getCategory() == ModuleCategory.Search &&
-                getPanelByCategory(ModuleCategory.Config) != null &&
-                !getPanelByCategory(ModuleCategory.Config).isSelected() &&
-                MouseUtils.isHovered2(posX + width - 20, posY + 18, 10, 10, mouseX, mouseY)) {
+        if (panel.getCategory() == Categor.Search &&
+                getPanelByCategory(Categor.Config) != null &&
+                !getPanelByCategory(Categor.Config).isSelected() &&
+                MouseUtil.isHovered2(posX + width - 20, posY + 18, 10, 10, mouseX, mouseY)) {
 
             if (!panel.isSelected()) {
                 for (Panel p : panels) {
@@ -313,7 +313,7 @@ public class NeverLose extends GuiScreen {
     }
 
     private boolean handleCategoryPanel(Panel panel, int mouseX, int mouseY) {
-        if (panel.getCategory() != ModuleCategory.Search && MouseUtils.isHovered2(posX + 8, panel.getCategory().ordinal() >= 7 ? posY + 92 + panel.getCategory().ordinal() * 24 : panel.getCategory().ordinal() >= 6 ? posY + 78 + panel.getCategory().ordinal() * 24 : panel.getCategory().ordinal() >= 2 ? posY + 65 + panel.getCategory().ordinal() * 24
+        if (panel.getCategory() != Categor.Search && MouseUtil.isHovered2(posX + 8, panel.getCategory().ordinal() >= 7 ? posY + 92 + panel.getCategory().ordinal() * 24 : panel.getCategory().ordinal() >= 6 ? posY + 78 + panel.getCategory().ordinal() * 24 : panel.getCategory().ordinal() >= 2 ? posY + 65 + panel.getCategory().ordinal() * 24
                 : posY + 52 + panel.getCategory().ordinal() * 24, 120, 19, mouseX, mouseY)) {
             for (Panel p : panels) {
                 p.setSelected(false);
@@ -325,10 +325,10 @@ public class NeverLose extends GuiScreen {
     }
 
     public void stuffToBlur(){
-        RoundedUtils.drawRound(posX,posY,135,height,6f,bgColor);
-        Panel visualPanel = getPanelByCategory(ModuleCategory.Visual);
+        RoundedUtil.drawRound(posX,posY,135,height,6f,bgColor);
+        Panel visualPanel = getPanelByCategory(Categor.Visual);
         if (visualPanel != null && visualPanel.isSelected() && Client.INSTANCE.getModuleManager().getModule(ESP2D.class).isEnabled()) {
-            RoundedUtils.drawRoundOutline(posX + width + 12,posY + 10,200,height - 20,2,.1f, ColorUtils.applyOpacity(bgColor2,1f),new Color(0x08111d).brighter());
+            RoundedUtil.drawRoundOutline(posX + width + 12,posY + 10,200,height - 20,2,.1f, ColorUtil.applyOpacity(bgColor2,1f),new Color(0x08111d).brighter());
         }
     }
 
@@ -341,7 +341,7 @@ public class NeverLose extends GuiScreen {
         if (selected != null) {
             selected.mouseReleased(mouseX, mouseY, state);
         }
-        Panel visualPanel = getPanelByCategory(ModuleCategory.Visual);
+        Panel visualPanel = getPanelByCategory(Categor.Visual);
         if (visualPanel != null && visualPanel.isSelected() && Client.INSTANCE.getModuleManager().getModule(ESP2D.class).isEnabled()) {
             espPreviewComponent.mouseReleased(mouseX,mouseY,state);
         }

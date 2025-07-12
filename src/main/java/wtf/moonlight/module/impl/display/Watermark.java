@@ -10,13 +10,13 @@ import wtf.moonlight.gui.click.neverlose.NeverLose;
 import wtf.moonlight.gui.font.FontRenderer;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.ListValue;
-import wtf.moonlight.utils.player.MovementUtils;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.player.MovementUtil;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 import java.text.DateFormat;
@@ -29,7 +29,7 @@ import static net.minecraft.util.EnumChatFormatting.WHITE;
 import static wtf.moonlight.gui.click.neverlose.NeverLose.*;
 import static wtf.moonlight.gui.click.neverlose.NeverLose.textRGB;
 
-@ModuleInfo(name = "Watermark", category = ModuleCategory.Display)
+@ModuleInfo(name = "Watermark", category = Categor.Display)
 public class Watermark extends Module {
     public final ListValue watemarkMode = new ListValue("Watermark Mode", new String[]{"Text","Styles","Styles 2","Rect","Nursultan","Exhi","Exhi 2",
             "Exhi 3","Nursultan 2","NeverLose","Novo","Novo 2","Novo 3","OneTap"}, "Text", this);
@@ -67,7 +67,7 @@ public class Watermark extends Module {
                     int width = Fonts.interBold.get(17).getStringWidth("ML") + Fonts.interRegular.get(17).getStringWidth(name) + 5;
                     int height = Fonts.interRegular.get(17).getHeight() + 3;
 
-                    RoundedUtils.drawRound(x, y, width, height, 4, new Color(getModule(Interface.class).bgColor(), true));
+                    RoundedUtil.drawRound(x, y, width, height, 4, new Color(getModule(Interface.class).bgColor(), true));
                     Fonts.interBold.get(17).drawOutlinedString("ML", x + 2, y + 4.5f, -1, setting.color());
                     Fonts.interRegular.get(17).drawStringWithShadow(name, Fonts.interBold.get(17).getStringWidth("ML") + x + 2, y + 4.5f, -1);
                 }
@@ -82,31 +82,31 @@ public class Watermark extends Module {
                     int width = Fonts.interSemiBold.get(17).getStringWidth("") + Fonts.interSemiBold.get(17).getStringWidth(stylesname) + 5;
                     int height = Fonts.interSemiBold.get(17).getHeight() + 3;
 
-                    RoundedUtils.drawRound(x, y, width, height, 4, new Color(getModule(Interface.class).bgColor(), true));
+                    RoundedUtil.drawRound(x, y, width, height, 4, new Color(getModule(Interface.class).bgColor(), true));
                     Fonts.interSemiBold.get(17).drawString(stylesname, Fonts.interBold.get(17).getStringWidth("") + x + 2, y + 4.5f, new Color(setting.color(1)).getRGB());
                 }
                 break;
                 case "Nursultan": {
-                    RoundedUtils.drawRound(7, 7.5f, 20 + Fonts.interMedium.get(15).getStringWidth(INSTANCE.getVersion()) + 5, 15, 4, new Color(setting.bgColor(0)));
+                    RoundedUtil.drawRound(7, 7.5f, 20 + Fonts.interMedium.get(15).getStringWidth(INSTANCE.getVersion()) + 5, 15, 4, new Color(setting.bgColor(0)));
                     Fonts.nursultan.get(16).drawString("P", 13, 14, setting.color(0));
-                    RenderUtils.drawRect(25, 10.5f, 1, 8.5f, new Color(47, 47, 47).getRGB());
+                    RenderUtil.drawRect(25, 10.5f, 1, 8.5f, new Color(47, 47, 47).getRGB());
                     Fonts.interMedium.get(15).drawString(INSTANCE.getVersion(), 29, 13, setting.color(0));
 
-                    RenderUtils.drawRect(7 + 20 + Fonts.interMedium.get(15).getStringWidth(INSTANCE.getVersion()) + 2.5f + 11 + 15, 10.5f, 1, 8.5f, new Color(47, 47, 47).getRGB());
-                    RoundedUtils.drawRound(7 + 20 + Fonts.interMedium.get(15).getStringWidth(INSTANCE.getVersion()) + 2.5f + 11, 7.5f, Fonts.interMedium.get(15).getStringWidth(mc.thePlayer.getName()) + 25, 15, 4, new Color(setting.bgColor(0)));
+                    RenderUtil.drawRect(7 + 20 + Fonts.interMedium.get(15).getStringWidth(INSTANCE.getVersion()) + 2.5f + 11 + 15, 10.5f, 1, 8.5f, new Color(47, 47, 47).getRGB());
+                    RoundedUtil.drawRound(7 + 20 + Fonts.interMedium.get(15).getStringWidth(INSTANCE.getVersion()) + 2.5f + 11, 7.5f, Fonts.interMedium.get(15).getStringWidth(mc.thePlayer.getName()) + 25, 15, 4, new Color(setting.bgColor(0)));
                     Fonts.nursultan.get(16).drawString("W", 7 + 20 + Fonts.interMedium.get(15).getStringWidth(INSTANCE.getVersion()) + 2.5f + 11 + 5, 14, setting.color(0));
                     Fonts.interMedium.get(15).drawString(mc.thePlayer.getName(), 7 + 20 + Fonts.interMedium.get(15).getStringWidth(INSTANCE.getVersion()) + 2.5f + 11 + 15 + 5, 13, -1);
                 }
                 break;
                 case "Exhi": {
-                    boolean shouldChange = RenderUtils.COLOR_PATTERN.matcher(setting.clientName.getValue()).find();
+                    boolean shouldChange = RenderUtil.COLOR_PATTERN.matcher(setting.clientName.getValue()).find();
                     String text = shouldChange ? "§r" + setting.clientName.getValue() : setting.clientName.getValue().charAt(0) + "§r§f" + setting.clientName.getValue().substring(1) +
                             " §7[§f" + Minecraft.getDebugFPS() + " FPS§7]§r ";
                     mc.fontRendererObj.drawStringWithShadow(text, 2.0f, 2.0f, setting.color());
                 }
                 break;
                 case "Exhi 2": {
-                    boolean shouldChange = RenderUtils.COLOR_PATTERN.matcher(setting.clientName.getValue()).find();
+                    boolean shouldChange = RenderUtil.COLOR_PATTERN.matcher(setting.clientName.getValue()).find();
                     String text = shouldChange ? "§r" + setting.clientName.getValue() : setting.clientName.getValue().charAt(0) + "§r§f" + setting.clientName.getValue().substring(1) +
                             " §7[§f" + Minecraft.getDebugFPS() + " FPS§7]§r ";
                     Fonts.Tahoma.get(15).drawStringWithShadow(text, 1.0f, 2.0f, setting.color());
@@ -128,7 +128,7 @@ public class Watermark extends Module {
                     String title = " | MoonLight";
                     float titleWidth = Fonts.interMedium.get(fontSize).getStringWidth(title);
 
-                    RoundedUtils.drawRound(posX, posY, rectWidth + iconSize * 2.5F + titleWidth, 15, 4.0F, new Color(getModule(Interface.class).bgColor(), true));
+                    RoundedUtil.drawRound(posX, posY, rectWidth + iconSize * 2.5F + titleWidth, 15, 4.0F, new Color(getModule(Interface.class).bgColor(), true));
 
                     Fonts.nursultan.get(18).drawString("S", posX + iconSize, posY + 2 + iconSize - 1.0F, setting.color());
 
@@ -138,7 +138,7 @@ public class Watermark extends Module {
                     float playerNameWidth = Fonts.interMedium.get(fontSize).getStringWidth(playerName);
                     float playerNameX = posX + rectWidth + iconSize * 2.5F + titleWidth + iconSize;
 
-                    RoundedUtils.drawRound(playerNameX, posY, rectWidth + iconSize * 2.5F + playerNameWidth, 15, 4.0F, new Color(getModule(Interface.class).bgColor(), true));
+                    RoundedUtil.drawRound(playerNameX, posY, rectWidth + iconSize * 2.5F + playerNameWidth, 15, 4.0F, new Color(getModule(Interface.class).bgColor(), true));
 
                     Fonts.nursultan.get(fontSize).drawString("W", playerNameX + iconSize, posY + 1 + iconSize, setting.color());
 
@@ -149,7 +149,7 @@ public class Watermark extends Module {
                     float fpsTextWidth = Fonts.interMedium.get(fontSize).getStringWidth(fpsText);
                     float fpsX = playerNameX + rectWidth + iconSize * 2.5F + playerNameWidth + iconSize;
 
-                    RoundedUtils.drawRound(fpsX, posY, rectWidth + iconSize * 2.5F + fpsTextWidth, 15, 4.0F, new Color(getModule(Interface.class).bgColor(), true));
+                    RoundedUtil.drawRound(fpsX, posY, rectWidth + iconSize * 2.5F + fpsTextWidth, 15, 4.0F, new Color(getModule(Interface.class).bgColor(), true));
 
                     Fonts.nursultan.get(18).drawString("X", fpsX + iconSize, posY + 1 + iconSize, setting.color());
 
@@ -159,7 +159,7 @@ public class Watermark extends Module {
                     float positionTextWidth = Fonts.interMedium.get(fontSize).getStringWidth(playerPosition);
                     float positionY = posY + 15 + iconSize;
 
-                    RoundedUtils.drawRound(posX, positionY, rectWidth + iconSize * 2.5F + positionTextWidth, 15, 4.0F, new Color(getModule(Interface.class).bgColor(), true));
+                    RoundedUtil.drawRound(posX, positionY, rectWidth + iconSize * 2.5F + positionTextWidth, 15, 4.0F, new Color(getModule(Interface.class).bgColor(), true));
 
                     Fonts.nursultan.get(18).drawString("F", posX + iconSize, positionY + 1.5F + iconSize, setting.color());
 
@@ -169,7 +169,7 @@ public class Watermark extends Module {
                     float pingTextWidth = Fonts.interMedium.get(fontSize).getStringWidth(pingText);
                     float pingX = posX + rectWidth + iconSize * 2.5F + positionTextWidth + iconSize;
 
-                    RoundedUtils.drawRound(pingX, positionY, rectWidth + iconSize * 2.5F + pingTextWidth, 15, 4.0F, new Color(getModule(Interface.class).bgColor(), true));
+                    RoundedUtil.drawRound(pingX, positionY, rectWidth + iconSize * 2.5F + pingTextWidth, 15, 4.0F, new Color(getModule(Interface.class).bgColor(), true));
 
                     Fonts.nursultan.get(18).drawString("Q", pingX + iconSize, positionY + 1 + iconSize, setting.color());
 
@@ -195,12 +195,12 @@ public class Watermark extends Module {
                     int textY = 11;
 
                     //title
-                    RoundedUtils.drawRound(3, bgY, titleFont.getStringWidth(setting.clientName.getText()) + 10, Fonts.interRegular.get(20).getHeight() + 2, 4, ColorUtils.applyOpacity(NeverLose.bgColor, 1f));
+                    RoundedUtil.drawRound(3, bgY, titleFont.getStringWidth(setting.clientName.getText()) + 10, Fonts.interRegular.get(20).getHeight() + 2, 4, ColorUtil.applyOpacity(NeverLose.bgColor, 1f));
                     titleFont.drawOutlinedString(setting.clientName.getText(), 8, textY - 2, textRGB, outlineTextRGB);
 
 
                     //info
-                    RoundedUtils.drawRound(3 + titleFont.getStringWidth(setting.clientName.getText()) + 14, bgY,
+                    RoundedUtil.drawRound(3 + titleFont.getStringWidth(setting.clientName.getText()) + 14, bgY,
                             Fonts.nursultan.get(20).getStringWidth(userIcon) +
                                     info.getStringWidth(mc.thePlayer.getName()) +
                                     Fonts.nursultan.get(20).getStringWidth(fpsIcon) +
@@ -208,7 +208,7 @@ public class Watermark extends Module {
                                     Fonts.nursultan.get(20).getStringWidth(timeIcon) +
                                     info.getStringWidth(times)
                                     + 17
-                            , Fonts.interRegular.get(20).getHeight() + 2, 4, ColorUtils.applyOpacity(NeverLose.bgColor, 1f));
+                            , Fonts.interRegular.get(20).getHeight() + 2, 4, ColorUtil.applyOpacity(NeverLose.bgColor, 1f));
 
                     Fonts.nursultan.get(20).drawString(userIcon, userIconX, textY, iconRGB);
                     info.drawString(mc.thePlayer.getName(), userIconX + Fonts.nursultan.get(20).getStringWidth(userIcon) - 6, 11, textRGB);
@@ -247,7 +247,7 @@ public class Watermark extends Module {
                         }
                         x += Fonts.sfui.get(20).getStringWidth(name.charAt(i) + "");
                     }
-                    Fonts.sfui.get(20).drawStringWithShadow(GRAY + " [" + WHITE + fpsFormat.format(Minecraft.getDebugFPS()) + " FPS" + GRAY + "] " + "[" + WHITE + bpsFormat.format(MovementUtils.getBPS()) + " BPS" + GRAY + "]", x, 2.0F, setting.color());
+                    Fonts.sfui.get(20).drawStringWithShadow(GRAY + " [" + WHITE + fpsFormat.format(Minecraft.getDebugFPS()) + " FPS" + GRAY + "] " + "[" + WHITE + bpsFormat.format(MovementUtil.getBPS()) + " BPS" + GRAY + "]", x, 2.0F, setting.color());
                 }
                 break;
 
@@ -257,13 +257,13 @@ public class Watermark extends Module {
                     float x = 9.0F;
                     String name = setting.clientName.getValue().charAt(0) + setting.clientName.getValue().substring(1);
 
-                    RenderUtils.drawRect(x - 2.5f, 5.5f, 2 + Fonts.sfui.get(18).getStringWidth(setting.clientName.getValue() + " - " + dateFormat.format(new Date()) + " - " + mc.thePlayer.getName() + " - " + fpsFormat.format(Minecraft.getDebugFPS()) + " FPS"), 12, setting.bgColor());
+                    RenderUtil.drawRect(x - 2.5f, 5.5f, 2 + Fonts.sfui.get(18).getStringWidth(setting.clientName.getValue() + " - " + dateFormat.format(new Date()) + " - " + mc.thePlayer.getName() + " - " + fpsFormat.format(Minecraft.getDebugFPS()) + " FPS"), 12, setting.bgColor());
                     if (setting.color.is("Fade")) {
-                        RenderUtils.drawHorizontalGradientSideways(x - 2.5f, 5.5f, 2 + Fonts.sfui.get(18).getStringWidth(setting.clientName.getValue() + rectText), 1, setting.getMainColor().getRGB(), setting.getSecondColor().getRGB());
+                        RenderUtil.drawHorizontalGradientSideways(x - 2.5f, 5.5f, 2 + Fonts.sfui.get(18).getStringWidth(setting.clientName.getValue() + rectText), 1, setting.getMainColor().getRGB(), setting.getSecondColor().getRGB());
                     } else if (setting.color.is("Dynamic")) {
-                        RenderUtils.drawHorizontalGradientSideways(x - 2.5f, 5.5f, 2 + Fonts.sfui.get(18).getStringWidth(setting.clientName.getValue() + rectText), 1, setting.getMainColor().getRGB(), ColorUtils.darker(setting.getMainColor().getRGB(), 0.25F));
+                        RenderUtil.drawHorizontalGradientSideways(x - 2.5f, 5.5f, 2 + Fonts.sfui.get(18).getStringWidth(setting.clientName.getValue() + rectText), 1, setting.getMainColor().getRGB(), ColorUtil.darker(setting.getMainColor().getRGB(), 0.25F));
                     } else {
-                        RenderUtils.drawHorizontalGradientSideways(x - 2.5f, 5.5f, 2 + Fonts.sfui.get(18).getStringWidth(setting.clientName.getValue() + rectText), 1, setting.color(0), setting.color(90));
+                        RenderUtil.drawHorizontalGradientSideways(x - 2.5f, 5.5f, 2 + Fonts.sfui.get(18).getStringWidth(setting.clientName.getValue() + rectText), 1, setting.color(0), setting.color(90));
                     }
                     for (int i = 0; i < name.length(); i++) {
                         String newstr = WHITE + String.valueOf(name.charAt(i));
@@ -291,8 +291,8 @@ public class Watermark extends Module {
                     String serverip = mc.isSingleplayer() ? "localhost:25565" : !mc.getCurrentServerData().serverIP.contains(":") ? mc.getCurrentServerData().serverIP + ":25565" : mc.getCurrentServerData().serverIP;
                     String onetapinfo = "moonlight | " + Client.INSTANCE.getDiscordRP().getName() + " | " + serverip + " | " + "delay: " + mc.getNetHandler().getPlayerInfo(mc.thePlayer.getUniqueID()).getResponseTime() + "ms | " + dateString3;
 
-                    RenderUtils.drawRect(5, 5, Fonts.interSemiBold.get(14).getStringWidth(onetapinfo) + 4, 12.5f, setting.bgColor());
-                    RenderUtils.drawRoundedRect(5, 5, Fonts.interSemiBold.get(14).getStringWidth(onetapinfo) + 4, 2f, 1, setting.color(0));
+                    RenderUtil.drawRect(5, 5, Fonts.interSemiBold.get(14).getStringWidth(onetapinfo) + 4, 12.5f, setting.bgColor());
+                    RenderUtil.drawRoundedRect(5, 5, Fonts.interSemiBold.get(14).getStringWidth(onetapinfo) + 4, 2f, 1, setting.color(0));
                     Fonts.interSemiBold.get(14).drawStringWithShadow(onetapinfo, 7, 11f, Color.WHITE.getRGB());
                 }
 
@@ -301,8 +301,8 @@ public class Watermark extends Module {
                 case "Novo 2": {
                     String novo2Info = setting.clientName.getValue() + " " + GRAY + "(" + WHITE + dateFormat.format(new Date()) + GRAY + ")" + WHITE + " - " + INSTANCE.getVersion() + " Build";
 
-                    RenderUtils.drawRect(5, 5, Fonts.interSemiBold.get(20).getStringWidth(novo2Info) + 4, Fonts.interSemiBold.get(20).getHeight() + Fonts.interSemiBold.get(20).getHeight() / 2f, setting.bgColor());
-                    RenderUtils.drawRect(5, 5, Fonts.interSemiBold.get(20).getStringWidth(novo2Info) + 4, 1f, setting.color(0));
+                    RenderUtil.drawRect(5, 5, Fonts.interSemiBold.get(20).getStringWidth(novo2Info) + 4, Fonts.interSemiBold.get(20).getHeight() + Fonts.interSemiBold.get(20).getHeight() / 2f, setting.bgColor());
+                    RenderUtil.drawRect(5, 5, Fonts.interSemiBold.get(20).getStringWidth(novo2Info) + 4, 1f, setting.color(0));
                     Fonts.interSemiBold.get(20).drawStringWithShadow(novo2Info, 7, 11f, Color.WHITE.getRGB());
                 }
                 break;

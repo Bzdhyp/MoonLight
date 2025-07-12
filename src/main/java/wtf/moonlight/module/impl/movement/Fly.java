@@ -18,15 +18,15 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.packet.PacketUtils;
-import wtf.moonlight.utils.player.MovementUtils;
+import wtf.moonlight.util.packet.PacketUtils;
+import wtf.moonlight.util.player.MovementUtil;
 
-@ModuleInfo(name = "Fly", category = ModuleCategory.Movement)
+@ModuleInfo(name = "Fly", category = Categor.Movement)
 public class Fly extends Module {
 
     public final ListValue mode = new ListValue("Mode", new String[]{"Vanilla", "Miniblox"}, "Vanilla", this);
@@ -75,7 +75,7 @@ public class Fly extends Module {
                     mc.thePlayer.motionY = -downSpeed.getValue();
                 }
 
-                MovementUtils.strafe(moveSpeed.getValue());
+                MovementUtil.strafe(moveSpeed.getValue());
 
                 break;
             case "Miniblox":
@@ -110,7 +110,7 @@ public class Fly extends Module {
                             mc.thePlayer.motionY = 0.0D;
                         }
 
-                        MovementUtils.setSpeed(moveSpeed.getValue());
+                        MovementUtil.setSpeed(moveSpeed.getValue());
                     }
 
                 if (!stop.get()) {
@@ -130,7 +130,7 @@ public class Fly extends Module {
                         mc.thePlayer.motionY = 0.0D;
                     }
 
-                    MovementUtils.setSpeed(moveSpeed.getValue());
+                    MovementUtil.setSpeed(moveSpeed.getValue());
                 }
 
                 if (slow.get())
@@ -151,7 +151,7 @@ public class Fly extends Module {
                             mc.thePlayer.motionY = 0.0D;
                         }
 
-                        MovementUtils.setSpeed(moveSpeed.getValue() / slowAmount.getValue());
+                        MovementUtil.setSpeed(moveSpeed.getValue() / slowAmount.getValue());
                     }
                 break;
         }

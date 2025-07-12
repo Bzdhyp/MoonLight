@@ -23,13 +23,13 @@ import wtf.moonlight.events.misc.WorldEvent;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.MultiBoolValue;
-import wtf.moonlight.utils.packet.Workers;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.packet.Workers;
+import wtf.moonlight.util.render.RenderUtil;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -38,7 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@ModuleInfo(name = "AntiBot", category = ModuleCategory.Combat)
+@ModuleInfo(name = "AntiBot", category = Categor.Combat)
 public class AntiBot extends Module {
     public final MultiBoolValue options = new MultiBoolValue("Options", Arrays.asList(
             new BoolValue("Tab", false),
@@ -170,12 +170,12 @@ public class AntiBot extends Module {
             return false;
 
         if (options.isEnabled("Tab")) {
-            String targetName = RenderUtils.stripColor(player.getDisplayName().getFormattedText());
+            String targetName = RenderUtil.stripColor(player.getDisplayName().getFormattedText());
 
             boolean shouldReturn = true;
 
             for (NetworkPlayerInfo networkPlayerInfo : mc.getNetHandler().getPlayerInfoMap()) {
-                shouldReturn = !RenderUtils.stripColor(networkPlayerInfo.getFullName()).contains(targetName);
+                shouldReturn = !RenderUtil.stripColor(networkPlayerInfo.getFullName()).contains(targetName);
             }
 
             return !shouldReturn;

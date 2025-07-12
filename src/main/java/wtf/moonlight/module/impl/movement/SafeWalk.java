@@ -16,15 +16,15 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.player.MoveInputEvent;
 import wtf.moonlight.events.player.SafeWalkEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.player.PlayerUtils;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.player.PlayerUtil;
 
-@ModuleInfo(name = "SafeWalk", category = ModuleCategory.Movement)
+@ModuleInfo(name = "SafeWalk", category = Categor.Movement)
 public class SafeWalk extends Module {
 
     public final ListValue mode = new ListValue("Mode", new String[]{"Safe", "Sneak"}, "Safe", this);
@@ -41,11 +41,11 @@ public class SafeWalk extends Module {
 
     @EventTarget
     public void onMoveInput(MoveInputEvent event) {
-        if (canSafeWalk() && mode.is("Sneak") && PlayerUtils.blockRelativeToPlayer(0, -1, 0) instanceof BlockAir)
+        if (canSafeWalk() && mode.is("Sneak") && PlayerUtil.blockRelativeToPlayer(0, -1, 0) instanceof BlockAir)
             event.setSneaking(true);
     }
 
     public boolean canSafeWalk() {
-        return mc.thePlayer.onGround && (heldBlocks.get() && mc.thePlayer.getHeldItem().getItem() instanceof ItemBlock || !heldBlocks.get()) && (pitchCheck.get() && MathUtils.inBetween(minPitch.getMin(), maxPitch.getMax(), mc.thePlayer.rotationPitch) || !pitchCheck.get());
+        return mc.thePlayer.onGround && (heldBlocks.get() && mc.thePlayer.getHeldItem().getItem() instanceof ItemBlock || !heldBlocks.get()) && (pitchCheck.get() && MathUti.inBetween(minPitch.getMin(), maxPitch.getMax(), mc.thePlayer.rotationPitch) || !pitchCheck.get());
     }
 }

@@ -23,32 +23,32 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.combat.KillAura;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.TimerUtils;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.TimerUtil;
+import wtf.moonlight.util.render.RenderUtil;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static wtf.moonlight.utils.render.RenderUtils.drawFilledCircleNoGL;
-import static wtf.moonlight.utils.render.RenderUtils.glDrawTriangle;
+import static wtf.moonlight.util.render.RenderUtil.drawFilledCircleNoGL;
+import static wtf.moonlight.util.render.RenderUtil.glDrawTriangle;
 
-@ModuleInfo(name = "AttackEffect", category = ModuleCategory.Visual)
+@ModuleInfo(name = "AttackEffect", category = Categor.Visual)
 public class AttackEffect extends Module {
 
     public final ListValue modeValue = new ListValue("Mode", new String[]{"Triangle", "Circle"}, "Triangle", this);
     private final SliderValue amount = new SliderValue("Amount", 3, 0, 10, this);
     private final BoolValue physics = new BoolValue("Physics", true, this);
     private final List<AttackParticle> particles = new ArrayList<>();
-    private final TimerUtils timer = new TimerUtils();
+    private final TimerUtil timer = new TimerUtil();
 
     @EventTarget
     private void onUpdate(UpdateEvent event) {
@@ -102,7 +102,7 @@ public class AttackEffect extends Module {
             if (quality > 350) {
                 quality = 350;
             }
-            if (!RenderUtils.isBBInFrustum(new EntityEgg(mc.theWorld, v.xCoord, v.yCoord, v.zCoord).getEntityBoundingBox())) {
+            if (!RenderUtil.isBBInFrustum(new EntityEgg(mc.theWorld, v.xCoord, v.yCoord, v.zCoord).getEntityBoundingBox())) {
                 draw = false;
             }
             if (i % 10 != 0 && distanceFromPlayer > 25.0) {
@@ -148,7 +148,7 @@ public class AttackEffect extends Module {
 
 
     public static class AttackParticle {
-        private final TimerUtils removeTimer = new TimerUtils();
+        private final TimerUtil removeTimer = new TimerUtil();
         public final Vec3 position;
         private final Vec3 delta;
 

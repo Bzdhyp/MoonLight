@@ -36,8 +36,8 @@ import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.impl.combat.AutoGap;
 import wtf.moonlight.module.impl.combat.KillAura;
 import wtf.moonlight.module.impl.misc.Disabler;
-import wtf.moonlight.utils.player.MovementUtils;
-import wtf.moonlight.utils.player.RotationUtils;
+import wtf.moonlight.util.player.MovementUtil;
+import wtf.moonlight.util.player.RotationUtil;
 
 public class EntityPlayerSP extends AbstractClientPlayer
 {
@@ -178,12 +178,12 @@ public class EntityPlayerSP extends AbstractClientPlayer
             float pitch = motionEvent.getPitch();
 
 
-            if(RotationUtils.currentRotation != null){
-                RotationUtils.previousRotation = RotationUtils.currentRotation;
-                yaw = RotationUtils.currentRotation[0];
-                pitch = RotationUtils.currentRotation[1];
+            if(RotationUtil.currentRotation != null){
+                RotationUtil.previousRotation = RotationUtil.currentRotation;
+                yaw = RotationUtil.currentRotation[0];
+                pitch = RotationUtil.currentRotation[1];
             } else {
-                RotationUtils.previousRotation = new float[]{yaw,pitch};
+                RotationUtil.previousRotation = new float[]{yaw,pitch};
             }
 
             double d3 = (yaw - this.lastReportedYaw);
@@ -692,7 +692,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
             if(!slowDownEvent.isSprinting())
                 this.setSprinting(false);
             if(slowDownEvent.isSprinting())
-                this.setSprinting(MovementUtils.canSprint(true));
+                this.setSprinting(MovementUtil.canSprint(true));
 
             this.sprintToggleTimer = 0;
         }

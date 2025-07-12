@@ -15,10 +15,10 @@ import net.minecraft.potion.PotionEffect;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 
-@ModuleInfo(name = "FullBright",category = ModuleCategory.Visual)
+@ModuleInfo(name = "FullBright",category = Categor.Visual)
 public class FullBright extends Module {
 
     @EventTarget

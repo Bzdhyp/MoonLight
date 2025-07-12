@@ -79,9 +79,9 @@ import net.minecraft.world.WorldSettings;
 import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.combat.KeepSprint;
 import wtf.moonlight.module.impl.display.Interface;
-import wtf.moonlight.utils.player.RotationUtils;
-import wtf.moonlight.utils.waveycapes.config.Config;
-import wtf.moonlight.utils.waveycapes.sim.StickSimulation;
+import wtf.moonlight.util.player.RotationUtil;
+import wtf.moonlight.util.waveycapes.config.Config;
+import wtf.moonlight.util.waveycapes.sim.StickSimulation;
 
 @SuppressWarnings("incomplete-switch")
 public abstract class EntityPlayer extends EntityLivingBase {
@@ -1223,7 +1223,7 @@ public abstract class EntityPlayer extends EntityLivingBase {
                         {
                             if(!Client.INSTANCE.getModuleManager().getModule(KeepSprint.class).isEnabled()) {
 
-                                float yaw = RotationUtils.currentRotation != null ? RotationUtils.currentRotation[0] : this.rotationYaw;
+                                float yaw = RotationUtil.currentRotation != null ? RotationUtil.currentRotation[0] : this.rotationYaw;
 
                                 targetEntity.addVelocity(-MathHelper.sin(yaw * (float) Math.PI / 180.0F) * (float) i * 0.5F, 0.1D, MathHelper.cos(yaw * (float) Math.PI / 180.0F) * (float) i * 0.5F);
                                 this.motionX *= 0.6D;

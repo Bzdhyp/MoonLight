@@ -1,6 +1,6 @@
 package net.minecraft.util;
 
-import wtf.moonlight.utils.MathUtils;
+import wtf.moonlight.util.MathUti;
 
 public class AxisAlignedBB {
     public final double minX;
@@ -77,6 +77,12 @@ public class AxisAlignedBB {
         double d4 = this.maxY + y;
         double d5 = this.maxZ + z;
         return new AxisAlignedBB(d0, d1, d2, d3, d4, d5);
+    }
+
+    public AxisAlignedBB expands(double v, boolean modifyYDown, boolean modifyYUp) {
+        double minY = this.minY - (modifyYDown ? v : 0.0);
+        double maxY = this.maxY + (modifyYUp ? v : 0.0);
+        return new AxisAlignedBB(this.minX - v, minY, this.minZ - v, this.maxX + v, maxY, this.maxZ + v);
     }
 
     public AxisAlignedBB expandXyz(double value) {
@@ -304,6 +310,6 @@ public class AxisAlignedBB {
     }
 
     public Vec3 getCenter() {
-        return new Vec3(MathUtils.lerp(0.5D, this.minX, this.maxX), MathUtils.lerp(0.5D, this.minY, this.maxY), MathUtils.lerp(0.5D, this.minZ, this.maxZ));
+        return new Vec3(MathUti.lerp(0.5D, this.minX, this.maxX), MathUti.lerp(0.5D, this.minY, this.maxY), MathUti.lerp(0.5D, this.minZ, this.maxZ));
     }
 }

@@ -38,7 +38,7 @@ public final class ModuleManager {
 
     private final Collection<Module> modules = new TreeSet<>(MODULE_COMPARATOR);
     private final Map<Class<? extends Module>, Module> registry = new HashMap<>(128);
-    private final Map<ModuleCategory, Set<Module>> categories = new EnumMap<>(ModuleCategory.class);
+    private final Map<Categor, Set<Module>> categories = new EnumMap<>(Categor.class);
 
     /**
      * Initializes the ModuleManager by adding all available modules,
@@ -46,7 +46,7 @@ public final class ModuleManager {
      */
     public ModuleManager() {
         // Init default sets
-        for (ModuleCategory category : ModuleCategory.values()) {
+        for (Categor category : Categor.values()) {
             categories.put(category, new TreeSet<>(MODULE_COMPARATOR));
         }
 
@@ -54,9 +54,8 @@ public final class ModuleManager {
                 // Combat
                 AntiBot.class,
                 AutoGap.class,
-                AutoPot.class,
+                AutoPotion.class,
                 AutoProjectile.class,
-                AutoWeapon.class,
                 BackTrack.class,
                 BowAimBot.class,
                 Critical.class,
@@ -65,7 +64,6 @@ public final class ModuleManager {
                 TargetStrafe.class,
                 TickBase.class,
                 Velocity.class,
-                MoreKB.class,
                 AutoRod.class,
 
                 // Misc
@@ -106,7 +104,7 @@ public final class ModuleManager {
                 FastPlace.class,
                 InvManager.class,
                 NoFall.class,
-                Stealer.class,
+                ChestStealer.class,
                 BedNuker.class,
 
                 // Visual
@@ -126,9 +124,9 @@ public final class ModuleManager {
                 Particles.class,
                 FreeLook.class,
                 FullBright.class,
-                GifTest.class,
                 GlowESP.class,
                 ChinaHat.class,
+                MotionBlur.class,
                 HitBubbles.class,
                 Indicators.class,
                 JumpCircles.class,
@@ -169,7 +167,7 @@ public final class ModuleManager {
                 Module module = moduleClass.getDeclaredConstructor().newInstance();
                 modules.add(module);
                 registry.put(moduleClass, module);
-                ModuleCategory category = moduleClass.getAnnotation(ModuleInfo.class).category();
+                Categor category = moduleClass.getAnnotation(ModuleInfo.class).category();
                 Set<Module> categoryModules = categories.get(category);
                 categoryModules.add(module);
                 categories.put(category, categoryModules);
@@ -210,7 +208,7 @@ public final class ModuleManager {
      * @return A list of modules within the specified category.
      */
     @NotNull
-    public Set<Module> getModulesByCategory(ModuleCategory category) {
+    public Set<Module> getModulesByCategory(Categor category) {
         return categories.get(category);
     }
 

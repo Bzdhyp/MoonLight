@@ -19,17 +19,17 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.misc.WorldEvent;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.MotionEvent;
-import wtf.moonlight.utils.misc.InstanceAccess;
-import wtf.moonlight.utils.TimerUtils;
-import wtf.moonlight.utils.packet.PacketUtils;
-import wtf.moonlight.utils.packet.TimedPacket;
+import wtf.moonlight.util.misc.InstanceAccess;
+import wtf.moonlight.util.TimerUtil;
+import wtf.moonlight.util.packet.PacketUtils;
+import wtf.moonlight.util.packet.TimedPacket;
 
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public final class PingSpoofComponent implements InstanceAccess {
     public static ConcurrentLinkedQueue<TimedPacket> packets = new ConcurrentLinkedQueue<>();
-    static TimerUtils enabledTimer = new TimerUtils();
+    static TimerUtil enabledTimer = new TimerUtil();
     public static boolean enabled;
     static long amount;
     static Tuple<Class[], Boolean> regular = new Tuple<>(new Class[]{C0FPacketConfirmTransaction.class, C00PacketKeepAlive.class, S1CPacketEntityMetadata.class}, false);

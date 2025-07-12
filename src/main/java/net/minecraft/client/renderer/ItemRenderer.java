@@ -32,7 +32,7 @@ import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.combat.KillAura;
 import wtf.moonlight.module.impl.visual.Animations;
 import wtf.moonlight.module.impl.visual.Camera;
-import wtf.moonlight.utils.misc.SpoofSlotUtils;
+import wtf.moonlight.component.SpoofSlotComponent;
 
 public class ItemRenderer
 {
@@ -763,7 +763,7 @@ public class ItemRenderer
     {
         this.prevEquippedProgress = this.equippedProgress;
         EntityPlayer entityplayer = this.mc.thePlayer;
-        ItemStack itemstack = SpoofSlotUtils.getSpoofedStack();
+        ItemStack itemstack = SpoofSlotComponent.getSpoofedStack();
         boolean flag = false;
 
         if (this.itemToRender != null && itemstack != null)
@@ -772,12 +772,12 @@ public class ItemRenderer
             {
                 if (Reflector.ForgeItem_shouldCauseReequipAnimation.exists())
                 {
-                    boolean flag1 = Reflector.callBoolean(this.itemToRender.getItem(), Reflector.ForgeItem_shouldCauseReequipAnimation, this.itemToRender, itemstack, this.equippedItemSlot != SpoofSlotUtils.getSpoofedSlot());
+                    boolean flag1 = Reflector.callBoolean(this.itemToRender.getItem(), Reflector.ForgeItem_shouldCauseReequipAnimation, this.itemToRender, itemstack, this.equippedItemSlot != SpoofSlotComponent.getSpoofedSlot());
 
                     if (!flag1)
                     {
                         this.itemToRender = itemstack;
-                        this.equippedItemSlot = SpoofSlotUtils.getSpoofedSlot();
+                        this.equippedItemSlot = SpoofSlotComponent.getSpoofedSlot();
                         return;
                     }
                 }
@@ -795,7 +795,7 @@ public class ItemRenderer
         if (this.equippedProgress < 0.1F)
         {
             this.itemToRender = itemstack;
-            this.equippedItemSlot = SpoofSlotUtils.getSpoofedSlot();
+            this.equippedItemSlot = SpoofSlotComponent.getSpoofedSlot();
 
             if (Config.isShaders())
             {

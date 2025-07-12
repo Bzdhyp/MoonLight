@@ -22,19 +22,19 @@ import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.ListValue;
-import wtf.moonlight.utils.TimerUtils;
+import wtf.moonlight.util.TimerUtil;
 import wtf.moonlight.component.PingSpoofComponent;
-import wtf.moonlight.utils.player.PlayerUtils;
+import wtf.moonlight.util.player.PlayerUtil;
 
-@ModuleInfo(name = "Phase", category = ModuleCategory.Movement)
+@ModuleInfo(name = "Phase", category = Categor.Movement)
 public class Phase extends Module {
 
     public final ListValue mode = new ListValue("Mode", new String[]{"Vanilla","Watchdog Auto","Watchdog","Intave"}, "Watchdog Auto", this);
     public boolean phase;
-    private final TimerUtils timerUtils = new TimerUtils();
+    private final TimerUtil timerUtil = new TimerUtil();
     private boolean phasing;
     private boolean canClip = false;
 
@@ -42,7 +42,7 @@ public class Phase extends Module {
     public void onUpdate(UpdateEvent event) {
         setTag(mode.getValue());
         if (mode.getValue().equals("Watchdog Auto")) {
-            if (phase && !timerUtils.hasTimeElapsed(4000)) PingSpoofComponent.blink();
+            if (phase && !timerUtil.hasTimeElapsed(4000)) PingSpoofComponent.blink();
         }
         if (mode.getValue().equals("Vanilla")) {
             this.phasing = false;
@@ -55,7 +55,7 @@ public class Phase extends Module {
             if (mc.thePlayer.isCollidedHorizontally) {
                 mc.thePlayer.setPosition(mc.thePlayer.posX - x * 0.005, mc.thePlayer.posY, mc.thePlayer.posZ + z * 0.005);
                 this.phasing = true;
-            } else if (PlayerUtils.insideBlock()) {
+            } else if (PlayerUtil.insideBlock()) {
                 sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX - x * 1.5, mc.thePlayer.posY, mc.thePlayer.posZ + z * 1.5, false));
 
                 mc.thePlayer.motionX *= 0.3D;
@@ -150,7 +150,7 @@ public class Phase extends Module {
                         case "§r§e§r§eThe game starts in §r§a§r§c3§r§e seconds!§r§e§r":
                         case "§r§eCages open in: §r§c3 §r§eseconds!§r":
                             phase = true;
-                            timerUtils.reset();
+                            timerUtil.reset();
                             break;
                     }
                 }

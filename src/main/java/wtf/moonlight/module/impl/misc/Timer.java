@@ -1,21 +1,11 @@
-/*
- * MoonLight Hacked Client
- *
- * A free and open-source hacked client for Minecraft.
- * Developed using Minecraft's resources.
- *
- * Repository: https://github.com/randomguy3725/MoonLight
- *
- * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
- */
 package wtf.moonlight.module.impl.misc;
 
+import com.cubk.EventTarget;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C00PacketKeepAlive;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
-import com.cubk.EventTarget;
 import wtf.moonlight.component.BadPacketsComponent;
 import wtf.moonlight.component.PingSpoofComponent;
 import wtf.moonlight.events.misc.WorldEvent;
@@ -23,27 +13,26 @@ import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.events.render.Render2DEvent;
+import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.advanced.ContinualAnimation;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.TimerUtils;
-import wtf.moonlight.utils.packet.*;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.TimerUtil;
+import wtf.moonlight.util.animations.advanced.ContinualAnimation;
+import wtf.moonlight.util.packet.*;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-@ModuleInfo(name = "Timer", category = ModuleCategory.Misc)
+@ModuleInfo(name = "Timer", category = Categor.Misc)
 public class Timer extends Module {
-
     public final ListValue mode = new ListValue("Mode", new String[]{"Vanilla", "Balance", "Hypixel Cancel"}, "Vanilla", this);
     public final SliderValue speed = new SliderValue("Speed", 1, 0.1f, 5, 0.05f, this);
     public final SliderValue balanceValue = new SliderValue("Balance", 3000, 0, 10000, 10, this, () -> mode.is("Balance"));
@@ -52,15 +41,15 @@ public class Timer extends Module {
     private double balance = 0;
     private boolean speeding = false;
     private final ContinualAnimation animation = new ContinualAnimation();
-    private final TimerUtils timerUtils = new TimerUtils();
-    private final TimerUtils hypixelTimer = new TimerUtils();
+    private final TimerUtil timerUtil = new TimerUtil();
+    private final TimerUtil hypixelTimer = new TimerUtil();
     private final CopyOnWriteArrayList<Packet> watchdogC0FC00Packets = new CopyOnWriteArrayList<>();
 
     @Override
     public void onEnable() {
         blinked = false;
         balance = 0;
-        timerUtils.reset();
+        timerUtil.reset();
         speeding = false;
     }
 
@@ -73,7 +62,7 @@ public class Timer extends Module {
 
     @EventTarget
     public void onMotion(MotionEvent event) {
-        setTag(mode.getValue() + " " + MathUtils.roundToHalf(speed.getValue()));
+        setTag(mode.getValue() + " " + MathUti.roundToHalf(speed.getValue()));
 
         switch (mode.getValue()) {
             case "Vanilla":
@@ -109,8 +98,8 @@ public class Timer extends Module {
                     this.balance -= 50;
                 }
 
-                this.balance += timerUtils.getTime();
-                this.timerUtils.reset();
+                this.balance += timerUtil.getTime();
+                this.timerUtil.reset();
             }
         }
 
@@ -154,10 +143,10 @@ public class Timer extends Module {
             final int half = width / 2;
             animation.animate((width - 2) * percentage, 40);
 
-            RoundedUtils.drawRound(x - half - 1, y - 1 - 12, width + 1, (int) (thickness + 1) + 12 + 3, 2, new Color(getModule(Interface.class).bgColor(),true));
-            RoundedUtils.drawRound(x - half - 1, y - 1, width + 1, (int) (thickness + 1), 2, new Color(getModule(Interface.class).bgColor(),true));
+            RoundedUtil.drawRound(x - half - 1, y - 1 - 12, width + 1, (int) (thickness + 1) + 12 + 3, 2, new Color(getModule(Interface.class).bgColor()));
+            RoundedUtil.drawRound(x - half - 1, y - 1, width + 1, (int) (thickness + 1), 2, new Color(getModule(Interface.class).bgColor()));
 
-            RoundedUtils.drawGradientHorizontal(x - half, y + 1, animation.getOutput(), thickness, 2, new Color(getModule(Interface.class).color(0)), new Color(getModule(Interface.class).color(90)));
+            RoundedUtil.drawGradientHorizontal(x - half, y + 1, animation.getOutput(), thickness, 2, new Color(getModule(Interface.class).color(0)), new Color(getModule(Interface.class).color(90)));
 
             Fonts.interRegular.get(15).drawCenteredString("Balance", x, y - 1 - 11 + 3, -1);
 
@@ -176,7 +165,7 @@ public class Timer extends Module {
 
     private void reset() {
         this.balance = 0;
-        this.timerUtils.reset();
+        this.timerUtil.reset();
         mc.timer.timerSpeed = 1;
     }
 }

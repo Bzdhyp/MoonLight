@@ -1,7 +1,6 @@
 package wtf.moonlight.module.impl.visual;
 
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -14,12 +13,12 @@ import org.lwjgl.opengl.GL11;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 
 import java.awt.*;
 
-@ModuleInfo(name = "ItemESP", category = ModuleCategory.Visual)
+@ModuleInfo(name = "ItemESP", category = Categor.Visual)
 public class ItemESP extends Module {
 
     @EventTarget

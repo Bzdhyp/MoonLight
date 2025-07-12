@@ -28,32 +28,32 @@ import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.events.render.Shader2DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.animations.advanced.Animation;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.TimerUtils;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.GLUtils;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.TimerUtil;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.GLUtil;
+import wtf.moonlight.util.render.RenderUtil;
 
 import java.awt.*;
 import java.util.Objects;
 
-@ModuleInfo(name = "TargetESP", category = ModuleCategory.Visual)
+@ModuleInfo(name = "TargetESP", category = Categor.Visual)
 public class TargetESP extends Module {
-    private final ListValue mode = new ListValue("Mark Mode", new String[]{"Points", "Ghost","Image", "Exhi", "Circle"}, "Points", this);
+    private final ListValue mode = new ListValue("Mark Mode", new String[]{"Points", "Ghost", "Image", "Exhi", "Circle"}, "Points", this);
     private final ListValue imageMode = new ListValue("Image Mode",new String[]{"Rectangle", "QuadStapple", "TriangleStapple", "TriangleStipple"},"Rectangle",this,() -> mode.is("Image"));
     private final SliderValue circleSpeed = new SliderValue("Circle Speed",2.0F, 1.0F, 5.0F, 0.1F,this,() -> mode.is("Circle"));
     private final BoolValue onlyPlayer = new BoolValue("Only Player",true,this);
     private EntityLivingBase target;
-    private final TimerUtils timerUtils = new TimerUtils();
+    private final TimerUtil timerUtil = new TimerUtil();
     private final long lastTime = System.currentTimeMillis();
     private final Animation alphaAnim = new DecelerateAnimation(400, 1);
     private final ResourceLocation glowCircle = new ResourceLocation("moonlight/texture/targetesp/glow_circle.png");
@@ -69,13 +69,13 @@ public class TargetESP extends Module {
         if(event.getTargetEntity() != null && (onlyPlayer.get() && event.getTargetEntity() instanceof EntityPlayer || !onlyPlayer.get())) {
             target = (EntityLivingBase) event.getTargetEntity();
             alphaAnim.setDirection(Direction.FORWARDS);
-            timerUtils.reset();
+            timerUtil.reset();
         }
     }
 
     @EventTarget
     public void onUpdate(UpdateEvent event){
-        if(timerUtils.hasTimeElapsed(100)){
+        if(timerUtil.hasTimeElapsed(100)){
             alphaAnim.setDirection(Direction.BACKWARDS);
             if(alphaAnim.isDone())
                 target = null;
@@ -105,7 +105,7 @@ public class TargetESP extends Module {
                 double motionZ = 0.0;
                 GlStateManager.translate(x + (xMoved + motionX + (mc.thePlayer.motionX + 0.005)), y + (yMoved + motionY + (mc.thePlayer.motionY - 0.002)), z + (zMoved + motionZ + (mc.thePlayer.motionZ + 0.005)));
                 AxisAlignedBB axisAlignedBB = target.getEntityBoundingBox();
-                RenderUtils.drawAxisAlignedBB(new AxisAlignedBB(axisAlignedBB.minX - 0.1 - target.posX, axisAlignedBB.minY - 0.1 - target.posY, axisAlignedBB.minZ - 0.1 - target.posZ, axisAlignedBB.maxX + 0.1 - target.posX, axisAlignedBB.maxY + 0.2 - target.posY, axisAlignedBB.maxZ + 0.1 - target.posZ), true, color);
+                RenderUtil.drawAxisAlignedBB(new AxisAlignedBB(axisAlignedBB.minX - 0.1 - target.posX, axisAlignedBB.minY - 0.1 - target.posY, axisAlignedBB.minZ - 0.1 - target.posZ, axisAlignedBB.maxX + 0.1 - target.posX, axisAlignedBB.maxY + 0.2 - target.posY, axisAlignedBB.maxZ + 0.1 - target.posZ), true, color);
                 GlStateManager.popMatrix();
             }
 
@@ -124,10 +124,10 @@ public class TargetESP extends Module {
                 double distance = 19;
                 int lenght = 20;
 
-                Vec3 interpolated = MathUtils.interpolate(new Vec3(target.lastTickPosX, target.lastTickPosY, target.lastTickPosZ), target.getPositionVector(), event.partialTicks());
+                Vec3 interpolated = MathUti.interpolate(new Vec3(target.lastTickPosX, target.lastTickPosY, target.lastTickPosZ), target.getPositionVector(), event.partialTicks());
                 interpolated.yCoord += 0.75f;
 
-                RenderUtils.setupOrientationMatrix(interpolated.xCoord, interpolated.yCoord + 0.5f, interpolated.zCoord);
+                RenderUtil.setupOrientationMatrix(interpolated.xCoord, interpolated.yCoord + 0.5f, interpolated.zCoord);
 
                 float[] idk = new float[]{mc.getRenderManager().playerViewY, mc.getRenderManager().playerViewX};
 
@@ -141,8 +141,8 @@ public class TargetESP extends Module {
                     GlStateManager.translate(s, (c), -c);
                     GlStateManager.translate(-size / 2f, -size / 2f, 0);
                     GlStateManager.translate(size / 2f, size / 2f, 0);
-                    int color = ColorUtils.applyOpacity(new Color(getModule(Interface.class).color(0)), (float) alphaAnim.getOutput()).getRGB();
-                    RenderUtils.drawImage(glowCircle, 0f, 0f, -size, -size, color);
+                    int color = ColorUtil.applyOpacity(new Color(getModule(Interface.class).color(0)), (float) alphaAnim.getOutput()).getRGB();
+                    RenderUtil.drawImage(glowCircle, 0f, 0f, -size, -size, color);
                     GlStateManager.translate(-size / 2f, -size / 2f, 0);
                     GlStateManager.translate(size / 2f, size / 2f, 0);
                     GlStateManager.translate(-(s), -(c), (c));
@@ -154,8 +154,8 @@ public class TargetESP extends Module {
                     GlStateManager.translate(-s, s, -c);
                     GlStateManager.translate(-size / 2f, -size / 2f, 0);
                     GlStateManager.translate(size / 2f, size / 2f, 0);
-                    int color = ColorUtils.applyOpacity(new Color(getModule(Interface.class).color(0)), (float) alphaAnim.getOutput()).getRGB();
-                    RenderUtils.drawImage(glowCircle, 0f, 0f, -size, -size, color);
+                    int color = ColorUtil.applyOpacity(new Color(getModule(Interface.class).color(0)), (float) alphaAnim.getOutput()).getRGB();
+                    RenderUtil.drawImage(glowCircle, 0f, 0f, -size, -size, color);
                     GlStateManager.translate(-size / 2f, -size / 2f, 0);
                     GlStateManager.translate(size / 2f, size / 2f, 0);
                     GlStateManager.translate((s), -(s), (c));
@@ -167,8 +167,8 @@ public class TargetESP extends Module {
                     GlStateManager.translate(-(s), -(s), (c));
                     GlStateManager.translate(-size / 2f, -size / 2f, 0);
                     GlStateManager.translate(size / 2f, size / 2f, 0);
-                    int color = ColorUtils.applyOpacity(new Color(getModule(Interface.class).color(0)), (float) alphaAnim.getOutput()).getRGB();
-                    RenderUtils.drawImage(glowCircle, 0f, 0f, -size, -size, color);
+                    int color = ColorUtil.applyOpacity(new Color(getModule(Interface.class).color(0)), (float) alphaAnim.getOutput()).getRGB();
+                    RenderUtil.drawImage(glowCircle, 0f, 0f, -size, -size, color);
                     GlStateManager.translate(-size / 2f, -size / 2f, 0);
                     GlStateManager.translate(size / 2f, size / 2f, 0);
                     GlStateManager.translate((s), (s), -(c));
@@ -183,7 +183,7 @@ public class TargetESP extends Module {
 
             if (mode.is("Circle")) {
                 prevCircleStep = circleStep;
-                circleStep += (double) this.circleSpeed.getValue() * RenderUtils.deltaTime();
+                circleStep += (double) this.circleSpeed.getValue() * RenderUtil.deltaTime();
                 float eyeHeight = target.getEyeHeight();
                 if (target.isSneaking()) {
                     eyeHeight -= 0.2F;
@@ -262,9 +262,9 @@ public class TargetESP extends Module {
 
     private void points() {
         if (target != null) {
-            double markerX = MathUtils.interporate(mc.timer.renderPartialTicks, target.lastTickPosX, target.posX);
-            double markerY = MathUtils.interporate(mc.timer.renderPartialTicks, target.lastTickPosY, target.posY) + target.height / 1.6f;
-            double markerZ = MathUtils.interporate(mc.timer.renderPartialTicks, target.lastTickPosZ, target.posZ);
+            double markerX = MathUti.interporate(mc.timer.renderPartialTicks, target.lastTickPosX, target.posX);
+            double markerY = MathUti.interporate(mc.timer.renderPartialTicks, target.lastTickPosY, target.posY) + target.height / 1.6f;
+            double markerZ = MathUti.interporate(mc.timer.renderPartialTicks, target.lastTickPosZ, target.posZ);
             float time = (float) ((((System.currentTimeMillis() - lastTime) / 1500F)) + (Math.sin((((System.currentTimeMillis() - lastTime) / 1500F))) / 10f));
             float alpha = ((Shaders.shaderPackLoaded ? 1 : 0.5f) * 1);
             float pl = 0;
@@ -272,14 +272,14 @@ public class TargetESP extends Module {
             for (int iteration = 0; iteration < 3; iteration++) {
                 for (float i = time * 360; i < time * 360 + 90; i += 2) {
                     float max = time * 360 + 90;
-                    float dc = MathUtils.normalize(i, time * 360 - 45, max);
+                    float dc = MathUti.normalize(i, time * 360 - 45, max);
                     float rf = 0.6f;
                     double radians = Math.toRadians(i);
                     double plY = pl + Math.sin(radians * 1.2f) * 0.1f;
-                    int firstColor = ColorUtils.applyOpacity(new Color(getModule(Interface.class).color(0)), (float) alphaAnim.getOutput()).getRGB();
-                    int secondColor = ColorUtils.applyOpacity(new Color(getModule(Interface.class).color(90)), (float) alphaAnim.getOutput()).getRGB();
+                    int firstColor = ColorUtil.applyOpacity(new Color(getModule(Interface.class).color(0)), (float) alphaAnim.getOutput()).getRGB();
+                    int secondColor = ColorUtil.applyOpacity(new Color(getModule(Interface.class).color(90)), (float) alphaAnim.getOutput()).getRGB();
                     GlStateManager.pushMatrix();
-                    RenderUtils.setupOrientationMatrix(markerX, markerY, markerZ);
+                    RenderUtil.setupOrientationMatrix(markerX, markerY, markerZ);
 
                     float[] idk = new float[]{mc.getRenderManager().playerViewY, mc.getRenderManager().playerViewX};
 
@@ -289,7 +289,7 @@ public class TargetESP extends Module {
                     GlStateManager.depthMask(false);
                     float q = (!fa ? 0.25f : 0.15f) * (Math.max(fa ? 0.25f : 0.15f, fa ? dc : (1f + (0.4f - dc)) / 2f) + 0.45f);
                     float size = q * (2f + ((0.5f - alpha) * 2));
-                    RenderUtils.drawImage(
+                    RenderUtil.drawImage(
                             glowCircle,
                             Math.cos(radians) * rf - size / 2f,
                             plY - 0.7,
@@ -315,17 +315,17 @@ public class TargetESP extends Module {
         double scaled = MathHelper.clamp_double((Math.sin(millis / 500.0) + 1.0) / 2.0, 0.8, 1.0);
         double rotate = MathHelper.clamp_double((Math.sin(millis / 1000.0) + 1.0) / 2.0 * 360.0, 0.0, 360.0);
         rotate = (imageMode.is("QuadStapple") ? 45 : 0) - (angle - 15.0) + rotate;
-        int color = ColorUtils.applyOpacity(new Color(getModule(Interface.class).color(0)), (float) alphaAnim.getOutput()).getRGB();
-        int color2 = ColorUtils.applyOpacity(new Color(getModule(Interface.class).color(90)), (float) alphaAnim.getOutput()).getRGB();
-        int color3 = ColorUtils.applyOpacity(new Color(getModule(Interface.class).color(180)), (float) alphaAnim.getOutput()).getRGB();
-        int color4 = ColorUtils.applyOpacity(new Color(getModule(Interface.class).color(270)), (float) alphaAnim.getOutput()).getRGB();
+        int color = ColorUtil.applyOpacity(new Color(getModule(Interface.class).color(0)), (float) alphaAnim.getOutput()).getRGB();
+        int color2 = ColorUtil.applyOpacity(new Color(getModule(Interface.class).color(90)), (float) alphaAnim.getOutput()).getRGB();
+        int color3 = ColorUtil.applyOpacity(new Color(getModule(Interface.class).color(180)), (float) alphaAnim.getOutput()).getRGB();
+        int color4 = ColorUtil.applyOpacity(new Color(getModule(Interface.class).color(270)), (float) alphaAnim.getOutput()).getRGB();
 
         rotate = 45 - (angle - 15.0) + rotate;
         float size = 128.0f * scale * (float) scaled;
         float x2 = (x -= size / 2.0f) + size;
         float y2 = (y -= size / 2.0f) + size;
         GlStateManager.pushMatrix();
-        RenderUtils.customRotatedObject2D(x, y, size, size, (float) rotate);
+        RenderUtil.customRotatedObject2D(x, y, size, size, (float) rotate);
         GL11.glDisable(3008);
         GlStateManager.depthMask(false);
         GlStateManager.enableBlend();
@@ -334,16 +334,16 @@ public class TargetESP extends Module {
 
         switch (imageMode.getValue()){
             case "Rectangle":
-                RenderUtils.drawImage(rectangle, x, y, x2, y2, color, color2, color3, color4);
+                RenderUtil.drawImage(rectangle, x, y, x2, y2, color, color2, color3, color4);
                 break;
             case "QuadStapple":
-                RenderUtils.drawImage(quadstapple, x, y, x2, y2, color, color2, color3, color4);
+                RenderUtil.drawImage(quadstapple, x, y, x2, y2, color, color2, color3, color4);
                 break;
             case "TriangleStapple":
-                RenderUtils.drawImage(trianglestapple, x, y, x2, y2, color, color2, color3, color4);
+                RenderUtil.drawImage(trianglestapple, x, y, x2, y2, color, color2, color3, color4);
                 break;
             case "TriangleStipple":
-                RenderUtils.drawImage(trianglestipple, x, y, x2, y2, color, color2, color3, color4);
+                RenderUtil.drawImage(trianglestipple, x, y, x2, y2, color, color2, color3, color4);
                 break;
         }
 
@@ -358,9 +358,9 @@ public class TargetESP extends Module {
     private float[] targetESPSPos(EntityLivingBase entity) {
         EntityRenderer entityRenderer = mc.entityRenderer;
         float partialTicks = mc.timer.renderPartialTicks;
-        double x = MathUtils.interpolate(entity.prevPosX, entity.posX, partialTicks);
-        double y = MathUtils.interpolate(entity.prevPosY, entity.posY, partialTicks);
-        double z = MathUtils.interpolate(entity.prevPosZ, entity.posZ, partialTicks);
+        double x = MathUti.interpolate(entity.prevPosX, entity.posX, partialTicks);
+        double y = MathUti.interpolate(entity.prevPosY, entity.posY, partialTicks);
+        double z = MathUti.interpolate(entity.prevPosZ, entity.posZ, partialTicks);
         double height = entity.height / (entity.isChild() ? 1.75f : 1.0f) / 2.0f;
         AxisAlignedBB bb = new AxisAlignedBB(x - 0.0, y, z - 0.0, x + 0.0, y + height, z + 0.0);
         final double[][] vectors = {{bb.minX, bb.minY, bb.minZ},
@@ -375,7 +375,7 @@ public class TargetESP extends Module {
         float[] projection;
         final float[] position = new float[]{Float.MAX_VALUE, Float.MAX_VALUE, -1.0F, -1.0F};
         for (final double[] vec : vectors) {
-            projection = GLUtils.project2D((float) (vec[0] - mc.getRenderManager().viewerPosX), (float) (vec[1] - mc.getRenderManager().viewerPosY), (float) (vec[2] - mc.getRenderManager().viewerPosZ), new ScaledResolution(mc).getScaleFactor());
+            projection = GLUtil.project2D((float) (vec[0] - mc.getRenderManager().viewerPosX), (float) (vec[1] - mc.getRenderManager().viewerPosY), (float) (vec[2] - mc.getRenderManager().viewerPosZ), new ScaledResolution(mc).getScaleFactor());
             if (projection != null && projection[2] >= 0.0F && projection[2] < 1.0F) {
                 position[0] = Math.min(projection[0], position[0]);
                 position[1] = Math.min(projection[1], position[1]);

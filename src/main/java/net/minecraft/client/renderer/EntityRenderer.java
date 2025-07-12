@@ -24,7 +24,7 @@ import wtf.moonlight.module.impl.visual.AspectRatio;
 import wtf.moonlight.module.impl.visual.Atmosphere;
 import wtf.moonlight.module.impl.visual.Camera;
 import wtf.moonlight.module.impl.misc.FreeLook;
-import wtf.moonlight.gui.main.GuiMainMenu;
+import wtf.moonlight.gui.main.MainMenu;
 import net.minecraft.client.gui.MapItemRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.particle.EffectRenderer;
@@ -103,7 +103,7 @@ import org.lwjglx.opengl.GLContext;
 import org.lwjglx.util.glu.Project;
 import wtf.moonlight.Client;
 import wtf.moonlight.events.render.Render3DEvent;
-import wtf.moonlight.utils.render.shader.impl.Sky;
+import wtf.moonlight.util.render.shader.impl.Sky;
 
 public class EntityRenderer implements IResourceManagerReloadListener
 {
@@ -2616,9 +2616,9 @@ public class EntityRenderer implements IResourceManagerReloadListener
             }
         }
 
-        if (this.mc.currentScreen instanceof GuiMainMenu)
+        if (this.mc.currentScreen instanceof MainMenu)
         {
-            this.updateMainMenu((GuiMainMenu)this.mc.currentScreen);
+            this.updateMainMenu((MainMenu)this.mc.currentScreen);
         }
 
         if (this.updatedWorld != world)
@@ -2656,7 +2656,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         }
     }
 
-    private void updateMainMenu(GuiMainMenu p_updateMainMenu_1_)
+    private void updateMainMenu(MainMenu p_updateMainMenu_1_)
     {
         try
         {

@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.lwjglx.input.Keyboard;
 import wtf.moonlight.Client;
 import wtf.moonlight.config.impl.AccountConfig;
-import wtf.moonlight.gui.main.GuiMainMenu;
+import wtf.moonlight.gui.main.MainMenu;
 import wtf.moonlight.gui.main.alt.auth.Account;
 import wtf.moonlight.gui.main.alt.auth.MicrosoftAuth;
 import wtf.moonlight.gui.main.alt.auth.SessionManager;
@@ -20,9 +20,9 @@ import wtf.moonlight.gui.main.alt.gui.GuiAltCracked;
 import wtf.moonlight.gui.main.alt.gui.GuiMicrosoftAuth;
 import wtf.moonlight.gui.main.alt.gui.GuiSessionLogin;
 import wtf.moonlight.gui.main.alt.utils.Notification;
-import wtf.moonlight.utils.render.RoundedUtils;
-import wtf.moonlight.utils.SkinUtils;
-import wtf.moonlight.utils.render.StencilUtils;
+import wtf.moonlight.util.render.RoundedUtil;
+import wtf.moonlight.util.SkinUtil;
+import wtf.moonlight.util.render.StencilUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,16 +64,16 @@ public class GuiAccountManager extends GuiScreen {
     Keyboard.enableRepeatEvents(true);
 
     buttonList.clear();
-    buttonList.add(loginButton = new GuiButton(0, this.width / 2 - 160, this.height - 48, 78, 20, "Login"));
+    buttonList.add(loginButton = new GuiButton(0, (float) this.width / 2 - 160, this.height - 48, 78, 20, "Login"));
 
-    buttonList.add(new GuiButton(5, this.width / 2 + 3, this.height - 48, 78, 20, "Token"));
+    buttonList.add(new GuiButton(5, (float) this.width / 2 + 3, this.height - 48, 78, 20, "Token"));
 
-    buttonList.add(new GuiButton(1, this.width / 2 - 160, this.height - 24, 78, 20, "Microsoft"));
-    buttonList.add(new GuiButton(4, this.width / 2 + 3, this.height - 24, 78, 20, "Offline"));
-    buttonList.add(new GuiButton(7, this.width / 2 - 78, this.height - 24, 78, 20, "Change Skin"));
+    buttonList.add(new GuiButton(1, (float) this.width / 2 - 160, this.height - 24, 78, 20, "Microsoft"));
+    buttonList.add(new GuiButton(4, (float) this.width / 2 + 3, this.height - 24, 78, 20, "Offline"));
+    buttonList.add(new GuiButton(7, (float) this.width / 2 - 78, this.height - 24, 78, 20, "Change Skin"));
 
-    buttonList.add(deleteButton = new GuiButton(2, this.width / 2 + 84, this.height - 48, 78, 20, "Delete"));
-    buttonList.add(cancelButton = new GuiButton(3, this.width / 2 + 84, this.height - 24, 78, 20, "Back"));
+    buttonList.add(deleteButton = new GuiButton(2, (float) this.width / 2 + 84, this.height - 48, 78, 20, "Delete"));
+    buttonList.add(cancelButton = new GuiButton(3, (float) this.width / 2 + 84, this.height - 24, 78, 20, "Back"));
 
     guiAccountList = new GuiAccountList(mc);
     guiAccountList.registerScrollButtons(11, 12);
@@ -294,7 +294,7 @@ public class GuiAccountManager extends GuiScreen {
       }
       break;
       case 3: { // Cancel/Back
-        this.mc.displayGuiScreen(this.previousScreen instanceof GuiMainMenu ? this.previousScreen : new GuiMainMenu());
+        this.mc.displayGuiScreen(this.previousScreen instanceof MainMenu ? this.previousScreen : new MainMenu());
       }
       break;
       case 4: { // Offline
@@ -441,11 +441,11 @@ public class GuiAccountManager extends GuiScreen {
     if (uuid == null || uuid.isEmpty()) {
       uuid = "8667ba71-b85a-4004-af54-457a9734eed7";
     }
-    StencilUtils.initStencilToWrite();
-    RoundedUtils.drawRound((float) x, (float) y, size, size, 2.5f, Color.WHITE);
-    StencilUtils.readStencilBuffer(1);
-    mc.getTextureManager().bindTexture(SkinUtils.getResourceLocation(uuid));
+    StencilUtil.initStencilToWrite();
+    RoundedUtil.drawRound((float) x, (float) y, size, size, 2.5f, Color.WHITE);
+    StencilUtil.readStencilBuffer(1);
+    mc.getTextureManager().bindTexture(SkinUtil.getResourceLocation(uuid));
     Gui.drawModalRectWithCustomSizedTexture((float) x, (float) y, 0.0f, 0.0f, size, size, size, size);
-    StencilUtils.uninitStencilBuffer();
+    StencilUtil.uninitStencilBuffer();
   }
 }

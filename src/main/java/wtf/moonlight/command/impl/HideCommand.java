@@ -15,7 +15,7 @@ import wtf.moonlight.Client;
 import wtf.moonlight.command.Command;
 import wtf.moonlight.command.CommandExecutionException;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.utils.DebugUtils;
+import wtf.moonlight.util.DebugUtil;
 
 import java.util.Optional;
 
@@ -34,12 +34,12 @@ public final class HideCommand extends Command {
                 for (final Module module : Client.INSTANCE.getModuleManager().getModules()) {
                     module.setHidden(false);
                 }
-                DebugUtils.sendMessage("Cleared all hidden module.");
+                DebugUtil.sendMessage("Cleared all hidden module.");
             } else if (arg.equalsIgnoreCase("list")) {
-                DebugUtils.sendMessage("Hidden Modules");
+                DebugUtil.sendMessage("Hidden Modules");
                 for (final Module module : Client.INSTANCE.getModuleManager().getModules()) {
                     if (module.isHidden()) {
-                        DebugUtils.sendMessage(EnumChatFormatting.GRAY + "- " + EnumChatFormatting.RED + module.getName());
+                        DebugUtil.sendMessage(EnumChatFormatting.GRAY + "- " + EnumChatFormatting.RED + module.getName());
                     }
                 }
             } else {
@@ -47,7 +47,7 @@ public final class HideCommand extends Command {
                 if (module2.isPresent()) {
                     final Module m = module2.get();
                     m.setHidden(!m.isHidden());
-                    DebugUtils.sendMessage(m.getName() + " is now " + (m.isHidden() ? "\u00a7Chidden\u00a77." : "\u00a7Ashown\u00a77."));
+                    DebugUtil.sendMessage(m.getName() + " is now " + (m.isHidden() ? "\u00a7Chidden\u00a77." : "\u00a7Ashown\u00a77."));
                 }
             }
             return;

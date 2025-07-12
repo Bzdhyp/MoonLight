@@ -13,10 +13,10 @@ package wtf.moonlight.module.impl.movement;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 
-@ModuleInfo(name = "NoJumpDelay", category = ModuleCategory.Movement)
+@ModuleInfo(name = "NoJumpDelay", category = Categor.Movement)
 public class NoJumpDelay extends Module {
 
     @EventTarget

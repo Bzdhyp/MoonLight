@@ -18,7 +18,7 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.combat.AntiBot;
 import wtf.moonlight.module.impl.misc.hackerdetector.Check;
@@ -28,7 +28,7 @@ import wtf.moonlight.module.values.impl.MultiBoolValue;
 
 import java.util.*;
 
-@ModuleInfo(name = "HackerDetector", category = ModuleCategory.Misc)
+@ModuleInfo(name = "HackerDetector", category = Categor.Misc)
 public class HackerDetector extends Module {
     public final MultiBoolValue options = new MultiBoolValue("Detects", Arrays.asList(
             new BoolValue("Angle", false),

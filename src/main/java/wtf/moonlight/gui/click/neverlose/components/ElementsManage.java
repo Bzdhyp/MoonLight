@@ -15,13 +15,13 @@ import wtf.moonlight.module.values.Value;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.advanced.Animation;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.MouseUtils;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.MouseUtil;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -49,23 +49,23 @@ public class ElementsManage extends Component {
         posX = INSTANCE.getNeverLose().espPreviewComponent.getPosX();
         posY = INSTANCE.getNeverLose().espPreviewComponent.getPosY();
         //anim
-        hover.setDirection(MouseUtils.isHovered2(posX + INSTANCE.getNeverLose().getWidth() + 70,posY + INSTANCE.getNeverLose().getHeight() - 27.5f,85,10,mouseX,mouseY) ? Direction.FORWARDS : Direction.BACKWARDS);
-        hover2.setDirection(MouseUtils.isHovered2(posX + INSTANCE.getNeverLose().getWidth() + 195.5f, (float) (posY + INSTANCE.getNeverLose().getHeight() - 183.5f * open.getOutput()),10,10,mouseX,mouseY) ? Direction.FORWARDS : Direction.BACKWARDS);
+        hover.setDirection(MouseUtil.isHovered2(posX + INSTANCE.getNeverLose().getWidth() + 70,posY + INSTANCE.getNeverLose().getHeight() - 27.5f,85,10,mouseX,mouseY) ? Direction.FORWARDS : Direction.BACKWARDS);
+        hover2.setDirection(MouseUtil.isHovered2(posX + INSTANCE.getNeverLose().getWidth() + 195.5f, (float) (posY + INSTANCE.getNeverLose().getHeight() - 183.5f * open.getOutput()),10,10,mouseX,mouseY) ? Direction.FORWARDS : Direction.BACKWARDS);
         open.setDirection(opened ? Direction.FORWARDS : Direction.BACKWARDS);
         //render
         if (open.getOutput() < 0.1){
-            Fonts.interSemiBold.get(16).drawCenteredString("Manage Elements", posX + INSTANCE.getNeverLose().getWidth() + 112, posY + INSTANCE.getNeverLose().getHeight() - 24, ColorUtils.interpolateColor2(new Color(textRGB),  new Color(iconRGB), (float) hover.getOutput()));
+            Fonts.interSemiBold.get(16).drawCenteredString("Manage Elements", posX + INSTANCE.getNeverLose().getWidth() + 112, posY + INSTANCE.getNeverLose().getHeight() - 24, ColorUtil.interpolateColor2(new Color(textRGB),  new Color(iconRGB), (float) hover.getOutput()));
         }else {
             //enable scissor
             GL11.glPushMatrix();
-            RenderUtils.scissor(posX + INSTANCE.getNeverLose().getWidth() + 12, posY + INSTANCE.getNeverLose().getHeight() - 190,200,180);
+            RenderUtil.scissor(posX + INSTANCE.getNeverLose().getWidth() + 12, posY + INSTANCE.getNeverLose().getHeight() - 190,200,180);
             GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
             //rect
-            RoundedUtils.drawRoundOutline(posX + INSTANCE.getNeverLose().getWidth() + 12, (float) (posY + INSTANCE.getNeverLose().getHeight() - 190 * open.getOutput()),200,180,4,.1f,bgColor4,outlineColor2);
+            RoundedUtil.drawRoundOutline(posX + INSTANCE.getNeverLose().getWidth() + 12, (float) (posY + INSTANCE.getNeverLose().getHeight() - 190 * open.getOutput()),200,180,4,.1f,bgColor4,outlineColor2);
             //text
             Fonts.interSemiBold.get(16).drawString("Manage Elements", posX + INSTANCE.getNeverLose().getWidth() + 20, (float) (posY + INSTANCE.getNeverLose().getHeight() - 180 * open.getOutput()), textRGB);
-            Fonts.neverlose.get(24).drawString("m", posX + INSTANCE.getNeverLose().getWidth() + 194, (float) (posY + INSTANCE.getNeverLose().getHeight() - 182 * open.getOutput()),ColorUtils.interpolateColor2(new Color(textRGB), new Color(iconRGB), (float) hover2.getOutput()));
+            Fonts.neverlose.get(24).drawString("m", posX + INSTANCE.getNeverLose().getWidth() + 194, (float) (posY + INSTANCE.getNeverLose().getHeight() - 182 * open.getOutput()), ColorUtil.interpolateColor2(new Color(textRGB), new Color(iconRGB), (float) hover2.getOutput()));
             //value
             float yOffset = 24, xOffset = 0;
             for (Value value: INSTANCE.getNeverLose().espPreviewComponent.getValues()) {
@@ -77,9 +77,9 @@ public class ElementsManage extends Component {
                         yOffset += 14;
                         xOffset = 0;
                     }
-                    RoundedUtils.drawRoundOutline(posX + INSTANCE.getNeverLose().getWidth() + 20 + xOffset, (float) (posY + INSTANCE.getNeverLose().getHeight() - 184 * open.getOutput()) + yOffset,currentWidth,12,2,0.1f,
-                            new Color(ColorUtils.interpolateColor2(bgColor4,new Color(iconRGB), (float) enableAnimationMap.get(boolValue).getOutput())),
-                            new Color(ColorUtils.interpolateColor2(outlineColor2,new Color(iconRGB), (float) enableAnimationMap.get(boolValue).getOutput())));
+                    RoundedUtil.drawRoundOutline(posX + INSTANCE.getNeverLose().getWidth() + 20 + xOffset, (float) (posY + INSTANCE.getNeverLose().getHeight() - 184 * open.getOutput()) + yOffset,currentWidth,12,2,0.1f,
+                            new Color(ColorUtil.interpolateColor2(bgColor4,new Color(iconRGB), (float) enableAnimationMap.get(boolValue).getOutput())),
+                            new Color(ColorUtil.interpolateColor2(outlineColor2,new Color(iconRGB), (float) enableAnimationMap.get(boolValue).getOutput())));
                     Fonts.interSemiBold.get(16).drawCenteredString(boolValue.getName(), posX + INSTANCE.getNeverLose().getWidth() + 20 + xOffset + currentWidth / 2f, (float) (posY + INSTANCE.getNeverLose().getHeight() - 180 * open.getOutput()) + yOffset, textRGB);
                     xOffset += currentWidth + 4;
                 }
@@ -94,9 +94,9 @@ public class ElementsManage extends Component {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (MouseUtils.isHovered2(posX + INSTANCE.getNeverLose().getWidth() + 70,posY + INSTANCE.getNeverLose().getHeight() - 27.5f,85,10,mouseX,mouseY)) {
+        if (MouseUtil.isHovered2(posX + INSTANCE.getNeverLose().getWidth() + 70,posY + INSTANCE.getNeverLose().getHeight() - 27.5f,85,10,mouseX,mouseY)) {
             opened = true;
-        }else if (MouseUtils.isHovered2(posX + INSTANCE.getNeverLose().getWidth() + 195.5f, (float) (posY + INSTANCE.getNeverLose().getHeight() - 183.5f * open.getOutput()),10,10,mouseX,mouseY)) {
+        }else if (MouseUtil.isHovered2(posX + INSTANCE.getNeverLose().getWidth() + 195.5f, (float) (posY + INSTANCE.getNeverLose().getHeight() - 183.5f * open.getOutput()),10,10,mouseX,mouseY)) {
             opened = false;
         }
         if (opened) {
@@ -108,7 +108,7 @@ public class ElementsManage extends Component {
                         yOffset += 14;
                         xOffset = 0;
                     }
-                    if (MouseUtils.isHovered2(posX + INSTANCE.getNeverLose().getWidth() + 20 + xOffset, (float) (posY + INSTANCE.getNeverLose().getHeight() - 184 * open.getOutput()) + yOffset,currentWidth,12,mouseX,mouseY)) {
+                    if (MouseUtil.isHovered2(posX + INSTANCE.getNeverLose().getWidth() + 20 + xOffset, (float) (posY + INSTANCE.getNeverLose().getHeight() - 184 * open.getOutput()) + yOffset,currentWidth,12,mouseX,mouseY)) {
                         boolValue.set(!boolValue.get());
                     }
                     //RoundedUtils.drawRoundOutline(posX + INSTANCE.getNeverLose().getWidth() + 20 + xOffset, (float) (posY + INSTANCE.getNeverLose().getHeight() - 184 * open.getOutput()) + yOffset,currentWidth,12,2,0.1f,bgColor,new Color(0x00BBFF).darker().darker().darker().darker().darker());

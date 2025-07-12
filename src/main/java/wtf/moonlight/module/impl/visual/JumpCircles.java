@@ -26,21 +26,21 @@ import wtf.moonlight.events.misc.WorldEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.RenderUtil;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@ModuleInfo(name = "JumpCircles", category = ModuleCategory.Visual)
+@ModuleInfo(name = "JumpCircles", category = Categor.Visual)
 public class JumpCircles extends Module {
     public ArrayList[] animatedGroups = new ArrayList[]{new ArrayList<>(), new ArrayList<>()};
 
@@ -145,7 +145,7 @@ public class JumpCircles extends Module {
         GlStateManager.pushMatrix();
         GlStateManager.translate(pos.xCoord - radius / 2.D, pos.yCoord, pos.zCoord - radius / 2.D);
         GL11.glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-        RenderUtils.customRotatedObject2D(0, 0, radius, radius, rotate);
+        RenderUtil.customRotatedObject2D(0, 0, radius, radius, rotate);
         worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
         worldRenderer.pos(0, 0, 0).tex(0, 0).color(getColor(alphaPC)).endVertex();
         worldRenderer.pos(0, radius, 0).tex(0, 1).color(getColor(alphaPC)).endVertex();
@@ -167,12 +167,12 @@ public class JumpCircles extends Module {
             float aPC;
             for (int i = 1; i < (int) polygons; i++) {
                 float iPC = i / polygons, extY = extMaxY * i / polygons - extMaxY / polygons;
-                if ((aPC = MathUtils.lerp(alphaPC * minAPC, 0, iPC)) * 255 < 1) continue;
+                if ((aPC = MathUti.lerp(alphaPC * minAPC, 0, iPC)) * 255 < 1) continue;
                 float radiusPost = radius + (float) easeOutCirc(valWave01(iPC - 1.5F / polygons)) * extMaxXZ;
-                worldRenderer.pos(-radiusPost / 2.F, extY, -radiusPost / 2.F).tex(0, 0).color(ColorUtils.darker(colors[0], aPC)).endVertex();
-                worldRenderer.pos(-radiusPost / 2.F, extY, radiusPost / 2.F).tex(0, 1).color(ColorUtils.darker(colors[1], aPC)).endVertex();
-                worldRenderer.pos(radiusPost / 2.F, extY, radiusPost / 2.F).tex(1, 1).color(ColorUtils.darker(colors[2], aPC)).endVertex();
-                worldRenderer.pos(radiusPost / 2.F, extY, -radiusPost / 2.F).tex(1, 0).color(ColorUtils.darker(colors[3], aPC)).endVertex();
+                worldRenderer.pos(-radiusPost / 2.F, extY, -radiusPost / 2.F).tex(0, 0).color(ColorUtil.darker(colors[0], aPC)).endVertex();
+                worldRenderer.pos(-radiusPost / 2.F, extY, radiusPost / 2.F).tex(0, 1).color(ColorUtil.darker(colors[1], aPC)).endVertex();
+                worldRenderer.pos(radiusPost / 2.F, extY, radiusPost / 2.F).tex(1, 1).color(ColorUtil.darker(colors[2], aPC)).endVertex();
+                worldRenderer.pos(radiusPost / 2.F, extY, -radiusPost / 2.F).tex(1, 0).color(ColorUtil.darker(colors[3], aPC)).endVertex();
             }
             tessellator.draw();
             GlStateManager.popMatrix();
@@ -221,7 +221,7 @@ public class JumpCircles extends Module {
 
         //GL_ONE_MINUS_CONSTANT_ALPHA
         GlStateManager.blendFunc(770, 1);
-        RenderUtils.setupOrientationMatrix(0, 0, 0);
+        RenderUtil.setupOrientationMatrix(0, 0, 0);
         render.run();
         GlStateManager.blendFunc(770, 771);
         GlStateManager.color(1.F, 1.F, 1.F);
@@ -236,7 +236,7 @@ public class JumpCircles extends Module {
 
     private int getColor(float alphaPC) {
         int colorize = getModule(Interface.class).color();
-        return ColorUtils.getOverallColorFrom(colorize, new Color(255, 255, 255, (int) (255.F * alphaPC)).getRGB(), .1F);
+        return ColorUtil.getOverallColorFrom(colorize, new Color(255, 255, 255, (int) (255.F * alphaPC)).getRGB(), .1F);
     }
 
     private final Tessellator tessellator = Tessellator.getInstance();

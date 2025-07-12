@@ -14,11 +14,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.module.impl.misc.hackerdetector.Check;
-import wtf.moonlight.utils.TimerUtils;
-import wtf.moonlight.utils.player.MovementUtils;
+import wtf.moonlight.util.TimerUtil;
+import wtf.moonlight.util.player.MovementUtil;
 
 public class LegitScaffoldCheck extends Check {
-    private final TimerUtils timer = new TimerUtils();
+    private final TimerUtil timer = new TimerUtil();
     private int sneakFlag;
 
     @Override
@@ -43,10 +43,10 @@ public class LegitScaffoldCheck extends Check {
         }
         if (player.rotationPitch > 75 && player.rotationPitch < 90 && player.isSwingInProgress) {
             if (player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemBlock) {
-                if (MovementUtils.getSpeed(player) >= 0.10 && player.onGround && sneakFlag > 5) {
+                if (MovementUtil.getSpeed(player) >= 0.10 && player.onGround && sneakFlag > 5) {
                     flag(player, "Sneak too fast");
                 }
-                if (MovementUtils.getSpeed(player) >= 0.21 && !player.onGround && sneakFlag > 5) {
+                if (MovementUtil.getSpeed(player) >= 0.21 && !player.onGround && sneakFlag > 5) {
                     flag(player, "Sneak too fast");
                 }
             }

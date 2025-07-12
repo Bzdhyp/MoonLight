@@ -20,12 +20,12 @@ import wtf.moonlight.events.misc.WorldEvent;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
-import wtf.moonlight.utils.packet.PacketUtils;
+import wtf.moonlight.util.packet.PacketUtils;
 
-@ModuleInfo(name = "Freeze", category = ModuleCategory.Movement)
+@ModuleInfo(name = "Freeze", category = Categor.Movement)
 public class Freeze extends Module {
     private final BoolValue disableOnHurt = new BoolValue("Disable On Hurt", false, this);
     private double x;

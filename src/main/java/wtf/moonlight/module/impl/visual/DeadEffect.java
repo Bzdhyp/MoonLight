@@ -22,7 +22,7 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.ColorValue;
 import wtf.moonlight.module.values.impl.SliderValue;
@@ -33,7 +33,7 @@ import java.util.Iterator;
 
 import static org.lwjgl.opengl.GL11.*;
 
-@ModuleInfo(name = "DeadEffect", category = ModuleCategory.Visual)
+@ModuleInfo(name = "DeadEffect", category = Categor.Visual)
 public class DeadEffect extends Module {
     
     public final ColorValue color = new ColorValue("Color", new Color(0,128,255),this);

@@ -26,23 +26,23 @@ import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.player.InvManager;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.MultiBoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.notification.NotificationType;
-import wtf.moonlight.utils.packet.PacketUtils;
-import wtf.moonlight.utils.player.MovementUtils;
-import wtf.moonlight.utils.player.RotationUtils;
+import wtf.moonlight.util.packet.PacketUtils;
+import wtf.moonlight.util.player.MovementUtil;
+import wtf.moonlight.util.player.RotationUtil;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-@ModuleInfo(name = "Disabler", category = ModuleCategory.Misc)
+@ModuleInfo(name = "Disabler", category = Categor.Misc)
 public class Disabler extends Module {
 
     public final MultiBoolValue options = new MultiBoolValue("Disablers", Arrays.asList(
@@ -123,11 +123,11 @@ public class Disabler extends Module {
                     mc.thePlayer.jump();
                 } else if (testTicks != -1 && disabled && mc.thePlayer.offGroundTicks >= tick.getValue()) {
                     if (mc.thePlayer.offGroundTicks % 2 == 0) {
-                        RotationUtils.setRotation(new float[]{(float) (mc.thePlayer.rotationYaw - (10) + (Math.random() - 0.5) * 3), mc.thePlayer.rotationPitch});
+                        RotationUtil.setRotation(new float[]{(float) (mc.thePlayer.rotationYaw - (10) + (Math.random() - 0.5) * 3), mc.thePlayer.rotationPitch});
                         event.setX(event.getX() + 0.095+Math.random() / 100);
                     }
 
-                    MovementUtils.stop();
+                    MovementUtil.stop();
                 }
             }
         }

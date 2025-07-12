@@ -12,8 +12,8 @@ package wtf.moonlight.gui.click.neverlose.components.espelements;
 
 import wtf.moonlight.module.impl.visual.ESP2D;
 import wtf.moonlight.gui.click.Component;
-import wtf.moonlight.utils.render.GLUtils;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.render.GLUtil;
+import wtf.moonlight.util.render.RenderUtil;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -27,7 +27,7 @@ public class BoxElement extends Component {
             float y2 = y + 170;
 
             glDisable(GL_TEXTURE_2D);
-            GLUtils.startBlend();
+            GLUtil.startBlend();
 
             glColor4ub((byte) 0, (byte) 0, (byte) 0, (byte) 0x96);
             glBegin(GL_QUADS);
@@ -59,7 +59,7 @@ public class BoxElement extends Component {
                 glVertex2f(x2 - 1.5F, y2 - 1.5F);
             }
 
-            RenderUtils.color(INSTANCE.getModuleManager().getModule(ESP2D.class).boxColor.getValue().getRGB());
+            RenderUtil.color(INSTANCE.getModuleManager().getModule(ESP2D.class).boxColor.getValue().getRGB());
 
             // Box
             {
@@ -88,12 +88,12 @@ public class BoxElement extends Component {
                 glVertex2f(x2 - 0.5F, y2 - 1);
             }
 
-            RenderUtils.resetColor();
+            RenderUtil.resetColor();
 
             glEnd();
 
             glEnable(GL_TEXTURE_2D);
-            GLUtils.endBlend();
+            GLUtil.endBlend();
         }
         super.drawScreen(mouseX, mouseY);
     }

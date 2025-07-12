@@ -1,43 +1,35 @@
-/*
- * MoonLight Hacked Client
- *
- * A free and open-source hacked client for Minecraft.
- * Developed using Minecraft's resources.
- *
- * Repository: https://github.com/randomguy3725/MoonLight
- *
- * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
- */
 package wtf.moonlight.module.impl.combat;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
 import com.cubk.EventTarget;
+import wtf.moonlight.Client;
 import wtf.moonlight.events.misc.TimerManipulationEvent;
 import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.events.player.MoveEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.TimerUtils;
-import wtf.moonlight.utils.player.PlayerUtils;
-import wtf.moonlight.utils.player.RotationUtils;
-import wtf.moonlight.utils.player.SimulatedPlayer;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.TimerUtil;
+import wtf.moonlight.util.player.PlayerUtil;
+import wtf.moonlight.util.player.RotationUtil;
+import wtf.moonlight.util.player.SimulatedPlayer;
+import wtf.moonlight.util.render.RenderUtil;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@ModuleInfo(name = "TickBase", category = ModuleCategory.Combat)
+@ModuleInfo(name = "TickBase", category = Categor.Combat)
 public class TickBase extends Module {
     public final ListValue mode = new ListValue("Mode",new String[]{"Future","Past"},"Future",this);
     public final SliderValue delay = new SliderValue("Delay", 50, 0, 1000,50, this);
@@ -46,28 +38,33 @@ public class TickBase extends Module {
     public final SliderValue maxTick = new SliderValue("Max Ticks", 4, 1, 20, this);
     public final BoolValue displayPredictPos = new BoolValue("Dislay Predict Pos",false,this);
     public final BoolValue check = new BoolValue("Check",false,this);
-    public final BoolValue workWithBackTrack = new BoolValue("Work With Back Track",false,this);
-    public TimerUtils timer = new TimerUtils();
+    public TimerUtil timer = new TimerUtil();
     public int skippedTick = 0;
     private long shifted, previousTime;
     public boolean working;
     private boolean firstAnimation = true;
     private final List<PredictProcess> predictProcesses = new ArrayList<>();
     public EntityPlayer target;
+    private KillAura killAura;
 
     @Override
     public void onEnable() {
         shifted = 0;
         previousTime = 0;
+        killAura = Client.INSTANCE.getModuleManager().getModule(KillAura.class);
+    }
+
+    public EntityPlayer getEffectiveTarget() {
+        if (killAura != null && killAura.isEnabled() && killAura.target != null && !killAura.target.isDead) {
+            return killAura.target instanceof EntityPlayer ? (EntityPlayer) killAura.target : null;
+        }
+
+        return PlayerUtil.getTarget(maxActiveRange.getValue() * 3);
     }
 
     @EventTarget
     public void onUpdate(UpdateEvent event) {
-        if (workWithBackTrack.get()) {
-            target = getModule(BackTrack.class).target;
-        } else {
-            target = PlayerUtils.getTarget(maxActiveRange.getValue() * 3);
-        }
+        target = getEffectiveTarget();
     }
 
     @EventTarget
@@ -99,14 +96,17 @@ public class TickBase extends Module {
         }
     }
 
-
     @EventTarget
     public void onTimerManipulation(TimerManipulationEvent event) {
         if (mode.is("Past")) {
+            EntityLivingBase currentTarget = killAura != null && killAura.isEnabled() ? killAura.target : null;
 
-            if (target == null || predictProcesses.isEmpty() || shouldStop()) {
+            if (!(currentTarget instanceof EntityPlayer) || predictProcesses.isEmpty() || shouldStop()) {
+                target = null;
                 return;
             }
+
+            target = (EntityPlayer) currentTarget;
 
             if (shouldStart() && timer.hasTimeElapsed(delay.getValue())) {
                 shifted += event.getTime() - previousTime;
@@ -124,19 +124,16 @@ public class TickBase extends Module {
 
     @EventTarget
     public void onMove(MoveEvent event) {
-
         predictProcesses.clear();
 
         SimulatedPlayer simulatedPlayer = SimulatedPlayer.fromClientPlayer(mc.thePlayer.movementInput);
 
-        simulatedPlayer.rotationYaw = RotationUtils.currentRotation != null ? RotationUtils.currentRotation[0] : mc.thePlayer.rotationYaw;
+        simulatedPlayer.rotationYaw = RotationUtil.currentRotation != null ? RotationUtil.currentRotation[0] : mc.thePlayer.rotationYaw;
 
         for (int i = 0; i < (skippedTick != 0 ? skippedTick : maxTick.getValue()); i++) {
             simulatedPlayer.tick();
             predictProcesses.add(new PredictProcess(
                     simulatedPlayer.getPos(),
-                    simulatedPlayer.fallDistance,
-                    simulatedPlayer.onGround,
                     simulatedPlayer.isCollidedHorizontally
             ));
         }
@@ -151,20 +148,22 @@ public class TickBase extends Module {
             double z = position.zCoord - mc.getRenderManager().viewerPosZ;
             AxisAlignedBB box = mc.thePlayer.getEntityBoundingBox().expand(0.1D, 0.1, 0.1);
             AxisAlignedBB axis = new AxisAlignedBB(box.minX - mc.thePlayer.posX + x, box.minY - mc.thePlayer.posY + y, box.minZ - mc.thePlayer.posZ + z, box.maxX - mc.thePlayer.posX + x, box.maxY - mc.thePlayer.posY + y, box.maxZ - mc.thePlayer.posZ + z);
-            RenderUtils.drawAxisAlignedBB(axis,false, true, new Color(50, 255, 255, 150).getRGB());
+            RenderUtil.drawAxisAlignedBB(axis,false, true, new Color(50, 255, 255, 150).getRGB());
         }
     }
 
     public boolean shouldStart(){
-        Vec3 targetPos = target.getPositionVector();
-        if(workWithBackTrack.get())
-            targetPos = getModule(BackTrack.class).realPosition;
+        if (killAura == null || !killAura.isEnabled() || killAura.target == null) {
+            return false;
+        }
+
         return predictProcesses.get((int) (maxTick.getValue() - 1)).position.distanceTo(target.getPositionVector()) <
                 mc.thePlayer.getPositionVector().distanceTo(target.getPositionVector()) &&
-                MathUtils.inBetween(minActiveRange.getValue(), maxActiveRange.getValue(), predictProcesses.get((int) (maxTick.getValue() - 1)).position.distanceTo(target.getPositionVector())) &&
+                MathUti.inBetween(minActiveRange.getValue(), maxActiveRange.getValue(),
+                        predictProcesses.get((int) (maxTick.getValue() - 1)).position.distanceTo(target.getPositionVector())) &&
                 mc.thePlayer.canEntityBeSeen(target) &&
                 target.canEntityBeSeen(mc.thePlayer) &&
-                (RotationUtils.getRotationDifference(mc.thePlayer, target) <= 90 && check.get() || !check.get()) &&
+                (RotationUtil.getRotationDifference(mc.thePlayer, target) <= 90 && check.get() || !check.get()) &&
                 !predictProcesses.get((int) (maxTick.getValue() - 1)).isCollidedHorizontally;
     }
 
@@ -196,14 +195,10 @@ public class TickBase extends Module {
 
     public static class PredictProcess {
         private final Vec3 position;
-        private final float fallDistance;
-        private final boolean onGround;
         private final boolean isCollidedHorizontally;
 
-        public PredictProcess(Vec3 position, float fallDistance, boolean onGround, boolean isCollidedHorizontally) {
+        public PredictProcess(Vec3 position, boolean isCollidedHorizontally) {
             this.position = position;
-            this.fallDistance = fallDistance;
-            this.onGround = onGround;
             this.isCollidedHorizontally = isCollidedHorizontally;
         }
     }

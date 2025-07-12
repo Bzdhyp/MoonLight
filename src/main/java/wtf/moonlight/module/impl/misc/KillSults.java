@@ -16,13 +16,13 @@ import wtf.moonlight.events.misc.WorldEvent;
 import wtf.moonlight.events.player.AttackEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.StringValue;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-@ModuleInfo(name = "KillSults", category = ModuleCategory.Misc)
+@ModuleInfo(name = "KillSults", category = Categor.Misc)
 public class KillSults extends Module {
     private EntityPlayer currentTarget;
     public final StringValue stringV = new StringValue("Name"," 你已被MoonLight击败",this);

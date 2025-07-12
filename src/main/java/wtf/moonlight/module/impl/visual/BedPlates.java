@@ -22,17 +22,17 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.TimerUtils;
-import wtf.moonlight.utils.render.GLUtils;
+import wtf.moonlight.util.TimerUtil;
+import wtf.moonlight.util.render.GLUtil;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@ModuleInfo(name = "BedPlates",category = ModuleCategory.Visual)
+@ModuleInfo(name = "BedPlates",category = Categor.Visual)
 public class BedPlates extends Module {
 
     private static final int MAX_SIZE = 8;
@@ -43,7 +43,7 @@ public class BedPlates extends Module {
     private final BlockPos[] beds = new BlockPos[MAX_SIZE];
     private final Set<Block>[] bedBlocks = new Set[MAX_SIZE];
     private final Set<BlockPos> retardedList = new HashSet<>();
-    private final TimerUtils timer = new TimerUtils();
+    private final TimerUtil timer = new TimerUtil();
 
     private void clearBeds() {
         for (int i = 0; i < MAX_SIZE; i++) {
@@ -130,7 +130,7 @@ public class BedPlates extends Module {
             final float[] position = new float[]{Float.MAX_VALUE, Float.MAX_VALUE, -1.0F, -1.0F};
 
             for (final double[] vec : vectors) {
-                projection = GLUtils.project2D((float) vec[0], (float) vec[1], (float) vec[2], event.scaledResolution().getScaleFactor());
+                projection = GLUtil.project2D((float) vec[0], (float) vec[1], (float) vec[2], event.scaledResolution().getScaleFactor());
                 if (projection != null && projection[2] >= 0.0F && projection[2] < 1.0F) {
                     final float pX = projection[0];
                     final float pY = projection[1];

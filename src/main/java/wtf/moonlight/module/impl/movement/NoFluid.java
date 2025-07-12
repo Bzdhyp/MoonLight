@@ -9,14 +9,14 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.misc.WorldEvent;
 import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.ListValue;
-import wtf.moonlight.utils.player.PlayerUtils;
+import wtf.moonlight.util.player.PlayerUtil;
 
 import java.util.Map;
 
-@ModuleInfo(name = "NoFluid",category = ModuleCategory.Movement)
+@ModuleInfo(name = "NoFluid",category = Categor.Movement)
 public class NoFluid extends Module {
 
     private final ListValue mode = new ListValue("Mode", new String[]{"Vanilla", "GrimAC"}, "Vanilla",this);
@@ -43,7 +43,7 @@ public class NoFluid extends Module {
 
         shouldCancel = false;
 
-        Map<BlockPos, Block> searchBlock = PlayerUtils.searchBlocks(2);
+        Map<BlockPos, Block> searchBlock = PlayerUtil.searchBlocks(2);
 
         for (Map.Entry<BlockPos, Block> block : searchBlock.entrySet()) {
             boolean checkBlock = mc.theWorld.getBlockState(block.getKey()).getBlock() == Blocks.water

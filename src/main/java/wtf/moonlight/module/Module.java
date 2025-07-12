@@ -20,10 +20,10 @@ import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.Value;
 import wtf.moonlight.gui.notification.NotificationType;
-import wtf.moonlight.utils.misc.InstanceAccess;
-import wtf.moonlight.utils.animations.Translate;
-import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.utils.packet.PacketUtils;
+import wtf.moonlight.util.misc.InstanceAccess;
+import wtf.moonlight.util.animations.Translate;
+import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.packet.PacketUtils;
 
 import java.util.*;
 
@@ -33,7 +33,7 @@ public abstract class Module implements InstanceAccess {
     @Getter
     private final String name;
     @Getter
-    private final ModuleCategory category;
+    private final Categor category;
     @Getter
     @Setter
     private int keyBind;

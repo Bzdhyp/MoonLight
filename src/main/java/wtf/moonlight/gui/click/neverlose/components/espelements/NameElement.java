@@ -15,8 +15,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import wtf.moonlight.module.impl.visual.ESP2D;
 import wtf.moonlight.gui.click.Component;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.render.RenderUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +32,11 @@ public class NameElement extends Component {
 
         if (INSTANCE.getModuleManager().getModule(ESP2D.class).tags.get()) {
             final FontRenderer fontRenderer = mc.fontRendererObj;
-            final String name = mc.thePlayer.getDisplayName().getFormattedText() + " " + (MathUtils.roundToHalf(mc.thePlayer.getHealth())) + EnumChatFormatting.RED + "❤";
+            final String name = mc.thePlayer.getDisplayName().getFormattedText() + " " + (MathUti.roundToHalf(mc.thePlayer.getHealth())) + EnumChatFormatting.RED + "❤";
 
             if (INSTANCE.getModuleManager().getModule(ESP2D.class).tagsBackground.get()) {
 
-                RenderUtils.drawRect(
+                RenderUtil.drawRect(
                         (x - fontRenderer.getStringWidth(name) / 2f * INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue()),
                         (y - 2),
                         fontRenderer.getStringWidth(name) * INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue(),
@@ -60,7 +60,7 @@ public class NameElement extends Component {
                 float armorX = x - fontRenderer.getStringWidth(name) / 2f - ((float) (items.size() * 18) / 2) * INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue();
 
                 for (ItemStack stack : items) {
-                    RenderUtils.renderItemStack(stack, armorX, y - 25 * INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue(), INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue() + INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue() / 2, true);
+                    RenderUtil.renderItemStack(stack, armorX, y - 25 * INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue(), INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue() + INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue() / 2, true);
                     armorX += 18 * INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue();
                 }
             }

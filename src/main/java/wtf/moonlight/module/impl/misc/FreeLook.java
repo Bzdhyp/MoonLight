@@ -14,10 +14,10 @@ import org.lwjglx.input.Mouse;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 
-@ModuleInfo(name = "FreeLook", category = ModuleCategory.Visual)
+@ModuleInfo(name = "FreeLook", category = Categor.Visual)
 public class FreeLook extends Module {
     private boolean released;
 

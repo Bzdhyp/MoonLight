@@ -16,11 +16,11 @@ import net.minecraft.client.gui.ScaledResolution;
 import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.misc.InstanceAccess;
-import wtf.moonlight.utils.animations.advanced.Animation;
-import wtf.moonlight.utils.animations.Translate;
-import wtf.moonlight.utils.animations.advanced.impl.EaseOutSine;
-import wtf.moonlight.utils.TimerUtils;
+import wtf.moonlight.util.misc.InstanceAccess;
+import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.animations.Translate;
+import wtf.moonlight.util.animations.advanced.impl.EaseOutSine;
+import wtf.moonlight.util.TimerUtil;
 
 
 @Getter
@@ -29,7 +29,7 @@ public class Notification implements InstanceAccess {
     private final NotificationType notificationType;
     private final String title, description;
     private final float time;
-    private final TimerUtils timerUtils;
+    private final TimerUtil timerUtil;
     private final Animation animation;
     private final Translate translate;
 
@@ -41,7 +41,7 @@ public class Notification implements InstanceAccess {
         this.title = title;
         this.description = description;
         this.time = (long) (time * 1000);
-        timerUtils = new TimerUtils();
+        timerUtil = new TimerUtil();
         this.notificationType = type;
         this.animation = new EaseOutSine(250, 1);
         final ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());

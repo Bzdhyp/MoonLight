@@ -14,14 +14,14 @@ import net.minecraft.util.MathHelper;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.advanced.Animation;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.MouseUtils;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.MouseUtil;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 
@@ -39,32 +39,32 @@ public class SliderComponent extends Component {
     }
     @Override
     public void drawScreen(int mouseX, int mouseY) {
-        RoundedUtils.drawRound(getX() + 4, getY() + 10, 172, .5f, 4, lineColor2);
+        RoundedUtil.drawRound(getX() + 4, getY() + 10, 172, .5f, 4, lineColor2);
 
-        Fonts.interSemiBold.get(17).drawString(setting.getName(), getX() + 6, getY() + 20, ColorUtils.interpolateColor2(Color.WHITE.darker().darker(), Color.WHITE, (float) drag.getOutput()));
-        RoundedUtils.drawRound(getX() + 90, getY() + 22, 60, 2, 1, sliderBgColor);
+        Fonts.interSemiBold.get(17).drawString(setting.getName(), getX() + 6, getY() + 20, ColorUtil.interpolateColor2(Color.WHITE.darker().darker(), Color.WHITE, (float) drag.getOutput()));
+        RoundedUtil.drawRound(getX() + 90, getY() + 22, 60, 2, 1, sliderBgColor);
 
-        RoundedUtils.drawRoundOutline(getX() + 154, getY() + 18, 20, 10, 2, .1f, bgColor4, outlineColor2);
+        RoundedUtil.drawRoundOutline(getX() + 154, getY() + 18, 20, 10, 2, .1f, bgColor4, outlineColor2);
 
         Fonts.interSemiBold.get(12).drawCenteredString((int) ((setting).getValue() * 100.0D) / 100.0D + "", getX() + 164, getY() + 22, textRGB);
-        anim = RenderUtils.animate(anim, 60 * (setting.getValue() - setting.getMin()) / (setting.getMax() - setting.getMin()), 50);
+        anim = RenderUtil.animate(anim, 60 * (setting.getValue() - setting.getMin()) / (setting.getMax() - setting.getMin()), 50);
         float sliderWidth = anim;
         drag.setDirection(dragging ? Direction.FORWARDS : Direction.BACKWARDS);
-        RoundedUtils.drawRound(getX() + 90, getY() + 22, sliderWidth, 2, 1, sliderBarColor);
-        RenderUtils.drawCircle(getX() + 90 + sliderWidth, getY() + 23, 0, 360, (float) 3, .1f, true, sliderCircleColor.getRGB());
+        RoundedUtil.drawRound(getX() + 90, getY() + 22, sliderWidth, 2, 1, sliderBarColor);
+        RenderUtil.drawCircle(getX() + 90 + sliderWidth, getY() + 23, 0, 360, (float) 3, .1f, true, sliderCircleColor.getRGB());
         if (dragging) {
             final double difference = this.setting.getMax() - this.setting
                     .getMin(), //
                     value = this.setting.getMin() + MathHelper
                             .clamp_double((mouseX - (getX() + 90)) / 60, 0, 1) * difference;
-            setting.setValue((float) MathUtils.incValue(value, setting.getIncrement()));
+            setting.setValue((float) MathUti.incValue(value, setting.getIncrement()));
         }
         super.drawScreen(mouseX, mouseY);
     }
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (MouseUtils.isHovered2(getX() + 90, getY() + 18, 60, 10,mouseX, mouseY) && mouseButton == 0) {
+        if (MouseUtil.isHovered2(getX() + 90, getY() + 18, 60, 10,mouseX, mouseY) && mouseButton == 0) {
             dragging = true;
         }
         super.mouseClicked(mouseX, mouseY, mouseButton);

@@ -8,16 +8,16 @@ import net.minecraft.util.AxisAlignedBB;
 import wtf.moonlight.Client;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.packet.PacketUtils;
+import wtf.moonlight.util.packet.PacketUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@ModuleInfo(name = "AntiFall", category = ModuleCategory.Movement)
+@ModuleInfo(name = "AntiFall", category = Categor.Movement)
 public class AntiFall extends Module {
     private final ListValue mode = new ListValue("Mode", new String[]{"Hypixel"},"Hypixel", this);
     private final SliderValue fallDist = new SliderValue("Fall Distance", 3F, 1F, 20F, 0.5F, this);

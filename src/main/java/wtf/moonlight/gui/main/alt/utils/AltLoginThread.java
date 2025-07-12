@@ -8,7 +8,7 @@ import lombok.Setter;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Session;
 
-import static wtf.moonlight.utils.misc.InstanceAccess.mc;
+import static wtf.moonlight.util.misc.InstanceAccess.mc;
 
 public final class AltLoginThread extends Thread {
     private final String password;

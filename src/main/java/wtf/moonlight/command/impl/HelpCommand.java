@@ -12,7 +12,7 @@ package wtf.moonlight.command.impl;
 
 import wtf.moonlight.Client;
 import wtf.moonlight.command.Command;
-import wtf.moonlight.utils.DebugUtils;
+import wtf.moonlight.util.DebugUtil;
 
 import java.util.Arrays;
 
@@ -26,7 +26,7 @@ public final class HelpCommand extends Command {
     public void execute(final String[] arguments) {
         for (final Command command : Client.INSTANCE.getCommandManager().cmd) {
             if(!(command instanceof ModuleCommand))
-                DebugUtils.sendMessage(Arrays.toString(command.getAliases()) + ": " + command.getUsage());
+                DebugUtil.sendMessage(Arrays.toString(command.getAliases()) + ": " + command.getUsage());
         }
     }
 

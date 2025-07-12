@@ -15,11 +15,11 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjglx.input.Keyboard;
 import org.lwjglx.input.Mouse;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.gui.click.dropdown.panel.CategoryPanel;
-import wtf.moonlight.utils.animations.advanced.Animation;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.EaseOutSine;
+import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.EaseOutSine;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,8 +35,8 @@ public class DropdownGUI extends GuiScreen {
 
     public DropdownGUI() {
         openingAnimation.setDirection(Direction.BACKWARDS);
-        for (ModuleCategory category : ModuleCategory.values()) {
-            if (category == ModuleCategory.Search || category == ModuleCategory.Config)
+        for (Categor category : Categor.values()) {
+            if (category == Categor.Search || category == Categor.Config)
                 continue;
             panels.add(new CategoryPanel(category));
             float width = 0;

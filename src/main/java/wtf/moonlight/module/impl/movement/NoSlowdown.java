@@ -19,14 +19,14 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.events.player.SlowDownEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.component.BlinkComponent;
-import wtf.moonlight.utils.packet.PacketUtils;
+import wtf.moonlight.util.packet.PacketUtils;
 
-@ModuleInfo(name = "NoSlowdown", category = ModuleCategory.Movement)
+@ModuleInfo(name = "NoSlowdown", category = Categor.Movement)
 public class NoSlowdown extends Module {
 
     public final ListValue mode = new ListValue("Mode", new String[]{"Blink"}, "Blink", this);

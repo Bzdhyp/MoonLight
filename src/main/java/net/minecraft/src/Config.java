@@ -112,7 +112,7 @@ public class Config
 
     public static String getVersion()
     {
-        return "OptiFine_1.8.9_HD_U_M6_pre2";
+        return "OptiFine HD_U_M6_pre2";
     }
 
     public static String getVersionDebug()

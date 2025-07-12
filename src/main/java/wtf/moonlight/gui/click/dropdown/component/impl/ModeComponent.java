@@ -14,8 +14,8 @@ import wtf.moonlight.module.impl.visual.ClickGUI;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.render.MouseUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.render.MouseUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 
@@ -31,7 +31,7 @@ public class ModeComponent extends Component {
         float offset = 0;
         float heightoff = 0;
 
-        RoundedUtils.drawRound(getX() + offset, getY() + Fonts.interRegular.get(15).getHeight() + 2, getWidth() - 5, heightoff, 4, new Color(50, 50, 108, 200));
+        RoundedUtil.drawRound(getX() + offset, getY() + Fonts.interRegular.get(15).getHeight() + 2, getWidth() - 5, heightoff, 4, new Color(50, 50, 108, 200));
         Fonts.interRegular.get(15).drawString(setting.getName(), getX() + 4, getY(), -1);
 
         for (String text : setting.getModes()) {
@@ -67,7 +67,7 @@ public class ModeComponent extends Component {
                 offset = 0;
                 heightoff += 8;
             }
-            if (MouseUtils.isHovered2(getX() + offset + 8, getY() + Fonts.interRegular.get(15).getHeight() + 2 + heightoff, Fonts.interRegular.get(13).getStringWidth(text), Fonts.interRegular.get(13).getHeight(), mouseX, mouseY) && mouse == 0) {
+            if (MouseUtil.isHovered2(getX() + offset + 8, getY() + Fonts.interRegular.get(15).getHeight() + 2 + heightoff, Fonts.interRegular.get(13).getStringWidth(text), Fonts.interRegular.get(13).getHeight(), mouseX, mouseY) && mouse == 0) {
                 setting.setValue(text);
             }
             offset += off;

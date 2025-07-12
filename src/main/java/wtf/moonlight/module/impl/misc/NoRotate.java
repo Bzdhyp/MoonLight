@@ -16,11 +16,11 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.TeleportEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.ListValue;
 
-@ModuleInfo(name = "NoRotate", category = ModuleCategory.Misc)
+@ModuleInfo(name = "NoRotate", category = Categor.Misc)
 public class NoRotate extends Module {
     public final ListValue mode = new ListValue("Mode", new String[]{"Edit","Packet"}, "Edit", this);
     private float yaw, pitch;

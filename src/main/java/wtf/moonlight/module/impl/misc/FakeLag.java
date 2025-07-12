@@ -19,17 +19,17 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.*;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.TimerUtils;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.TimerUtil;
 import wtf.moonlight.component.PingSpoofComponent;
 
 import java.util.Arrays;
 import java.util.List;
 
-@ModuleInfo(name = "FakeLag", category = ModuleCategory.Misc)
+@ModuleInfo(name = "FakeLag", category = Categor.Misc)
 public class FakeLag extends Module {
     private final ListValue mode = new ListValue("Mode", new String[]{"Constant", "Dynamic"}, "Dynamic", this);
     private final SliderValue minDelay = new SliderValue("Min Delay", 300, 0, 1000, 1, this);
@@ -42,8 +42,8 @@ public class FakeLag extends Module {
             new BoolValue("Block Interact", false),
             new BoolValue("Action", false)), this);
 
-    private final TimerUtils chronometer = new TimerUtils();
-    private final TimerUtils delayTimer = new TimerUtils();
+    private final TimerUtil chronometer = new TimerUtil();
+    private final TimerUtil delayTimer = new TimerUtil();
     private int nextDelay;
     private boolean isEnemyNearby;
 
@@ -153,7 +153,7 @@ public class FakeLag extends Module {
     }
 
     private int getRandomDelay() {
-        return (int) MathUtils.getAdvancedRandom(minDelay.getValue(), maxDelay.getValue());
+        return (int) MathUti.getAdvancedRandom(minDelay.getValue(), maxDelay.getValue());
     }
 
     @Override

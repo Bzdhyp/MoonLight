@@ -24,7 +24,7 @@ import net.optifine.shaders.SVertexBuilder;
 import net.optifine.util.TextureUtils;
 import org.apache.logging.log4j.LogManager;
 import org.lwjgl.opengl.GL11;
-import wtf.moonlight.utils.render.ColorUtils;
+import wtf.moonlight.util.render.ColorUtil;
 
 public class WorldRenderer
 {
@@ -492,10 +492,10 @@ public class WorldRenderer
         return this.color((int)(red * 255.0F), (int)(green * 255.0F), (int)(blue * 255.0F), (int)(alpha * 255.0F));
     }
     public WorldRenderer color(int color) {
-        return this.color(ColorUtils.getRedFromColor(color), ColorUtils.getGreenFromColor(color), ColorUtils.getBlueFromColor(color), ColorUtils.getAlphaFromColor(color));
+        return this.color(ColorUtil.getRedFromColor(color), ColorUtil.getGreenFromColor(color), ColorUtil.getBlueFromColor(color), ColorUtil.getAlphaFromColor(color));
     }
     public WorldRenderer color(int color,float alpha) {
-        return this.color(ColorUtils.getRedFromColor(color), ColorUtils.getGreenFromColor(color), ColorUtils.getBlueFromColor(color), alpha);
+        return this.color(ColorUtil.getRedFromColor(color), ColorUtil.getGreenFromColor(color), ColorUtil.getBlueFromColor(color), alpha);
     }
     public WorldRenderer color(int red, int green, int blue, int alpha)
     {

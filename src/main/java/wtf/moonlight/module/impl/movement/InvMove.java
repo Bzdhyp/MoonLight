@@ -1,6 +1,5 @@
 package wtf.moonlight.module.impl.movement;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiChest;
 import com.cubk.EventTarget;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -16,7 +15,7 @@ import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.events.player.MoveInputEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.player.InvManager;
 import wtf.moonlight.module.values.impl.ListValue;
@@ -26,7 +25,7 @@ import java.util.List;
 /**
  * @Author：haogemc
  */
-@ModuleInfo(name = "InvMove", category = ModuleCategory.Movement)
+@ModuleInfo(name = "InvMove", category = Categor.Movement)
 public class InvMove extends Module {
     public final ListValue mode = new ListValue("Mode", new String[]{"Basic", "Hypixel", "LastPacket"}, "Basic", this);
 

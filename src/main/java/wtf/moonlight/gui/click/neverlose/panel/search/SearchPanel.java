@@ -17,22 +17,22 @@ import org.lwjgl.opengl.GL11;
 import org.lwjglx.input.Keyboard;
 import org.lwjglx.input.Mouse;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.click.IComponent;
 import wtf.moonlight.gui.click.neverlose.components.ModuleComponent;
 import wtf.moonlight.gui.click.neverlose.panel.Panel;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.misc.InstanceAccess;
-import wtf.moonlight.utils.animations.advanced.Animation;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.utils.animations.advanced.impl.SmoothStepAnimation;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.MouseUtils;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.misc.InstanceAccess;
+import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.animations.advanced.impl.SmoothStepAnimation;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.MouseUtil;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 import java.util.List;
@@ -52,7 +52,7 @@ public class SearchPanel extends Panel implements IComponent, InstanceAccess {
     private final Animation input = new DecelerateAnimation(250, 1);
     private boolean inputting;
     private String text = "";
-    public SearchPanel(ModuleCategory category) {
+    public SearchPanel(Categor category) {
         super(category);
         for (Module module : INSTANCE.getModuleManager().getModules()) {
             moduleComponents.add(new ModuleComponent(module));
@@ -69,7 +69,7 @@ public class SearchPanel extends Panel implements IComponent, InstanceAccess {
         posY = INSTANCE.getNeverLose().getPosY();
         //render
         if (isSelected()){
-            RoundedUtils.drawRoundOutline(posX + 140, posY + 12, 340, (float) 22, 2, 0.1f, ColorUtils.applyOpacity(bgColor4, (float) animation.getOutput()), ColorUtils.applyOpacity(outlineColor, (float) animation.getOutput()));
+            RoundedUtil.drawRoundOutline(posX + 140, posY + 12, 340, (float) 22, 2, 0.1f, ColorUtil.applyOpacity(bgColor4, (float) animation.getOutput()), ColorUtil.applyOpacity(outlineColor, (float) animation.getOutput()));
             //drawTextWithLineBreaks(text + (inputting && text.length() < 67 && System.currentTimeMillis() % 1000 > 500 ? "|" : ""), posX + 144, posY + 21, 180);
             Fonts.interSemiBold.get(18).drawString(text + (inputting && text.length() < 67 && System.currentTimeMillis() % 1000 > 500 ? "|" : ""), posX + 146, posY + 21, Color.WHITE.darker().darker().getRGB());
             if (!inputting && text.isEmpty()) {
@@ -86,7 +86,7 @@ public class SearchPanel extends Panel implements IComponent, InstanceAccess {
                 //GL11.glPushMatrix();
 
                 GL11.glEnable(GL11.GL_SCISSOR_TEST);
-                RenderUtils.scissor(getPosX() + 140, getPosY() + 49, 380, 368);
+                RenderUtil.scissor(getPosX() + 140, getPosY() + 49, 380, 368);
 
                 float left = 0, right = 0;
 
@@ -107,7 +107,7 @@ public class SearchPanel extends Panel implements IComponent, InstanceAccess {
                     module.drawScreen(mouseX, mouseY);
 
                     double scroll = getScroll();
-                    module.setScroll((int) MathUtils.roundToHalf(scroll));
+                    module.setScroll((int) MathUti.roundToHalf(scroll));
                     onScroll(30, mouseX, mouseY);
 
                     maxScroll = Math.max(0, filtered.isEmpty() ? 0 : filtered.get(filtered.size() - 1).getMaxScroll());
@@ -128,7 +128,7 @@ public class SearchPanel extends Panel implements IComponent, InstanceAccess {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (MouseUtils.isHovered2(posX + 140, posY + 12, 340,22,mouseX,mouseY) && mouseButton == 0){
+        if (MouseUtil.isHovered2(posX + 140, posY + 12, 340,22,mouseX,mouseY) && mouseButton == 0){
             inputting = !inputting;
         } else {
             inputting = false;
@@ -177,7 +177,7 @@ public class SearchPanel extends Panel implements IComponent, InstanceAccess {
     }
     public void onScroll(int ms, int mx, int my) {
         scroll = (float) (rawScroll - scrollAnimation.getOutput());
-        if (MouseUtils.isHovered2(getPosX() + 140, getPosY() + 49, 380, 368, mx, my) && moduleComponents.stream().noneMatch(moduleComponent -> moduleComponent.getComponents().stream().anyMatch(component -> component.isHovered(mx,my)))) {
+        if (MouseUtil.isHovered2(getPosX() + 140, getPosY() + 49, 380, 368, mx, my) && moduleComponents.stream().noneMatch(moduleComponent -> moduleComponent.getComponents().stream().anyMatch(component -> component.isHovered(mx,my)))) {
             rawScroll += (float) Mouse.getDWheel() * 20;
         }
         rawScroll = Math.max(Math.min(0, rawScroll), -maxScroll);

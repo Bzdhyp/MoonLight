@@ -5,7 +5,7 @@ import net.minecraft.util.Session;
 
 import java.lang.reflect.Field;
 
-import static wtf.moonlight.utils.misc.InstanceAccess.mc;
+import static wtf.moonlight.util.misc.InstanceAccess.mc;
 
 public class SessionManager {
   private static Field sessionField = null;

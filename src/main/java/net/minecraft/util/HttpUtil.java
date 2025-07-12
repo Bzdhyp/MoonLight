@@ -9,7 +9,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import wtf.moonlight.utils.packet.Workers;
+import wtf.moonlight.util.packet.Workers;
 
 import java.io.*;
 import java.net.*;

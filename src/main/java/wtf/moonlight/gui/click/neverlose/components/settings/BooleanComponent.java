@@ -13,13 +13,13 @@ package wtf.moonlight.gui.click.neverlose.components.settings;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.advanced.Animation;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.MouseUtils;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.MouseUtil;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 
@@ -38,20 +38,20 @@ public class BooleanComponent extends Component {
     @Override
     public void drawScreen(int mouseX, int mouseY) {
         enabled.setDirection(setting.get() ? Direction.FORWARDS : Direction.BACKWARDS);
-        hover.setDirection(MouseUtils.isHovered2(getX() + 154,getY() + 16,20,10,mouseX,mouseY) ? Direction.FORWARDS : Direction.BACKWARDS);
-            RoundedUtils.drawRound(getX() + 4, getY() + 10, 172, .5f, 4, lineColor2);
+        hover.setDirection(MouseUtil.isHovered2(getX() + 154,getY() + 16,20,10,mouseX,mouseY) ? Direction.FORWARDS : Direction.BACKWARDS);
+            RoundedUtil.drawRound(getX() + 4, getY() + 10, 172, .5f, 4, lineColor2);
 
-        Fonts.interSemiBold.get(17).drawString(setting.getName(),getX() + 6,getY() + 20,ColorUtils.interpolateColor2(Color.WHITE.darker().darker(),Color.WHITE, (float) enabled.getOutput()));
-        RoundedUtils.drawRound(getX() + 154,getY() + 16,20,10,4,new Color(ColorUtils.interpolateColor2(new Color(ColorUtils.interpolateColor2(boolBgColor,boolBgColor2,(float) enabled.getOutput())),
-                new Color(ColorUtils.interpolateColor2(boolBgColor,boolBgColor2,(float) enabled.getOutput())).brighter().brighter(), (float) hover.getOutput())));
-        RenderUtils.drawCircle(getX() + 159 + 10 * (float) enabled.getOutput(),getY() + 21,0,360,5,.1f,true, ColorUtils.interpolateColor2(new Color(ColorUtils.interpolateColor2(boolCircleColor2,boolCircleColor,(float) enabled.getOutput())),
-                new Color(ColorUtils.interpolateColor2(boolCircleColor.darker().darker(),boolCircleColor,(float) enabled.getOutput())).brighter().brighter(), (float) hover.getOutput()));
+        Fonts.interSemiBold.get(17).drawString(setting.getName(),getX() + 6,getY() + 20, ColorUtil.interpolateColor2(Color.WHITE.darker().darker(),Color.WHITE, (float) enabled.getOutput()));
+        RoundedUtil.drawRound(getX() + 154,getY() + 16,20,10,4,new Color(ColorUtil.interpolateColor2(new Color(ColorUtil.interpolateColor2(boolBgColor,boolBgColor2,(float) enabled.getOutput())),
+                new Color(ColorUtil.interpolateColor2(boolBgColor,boolBgColor2,(float) enabled.getOutput())).brighter().brighter(), (float) hover.getOutput())));
+        RenderUtil.drawCircle(getX() + 159 + 10 * (float) enabled.getOutput(),getY() + 21,0,360,5,.1f,true, ColorUtil.interpolateColor2(new Color(ColorUtil.interpolateColor2(boolCircleColor2,boolCircleColor,(float) enabled.getOutput())),
+                new Color(ColorUtil.interpolateColor2(boolCircleColor.darker().darker(),boolCircleColor,(float) enabled.getOutput())).brighter().brighter(), (float) hover.getOutput()));
         super.drawScreen(mouseX, mouseY);
     }
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (MouseUtils.isHovered2(getX() + 154,getY() + 16,20,10,mouseX,mouseY) && mouseButton == 0){
+        if (MouseUtil.isHovered2(getX() + 154,getY() + 16,20,10,mouseX,mouseY) && mouseButton == 0){
             setting.toggle();
         }
         super.mouseClicked(mouseX, mouseY, mouseButton);

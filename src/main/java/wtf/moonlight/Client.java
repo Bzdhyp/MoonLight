@@ -20,7 +20,8 @@ import com.cubk.EventManager;
 import wtf.moonlight.command.CommandManager;
 import wtf.moonlight.config.ConfigManager;
 import wtf.moonlight.gui.click.arcane.ArcaneClickGui;
-import wtf.moonlight.utils.friend.FriendManager;
+import wtf.moonlight.component.VideoComponent;
+import wtf.moonlight.util.friend.FriendManager;
 import wtf.moonlight.module.ModuleManager;
 import wtf.moonlight.gui.widget.impl.ScaffoldCounter;
 import wtf.moonlight.gui.click.dropdown.DropdownGUI;
@@ -28,13 +29,13 @@ import wtf.moonlight.gui.click.neverlose.NeverLose;
 import wtf.moonlight.gui.notification.NotificationManager;
 import wtf.moonlight.gui.notification.NotificationType;
 import wtf.moonlight.gui.widget.WidgetManager;
-import wtf.moonlight.utils.DiscordInfo;
-import wtf.moonlight.utils.misc.SpoofSlotUtils;
+import wtf.moonlight.util.DiscordInfo;
+import wtf.moonlight.component.SpoofSlotComponent;
 import wtf.moonlight.component.BadPacketsComponent;
 import wtf.moonlight.component.BlinkComponent;
 import wtf.moonlight.component.PingSpoofComponent;
 import wtf.moonlight.component.FallDistanceComponent;
-import wtf.moonlight.utils.player.RotationUtils;
+import wtf.moonlight.util.player.RotationUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -130,6 +131,9 @@ public class Client {
         commandManager = new CommandManager();
         friendManager = new FriendManager();
 
+        VideoComponent.ensureVideoExists();
+        VideoComponent.startVideoPlayback();
+
         neverLose = new NeverLose();
         dropdownGUI = new DropdownGUI();
         arcaneClickGui = new ArcaneClickGui();
@@ -137,12 +141,12 @@ public class Client {
 
     private void registerEventHandlers() {
         eventManager.register(new ScaffoldCounter());
-        eventManager.register(new RotationUtils());
+        eventManager.register(new RotationUtil());
         eventManager.register(new FallDistanceComponent());
         eventManager.register(new BadPacketsComponent());
         eventManager.register(new PingSpoofComponent());
         eventManager.register(new BlinkComponent());
-        eventManager.register(new SpoofSlotUtils());
+        eventManager.register(new SpoofSlotComponent());
 
         LOGGER.info("Event handlers registered.");
     }

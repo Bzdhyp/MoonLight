@@ -15,12 +15,12 @@ import org.lwjglx.input.Keyboard;
 import wtf.moonlight.module.values.impl.StringValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.advanced.Animation;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.MouseUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.MouseUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -47,11 +47,11 @@ public class StringComponent extends Component {
             text = text.replaceAll("[a-zA-Z]", "");
         }
         String textToDraw = setting.getValue().isEmpty() && !inputting ? "Empty..." : setting.getText();
-        RoundedUtils.drawRound(getX() + 4, getY() + 10, 172, .5f, 4, lineColor2);
+        RoundedUtil.drawRound(getX() + 4, getY() + 10, 172, .5f, 4, lineColor2);
 
         Fonts.interSemiBold.get(17).drawString(setting.getName(), getX() + 6, getY() + 20, textRGB);
-        RoundedUtils.drawRoundOutline(getX() + 84, getY() + 13, 90, 16, 2, .1f, new Color(ColorUtils.interpolateColor2(bgColor,
-                bgColor.darker(), (float) input.getOutput())), new Color(ColorUtils.interpolateColor2(bgColor.darker(),
+        RoundedUtil.drawRoundOutline(getX() + 84, getY() + 13, 90, 16, 2, .1f, new Color(ColorUtil.interpolateColor2(bgColor,
+                bgColor.darker(), (float) input.getOutput())), new Color(ColorUtil.interpolateColor2(bgColor.darker(),
                 bgColor, (float) input.getOutput())));
         drawTextWithLineBreaks(textToDraw + (inputting && text.length() < 59 && System.currentTimeMillis() % 1000 > 500 ? "|" : ""), getX() + 88, getY() + 19, 90);
         super.drawScreen(mouseX, mouseY);
@@ -59,7 +59,7 @@ public class StringComponent extends Component {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (MouseUtils.isHovered2(getX() + 94,getY() + 13,80,16,mouseX,mouseY) && mouseButton == 0){
+        if (MouseUtil.isHovered2(getX() + 94,getY() + 13,80,16,mouseX,mouseY) && mouseButton == 0){
             inputting = !inputting;
         } else {
             inputting = false;
@@ -97,7 +97,7 @@ public class StringComponent extends Component {
             java.util.List<String> wrappedLines = wrapText(line, 6, maxWidth);
             for (String wrappedLine : wrappedLines) {
 
-                Fonts.interSemiBold.get(16).drawString(wrappedLine, x, currentY, ColorUtils.interpolateColor2(new Color(-1).darker(),
+                Fonts.interSemiBold.get(16).drawString(wrappedLine, x, currentY, ColorUtil.interpolateColor2(new Color(-1).darker(),
                         new Color(-1), (float) input.getOutput()));
                 currentY += Fonts.interSemiBold.get(16).getHeight();
             }

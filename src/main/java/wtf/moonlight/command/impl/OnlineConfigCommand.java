@@ -14,8 +14,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import wtf.moonlight.Client;
 import wtf.moonlight.command.Command;
-import wtf.moonlight.utils.DebugUtils;
-import wtf.moonlight.utils.misc.HttpUtils;
+import wtf.moonlight.util.DebugUtil;
+import wtf.moonlight.util.misc.HttpUtil;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -34,7 +34,7 @@ public class OnlineConfigCommand extends Command {
     @Override
     public void execute(String[] args) {
         if (args.length == 1) {
-            DebugUtils.sendMessage("Usage: " + getUsage());
+            DebugUtil.sendMessage("Usage: " + getUsage());
             return;
         }
 
@@ -44,16 +44,16 @@ public class OnlineConfigCommand extends Command {
             case "load":
                 JsonObject config;
                 try {
-                    config = new JsonParser().parse(HttpUtils.get(
+                    config = new JsonParser().parse(HttpUtil.get(
                             url + "/configs/" + args[2].toLowerCase(Locale.getDefault())
                     )).getAsJsonObject();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
                 if (Client.INSTANCE.getConfigManager().loadOnlineConfig(Client.INSTANCE.getConfigManager().getSetting(),config)) {
-                    DebugUtils.sendMessage("Loaded config: " + args[2]);
+                    DebugUtil.sendMessage("Loaded config: " + args[2]);
                 } else {
-                    DebugUtils.sendMessage("Invalid config: " + args[2]);
+                    DebugUtil.sendMessage("Invalid config: " + args[2]);
                 }
                 break;
         }

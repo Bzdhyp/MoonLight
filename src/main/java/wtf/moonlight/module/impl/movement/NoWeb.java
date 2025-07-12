@@ -8,15 +8,15 @@ import net.minecraft.util.EnumFacing;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
-import wtf.moonlight.utils.player.PlayerUtils;
+import wtf.moonlight.util.player.PlayerUtil;
 
 import java.util.Map;
 
-@ModuleInfo(name = "NoWeb",category = ModuleCategory.Movement)
+@ModuleInfo(name = "NoWeb",category = Categor.Movement)
 public class NoWeb extends Module {
 
     private final ListValue mode = new ListValue("Mode", new String[]{"Vanilla", "GrimAC", "Intave"}, "Vanilla",this);
@@ -35,7 +35,7 @@ public class NoWeb extends Module {
                 mc.thePlayer.isInWeb = false;
                 break;
             case "GrimAC":
-                Map<BlockPos, Block> searchBlock = PlayerUtils.searchBlocks(2);
+                Map<BlockPos, Block> searchBlock = PlayerUtil.searchBlocks(2);
                 for (Map.Entry<BlockPos, Block> block : searchBlock.entrySet()) {
                     if (mc.theWorld.getBlockState(block.getKey()).getBlock() instanceof BlockWeb) {
                         mc.getNetHandler().getNetworkManager().sendPacket(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.ABORT_DESTROY_BLOCK, block.getKey(), EnumFacing.DOWN));
@@ -45,7 +45,7 @@ public class NoWeb extends Module {
                 mc.thePlayer.isInWeb = false;
                 break;
             case "Intave":
-                searchBlock = PlayerUtils.searchBlocks(2);
+                searchBlock = PlayerUtil.searchBlocks(2);
                 for (Map.Entry<BlockPos, Block> block : searchBlock.entrySet()) {
                     if (mc.theWorld.getBlockState(block.getKey()).getBlock() instanceof BlockWeb) {
                         if (noDown.get()) {

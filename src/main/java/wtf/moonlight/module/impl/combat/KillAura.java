@@ -34,7 +34,7 @@ import wtf.moonlight.events.player.StrafeEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.impl.movement.AntiFall;
@@ -44,17 +44,17 @@ import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.MultiBoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.TimerUtils;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.TimerUtil;
 import wtf.moonlight.component.BlinkComponent;
-import wtf.moonlight.utils.player.*;
+import wtf.moonlight.util.player.*;
 
 import java.security.SecureRandom;
 import java.util.*;
 
-@ModuleInfo(name = "KillAura", category = ModuleCategory.Combat, key = Keyboard.KEY_R)
+@ModuleInfo(name = "KillAura", category = Categor.Combat, key = Keyboard.KEY_R)
 public class KillAura extends Module {
     private final ListValue priority = new ListValue("Priority", new String[]{"Range", "Armor", "Health", "HurtTime", "FOV"}, "Health", this);
     private final ListValue mode = new ListValue("Mode", new String[]{"Switch", "Single"}, "Switch", this);
@@ -70,21 +70,21 @@ public class KillAura extends Module {
     private final BoolValue smartRotation = new BoolValue("Smart Rotation", true, this);
     private final BoolValue customRotationSetting = new BoolValue("Custom Rotation Setting", false, this);
 
-    private final ListValue smoothMode = new ListValue("Rotations Smooth", RotationUtils.smoothModes, RotationUtils.smoothModes[0], this,() -> customRotationSetting.canDisplay() && customRotationSetting.get());
+    private final ListValue smoothMode = new ListValue("Rotations Smooth", RotationUtil.smoothModes, RotationUtil.smoothModes[0], this,() -> customRotationSetting.canDisplay() && customRotationSetting.get());
     private final SliderValue minYawRotSpeed = new SliderValue("Min Yaw Rotation Speed", 45, 1,180,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get());
     private final SliderValue minPitchRotSpeed = new SliderValue("Min Pitch Rotation Speed", 45, 1,180,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get());
     private final SliderValue maxYawRotSpeed = new SliderValue("Max Yaw Rotation Speed", 90, 1,180,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get());
     private final SliderValue maxPitchRotSpeed = new SliderValue("Max Pitch Rotation Speed", 90, 1,180,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get());
-    private final SliderValue bezierP0 = new SliderValue("Bezier P0", 0f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtils.smoothModes[1]) || smoothMode.is(RotationUtils.smoothModes[8])));
-    private final SliderValue bezierP1 = new SliderValue("Bezier P1", 0.05f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtils.smoothModes[1]) || smoothMode.is(RotationUtils.smoothModes[8])));
-    private final SliderValue bezierP2 = new SliderValue("Bezier P2", 0.2f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtils.smoothModes[1]) || smoothMode.is(RotationUtils.smoothModes[8])));
-    private final SliderValue bezierP3 = new SliderValue("Bezier P3", 0.4f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtils.smoothModes[1]) || smoothMode.is(RotationUtils.smoothModes[8])));
-    private final SliderValue bezierP4 = new SliderValue("Bezier P4", 0.6f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtils.smoothModes[1]) || smoothMode.is(RotationUtils.smoothModes[8])));
-    private final SliderValue bezierP5 = new SliderValue("Bezier P5", 0.8f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtils.smoothModes[1]) || smoothMode.is(RotationUtils.smoothModes[8])));
-    private final SliderValue bezierP6 = new SliderValue("Bezier P6", 0.95f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtils.smoothModes[1]) || smoothMode.is(RotationUtils.smoothModes[8])));
-    private final SliderValue bezierP7 = new SliderValue("Bezier P7", 0.1f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtils.smoothModes[1]) || smoothMode.is(RotationUtils.smoothModes[8])));
-    private final SliderValue elasticity = new SliderValue("Elasticity", 0.3f, 0.1f, 1f,0.01f, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && smoothMode.is(RotationUtils.smoothModes[7]));
-    private final SliderValue dampingFactor = new SliderValue("Damping Factor", 0.5f, 0.1f, 1f,0.01f, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && smoothMode.is(RotationUtils.smoothModes[7]));
+    private final SliderValue bezierP0 = new SliderValue("Bezier P0", 0f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP1 = new SliderValue("Bezier P1", 0.05f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP2 = new SliderValue("Bezier P2", 0.2f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP3 = new SliderValue("Bezier P3", 0.4f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP4 = new SliderValue("Bezier P4", 0.6f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP5 = new SliderValue("Bezier P5", 0.8f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP6 = new SliderValue("Bezier P6", 0.95f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP7 = new SliderValue("Bezier P7", 0.1f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue elasticity = new SliderValue("Elasticity", 0.3f, 0.1f, 1f,0.01f, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && smoothMode.is(RotationUtil.smoothModes[7]));
+    private final SliderValue dampingFactor = new SliderValue("Damping Factor", 0.5f, 0.1f, 1f,0.01f, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && smoothMode.is(RotationUtil.smoothModes[7]));
     private final SliderValue keepLength = new SliderValue("Keep Length", 1, 0, 20,1, this);
     public final BoolValue smoothlyResetRotation = new BoolValue("Smoothly Reset Rotation", true, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get());
     private final BoolValue randomize = new BoolValue("Randomize", false, this);
@@ -133,10 +133,10 @@ public class KillAura extends Module {
     public final BoolValue noBedNuker = new BoolValue("No Bed Nuker", false, this);
     public final List<EntityLivingBase> targets = new ArrayList<>();
     public EntityLivingBase target;
-    private final TimerUtils attackTimer = new TimerUtils();
-    private final TimerUtils switchTimer = new TimerUtils();
-    private final TimerUtils perfectHitTimer = new TimerUtils();
-    private final TimerUtils afterHitSelectTimer = new TimerUtils();
+    private final TimerUtil attackTimer = new TimerUtil();
+    private final TimerUtil switchTimer = new TimerUtil();
+    private final TimerUtil perfectHitTimer = new TimerUtil();
+    private final TimerUtil afterHitSelectTimer = new TimerUtil();
     private int index;
     private int clicks;
     private int maxClicks;
@@ -227,7 +227,7 @@ public class KillAura extends Module {
                         targets.sort(Comparator.comparingInt(entity -> entity.hurtTime));
                         break;
                     case "FOV":
-                        targets.sort(Comparator.comparingDouble(RotationUtils::distanceFromYaw));
+                        targets.sort(Comparator.comparingDouble(RotationUtil::distanceFromYaw));
                         break;
                 }
             }
@@ -263,14 +263,14 @@ public class KillAura extends Module {
         ) return;
 
         if (target != null) {
-            if (PlayerUtils.getDistanceToEntityBox(target) < rotationRange.getValue()) {
-                if (PlayerUtils.getDistanceToEntityBox(target) < pauseRange.getValue() && pauseRotations.get()) {
+            if (PlayerUtil.getDistanceToEntityBox(target) < rotationRange.getValue()) {
+                if (PlayerUtil.getDistanceToEntityBox(target) < pauseRange.getValue() && pauseRotations.get()) {
                     return;
                 }
 
                 rotation = calcToEntity(target);
                 if (customRotationSetting.canDisplay() && customRotationSetting.get()) {
-                    RotationUtils.setRotation(rotation,
+                    RotationUtil.setRotation(rotation,
                             smoothMode.getValue(),
                             addons.isEnabled("Movement Fix") ? movementFix.is("Strict") ? MovementCorrection.STRICT : MovementCorrection.SILENT : MovementCorrection.OFF,
                             minYawRotSpeed.getValue(), maxYawRotSpeed.getValue(), minPitchRotSpeed.getValue(), maxPitchRotSpeed.getValue(),
@@ -286,15 +286,15 @@ public class KillAura extends Module {
                             dampingFactor.getValue(),
                             keepLength.getValue().intValue(), smoothlyResetRotation.get());
                 } else {
-                    RotationUtils.setRotation(rotation, addons.isEnabled("Movement Fix") ? movementFix.is("Strict") ? MovementCorrection.STRICT : MovementCorrection.SILENT : MovementCorrection.OFF, keepLength.getValue().intValue());
+                    RotationUtil.setRotation(rotation, addons.isEnabled("Movement Fix") ? movementFix.is("Strict") ? MovementCorrection.STRICT : MovementCorrection.SILENT : MovementCorrection.OFF, keepLength.getValue().intValue());
                 }
 
 
                 prevRotation = rotation;
 
                 if (preSwingWithRotationRange.get()) {
-                    if (PlayerUtils.getDistanceToEntityBox(target) <= (mc.thePlayer.canEntityBeSeen(target) ? rotationRange.getValue() : 0) &&
-                            PlayerUtils.getDistanceToEntityBox(target) > (!mc.thePlayer.canEntityBeSeen(target) ? wallAttackRange.getValue() : attackRange.getValue())
+                    if (PlayerUtil.getDistanceToEntityBox(target) <= (mc.thePlayer.canEntityBeSeen(target) ? rotationRange.getValue() : 0) &&
+                            PlayerUtil.getDistanceToEntityBox(target) > (!mc.thePlayer.canEntityBeSeen(target) ? wallAttackRange.getValue() : attackRange.getValue())
                     ) {
                         maxClicks = clicks;
 
@@ -335,7 +335,7 @@ public class KillAura extends Module {
 
     @EventTarget
     public void onStrafe(StrafeEvent event) {
-        if (auto.canDisplay() && auto.get() && target != null && shouldAttack() && target.hurtTime < 6 && !mc.gameSettings.keyBindJump.isKeyDown() && !checks() && mc.thePlayer.onGround && (sprintCheck.get() && MovementUtils.canSprint(true) || !sprintCheck.get())) {
+        if (auto.canDisplay() && auto.get() && target != null && shouldAttack() && target.hurtTime < 6 && !mc.gameSettings.keyBindJump.isKeyDown() && !checks() && mc.thePlayer.onGround && (sprintCheck.get() && MovementUtil.canSprint(true) || !sprintCheck.get())) {
             mc.thePlayer.jump();
             if (mc.thePlayer.offGroundTicks >= 4)
                 autoHitSelect = true;
@@ -351,7 +351,7 @@ public class KillAura extends Module {
         double max = maxAps.getValue();
         switch (apsMode.getValue()) {
             case "Random":
-                if (attackTimer.hasTimeElapsed(1000L / (MathUtils.nextInt((int) min, (int) max))) && target != null) {
+                if (attackTimer.hasTimeElapsed(1000L / (MathUti.nextInt((int) min, (int) max))) && target != null) {
                     clicks++;
                     attackTimer.reset();
                 }
@@ -368,10 +368,10 @@ public class KillAura extends Module {
                 break;
             }
             case "Full Random": {
-                min *= MathUtils.nextDouble(0, 1);
-                max *= MathUtils.nextDouble(0, 1);
+                min *= MathUti.nextDouble(0, 1);
+                max *= MathUti.nextDouble(0, 1);
 
-                double time = (max / min) * (MathUtils.nextDouble(min, max));
+                double time = (max / min) * (MathUti.nextDouble(min, max));
 
                 if (attackTimer.hasTimeElapsed((float) (1000L / time))) {
                     clicks++;
@@ -496,7 +496,7 @@ public class KillAura extends Module {
     public void attack() {
         if (autoBlock.is("Release"))
             unblock();
-        boolean test = RotationUtils.isLookingAtEntity(target, attackRange.getValue());
+        boolean test = RotationUtil.isLookingAtEntity(target, attackRange.getValue());
         if (canAttack(target) && (addons.isEnabled("Ray Cast") && test || !addons.isEnabled("Ray Cast"))) {
             if (getModule(AutoGap.class).isEnabled() && getModule(AutoGap.class).alwaysAttack.get() && getModule(AutoGap.class).eating) {
                 AttackOrder.sendFixedAttackNoPacketEvent(mc.thePlayer, target);
@@ -545,7 +545,7 @@ public class KillAura extends Module {
     private void getTargets() {
         for (final Entity entity : mc.theWorld.loadedEntityList) {
             if (entity instanceof EntityLivingBase e) {
-                if (isValid(e) && PlayerUtils.getDistanceToEntityBox(e) <= searchRange.getValue() && (RotationUtils.getRotationDifference(e) <= fov.getValue() || fov.getValue() == 180))
+                if (isValid(e) && PlayerUtil.getDistanceToEntityBox(e) <= searchRange.getValue() && (RotationUtil.getRotationDifference(e) <= fov.getValue() || fov.getValue() == 180))
                     targets.add(e);
                 else
                     targets.remove(e);
@@ -556,7 +556,7 @@ public class KillAura extends Module {
     public double getDistanceToEntity(Entity entity) {
         switch (rangeMode.getValue()) {
             case "Client":
-                return PlayerUtils.getDistanceToEntityBox(entity);
+                return PlayerUtil.getDistanceToEntityBox(entity);
             case "Server":
                 double x = (double) entity.serverPosX / 32.0D;
                 double y = (double) entity.serverPosY / 32.0D;
@@ -565,13 +565,13 @@ public class KillAura extends Module {
             case "Client 2":
                 return entity.getDistance(mc.thePlayer.getPositionEyes(1));
             case "Client 3":
-                return PlayerUtils.calculatePerfectRangeToEntity(entity);
+                return PlayerUtil.calculatePerfectRangeToEntity(entity);
         }
         return 0;
     }
 
     public boolean isValid(Entity entity) {
-        if ((filter.isEnabled("Teams") && PlayerUtils.isInTeam(entity))) {
+        if ((filter.isEnabled("Teams") && PlayerUtil.isInTeam(entity))) {
             return false;
         }
         if (entity instanceof EntityLivingBase && (targetOption.isEnabled("Dead") || entity.isEntityAlive()) && entity != mc.thePlayer) {
@@ -582,17 +582,17 @@ public class KillAura extends Module {
                     return !isEnabled(AntiBot.class) || !getModule(AntiBot.class).isBot((EntityPlayer) entity);
                 }
             }
-            return (targetOption.isEnabled("Mobs") && PlayerUtils.isMob(entity)) || (targetOption.isEnabled("Animals") && PlayerUtils.isAnimal(entity));
+            return (targetOption.isEnabled("Mobs") && PlayerUtil.isMob(entity)) || (targetOption.isEnabled("Animals") && PlayerUtil.isAnimal(entity));
         }
         return false;
     }
 
     public boolean shouldAttack() {
-        return PlayerUtils.getDistanceToEntityBox(target) <= (!mc.thePlayer.canEntityBeSeen(target) ? wallAttackRange.getValue() : attackRange.getValue());
+        return PlayerUtil.getDistanceToEntityBox(target) <= (!mc.thePlayer.canEntityBeSeen(target) ? wallAttackRange.getValue() : attackRange.getValue());
     }
 
     public boolean shouldBlock() {
-        return PlayerUtils.getDistanceToEntityBox(target) <= blockRange.getValue() && isHoldingSword();
+        return PlayerUtil.getDistanceToEntityBox(target) <= blockRange.getValue() && isHoldingSword();
     }
 
     public float[] calcToEntity(EntityLivingBase entity) {
@@ -614,7 +614,7 @@ public class KillAura extends Module {
                 targetVec = entityPos.add(0.0, entity.height * 0.45, 0.0);
                 break;
             case "Nearest":
-                targetVec = RotationUtils.getBestHitVec(entity);
+                targetVec = RotationUtil.getBestHitVec(entity);
                 break;
             case "Test":
 
@@ -633,11 +633,11 @@ public class KillAura extends Module {
         }
 
         if (heuristics.get()) {
-            targetVec = RotationUtils.heuristics(entity, targetVec);
+            targetVec = RotationUtil.heuristics(entity, targetVec);
         }
 
         if (bruteforce.get()) {
-            if (!RotationUtils.isLookingAtEntity(RotationUtils.getRotations(targetVec), rotationRange.getValue())) {
+            if (!RotationUtil.isLookingAtEntity(RotationUtil.getRotations(targetVec), rotationRange.getValue())) {
                 final double xWidth = boundingBox.maxX - boundingBox.minX;
                 final double zWidth = boundingBox.maxZ - boundingBox.minZ;
                 final double height = boundingBox.maxY - boundingBox.minY;
@@ -645,7 +645,7 @@ public class KillAura extends Module {
                     for (double y = 0.0; y < 1.0; y += 0.2) {
                         for (double z = 0.0; z < 1.0; z += 0.2) {
                             final Vec3 hitVec = new Vec3(boundingBox.minX + xWidth * x, boundingBox.minY + height * y, boundingBox.minZ + zWidth * z);
-                            if (RotationUtils.isLookingAtEntity(RotationUtils.getRotations(hitVec), rotationRange.getValue())) {
+                            if (RotationUtil.isLookingAtEntity(RotationUtil.getRotations(hitVec), rotationRange.getValue())) {
                                 targetVec = hitVec;
                             }
                         }
@@ -658,11 +658,11 @@ public class KillAura extends Module {
             double minAimY = entity.posY + entity.getEyeHeight() * minAimRange.getValue();
             double maxAimY = entity.posY + entity.getEyeHeight() * maxAimRange.getValue();
 
-            if (RotationUtils.getBestHitVec(entity).yCoord < minAimY) {
+            if (RotationUtil.getBestHitVec(entity).yCoord < minAimY) {
                 targetVec.yCoord = minAimY;
             }
 
-            if (RotationUtils.getBestHitVec(entity).yCoord > maxAimY) {
+            if (RotationUtil.getBestHitVec(entity).yCoord > maxAimY) {
                 targetVec.yCoord = maxAimY;
             }
         }
@@ -670,7 +670,7 @@ public class KillAura extends Module {
         currentVec = targetVec;
 
         if (smartVec.get()) {
-            boolean test = RotationUtils.isLookingAtEntity(RotationUtils.getRotations(prevVec), rotationRange.getValue());
+            boolean test = RotationUtil.isLookingAtEntity(RotationUtil.getRotations(prevVec), rotationRange.getValue());
             if (test) {
                 currentVec = prevVec;
             }
@@ -686,8 +686,8 @@ public class KillAura extends Module {
         if(this.randomize.get()) {
             switch (this.randomizerot.getValue()) {
                 case "Random" -> {
-                    yaw += MathUtils.randomizeDouble(-this.yawStrength.getValue(), this.yawStrength.getValue());
-                    pitch += MathUtils.randomizeDouble(-this.pitchStrength.getValue(), this.pitchStrength.getValue());
+                    yaw += MathUti.randomizeDouble(-this.yawStrength.getValue(), this.yawStrength.getValue());
+                    pitch += MathUti.randomizeDouble(-this.pitchStrength.getValue(), this.pitchStrength.getValue());
                 }
                 case "Advanced" -> {
                     if(rdadvanceaddons.isEnabled("Sin Cos Random")) {
@@ -701,17 +701,17 @@ public class KillAura extends Module {
                     }
 
                     if(rdadvanceaddons.isEnabled("Randomize")) {
-                        yaw += MathUtils.randomizeDouble(-this.yawStrengthAddon.getValue(), this.yawStrengthAddon.getValue());
-                        pitch += MathUtils.randomizeDouble(-this.pitchStrengthAddon.getValue(), this.pitchStrengthAddon.getValue());
+                        yaw += MathUti.randomizeDouble(-this.yawStrengthAddon.getValue(), this.yawStrengthAddon.getValue());
+                        pitch += MathUti.randomizeDouble(-this.pitchStrengthAddon.getValue(), this.pitchStrengthAddon.getValue());
                     }
                 }
             }
         }
 
         if (smartRotation.get() && prevRotation != null) {
-            boolean test = RotationUtils.isLookingAtEntity(prevRotation, rotationRange.getValue());
-            boolean test2 = RotationUtils.isLookingAtEntity(new float[]{yaw, prevRotation[1]}, rotationRange.getValue());
-            boolean test3 = RotationUtils.isLookingAtEntity(new float[]{prevRotation[0], pitch}, rotationRange.getValue());
+            boolean test = RotationUtil.isLookingAtEntity(prevRotation, rotationRange.getValue());
+            boolean test2 = RotationUtil.isLookingAtEntity(new float[]{yaw, prevRotation[1]}, rotationRange.getValue());
+            boolean test3 = RotationUtil.isLookingAtEntity(new float[]{prevRotation[0], pitch}, rotationRange.getValue());
 
             if (test) {
                 return prevRotation;

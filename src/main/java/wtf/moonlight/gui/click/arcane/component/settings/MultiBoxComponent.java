@@ -3,19 +3,18 @@ package wtf.moonlight.gui.click.arcane.component.settings;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.MathHelper;
-import org.lwjgl.opengl.GL11;
 import org.lwjglx.input.Mouse;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.MultiBoolValue;
-import wtf.moonlight.utils.animations.advanced.Animation;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.utils.animations.advanced.impl.SmoothStepAnimation;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.animations.advanced.impl.SmoothStepAnimation;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -41,7 +40,7 @@ public class MultiBoxComponent extends Component {
 
     @Override
     public void drawScreen(int mouseX, int mouseY) {
-        Fonts.Bold.get(18).drawString(setting.getName(), getX() + 10, getY() + 4, ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(), 0.4f));
+        Fonts.Bold.get(18).drawString(setting.getName(), getX() + 10, getY() + 4, ColorUtil.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(), 0.4f));
 
         open.setDirection(opened ? Direction.FORWARDS : Direction.BACKWARDS);
         sb.setDirection(opened ? Direction.FORWARDS : Direction.BACKWARDS);
@@ -52,7 +51,7 @@ public class MultiBoxComponent extends Component {
             float outlineHeight = (float) ((setting.getValues().size() * 20 + 2) * open.getOutput());
             float y = (getY() + 12 + getHalfTotalHeight()) < INSTANCE.getArcaneClickGui().getY() + 49 ? INSTANCE.getArcaneClickGui().getY() + 49 : (getY() + 12 + getHalfTotalHeight());
 
-            RoundedUtils.drawRound(getX() + 10, getY() + 32, 145, outlineHeight, 2, INSTANCE.getArcaneClickGui().smallbackgroundColor2);
+            RoundedUtil.drawRound(getX() + 10, getY() + 32, 145, outlineHeight, 2, INSTANCE.getArcaneClickGui().smallbackgroundColor2);
 
             for (BoolValue boolValue : setting.getValues()) {
                 select.putIfAbsent(boolValue,new DecelerateAnimation(250, 1));
@@ -60,10 +59,10 @@ public class MultiBoxComponent extends Component {
 
                 if (boolValue.get()) {
                     float boolValueY = (float) ((getY() + 34 + (setting.getValues().indexOf(boolValue) * 20) * open.getOutput())) + getScroll();
-                    RoundedUtils.drawRound(getX() + 12, boolValueY, 141, 18, 2,
-                            new Color(ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().backgroundColor.getRGB(), (float) select.get(boolValue).getOutput())));
+                    RoundedUtil.drawRound(getX() + 12, boolValueY, 141, 18, 2,
+                            new Color(ColorUtil.applyOpacity(INSTANCE.getArcaneClickGui().backgroundColor.getRGB(), (float) select.get(boolValue).getOutput())));
                 }
-                Fonts.Bold.get(16).drawString(boolValue.getName(), getX() + 14, getY() + 40 + (setting.getValues().indexOf(boolValue) * 20 * open.getOutput()) + getScroll(), ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(),  (float) (1 * open.getOutput())));
+                Fonts.Bold.get(16).drawString(boolValue.getName(), getX() + 14, getY() + 40 + (setting.getValues().indexOf(boolValue) * 20 * open.getOutput()) + getScroll(), ColorUtil.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(),  (float) (1 * open.getOutput())));
 
             }
 
@@ -72,22 +71,22 @@ public class MultiBoxComponent extends Component {
 
             GlStateManager.translate(0, 0, -2f);
         }
-        RoundedUtils.drawRound(getX() + 10, getY() + 14, 145, 14, 2, INSTANCE.getArcaneClickGui().smallbackgroundColor2);
+        RoundedUtil.drawRound(getX() + 10, getY() + 14, 145, 14, 2, INSTANCE.getArcaneClickGui().smallbackgroundColor2);
         String enabledText = setting.isEnabled().isEmpty() ? "None" : (setting.isEnabled().length() > 30 ? setting.isEnabled().substring(0, 30) + "..." : setting.isEnabled());
-        Fonts.Bold.get(16).drawString(enabledText, getX() + 14, getY() + 15 + Fonts.Bold.get(16).getMiddleOfBox(17), ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(), 1));
-        Fonts.Icon.get(16).drawString("U", getX() + 145, getY() + 20, ColorUtils.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(), 1));
+        Fonts.Bold.get(16).drawString(enabledText, getX() + 14, getY() + 15 + Fonts.Bold.get(16).getMiddleOfBox(17), ColorUtil.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(), 1));
+        Fonts.Icon.get(16).drawString("U", getX() + 145, getY() + 20, ColorUtil.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(), 1));
 
         super.drawScreen(mouseX, mouseY);
     }
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouse) {
-        if (RenderUtils.isHovering(getX() + 10, getY() + 14, 145, 14,mouseX,mouseY) && mouse == 1){
+        if (RenderUtil.isHovering(getX() + 10, getY() + 14, 145, 14,mouseX,mouseY) && mouse == 1){
             opened = !opened;
         }
         if (opened){
             for (BoolValue boolValue : setting.getValues()) {
-                if (RenderUtils.isHovering(getX() + 12, (float) ((getY() + 34 + (setting.getValues().indexOf(boolValue) * 20) * open.getOutput())) + getScroll(), 141, 18, mouseX, mouseY) && mouse == 0) {
+                if (RenderUtil.isHovering(getX() + 12, (float) ((getY() + 34 + (setting.getValues().indexOf(boolValue) * 20) * open.getOutput())) + getScroll(), 141, 18, mouseX, mouseY) && mouse == 0) {
                     boolValue.set(!boolValue.get());
                 }
             }
@@ -96,7 +95,7 @@ public class MultiBoxComponent extends Component {
     }
     public void onScroll(int ms, int mx, int my) {
         scroll = (float) (rawScroll - scrollAnimation.getOutput());
-        if (RenderUtils.isHovering(getX() + 94,
+        if (RenderUtil.isHovering(getX() + 94,
                 (getY() + 12 - getHalfTotalHeight()) < INSTANCE.getArcaneClickGui().getY() + 49 ? INSTANCE.getArcaneClickGui().getY() + 49 : (getY() + 12 - getHalfTotalHeight()),
                 80f,
                 (float) (((((getY() + 12 - (getSize() * 20 * open.getOutput()) / 2f) < INSTANCE.getArcaneClickGui().getY() + 49) ? MathHelper.clamp_float((getY() + 12 - getHalfTotalHeight()) - INSTANCE.getArcaneClickGui().getY() + 49,0,999) : 122)) * open.getOutput()), mx, my)) {
@@ -111,7 +110,7 @@ public class MultiBoxComponent extends Component {
     }
     @Override
     public boolean isHovered(float mouseX, float mouseY) {
-        return opened && RenderUtils.isHovering(getX() + 94,
+        return opened && RenderUtil.isHovering(getX() + 94,
                 (getY() + 12 - getHalfTotalHeight()) < INSTANCE.getArcaneClickGui().getY() + 49 ? INSTANCE.getArcaneClickGui().getY() + 49 : (getY() + 12 - getHalfTotalHeight()),
                 80f,
                 (float) (((((getY() + 12 - (getSize() * 20 * open.getOutput()) / 2f) < INSTANCE.getArcaneClickGui().getY() + 49) ? MathHelper.clamp_float((getY() + 12 - getHalfTotalHeight()) - INSTANCE.getArcaneClickGui().getY() + 49,0,999) : 122)) * open.getOutput()), (int) mouseX, (int) mouseY);

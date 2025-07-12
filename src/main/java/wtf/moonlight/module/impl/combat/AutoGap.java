@@ -35,21 +35,21 @@ import wtf.moonlight.events.player.MoveInputEvent;
 import wtf.moonlight.events.player.MoveMathEvent;
 import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.advanced.ContinualAnimation;
-import wtf.moonlight.utils.TimerUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.animations.advanced.ContinualAnimation;
+import wtf.moonlight.util.TimerUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.concurrent.LinkedBlockingQueue;
 
-@ModuleInfo(name = "AutoGap", category = ModuleCategory.Combat)
+@ModuleInfo(name = "AutoGap", category = Categor.Combat)
 public class AutoGap extends Module {
 
     private final SliderValue delay = new SliderValue("Delay", 1000, 0, 10000, 100,this);
@@ -58,7 +58,7 @@ public class AutoGap extends Module {
     public final BoolValue alwaysAttack = new BoolValue("Always Attack", false,this);
     private final BoolValue autoClose = new BoolValue("Close When No Golden Apple", true,this);
     private final BoolValue lagValue = new BoolValue("Lag When In Air", false,this);
-    private final TimerUtils timer = new TimerUtils();
+    private final TimerUtil timer = new TimerUtil();
     public boolean eating = false;
     private int movingPackets = 0;
     private int slot = 0;
@@ -220,10 +220,10 @@ public class AutoGap extends Module {
             final int half = width / 2;
             animation.animate((width - 2) * percentage, 40);
 
-            RoundedUtils.drawRound(x - half - 1, y - 1 - 12, width + 1, (int) (thickness + 1) + 12 + 3, 2, new Color(getModule(Interface.class).bgColor(),true));
-            RoundedUtils.drawRound(x - half - 1, y - 1, width + 1, (int) (thickness + 1), 2, new Color(getModule(Interface.class).bgColor(),true));
+            RoundedUtil.drawRound(x - half - 1, y - 1 - 12, width + 1, (int) (thickness + 1) + 12 + 3, 2, new Color(getModule(Interface.class).bgColor(),true));
+            RoundedUtil.drawRound(x - half - 1, y - 1, width + 1, (int) (thickness + 1), 2, new Color(getModule(Interface.class).bgColor(),true));
 
-            RoundedUtils.drawGradientHorizontal(x - half, y - 1, animation.getOutput(), thickness, 2, new Color(getModule(Interface.class).color(0)), new Color(getModule(Interface.class).color(90)));
+            RoundedUtil.drawGradientHorizontal(x - half, y - 1, animation.getOutput(), thickness, 2, new Color(getModule(Interface.class).color(0)), new Color(getModule(Interface.class).color(90)));
 
             Fonts.interRegular.get(15).drawCenteredString("Time", x, y - 1 - 11 + 3, -1);
 

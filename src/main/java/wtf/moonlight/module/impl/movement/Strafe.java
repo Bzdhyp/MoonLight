@@ -13,12 +13,12 @@ package wtf.moonlight.module.impl.movement;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
-import wtf.moonlight.utils.player.MovementUtils;
+import wtf.moonlight.util.player.MovementUtil;
 
-@ModuleInfo(name = "Strafe", category = ModuleCategory.Movement)
+@ModuleInfo(name = "Strafe", category = Categor.Movement)
 public class Strafe extends Module {
 
     public final BoolValue ground = new BoolValue("Ground", true, this);
@@ -26,7 +26,7 @@ public class Strafe extends Module {
 
     @EventTarget
     public void onUpdate(UpdateEvent event) {
-        if (mc.thePlayer.onGround && ground.get()) MovementUtils.strafe();
-        if (!mc.thePlayer.onGround && air.get()) MovementUtils.strafe();
+        if (mc.thePlayer.onGround && ground.get()) MovementUtil.strafe();
+        if (!mc.thePlayer.onGround && air.get()) MovementUtil.strafe();
     }
 }

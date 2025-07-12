@@ -11,11 +11,11 @@
 package wtf.moonlight.module.impl.combat;
 
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.ListValue;
 
-@ModuleInfo(name = "KeepSprint", category = ModuleCategory.Combat)
+@ModuleInfo(name = "KeepSprint", category = Categor.Combat)
 public class KeepSprint extends Module {
 
     public final ListValue mode = new ListValue("Mode", new String[]{"Vanilla"}, "Vanilla", this);

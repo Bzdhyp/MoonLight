@@ -14,17 +14,17 @@ import net.minecraft.block.BlockAir;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ColorValue;
-import wtf.moonlight.utils.player.PlayerUtils;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.player.PlayerUtil;
+import wtf.moonlight.util.render.RenderUtil;
 
 import java.awt.*;
 
-@ModuleInfo(name = "BlockOverlay",category = ModuleCategory.Visual)
+@ModuleInfo(name = "BlockOverlay",category = Categor.Visual)
 public class BlockOverlay extends Module {
 
     public final BoolValue outline = new BoolValue("Outline", true, this);
@@ -35,13 +35,13 @@ public class BlockOverlay extends Module {
     @EventTarget
     public void onRender3D(Render3DEvent event) {
 
-        if(PlayerUtils.getBlock(mc.objectMouseOver.getBlockPos()) instanceof BlockAir)
+        if(PlayerUtil.getBlock(mc.objectMouseOver.getBlockPos()) instanceof BlockAir)
             return;
 
         if (syncColor.get()) {
-            RenderUtils.renderBlock(mc.objectMouseOver.getBlockPos(), getModule(Interface.class).color(0), outline.get(), filled.get());
+            RenderUtil.renderBlock(mc.objectMouseOver.getBlockPos(), getModule(Interface.class).color(0), outline.get(), filled.get());
         } else {
-            RenderUtils.renderBlock(mc.objectMouseOver.getBlockPos(), color.getValue().getRGB(), outline.get(), filled.get());
+            RenderUtil.renderBlock(mc.objectMouseOver.getBlockPos(), color.getValue().getRGB(), outline.get(), filled.get());
         }
 
     }

@@ -14,7 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.server.S14PacketEntity;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.module.impl.misc.hackerdetector.Check;
-import wtf.moonlight.utils.player.MovementUtils;
+import wtf.moonlight.util.player.MovementUtil;
 
 public class VelocityCheck extends Check {
 
@@ -27,7 +27,7 @@ public class VelocityCheck extends Check {
     public void onPacketReceive(PacketEvent event, EntityPlayer player) {
 
         if (event.getPacket() instanceof S14PacketEntity) {
-            if (MovementUtils.getSpeed(player) == 0.0 && player.hurtResistantTime > 6 && player.hurtResistantTime < 1 && !mc.theWorld.checkBlockCollision(player.getEntityBoundingBox().expand(0.05, 0.0, 0.05))) {
+            if (MovementUtil.getSpeed(player) == 0.0 && player.hurtResistantTime > 6 && player.hurtResistantTime < 1 && !mc.theWorld.checkBlockCollision(player.getEntityBoundingBox().expand(0.05, 0.0, 0.05))) {
                 flag(player, "Invalid velocity");
             }
         }

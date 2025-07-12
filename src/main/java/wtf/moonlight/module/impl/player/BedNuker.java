@@ -36,22 +36,22 @@ import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.movement.Scaffold;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.advanced.ContinualAnimation;
-import wtf.moonlight.utils.player.PlayerUtils;
-import wtf.moonlight.utils.player.RotationUtils;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.animations.advanced.ContinualAnimation;
+import wtf.moonlight.util.player.PlayerUtil;
+import wtf.moonlight.util.player.RotationUtil;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 
-@ModuleInfo(name = "BedNuker", category = ModuleCategory.Player)
+@ModuleInfo(name = "BedNuker", category = Categor.Player)
 public class BedNuker extends Module {
     public final SliderValue breakRange = new SliderValue("Break Range", 4, 1, 5, 1, this);
     public final BoolValue breakSurroundings = new BoolValue("Break Top", true, this);
@@ -110,8 +110,8 @@ public class BedNuker extends Module {
 
         if (bedPos != null) {
             if (rotate) {
-                float[] rot = RotationUtils.getRotations(bedPos);
-                RotationUtils.setRotation(rot);
+                float[] rot = RotationUtil.getRotations(bedPos);
+                RotationUtil.setRotation(rot);
                 rotate = false;
             }
             mine(bedPos);
@@ -144,7 +144,7 @@ public class BedNuker extends Module {
     @EventTarget
     public void onRender3D(Render3DEvent event) {
         if (progressText.get() && bedPos != null) {
-            RenderUtils.renderBlock(bedPos, getModule(Interface.class).color(), true, true);
+            RenderUtil.renderBlock(bedPos, getModule(Interface.class).color(), true, true);
 
             if (breakProgress == 0.0f)
                 return;
@@ -184,9 +184,9 @@ public class BedNuker extends Module {
             final int half = width / 2;
             barAnim.animate(width * (breakProgress), 40);
 
-            RoundedUtils.drawRound(x - half, y, width, thickness, thickness / 2, new Color(getModule(Interface.class).bgColor(),true));
+            RoundedUtil.drawRound(x - half, y, width, thickness, thickness / 2, new Color(getModule(Interface.class).bgColor(),true));
 
-            RoundedUtils.drawGradientHorizontal(x - half, y, barAnim.getOutput(), thickness, thickness / 2, new Color(getModule(Interface.class).color(0)), new Color(getModule(Interface.class).color(90)));
+            RoundedUtil.drawGradientHorizontal(x - half, y, barAnim.getOutput(), thickness, thickness / 2, new Color(getModule(Interface.class).color(0)), new Color(getModule(Interface.class).color(90)));
 
             String progressStr = (int) (100.0 * (this.breakProgress / 1.0)) + "%";
 
@@ -265,7 +265,7 @@ public class BedNuker extends Module {
         }
 
         if(swap.get()){
-            breakProgress += (getBlockHardness(bedPos, PlayerUtils.findTool(bedPos) != -1 ? mc.thePlayer.inventory.getStackInSlot(PlayerUtils.findTool(bedPos)) : mc.thePlayer.getHeldItem(), ignoreSlow.get() , groundSpoof.get()));
+            breakProgress += (getBlockHardness(bedPos, PlayerUtil.findTool(bedPos) != -1 ? mc.thePlayer.inventory.getStackInSlot(PlayerUtil.findTool(bedPos)) : mc.thePlayer.getHeldItem(), ignoreSlow.get() , groundSpoof.get()));
         } else {
             breakProgress += mc.theWorld.getBlockState(bedPos).getBlock().getPlayerRelativeBlockHardness(mc.thePlayer, mc.theWorld, bedPos);
         }
@@ -286,8 +286,8 @@ public class BedNuker extends Module {
         rotate = !resetRotate;
     }
     private void doAutoTool(BlockPos pos) {
-        if(PlayerUtils.findTool(pos) != -1) {
-            mc.thePlayer.inventory.currentItem = PlayerUtils.findTool(pos);
+        if(PlayerUtil.findTool(pos) != -1) {
+            mc.thePlayer.inventory.currentItem = PlayerUtil.findTool(pos);
         }
     }
 

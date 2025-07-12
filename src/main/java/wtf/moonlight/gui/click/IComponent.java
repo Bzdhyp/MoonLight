@@ -10,7 +10,7 @@
  */
 package wtf.moonlight.gui.click;
 
-import wtf.moonlight.utils.misc.InstanceAccess;
+import wtf.moonlight.util.misc.InstanceAccess;
 
 public interface IComponent extends InstanceAccess {
     default void drawScreen(int mouseX, int mouseY) {

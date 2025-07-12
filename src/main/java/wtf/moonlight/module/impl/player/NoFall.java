@@ -16,16 +16,16 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.movement.Scaffold;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.component.BlinkComponent;
-import wtf.moonlight.utils.player.MovementUtils;
-import wtf.moonlight.utils.player.PlayerUtils;
+import wtf.moonlight.util.player.MovementUtil;
+import wtf.moonlight.util.player.PlayerUtil;
 
-@ModuleInfo(name = "NoFall", category = ModuleCategory.Player)
+@ModuleInfo(name = "NoFall", category = Categor.Player)
 public class NoFall extends Module {
 
     public final ListValue mode = new ListValue("Mode", new String[]{"NoGround", "Blink", "Extra"}, "NoGround", this);
@@ -37,7 +37,7 @@ public class NoFall extends Module {
 
     @Override
     public void onEnable() {
-        if (PlayerUtils.nullCheck())
+        if (PlayerUtil.nullCheck())
             this.fallDistance = mc.thePlayer.fallDistance;
     }
 
@@ -53,7 +53,7 @@ public class NoFall extends Module {
     @EventTarget
     public void onMotion(MotionEvent event) {
         setTag(mode.getValue());
-        if (!PlayerUtils.nullCheck())
+        if (!PlayerUtil.nullCheck())
             return;
 
         if (event.isPost())
@@ -64,7 +64,7 @@ public class NoFall extends Module {
         else {
             fallDistance += (float) Math.max(mc.thePlayer.lastTickPosY - event.getY(), 0);
 
-            fallDistance -= MovementUtils.predictedMotionY(mc.thePlayer.motionY, 1);
+            fallDistance -= MovementUtil.predictedMotionY(mc.thePlayer.motionY, 1);
         }
 
         if (mc.thePlayer.capabilities.allowFlying) return;
@@ -108,7 +108,7 @@ public class NoFall extends Module {
                     }
 
                     prevOnGround = false;
-                } else if (PlayerUtils.isBlockUnder() && BlinkComponent.blinking && (this.fallDistance - mc.thePlayer.motionY) >= minDistance.getValue()) {
+                } else if (PlayerUtil.isBlockUnder() && BlinkComponent.blinking && (this.fallDistance - mc.thePlayer.motionY) >= minDistance.getValue()) {
                     mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
                     this.fallDistance = 0.0F;
                 }
@@ -126,10 +126,10 @@ public class NoFall extends Module {
     }
 
     private boolean isVoid() {
-        return PlayerUtils.overVoid(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+        return PlayerUtil.overVoid(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
     }
 
     private boolean shouldBlink() {
-        return !mc.thePlayer.onGround && !PlayerUtils.isBlockUnder((int) Math.floor(minDistance.getValue())) && PlayerUtils.isBlockUnder() && !getModule(Scaffold.class).isEnabled();
+        return !mc.thePlayer.onGround && !PlayerUtil.isBlockUnder((int) Math.floor(minDistance.getValue())) && PlayerUtil.isBlockUnder() && !getModule(Scaffold.class).isEnabled();
     }
 }

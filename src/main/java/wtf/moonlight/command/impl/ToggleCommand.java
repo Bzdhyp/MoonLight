@@ -14,7 +14,7 @@ import wtf.moonlight.Client;
 import wtf.moonlight.command.Command;
 import wtf.moonlight.command.CommandExecutionException;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.utils.DebugUtils;
+import wtf.moonlight.util.DebugUtil;
 
 public final class ToggleCommand extends Command {
     @Override
@@ -29,7 +29,7 @@ public final class ToggleCommand extends Command {
             for (final Module module : Client.INSTANCE.getModuleManager().getModules()) {
                 if (module.getName().replaceAll(" ", "").equalsIgnoreCase(moduleName)) {
                     module.toggle();
-                    DebugUtils.sendMessage(module.getName() + " has been " + (module.isEnabled() ? "\u00a7AEnabled\u00a77." : "\u00a7CDisabled\u00a77."));
+                    DebugUtil.sendMessage(module.getName() + " has been " + (module.isEnabled() ? "\u00a7AEnabled\u00a77." : "\u00a7CDisabled\u00a77."));
                     return;
                 }
             }

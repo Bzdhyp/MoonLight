@@ -13,12 +13,12 @@ package wtf.moonlight.gui.click.dropdown.component.impl;
 import wtf.moonlight.module.values.impl.ColorValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.animations.advanced.Animation;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.EaseOutSine;
-import wtf.moonlight.utils.render.MouseUtils;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.EaseOutSine;
+import wtf.moonlight.util.render.MouseUtil;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 
@@ -42,14 +42,14 @@ public class ColorPickerComponent extends Component {
         final float alpha = setting.getAlpha();
 
         Fonts.interRegular.get(15).drawString(setting.getName(), getX() + 4, getY(), -1);
-        RoundedUtils.drawRound(getX() + getWidth() - 18, getY(), 15, Fonts.interRegular.get(15).getHeight() - 3, 2, setting.getValue());
+        RoundedUtil.drawRound(getX() + getWidth() - 18, getY(), 15, Fonts.interRegular.get(15).getHeight() - 3, 2, setting.getValue());
 
         if (opened) {
 
-            RoundedUtils.drawGradientRound(getX() + 2, getY() + Fonts.interRegular.get(15).getHeight() + 2, getWidth() - 4, (float) (45 * open.getOutput()), 4, Color.BLACK, Color.WHITE, Color.BLACK, Color.getHSBColor(setting.getHue(), 1, 1));
+            RoundedUtil.drawGradientRound(getX() + 2, getY() + Fonts.interRegular.get(15).getHeight() + 2, getWidth() - 4, (float) (45 * open.getOutput()), 4, Color.BLACK, Color.WHITE, Color.BLACK, Color.getHSBColor(setting.getHue(), 1, 1));
 
             for (int max = (int) (getWidth() - 8), i = 0; i < max; i++) {
-                RoundedUtils.drawRound(getX() + i + 4, (float) (getY() + Fonts.interRegular.get(15).getHeight() + 2 + (45 * open.getOutput()) + 4), 2, 4, 2, Color.getHSBColor(i / (float) max, 1, 1));
+                RoundedUtil.drawRound(getX() + i + 4, (float) (getY() + Fonts.interRegular.get(15).getHeight() + 2 + (45 * open.getOutput()) + 4), 2, 4, 2, Color.getHSBColor(i / (float) max, 1, 1));
             }
 
             float alphaSliderY = (float) (getY() + Fonts.interRegular.get(15).getHeight() + 2 + (45 * open.getOutput()) + 12);
@@ -63,14 +63,14 @@ public class ColorPickerComponent extends Component {
                         setting.getValue().getBlue(),
                         (int)(alphaValue * 255)
                 );
-                RoundedUtils.drawRound(getX() + i + 4, alphaSliderY, 2, 4, 1, alphaColor);
+                RoundedUtil.drawRound(getX() + i + 4, alphaSliderY, 2, 4, 1, alphaColor);
             }
 
             float sliderX = getX() + 4;
             float sliderWidth = getWidth() - 8;
             float alphaHandleX = sliderX + (sliderWidth * alpha);
             alphaHandleX = Math.max(sliderX + 2, Math.min(sliderX + sliderWidth - 2, alphaHandleX));
-            RenderUtils.drawCircle((int) alphaHandleX, (int) alphaSliderY + 2, 0, 360, 2, .1f, false, -1);
+            RenderUtil.drawCircle((int) alphaHandleX, (int) alphaSliderY + 2, 0, 360, 2, .1f, false, -1);
 
             float gradientX = getX() + 4;
             float gradientY = getY() + Fonts.interRegular.get(15).getHeight() + 2;
@@ -99,13 +99,13 @@ public class ColorPickerComponent extends Component {
                 setting.setAlpha(newAlpha);
             }
 
-            RenderUtils.drawCircle((int) pickerX, (int) pickerY, 0, 360, 2, .1f, false, -1);
+            RenderUtil.drawCircle((int) pickerX, (int) pickerY, 0, 360, 2, .1f, false, -1);
         }
         super.drawScreen(mouseX, mouseY);
     }
 
     private void drawCheckerboard(float x, float y, float width, float height) {
-        RoundedUtils.drawRound(x, y, width, height, 2, new Color(200, 200, 200));
+        RoundedUtil.drawRound(x, y, width, height, 2, new Color(200, 200, 200));
         int squareSize = 4;
         boolean white = true;
         for (int i = 0; i < width; i += squareSize) {
@@ -116,7 +116,7 @@ public class ColorPickerComponent extends Component {
                     float drawHeight = Math.min(squareSize, height - j);
 
                     if (i > 2 && i < width - 2 || j > 0 && j < height - 0) {
-                        RoundedUtils.drawRound(x + i, y + j, drawWidth, drawHeight, 0, color);
+                        RoundedUtil.drawRound(x + i, y + j, drawWidth, drawHeight, 0, color);
                     }
                 }
                 white = !white;
@@ -130,20 +130,20 @@ public class ColorPickerComponent extends Component {
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 
-        if (MouseUtils.isHovered2(getX() + getWidth() - 18, getY(), 15, Fonts.interRegular.get(15).getHeight(), mouseX, mouseY)) {
+        if (MouseUtil.isHovered2(getX() + getWidth() - 18, getY(), 15, Fonts.interRegular.get(15).getHeight(), mouseX, mouseY)) {
             opened = !opened;
         }
 
         if (opened) {
-            if (MouseUtils.isHovered2(getX() + 4, getY() + Fonts.interRegular.get(15).getHeight() + 2, getWidth() - 8, (float) (45 * open.getOutput()), mouseX, mouseY)) {
+            if (MouseUtil.isHovered2(getX() + 4, getY() + Fonts.interRegular.get(15).getHeight() + 2, getWidth() - 8, (float) (45 * open.getOutput()), mouseX, mouseY)) {
                 pickingOthers = true;
             }
-            if (MouseUtils.isHovered2(getX() + 4, (float) (getY() + Fonts.interRegular.get(15).getHeight() + 2 + (45 * open.getOutput()) + 4), getWidth() - 8, 6, mouseX, mouseY)) {
+            if (MouseUtil.isHovered2(getX() + 4, (float) (getY() + Fonts.interRegular.get(15).getHeight() + 2 + (45 * open.getOutput()) + 4), getWidth() - 8, 6, mouseX, mouseY)) {
                 pickingHue = true;
             }
 
             float alphaSliderY = (float) (getY() + Fonts.interRegular.get(15).getHeight() + 2 + (45 * open.getOutput()) + 12);
-            if (MouseUtils.isHovered2(getX() + 4, alphaSliderY, getWidth() - 8, 6, mouseX, mouseY)) {
+            if (MouseUtil.isHovered2(getX() + 4, alphaSliderY, getWidth() - 8, 6, mouseX, mouseY)) {
                 pickingAlpha = true;
             }
         }

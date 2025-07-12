@@ -11,11 +11,11 @@
 package wtf.moonlight.module.impl.visual;
 
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.SliderValue;
 
-@ModuleInfo(name = "AspectRatio", category = ModuleCategory.Visual)
+@ModuleInfo(name = "AspectRatio", category = Categor.Visual)
 public class AspectRatio extends Module {
     public final SliderValue aspect = new SliderValue("Aspect",1.0f, 0.1f, 5.0f, 0.1f,this);
 }

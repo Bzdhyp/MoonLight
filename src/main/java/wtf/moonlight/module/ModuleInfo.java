@@ -18,10 +18,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ModuleInfo {
-
     String name();
-
-    ModuleCategory category();
-
+    Categor category();
     int key() default 0;
 }

@@ -17,15 +17,15 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.player.LookEvent;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.render.RenderUtil;
 
-@ModuleInfo(name = "SilentView", category = ModuleCategory.Misc)
+@ModuleInfo(name = "SilentView", category = Categor.Misc)
 public class SilentView extends Module {
     public final BoolValue body = new BoolValue("Render Body", true, this);
     public final BoolValue realistic = new BoolValue("Realistic", true, this, body::get);
@@ -63,7 +63,7 @@ public class SilentView extends Module {
             y = vec32.yCoord;
             z = vec32.zCoord;
 
-            Vec3 vec = new Vec3(MathUtils.interpolate(prevX, x, event.partialTicks()), MathUtils.interpolate(prevY, y, event.partialTicks()), MathUtils.interpolate(prevZ, z, event.partialTicks()));
+            Vec3 vec = new Vec3(MathUti.interpolate(prevX, x, event.partialTicks()), MathUti.interpolate(prevY, y, event.partialTicks()), MathUti.interpolate(prevZ, z, event.partialTicks()));
 
             final double x = mc.thePlayer.prevPosX + (mc.thePlayer.posX - mc.thePlayer.prevPosX) * event.partialTicks();
             final double y = mc.thePlayer.prevPosY + (mc.thePlayer.posY - mc.thePlayer.prevPosY) * event.partialTicks();
@@ -73,7 +73,7 @@ public class SilentView extends Module {
             AxisAlignedBB target = new AxisAlignedBB(vec.xCoord - d, vec.yCoord - d, vec.zCoord - d, vec.xCoord + d, vec.yCoord + d, vec.zCoord + d);
 
             AxisAlignedBB axis = new AxisAlignedBB(target.minX - x, target.minY - y, target.minZ - z, target.maxX - x, target.maxY - y, target.maxZ - z);
-            RenderUtils.drawAxisAlignedBB(axis, true, getModule(Interface.class).color());
+            RenderUtil.drawAxisAlignedBB(axis, true, getModule(Interface.class).color());
         }
     }
 }

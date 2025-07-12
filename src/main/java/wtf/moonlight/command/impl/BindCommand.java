@@ -16,8 +16,8 @@ import wtf.moonlight.Client;
 import wtf.moonlight.command.Command;
 import wtf.moonlight.command.CommandExecutionException;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.utils.DebugUtils;
-import wtf.moonlight.utils.StringUtils;
+import wtf.moonlight.util.DebugUtil;
+import wtf.moonlight.util.StringUtil;
 
 public final class BindCommand extends Command {
     @Override
@@ -35,15 +35,15 @@ public final class BindCommand extends Command {
             for (final Module module : Client.INSTANCE.getModuleManager().getModules()) {
                 if (module.getName().equalsIgnoreCase(moduleName)) {
                     module.setKeyBind(Keyboard.getKeyIndex(keyName.toUpperCase()));
-                    final String string = "Set " + module.getName() + " to " + StringUtils.upperSnakeCaseToPascal(Keyboard.getKeyName(module.getKeyBind())) + ".";
-                    DebugUtils.sendMessage(string);
+                    final String string = "Set " + module.getName() + " to " + StringUtil.upperSnakeCaseToPascal(Keyboard.getKeyName(module.getKeyBind())) + ".";
+                    DebugUtil.sendMessage(string);
                     foundModule = true;
                     break;
                 }
             }
 
             if (!foundModule) {
-                DebugUtils.sendMessage("Cound not find module.");
+                DebugUtil.sendMessage("Cound not find module.");
             }
         } else {
             if (arguments.length != 2) {
@@ -53,13 +53,13 @@ public final class BindCommand extends Command {
             if (arguments[1].equalsIgnoreCase("clear")) {
                 for (final Module module2 : Client.INSTANCE.getModuleManager().getModules()) {
                     module2.setKeyBind(0);
-                    DebugUtils.sendMessage("Cleared all binds.");
+                    DebugUtil.sendMessage("Cleared all binds.");
                 }
             } else if (arguments[1].equalsIgnoreCase("list")) {
-                DebugUtils.sendMessage("Binds");
+                DebugUtil.sendMessage("Binds");
                 for (final Module module2 : Client.INSTANCE.getModuleManager().getModules()) {
                     if (module2.getKeyBind() != 0) {
-                        DebugUtils.sendMessage(EnumChatFormatting.GRAY + "- " + EnumChatFormatting.RED + module2.getName() + ": " + Keyboard.getKeyName(module2.getKeyBind()));
+                        DebugUtil.sendMessage(EnumChatFormatting.GRAY + "- " + EnumChatFormatting.RED + module2.getName() + ": " + Keyboard.getKeyName(module2.getKeyBind()));
                     }
                 }
             }

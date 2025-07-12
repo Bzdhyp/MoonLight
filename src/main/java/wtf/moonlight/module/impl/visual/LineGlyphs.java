@@ -22,14 +22,14 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.animations.advanced.impl.SmoothStepAnimation;
-import wtf.moonlight.utils.MathUtils;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.animations.advanced.impl.SmoothStepAnimation;
+import wtf.moonlight.util.MathUti;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Random;
 
 
-@ModuleInfo(name = "LineGlyphs", category = ModuleCategory.Visual)
+@ModuleInfo(name = "LineGlyphs", category = Categor.Visual)
 public class LineGlyphs extends Module {
 
     public final BoolValue slowSpeed = new BoolValue("Slow Speed", false, this);
@@ -119,9 +119,9 @@ public class LineGlyphs extends Module {
             double z = vec3i.getZ();
             if (!vec3is.isEmpty() && vec3i == vec3is.get(vec3is.size() - 1)) {
                 Vec3i prevVec3i = vec3is.get(vec3is.size() - 2);
-                x = MathUtils.lerp(moveAdvance, prevVec3i.getX(), x);
-                y = MathUtils.lerp(moveAdvance, prevVec3i.getY(), y);
-                z = MathUtils.lerp(moveAdvance, prevVec3i.getZ(), z);
+                x = MathUti.lerp(moveAdvance, prevVec3i.getX(), x);
+                y = MathUti.lerp(moveAdvance, prevVec3i.getY(), y);
+                z = MathUti.lerp(moveAdvance, prevVec3i.getZ(), z);
             }
             this.temp3dVecs.add(new Vec3(x, y, z));
         }

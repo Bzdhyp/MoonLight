@@ -12,7 +12,7 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
@@ -21,7 +21,7 @@ import wtf.moonlight.gui.notification.NotificationType;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-@ModuleInfo(name = "LongJump", category = ModuleCategory.Movement)
+@ModuleInfo(name = "LongJump", category = Categor.Movement)
 public class LongJump extends Module {
     public final ListValue mode = new ListValue("Mode", new String[]{"Prediction", "Delay"}, "Prediction", this);
     private final SliderValue delayTime = new SliderValue("Delay Time", 1000, 0, 5000, 1, this);

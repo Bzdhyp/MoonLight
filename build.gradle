@@ -133,8 +133,6 @@ dependencies {
     implementation 'org.joml:joml:1.10.7'
     implementation 'org.jetbrains:annotations:24.1.0'
 
-    implementation 'com.madgag:animated-gif-lib:1.4'
-
     implementation fileTree(dir: 'libs', include: '*.jar')
     compileOnly fileTree(dir: 'libs', include: '*.jar')
     testCompileOnly fileTree(dir: 'libs', include: '*.jar')

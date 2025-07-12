@@ -19,13 +19,13 @@ import wtf.moonlight.events.misc.TickEvent;
 import wtf.moonlight.events.player.PostStepEvent;
 import wtf.moonlight.events.player.StrafeEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.player.PlayerUtils;
+import wtf.moonlight.util.player.PlayerUtil;
 
-@ModuleInfo(name = "Step", category = ModuleCategory.Movement)
+@ModuleInfo(name = "Step", category = Categor.Movement)
 public class Step extends Module {
 
     public final ListValue mode = new ListValue("Mode", new String[]{"NCP"}, "NCP", this);
@@ -45,8 +45,8 @@ public class Step extends Module {
     @EventTarget
     public void onPostStep(PostStepEvent event) {
         if (mode.getValue().equals("NCP")) {
-            if (event.getHeight() == 1 && mc.thePlayer.onGround && !PlayerUtils.inLiquid() && !isEnabled(Speed.class) && !isEnabled(Scaffold.class) && !mc.gameSettings.keyBindJump.isKeyDown()) {
-                    Block block = PlayerUtils.getBlock(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+            if (event.getHeight() == 1 && mc.thePlayer.onGround && !PlayerUtil.inLiquid() && !isEnabled(Speed.class) && !isEnabled(Scaffold.class) && !mc.gameSettings.keyBindJump.isKeyDown()) {
+                    Block block = PlayerUtil.getBlock(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
                     if (block instanceof BlockStairs || block instanceof BlockSlab) return;
 
                     lastStep = System.currentTimeMillis() + 300L;
@@ -62,7 +62,7 @@ public class Step extends Module {
     @EventTarget
     public void onStrafe(StrafeEvent event) {
         if (mode.getValue().equals("NCP")) {
-            if (mc.thePlayer.onGround && !PlayerUtils.inLiquid() && isEnabled(Speed.class) && mc.thePlayer.isCollidedHorizontally) {
+            if (mc.thePlayer.onGround && !PlayerUtil.inLiquid() && isEnabled(Speed.class) && mc.thePlayer.isCollidedHorizontally) {
                 mc.thePlayer.jump();
             }
         }

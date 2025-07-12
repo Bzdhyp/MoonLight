@@ -12,12 +12,12 @@ import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.gui.font.FontRenderer;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.notification.Notification;
-import wtf.moonlight.utils.misc.InstanceAccess;
-import wtf.moonlight.utils.animations.advanced.Animation;
-import wtf.moonlight.utils.animations.advanced.ContinualAnimation;
-import wtf.moonlight.utils.animations.advanced.Direction;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.misc.InstanceAccess;
+import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.animations.advanced.ContinualAnimation;
+import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
 
@@ -78,8 +78,8 @@ public class IslandRenderer implements InstanceAccess {
 
             drawBackgroundAuto(1);
 
-            RoundedUtils.drawRound(animatedX.getOutput() + 6, animatedY.getOutput() + ((y - animatedY.getOutput()) * 2), width - 12, 5f, 2.5f, new Color(255, 255, 255, 80));
-            RoundedUtils.drawRound(animatedX.getOutput() + 6, animatedY.getOutput() + ((y - animatedY.getOutput()) * 2), (width - 12) * Math.min(64,size) / 64, 5f, 2.5f, new Color(255, 255, 255, 255));
+            RoundedUtil.drawRound(animatedX.getOutput() + 6, animatedY.getOutput() + ((y - animatedY.getOutput()) * 2), width - 12, 5f, 2.5f, new Color(255, 255, 255, 80));
+            RoundedUtil.drawRound(animatedX.getOutput() + 6, animatedY.getOutput() + ((y - animatedY.getOutput()) * 2), (width - 12) * Math.min(64,size) / 64, 5f, 2.5f, new Color(255, 255, 255, 255));
             
             if(!shader) {
                 largest.drawString(title, animatedX.getOutput() + 5, animatedY.getOutput() + 6, -1);
@@ -93,7 +93,7 @@ public class IslandRenderer implements InstanceAccess {
                 boolean isExhi = Client.INSTANCE.getModuleManager().getModule(Interface.class).notificationMode.is("Exhi");
                 notifications.removeIf(it -> {
                     var animation = it.getAnimation();
-                    animation.setDirection(it.getTimerUtils().hasTimeElapsed((long) it.getTime()) ? Direction.BACKWARDS : Direction.FORWARDS);
+                    animation.setDirection(it.getTimerUtil().hasTimeElapsed((long) it.getTime()) ? Direction.BACKWARDS : Direction.FORWARDS);
                     return !isExhi && it.getAnimation().finished(Direction.BACKWARDS);
                 });
 
@@ -115,8 +115,8 @@ public class IslandRenderer implements InstanceAccess {
 
                     drawBackgroundAuto(1);
 
-                    RoundedUtils.drawRound(animatedX.getOutput() + 6, animatedY.getOutput() + ((y - animatedY.getOutput()) * 2), (width - 12), 5f, 2.5f, new Color(255, 255, 255, 80));
-                    RoundedUtils.drawRound(animatedX.getOutput() + 6, animatedY.getOutput() + ((y - animatedY.getOutput()) * 2), (width - 12) * Math.min((notification.getTimerUtils().getTime() / notification.getTime()), 1), 5f, 2.5f, new Color(255, 255, 255, 255));
+                    RoundedUtil.drawRound(animatedX.getOutput() + 6, animatedY.getOutput() + ((y - animatedY.getOutput()) * 2), (width - 12), 5f, 2.5f, new Color(255, 255, 255, 80));
+                    RoundedUtil.drawRound(animatedX.getOutput() + 6, animatedY.getOutput() + ((y - animatedY.getOutput()) * 2), (width - 12) * Math.min((notification.getTimerUtil().getTime() / notification.getTime()), 1), 5f, 2.5f, new Color(255, 255, 255, 255));
 
                     if (!shader) {
                         largest.drawString(title, animatedX.getOutput() + 5, animatedY.getOutput() + 6, -1);
@@ -164,7 +164,7 @@ public class IslandRenderer implements InstanceAccess {
     public void drawBackgroundAuto(int identifier) {
         float renderHeight = ((y - animatedY.getOutput()) * 2) + (identifier == 1 ? 10 : 0);
 
-        RenderUtils.scissor(animatedX.getOutput() - 1, animatedY.getOutput() - 1, ((x - animatedX.getOutput()) * 2) + 2, renderHeight + 2);
-        RoundedUtils.drawRound(animatedX.getOutput(), animatedY.getOutput(), (x - animatedX.getOutput()) * 2, renderHeight, 7, new Color(Client.INSTANCE.getModuleManager().getModule(Interface.class).bgColor(),true));
+        RenderUtil.scissor(animatedX.getOutput() - 1, animatedY.getOutput() - 1, ((x - animatedX.getOutput()) * 2) + 2, renderHeight + 2);
+        RoundedUtil.drawRound(animatedX.getOutput(), animatedY.getOutput(), (x - animatedX.getOutput()) * 2, renderHeight, 7, new Color(Client.INSTANCE.getModuleManager().getModule(Interface.class).bgColor(),true));
     }
 }

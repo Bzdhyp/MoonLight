@@ -17,24 +17,24 @@ import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Client;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.render.Render3DEvent;
-import wtf.moonlight.utils.friend.Friend;
+import wtf.moonlight.util.friend.Friend;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.combat.KillAura;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ColorValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.GLUtils;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.GLUtil;
 
 import java.awt.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
-@ModuleInfo(name = "ChinaHat", category = ModuleCategory.Visual)
+@ModuleInfo(name = "ChinaHat", category = Categor.Visual)
 public class ChinaHat extends Module {
     public final ListValue mode = new ListValue("Mode", new String[]{"Astolfo", "Sexy", "Fade", "Dynamic"}, "Sexy", this);
     public final SliderValue points = new SliderValue("Points", 30, 3, 180, this);
@@ -96,7 +96,7 @@ public class ChinaHat extends Module {
         glDepthMask(false);
         glDisable(GL_DEPTH_TEST);
         glShadeModel(GL_SMOOTH);
-        GLUtils.startBlend();
+        GLUtil.startBlend();
 
         final float partialTicks = event.partialTicks();
         final RenderManager render = this.mc.getRenderManager();
@@ -127,7 +127,7 @@ public class ChinaHat extends Module {
             case "Fade" ->
                     new Color[]{this.colorValue.getValue(), this.secondColorValue.getValue(), this.colorValue.getValue()};
             case "Dynamic" ->
-                    new Color[]{this.colorValue.getValue(), new Color(ColorUtils.darker(colorValue.getValue().getRGB(), 0.25F)), this.colorValue.getValue()};
+                    new Color[]{this.colorValue.getValue(), new Color(ColorUtil.darker(colorValue.getValue().getRGB(), 0.25F)), this.colorValue.getValue()};
             default -> colorMode;
         };
 
@@ -146,12 +146,12 @@ public class ChinaHat extends Module {
 
         // Yaw
         {
-            glRotatef(MathUtils.interpolate(player.prevRotationYawHead, player.rotationYawHead, partialTicks), 0, -1, 0);
+            glRotatef(MathUti.interpolate(player.prevRotationYawHead, player.rotationYawHead, partialTicks), 0, -1, 0);
         }
 
         // Pitch
         {
-            final float pitch = MathUtils.interpolate(player.prevRotationPitchHead, player.rotationPitchHead, partialTicks);
+            final float pitch = MathUti.interpolate(player.prevRotationPitchHead, player.rotationPitchHead, partialTicks);
             glRotatef(pitch / 3.f, 1, 0, 0);
             glTranslated(0, 0, pitch / 270.f);
         }
@@ -187,7 +187,7 @@ public class ChinaHat extends Module {
 
         glTranslated(rx, ry, rz);
 
-        GLUtils.endBlend();
+        GLUtil.endBlend();
         glDepthMask(true);
         glShadeModel(GL_FLAT);
         glEnable(GL_DEPTH_TEST);

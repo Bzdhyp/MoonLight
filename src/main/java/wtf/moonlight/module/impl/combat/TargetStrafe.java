@@ -25,16 +25,16 @@ import wtf.moonlight.events.player.StrafeEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.movement.Speed;
 import wtf.moonlight.module.impl.movement.Scaffold;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.player.MovementUtils;
-import wtf.moonlight.utils.player.PlayerUtils;
+import wtf.moonlight.util.player.MovementUtil;
+import wtf.moonlight.util.player.PlayerUtil;
 
-@ModuleInfo(name = "TargetStrafe", category = ModuleCategory.Combat)
+@ModuleInfo(name = "TargetStrafe", category = Categor.Combat)
 public class TargetStrafe extends Module {
 
     public final SliderValue range = new SliderValue("Range", 1, 0.1f, 6, 0.1f, this);
@@ -83,9 +83,9 @@ public class TargetStrafe extends Module {
         if(!speed.couldStrafe)
             return;
 
-        if (mc.thePlayer.isCollidedHorizontally || !PlayerUtils.isBlockUnder(5, false)) {
+        if (mc.thePlayer.isCollidedHorizontally || !PlayerUtil.isBlockUnder(5, false)) {
             if (!colliding) {
-                MovementUtils.strafe();
+                MovementUtil.strafe();
                 left = !left;
             }
             colliding = true;

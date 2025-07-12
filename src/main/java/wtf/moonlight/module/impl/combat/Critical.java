@@ -16,14 +16,14 @@ import wtf.moonlight.events.player.AttackEvent;
 import wtf.moonlight.events.player.StrafeEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.movement.Freeze;
 import wtf.moonlight.module.impl.movement.Speed;
 import wtf.moonlight.module.values.impl.ListValue;
-import wtf.moonlight.utils.player.MovementUtils;
+import wtf.moonlight.util.player.MovementUtil;
 
-@ModuleInfo(name = "Critical", category = ModuleCategory.Combat)
+@ModuleInfo(name = "Critical", category = Categor.Combat)
 public class Critical extends Module {
     private final ListValue mode = new ListValue("Mode", new String[]{"Jump", "AutoFreeze", "AutoSpeed"}, "Jump", this);
     private boolean attacking;
@@ -65,7 +65,7 @@ public class Critical extends Module {
                     if (isDisabled(Speed.class)) {
                         getModule(Speed.class).setEnabled(true);
                     } else {
-                        if (!MovementUtils.isMoving() && mc.thePlayer.onGround) {
+                        if (!MovementUtil.isMoving() && mc.thePlayer.onGround) {
                             mc.thePlayer.jump();
                         }
                     }

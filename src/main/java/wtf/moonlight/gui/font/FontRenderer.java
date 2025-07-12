@@ -15,9 +15,9 @@ import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.impl.visual.NameHider;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.GradientUtils;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.GradientUtil;
+import wtf.moonlight.util.render.RenderUtil;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
@@ -143,7 +143,7 @@ public class FontRenderer {
     }
 
     public void drawStringDynamic(String text, double x, double y, int tick1, int tick2, float opacity) {
-        GradientUtils.applyGradientHorizontal(
+        GradientUtil.applyGradientHorizontal(
                 (float) x,
                 (float) y,
                 (float) getStringWidth(text),
@@ -152,7 +152,7 @@ public class FontRenderer {
                 new Color(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(tick1)),
                 new Color(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(tick2)),
                 () -> {
-                    RenderUtils.setAlphaLimit(0);
+                    RenderUtil.setAlphaLimit(0);
                     drawString(text, (float) x, (float) y, -1, true);
                 }
         );
@@ -413,7 +413,7 @@ public class FontRenderer {
             if (c != '\247' && (index == 0 || index == characters.length - 1 || characters[index - 1] != '\247')) {
                 if (index >= 1 && characters[index - 1] == '\247') continue;
                 glPushMatrix();
-                drawString(Character.toString(c), x, y, ColorUtils.reAlpha(new Color(currentColor), (int) alpha).getRGB(), false);
+                drawString(Character.toString(c), x, y, ColorUtil.reAlpha(new Color(currentColor), (int) alpha).getRGB(), false);
                 glPopMatrix();
 
                 curWidth += (getStringWidth(Character.toString(c)) * 2.0F);

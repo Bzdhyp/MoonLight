@@ -13,7 +13,7 @@ package wtf.moonlight.module.impl.visual;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjglx.input.Keyboard;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ColorValue;
@@ -21,7 +21,7 @@ import wtf.moonlight.module.values.impl.ListValue;
 
 import java.awt.*;
 
-@ModuleInfo(name = "ClickGUI", category = ModuleCategory.Visual, key = Keyboard.KEY_RSHIFT)
+@ModuleInfo(name = "ClickGUI", category = Categor.Visual, key = Keyboard.KEY_RSHIFT)
 public class ClickGUI extends Module {
     public final ListValue mode = new ListValue("Mode", new String[]{"NeverLose", "DropDown", "Arcane"}, "Arcane", this);
 

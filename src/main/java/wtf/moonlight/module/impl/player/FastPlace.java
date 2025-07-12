@@ -14,20 +14,19 @@ import net.minecraft.item.ItemBlock;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.player.PlayerUtils;
+import wtf.moonlight.util.player.PlayerUtil;
 
-@ModuleInfo(name = "FastPlace", category = ModuleCategory.Player)
+@ModuleInfo(name = "FastPlace", category = Categor.Player)
 public class FastPlace extends Module {
 
     public final SliderValue speed = new SliderValue("Speed", 1, 0, 4, this);
 
     @EventTarget
     public void onMotion(MotionEvent event) {
-        if (!PlayerUtils.nullCheck())
+        if (!PlayerUtil.nullCheck())
             return;
         if (mc.thePlayer.getHeldItem() == null)
             return;

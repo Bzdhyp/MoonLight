@@ -3,15 +3,15 @@ package wtf.moonlight.module.impl.visual;
 import net.minecraft.client.shader.Framebuffer;
 import wtf.moonlight.events.render.Shader2DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.shader.impl.KawaseBloom;
-import wtf.moonlight.utils.render.shader.impl.KawaseBlur;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.shader.impl.KawaseBloom;
+import wtf.moonlight.util.render.shader.impl.KawaseBlur;
 
-@ModuleInfo(name = "Shaders", category = ModuleCategory.Visual)
+@ModuleInfo(name = "Shaders", category = Categor.Visual)
 public class PostProcessing extends Module {
     public final BoolValue blur = new BoolValue("Blur", true, this);
     private final SliderValue blurRadius = new SliderValue("Blur Radius", 8, 1, 50, 1, this, this.blur::get);
@@ -25,18 +25,18 @@ public class PostProcessing extends Module {
         if (!this.isEnabled()) return;
 
         if (this.blur.get()) {
-            stencilFramebuffer = RenderUtils.createFrameBuffer(stencilFramebuffer);
+            stencilFramebuffer = RenderUtil.createFrameBuffer(stencilFramebuffer);
             stencilFramebuffer.framebufferClear();
             stencilFramebuffer.bindFramebuffer(false);
 
             KawaseBlur.startBlur();
             INSTANCE.getEventManager().call(new Shader2DEvent(Shader2DEvent.ShaderType.BLUR));
-            RenderUtils.resetColor();
+            RenderUtil.resetColor();
             KawaseBlur.endBlur(blurRadius.getValue(), blurCompression.getValue().intValue());
         }
 
         if (shadow.get()) {
-            stencilFramebuffer = RenderUtils.createFrameBuffer(stencilFramebuffer, true);
+            stencilFramebuffer = RenderUtil.createFrameBuffer(stencilFramebuffer, true);
             stencilFramebuffer.framebufferClear();
             stencilFramebuffer.bindFramebuffer(true);
 

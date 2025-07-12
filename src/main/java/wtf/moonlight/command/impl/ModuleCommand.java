@@ -15,7 +15,7 @@ import wtf.moonlight.command.CommandExecutionException;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.values.Value;
 import wtf.moonlight.module.values.impl.*;
-import wtf.moonlight.utils.DebugUtils;
+import wtf.moonlight.util.DebugUtil;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -46,7 +46,7 @@ public class ModuleCommand extends Command {
     public void execute(String[] args) throws CommandExecutionException {
 
         if (args.length == 1) {
-            DebugUtils.sendMessage("Usage: " + getUsage());
+            DebugUtil.sendMessage("Usage: " + getUsage());
             return;
         }
 
@@ -59,36 +59,36 @@ public class ModuleCommand extends Command {
             boolean newValue = !boolValue.get();
             boolValue.set(newValue);
 
-            DebugUtils.sendMessage(module.getName() + " " + args[1] + " was toggled " + (newValue ? "§8on" : "§8off") + ".");
+            DebugUtil.sendMessage(module.getName() + " " + args[1] + " was toggled " + (newValue ? "§8on" : "§8off") + ".");
         } else {
 
             if (args.length < 3) {
                 if (value instanceof SliderValue || value instanceof ColorValue)
-                    DebugUtils.sendMessage(args[1].toLowerCase() + " <value>");
+                    DebugUtil.sendMessage(args[1].toLowerCase() + " <value>");
                 else if (value instanceof ListValue modeValue)
-                    DebugUtils.sendMessage(args[1].toLowerCase() + " <" + Arrays.stream(modeValue.getModes())
+                    DebugUtil.sendMessage(args[1].toLowerCase() + " <" + Arrays.stream(modeValue.getModes())
                             .map(String::toLowerCase).reduce((s1, s2) -> s1 + "/" + s2).orElse("") + ">");
                 return;
             }
 
             if (value instanceof ColorValue colorValue) {
                 colorValue.setValue(new Color(Integer.parseInt(args[2])));
-                DebugUtils.sendMessage(module.getName() + " " + args[1] + " was set to " + colorValue.getValue() + ".");
+                DebugUtil.sendMessage(module.getName() + " " + args[1] + " was set to " + colorValue.getValue() + ".");
             } else if (value instanceof SliderValue sliderValue) {
                 sliderValue.setValue(Float.parseFloat(args[2]));
-                DebugUtils.sendMessage(module.getName() + " " + args[1] + " was set to " + sliderValue.getValue() + ".");
+                DebugUtil.sendMessage(module.getName() + " " + args[1] + " was set to " + sliderValue.getValue() + ".");
             } else if (value instanceof MultiBoolValue multiBoolValue) {
 
                 multiBoolValue.getValues().forEach(boolValue -> {
                     if (Objects.equals(boolValue.getName(), args[2])) {
                         boolean newValue = !boolValue.get();
                         boolValue.set(newValue);
-                        DebugUtils.sendMessage(module.getName() + " " + args[1] + " was set to " + boolValue.get() + ".");
+                        DebugUtil.sendMessage(module.getName() + " " + args[1] + " was set to " + boolValue.get() + ".");
                     }
                 });
             } else if (value instanceof ListValue modeValue) {
                 modeValue.setValue(args[2]);
-                DebugUtils.sendMessage(module.getName() + " " + args[1] + " was set to " + modeValue.getValue() + ".");
+                DebugUtil.sendMessage(module.getName() + " " + args[1] + " was set to " + modeValue.getValue() + ".");
             }
         }
     }

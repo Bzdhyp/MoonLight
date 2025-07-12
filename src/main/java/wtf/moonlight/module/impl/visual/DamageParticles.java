@@ -11,14 +11,14 @@ import wtf.moonlight.events.misc.EntityUpdateEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
-@ModuleInfo(name = "DamageParticles",category = ModuleCategory.Visual)
+@ModuleInfo(name = "DamageParticles",category = Categor.Visual)
 public class DamageParticles extends Module {
 
     private final Object2FloatOpenHashMap<EntityLivingBase> healthMap = new Object2FloatOpenHashMap<>();

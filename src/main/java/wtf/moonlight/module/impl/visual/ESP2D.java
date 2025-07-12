@@ -25,7 +25,7 @@ import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.events.render.RenderNameTagEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.impl.misc.HackerDetector;
@@ -33,10 +33,10 @@ import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ColorValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.GLUtils;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.GLUtil;
+import wtf.moonlight.util.render.RenderUtil;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
 
-@ModuleInfo(name = "ESP2D", category = ModuleCategory.Visual)
+@ModuleInfo(name = "ESP2D", category = Categor.Visual)
 public class ESP2D extends Module {
     public final BoolValue tags = new BoolValue("Tags", true, this);
     public final BoolValue fontTags = new BoolValue("Font Tags", true, this);
@@ -98,7 +98,7 @@ public class ESP2D extends Module {
 
         for (EntityPlayer player : entityPosMap.keySet()) {
             if ((player.getDistanceToEntity(mc.thePlayer) < 1.0F && mc.gameSettings.thirdPersonView == 0) ||
-                    !RenderUtils.isInViewFrustum(player))
+                    !RenderUtil.isInViewFrustum(player))
                 continue;
 
             final float[] positions = entityPosMap.get(player);
@@ -114,7 +114,7 @@ public class ESP2D extends Module {
             if (fontTags.get()) {
 
                 final String hacker = getModule(HackerDetector.class).isHacker(player) ? EnumChatFormatting.RED + "[Hacker] " + EnumChatFormatting.RESET : "";
-                final String healthString = fonttagsHealth.get() ? EnumChatFormatting.WHITE + "" + EnumChatFormatting.BOLD + " " + (MathUtils.roundToHalf(player.getHealth())) + EnumChatFormatting.RESET + "" : "";
+                final String healthString = fonttagsHealth.get() ? EnumChatFormatting.WHITE + "" + EnumChatFormatting.BOLD + " " + (MathUti.roundToHalf(player.getHealth())) + EnumChatFormatting.RESET + "" : "";
                 final String name = hacker + player.getDisplayName().getFormattedText() + healthString;
                 float halfWidth = (float) Fonts.interMedium.get(15).getStringWidth(name) * 0.5f;
                 final float xDif = x2 - x;
@@ -140,7 +140,7 @@ public class ESP2D extends Module {
                 final FontRenderer fontRenderer = mc.fontRendererObj;
 
                 final String hacker = getModule(HackerDetector.class).isHacker(player) ? EnumChatFormatting.RED + "[Hacker] " + EnumChatFormatting.RESET : "";
-                final String healthString = tagsHealth.get() ? " " + (MathUtils.roundToHalf(player.getHealth())) + EnumChatFormatting.RED + "❤" : "";
+                final String healthString = tagsHealth.get() ? " " + (MathUti.roundToHalf(player.getHealth())) + EnumChatFormatting.RED + "❤" : "";
                 final String name = hacker + player.getDisplayName().getFormattedText() + healthString;
                 float halfWidth = (float) fontRenderer.getStringWidth(name) / 2 * tagsSize.getValue();
                 final float xDif = x2 - x;
@@ -156,7 +156,7 @@ public class ESP2D extends Module {
                 }
 
                 if (tagsHealthBar.get()) {
-                    RenderUtils.drawRect(left, renderY + textHeight, (halfWidth + halfWidth + 1) * healthPercentage, 0.5f, ColorUtils.getHealthColor(player));
+                    RenderUtil.drawRect(left, renderY + textHeight, (halfWidth + halfWidth + 1) * healthPercentage, 0.5f, ColorUtil.getHealthColor(player));
                 }
 
                 fontRenderer.drawScaledString(name, middle - halfWidth, renderY + 0.5F, tagsSize.getValue(), -1);
@@ -175,7 +175,7 @@ public class ESP2D extends Module {
                     float armorX = middle - ((float) (items.size() * 18) / 2) * tagsSize.getValue();
 
                     for (ItemStack stack : items) {
-                        RenderUtils.renderItemStack(stack, armorX, renderY - 25 * tagsSize.getValue(), tagsSize.getValue() + tagsSize.getValue() / 2, true);
+                        RenderUtil.renderItemStack(stack, armorX, renderY - 25 * tagsSize.getValue(), tagsSize.getValue() + tagsSize.getValue() / 2, true);
                         armorX += 18 * tagsSize.getValue();
                     }
                 }
@@ -183,7 +183,7 @@ public class ESP2D extends Module {
 
             if (esp2d.get()) {
                 glDisable(GL_TEXTURE_2D);
-                GLUtils.startBlend();
+                GLUtil.startBlend();
 
                 if (armorBar.get()) {
                     final float armorPercentage = player.getTotalArmorValue() / 20.0F;
@@ -202,7 +202,7 @@ public class ESP2D extends Module {
                     }
 
                     if (armorPercentage > 0) {
-                        RenderUtils.color(armorBarColor.getValue().getRGB());
+                        RenderUtil.color(armorBarColor.getValue().getRGB());
 
                         // Bar
                         {
@@ -212,7 +212,7 @@ public class ESP2D extends Module {
                             glVertex2f(x + armorBarWidth - 0.5F, y2 + 2);
                             glVertex2f(x + armorBarWidth - 0.5F, y2 + 1);
                         }
-                        RenderUtils.resetColor();
+                        RenderUtil.resetColor();
                     }
 
                     if (!healthBar.get())
@@ -248,11 +248,11 @@ public class ESP2D extends Module {
                     if (healthBarSyncColor.get()) {
                         final int syncedcolor = getModule(Interface.class).color(0);
 
-                        RenderUtils.color(syncedcolor);
+                        RenderUtil.color(syncedcolor);
                     } else {
-                        final int color = ColorUtils.getColorFromPercentage(healthPercentage);
+                        final int color = ColorUtil.getColorFromPercentage(healthPercentage);
 
-                        RenderUtils.color(color);
+                        RenderUtil.color(color);
                     }
                     // Bar
                     {
@@ -263,7 +263,7 @@ public class ESP2D extends Module {
                         glVertex2f(healthBarRight, topOfHealthBar);
                     }
 
-                    RenderUtils.resetColor();
+                    RenderUtil.resetColor();
 
 
                     final float absorption = player.getAbsorptionAmount();
@@ -277,9 +277,9 @@ public class ESP2D extends Module {
                     final float topOfAbsorptionBar = y2 + 0.5F + absorptionHeight;
 
                     if (healthBarSyncColor.get()) {
-                        RenderUtils.color(getModule(Interface.class).color(0));
+                        RenderUtil.color(getModule(Interface.class).color(0));
                     } else {
-                        RenderUtils.color(absorptionColor);
+                        RenderUtil.color(absorptionColor);
                     }
 
                     // Absorption Bar
@@ -291,7 +291,7 @@ public class ESP2D extends Module {
                         glVertex2f(healthBarRight, topOfAbsorptionBar);
                     }
 
-                    RenderUtils.resetColor();
+                    RenderUtil.resetColor();
 
                     if (!box.get())
                         glEnd();
@@ -330,9 +330,9 @@ public class ESP2D extends Module {
                     }
 
                     if (boxSyncColor.get()) {
-                        RenderUtils.color(getModule(Interface.class).color(0));
+                        RenderUtil.color(getModule(Interface.class).color(0));
                     } else {
-                        RenderUtils.color(boxColor.getValue().getRGB());
+                        RenderUtil.color(boxColor.getValue().getRGB());
                     }
 
                     // Box
@@ -362,13 +362,13 @@ public class ESP2D extends Module {
                         glVertex2f(x2 - 0.5F, y2 - 1);
                     }
 
-                    RenderUtils.resetColor();
+                    RenderUtil.resetColor();
 
                     glEnd();
                 }
 
                 glEnable(GL_TEXTURE_2D);
-                GLUtils.endBlend();
+                GLUtil.endBlend();
             }
         }
     }
@@ -385,11 +385,11 @@ public class ESP2D extends Module {
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glEnable(GL_LINE_SMOOTH);
-            RenderUtils.color(skeletonsColor.getValue().getRGB());
+            RenderUtil.color(skeletonsColor.getValue().getRGB());
             glDisable(GL_DEPTH_TEST);
             glDisable(GL_TEXTURE_2D);
             glDepthMask(false);
-            RenderUtils.resetColor();
+            RenderUtil.resetColor();
         }
 
         final float partialTicks = event.partialTicks();
@@ -397,11 +397,11 @@ public class ESP2D extends Module {
         for (final EntityPlayer player : mc.theWorld.playerEntities) {
             if (project2D) {
 
-                final double posX = (MathUtils.interpolate(player.prevPosX, player.posX, partialTicks) -
+                final double posX = (MathUti.interpolate(player.prevPosX, player.posX, partialTicks) -
                         mc.getRenderManager().viewerPosX);
-                final double posY = (MathUtils.interpolate(player.prevPosY, player.posY, partialTicks) -
+                final double posY = (MathUti.interpolate(player.prevPosY, player.posY, partialTicks) -
                         mc.getRenderManager().viewerPosY);
-                final double posZ = (MathUtils.interpolate(player.prevPosZ, player.posZ, partialTicks) -
+                final double posZ = (MathUti.interpolate(player.prevPosZ, player.posZ, partialTicks) -
                         mc.getRenderManager().viewerPosZ);
 
                 final double halfWidth = player.width / 2.0D;
@@ -421,7 +421,7 @@ public class ESP2D extends Module {
                 final float[] position = new float[]{Float.MAX_VALUE, Float.MAX_VALUE, -1.0F, -1.0F};
 
                 for (final double[] vec : vectors) {
-                    projection = GLUtils.project2D((float) vec[0], (float) vec[1], (float) vec[2], event.scaledResolution().getScaleFactor());
+                    projection = GLUtil.project2D((float) vec[0], (float) vec[1], (float) vec[2], event.scaledResolution().getScaleFactor());
                     if (projection != null && projection[2] >= 0.0F && projection[2] < 1.0F) {
                         final float pX = projection[0];
                         final float pY = projection[1];
@@ -453,16 +453,16 @@ public class ESP2D extends Module {
         float[][] entPos;
         if ((entPos = playerRotationMap.get(player)) != null) {
             glPushMatrix();
-            float x = (float) (MathUtils.interpolate(player.prevPosX, player.posX, pt) -
+            float x = (float) (MathUti.interpolate(player.prevPosX, player.posX, pt) -
                     mc.getRenderManager().renderPosX);
-            float y = (float) (MathUtils.interpolate(player.prevPosY, player.posY, pt) -
+            float y = (float) (MathUti.interpolate(player.prevPosY, player.posY, pt) -
                     mc.getRenderManager().renderPosY);
-            float z = (float) (MathUtils.interpolate(player.prevPosZ, player.posZ, pt) -
+            float z = (float) (MathUti.interpolate(player.prevPosZ, player.posZ, pt) -
                     mc.getRenderManager().renderPosZ);
             glTranslated(x, y, z);
             boolean sneaking = player.isSneaking();
 
-            final float xOff = MathUtils.interpolate(player.prevRenderYawOffset, player.renderYawOffset, pt);
+            final float xOff = MathUti.interpolate(player.prevRenderYawOffset, player.renderYawOffset, pt);
             float yOff = sneaking ? 0.6F : 0.75F;
             glRotatef(-xOff, 0.0F, 1.0F, 0.0F);
             glTranslatef(0.0F, 0.0F, sneaking ? -0.235F : 0.0F);
@@ -591,7 +591,7 @@ public class ESP2D extends Module {
                 return false;
             }
 
-            return RenderUtils.isBBInFrustum(entity.getEntityBoundingBox()) && mc.theWorld.playerEntities.contains(player);
+            return RenderUtil.isBBInFrustum(entity.getEntityBoundingBox()) && mc.theWorld.playerEntities.contains(player);
         }
 
         return false;

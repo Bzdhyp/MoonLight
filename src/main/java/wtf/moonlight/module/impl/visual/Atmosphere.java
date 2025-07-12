@@ -15,7 +15,7 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ColorValue;
@@ -24,7 +24,7 @@ import wtf.moonlight.module.values.impl.SliderValue;
 
 import java.awt.*;
 
-@ModuleInfo(name = "Atmosphere", category = ModuleCategory.Visual)
+@ModuleInfo(name = "Atmosphere", category = Categor.Visual)
 public class Atmosphere extends Module {
     private final BoolValue time = new BoolValue("Time Editor",true,this);
     private final SliderValue timeValue = new SliderValue("Time", 18000, 0, 24000, 1000, this,time::get);

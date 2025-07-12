@@ -17,25 +17,25 @@ import net.minecraft.item.ItemStack;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.movement.Freeze;
 import wtf.moonlight.module.impl.movement.Scaffold;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.TimerUtils;
-import wtf.moonlight.utils.misc.SpoofSlotUtils;
-import wtf.moonlight.utils.player.MovementCorrection;
-import wtf.moonlight.utils.player.PlayerUtils;
-import wtf.moonlight.utils.player.RotationUtils;
+import wtf.moonlight.util.TimerUtil;
+import wtf.moonlight.component.SpoofSlotComponent;
+import wtf.moonlight.util.player.MovementCorrection;
+import wtf.moonlight.util.player.PlayerUtil;
+import wtf.moonlight.util.player.RotationUtil;
 
 import java.util.Objects;
 
 import static net.minecraft.init.Items.egg;
 import static net.minecraft.init.Items.snowball;
 
-@ModuleInfo(name = "AutoProjectile", category = ModuleCategory.Combat)
+@ModuleInfo(name = "AutoProjectile", category = Categor.Combat)
 public class AutoProjectile extends Module {
     private final ListValue mode = new ListValue("Mode", new String[]{"Silent", "Always"}, "Silent", this);
     private final SliderValue fov = new SliderValue("FOV",180,1,180,this);
@@ -44,26 +44,26 @@ public class AutoProjectile extends Module {
     private final SliderValue switchBackDelay = new SliderValue("Switch Back Delay", 500, 50, 2000, 25, this);
     private final SliderValue predictSize = new SliderValue("Predict Size", 2, 0.1f, 5, 0.1f, this);
     private final BoolValue customRotationSetting = new BoolValue("Custom Rotation Setting", false, this);
-    private final ListValue smoothMode = new ListValue("Rotations Smooth", RotationUtils.smoothModes, RotationUtils.smoothModes[0], this, customRotationSetting::get);
+    private final ListValue smoothMode = new ListValue("Rotations Smooth", RotationUtil.smoothModes, RotationUtil.smoothModes[0], this, customRotationSetting::get);
     private final SliderValue minYawRotSpeed = new SliderValue("Min Yaw Rotation Speed", 45, 1,180,1, this, customRotationSetting::get);
     private final SliderValue minPitchRotSpeed = new SliderValue("Min Pitch Rotation Speed", 45, 1,180,1, this, customRotationSetting::get);
     private final SliderValue maxYawRotSpeed = new SliderValue("Max Yaw Rotation Speed", 90, 1,180,1, this, customRotationSetting::get);
     private final SliderValue maxPitchRotSpeed = new SliderValue("Max Pitch Rotation Speed", 90, 1,180,1, this, customRotationSetting::get);
-    private final SliderValue bezierP0 = new SliderValue("Bezier P0", 0f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtils.smoothModes[1]) || smoothMode.is(RotationUtils.smoothModes[8])));
-    private final SliderValue bezierP1 = new SliderValue("Bezier P1", 0.05f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtils.smoothModes[1]) || smoothMode.is(RotationUtils.smoothModes[8])));
-    private final SliderValue bezierP2 = new SliderValue("Bezier P2", 0.2f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtils.smoothModes[1]) || smoothMode.is(RotationUtils.smoothModes[8])));
-    private final SliderValue bezierP3 = new SliderValue("Bezier P3", 0.4f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtils.smoothModes[1]) || smoothMode.is(RotationUtils.smoothModes[8])));
-    private final SliderValue bezierP4 = new SliderValue("Bezier P4", 0.6f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtils.smoothModes[1]) || smoothMode.is(RotationUtils.smoothModes[8])));
-    private final SliderValue bezierP5 = new SliderValue("Bezier P5", 0.8f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtils.smoothModes[1]) || smoothMode.is(RotationUtils.smoothModes[8])));
-    private final SliderValue bezierP6 = new SliderValue("Bezier P6", 0.95f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtils.smoothModes[1]) || smoothMode.is(RotationUtils.smoothModes[8])));
-    private final SliderValue bezierP7 = new SliderValue("Bezier P7", 0.1f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtils.smoothModes[1]) || smoothMode.is(RotationUtils.smoothModes[8])));
-    private final SliderValue elasticity = new SliderValue("Elasticity", 0.3f, 0.1f, 1f,0.01f, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && smoothMode.is(RotationUtils.smoothModes[7]));
-    private final SliderValue dampingFactor = new SliderValue("Damping Factor", 0.5f, 0.1f, 1f,0.01f, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && smoothMode.is(RotationUtils.smoothModes[7]));
+    private final SliderValue bezierP0 = new SliderValue("Bezier P0", 0f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP1 = new SliderValue("Bezier P1", 0.05f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP2 = new SliderValue("Bezier P2", 0.2f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP3 = new SliderValue("Bezier P3", 0.4f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP4 = new SliderValue("Bezier P4", 0.6f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP5 = new SliderValue("Bezier P5", 0.8f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP6 = new SliderValue("Bezier P6", 0.95f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP7 = new SliderValue("Bezier P7", 0.1f, 0f, 1f,1, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue elasticity = new SliderValue("Elasticity", 0.3f, 0.1f, 1f,0.01f, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && smoothMode.is(RotationUtil.smoothModes[7]));
+    private final SliderValue dampingFactor = new SliderValue("Damping Factor", 0.5f, 0.1f, 1f,0.01f, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && smoothMode.is(RotationUtil.smoothModes[7]));
     public final BoolValue smoothlyResetRotation = new BoolValue("Smoothly Reset Rotation", true, this, customRotationSetting::get);
     private final BoolValue moveFix = new BoolValue("Move Fix", true, this);
     public final ListValue moveFixMode = new ListValue("Move Fix Mode", new String[]{"Silent", "Strict"}, "Silent", this);
-    private final TimerUtils projectilePullTimer = new TimerUtils();
-    private final TimerUtils delayTimer = new TimerUtils();
+    private final TimerUtil projectilePullTimer = new TimerUtil();
+    private final TimerUtil delayTimer = new TimerUtil();
     private boolean projectileInUse;
     private int switchBack;
     private EntityPlayer target;
@@ -71,20 +71,20 @@ public class AutoProjectile extends Module {
 
     @Override
     public void onDisable() {
-        SpoofSlotUtils.stopSpoofing();
+        SpoofSlotComponent.stopSpoofing();
     }
 
     @EventTarget
     public void onUpdate(UpdateEvent event) {
         boolean usingProjectile = (mc.thePlayer.isUsingItem() && (mc.thePlayer.getHeldItem() != null && (mc.thePlayer.getHeldItem().getItem() instanceof ItemSnowball || mc.thePlayer.getHeldItem().getItem() instanceof ItemEgg))) || this.projectileInUse;
 
-        target = PlayerUtils.getTarget(range.getValue());
+        target = PlayerUtil.getTarget(range.getValue());
 
         if (getModule(Scaffold.class).isEnabled() || getModule(KillAura.class).target != null || isEnabled(Freeze.class) || !mc.thePlayer.canEntityBeSeen(target) || mc.thePlayer.isUsingItem()) {
             return;
         }
 
-        if (target != null && (RotationUtils.getRotationDifference(target) <= fov.getValue() || fov.getValue() == 180)) {
+        if (target != null && (RotationUtil.getRotationDifference(target) <= fov.getValue() || fov.getValue() == 180)) {
             if (mode.is("Always") && findProjectile() != -1) {
                 rotate();
             }
@@ -97,7 +97,7 @@ public class AutoProjectile extends Module {
                     } else {
                         mc.thePlayer.stopUsingItem();
                     }
-                    SpoofSlotUtils.stopSpoofing();
+                    SpoofSlotComponent.stopSpoofing();
 
                     this.switchBack = -1;
                     this.projectileInUse = false;
@@ -112,7 +112,7 @@ public class AutoProjectile extends Module {
                     }
 
                     this.switchBack = mc.thePlayer.inventory.currentItem;
-                    SpoofSlotUtils.startSpoofing(switchBack);
+                    SpoofSlotComponent.startSpoofing(switchBack);
                     mc.thePlayer.inventory.currentItem = projectile - 36;
                     mc.playerController.updateController();
                 }
@@ -130,7 +130,7 @@ public class AutoProjectile extends Module {
             } else {
                 mc.thePlayer.stopUsingItem();
             }
-            SpoofSlotUtils.stopSpoofing();
+            SpoofSlotComponent.stopSpoofing();
 
             this.switchBack = -1;
             this.projectileInUse = false;
@@ -170,10 +170,10 @@ public class AutoProjectile extends Module {
     
     private void rotate() {
 
-        float[] finalRotation = RotationUtils.faceTrajectory(target, true, predictSize.getValue(), 0.03f, 0.5f);
+        float[] finalRotation = RotationUtil.faceTrajectory(target, true, predictSize.getValue(), 0.03f, 0.5f);
 
         if (customRotationSetting.get()) {
-            RotationUtils.setRotation(finalRotation,smoothMode.getValue(), moveFix.get() ? (Objects.equals(moveFixMode.getValue(), "Silent") ? MovementCorrection.SILENT : MovementCorrection.STRICT) : MovementCorrection.OFF, minYawRotSpeed.getValue(), maxYawRotSpeed.getValue(), minPitchRotSpeed.getValue(), maxPitchRotSpeed.getValue(),
+            RotationUtil.setRotation(finalRotation,smoothMode.getValue(), moveFix.get() ? (Objects.equals(moveFixMode.getValue(), "Silent") ? MovementCorrection.SILENT : MovementCorrection.STRICT) : MovementCorrection.OFF, minYawRotSpeed.getValue(), maxYawRotSpeed.getValue(), minPitchRotSpeed.getValue(), maxPitchRotSpeed.getValue(),
                     bezierP0.getValue(),
                     bezierP1.getValue(),
                     bezierP2.getValue(),
@@ -186,7 +186,7 @@ public class AutoProjectile extends Module {
                     dampingFactor.getValue(),
                     smoothlyResetRotation.get());
         } else {
-            RotationUtils.setRotation(finalRotation, moveFix.get() ? (Objects.equals(moveFixMode.getValue(), "Silent") ? MovementCorrection.SILENT : MovementCorrection.STRICT) : MovementCorrection.OFF);
+            RotationUtil.setRotation(finalRotation, moveFix.get() ? (Objects.equals(moveFixMode.getValue(), "Silent") ? MovementCorrection.SILENT : MovementCorrection.STRICT) : MovementCorrection.OFF);
         }
     }
 }

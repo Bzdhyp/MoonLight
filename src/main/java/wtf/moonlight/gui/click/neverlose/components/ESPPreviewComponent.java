@@ -21,11 +21,11 @@ import wtf.moonlight.gui.click.neverlose.components.espelements.BoxElement;
 import wtf.moonlight.gui.click.neverlose.components.espelements.HealthElement;
 import wtf.moonlight.gui.click.neverlose.components.espelements.NameElement;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.misc.InstanceAccess;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.MouseUtils;
-import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.RoundedUtils;
+import wtf.moonlight.util.misc.InstanceAccess;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.MouseUtil;
+import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.render.RoundedUtil;
 
 import java.util.List;
 
@@ -62,10 +62,10 @@ public class ESPPreviewComponent extends Component implements InstanceAccess {
         adsorb = Math.abs(posX - INSTANCE.getNeverLose().getPosX()) <= 30
                 && Math.abs(posY - INSTANCE.getNeverLose().getPosY()) <= INSTANCE.getNeverLose().getHeight();
         //rect
-        RoundedUtils.drawRoundOutline(posX + INSTANCE.getNeverLose().getWidth() + 12,posY + 10,200,INSTANCE.getNeverLose().getHeight() - 20,2,.1f, ColorUtils.applyOpacity(bgColor2,.7f),outlineColor);
+        RoundedUtil.drawRoundOutline(posX + INSTANCE.getNeverLose().getWidth() + 12,posY + 10,200,INSTANCE.getNeverLose().getHeight() - 20,2,.1f, ColorUtil.applyOpacity(bgColor2,.7f),outlineColor);
         Fonts.neverlose.get(30).drawString("b",posX + INSTANCE.getNeverLose().getWidth() + 18,posY + 16,textRGB);
         Fonts.interSemiBold.get(16).drawString("Interactive ESP Preview",posX + INSTANCE.getNeverLose().getWidth() + 206 - Fonts.interSemiBold.get(16).getStringWidth("Interactive ESP Preview"),posY + 18,textRGB);
-        RenderUtils.resetColor();
+        RenderUtil.resetColor();
         //render model
         GlStateManager.pushMatrix();
         drawEntityOnScreen((posX + INSTANCE.getNeverLose().getWidth() + 110), (int) (posY + 210 + 75 * (1 - elementsManage.open.getOutput())), 80, 0, 0, mc.thePlayer);
@@ -79,7 +79,7 @@ public class ESPPreviewComponent extends Component implements InstanceAccess {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (MouseUtils.isHovered2(posX + INSTANCE.getNeverLose().getWidth() + 12,posY + 10,200,INSTANCE.getNeverLose().getHeight() - (INSTANCE.getNeverLose().getHeight() - 20),mouseX,mouseY) && mouseButton == 0 && !elementsManage.opened) {
+        if (MouseUtil.isHovered2(posX + INSTANCE.getNeverLose().getWidth() + 12,posY + 10,200,INSTANCE.getNeverLose().getHeight() - (INSTANCE.getNeverLose().getHeight() - 20),mouseX,mouseY) && mouseButton == 0 && !elementsManage.opened) {
             dragging = true;
             dragX = posX - mouseX;
             dragY = posY - mouseY;

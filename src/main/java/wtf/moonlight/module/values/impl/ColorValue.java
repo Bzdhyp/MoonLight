@@ -14,7 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.values.Value;
-import wtf.moonlight.utils.render.ColorUtils;
+import wtf.moonlight.util.render.ColorUtil;
 
 import java.awt.*;
 import java.util.function.Supplier;
@@ -39,10 +39,11 @@ public class ColorValue extends Value {
     }
 
     public Color getValue() {
-        return ColorUtils.applyOpacity(Color.getHSBColor(hue, saturation, brightness), alpha);
+        return ColorUtil.applyOpacity(Color.getHSBColor(hue, saturation, brightness), alpha);
     }
+
     public Color get() {
-        return ColorUtils.applyOpacity(Color.getHSBColor(hue, saturation, brightness), alpha);
+        return ColorUtil.applyOpacity(Color.getHSBColor(hue, saturation, brightness), alpha);
     }
 
     public void setValue(Color color) {

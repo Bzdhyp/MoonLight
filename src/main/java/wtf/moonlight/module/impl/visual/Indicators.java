@@ -19,25 +19,25 @@ import net.minecraft.entity.projectile.EntityFireball;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.misc.HackerDetector;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.font.FontRenderer;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.player.PlayerUtils;
-import wtf.moonlight.utils.player.RotationUtils;
-import wtf.moonlight.utils.render.ColorUtils;
-import wtf.moonlight.utils.render.GLUtils;
-import wtf.moonlight.utils.render.RenderUtils;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.player.PlayerUtil;
+import wtf.moonlight.util.player.RotationUtil;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.GLUtil;
+import wtf.moonlight.util.render.RenderUtil;
 
 import java.awt.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
-@ModuleInfo(name = "Indicators", category = ModuleCategory.Visual)
+@ModuleInfo(name = "Indicators", category = Categor.Visual)
 public class Indicators extends Module {
     private final SliderValue size = new SliderValue("Size", 6, 3, 30, this);
     private final SliderValue radius = new SliderValue("Radius", 100, 15, 250, 1, this);
@@ -74,20 +74,20 @@ public class Indicators extends Module {
         final double radius = this.radius.getValue();
 
         for (Entity entity : mc.theWorld.loadedEntityList) {
-            if ((!onlyNotInView.get() || onlyNotInView.get() && !RenderUtils.isInViewFrustum(entity))&& (entity instanceof EntityPlayer && entity != mc.thePlayer && renderPlayers.get()
+            if ((!onlyNotInView.get() || onlyNotInView.get() && !RenderUtil.isInViewFrustum(entity))&& (entity instanceof EntityPlayer && entity != mc.thePlayer && renderPlayers.get()
                     || entity instanceof EntityArrow && !((EntityArrow) entity).inGround && renderArrows.get()
                     || entity instanceof EntityFireball && renderFireballs.get() || entity instanceof EntityEnderPearl && renderPearls.get())) {
                 final Entity local = mc.thePlayer;
 
-                final float currentRotation = MathUtils.interpolate(local.prevRotationYaw, local.rotationYaw, partialTicks);
+                final float currentRotation = MathUti.interpolate(local.prevRotationYaw, local.rotationYaw, partialTicks);
 
-                final double currentPosX = MathUtils.interpolate(local.prevPosX, local.posX, partialTicks);
-                final double currentPosZ = MathUtils.interpolate(local.prevPosZ, local.posZ, partialTicks);
+                final double currentPosX = MathUti.interpolate(local.prevPosX, local.posX, partialTicks);
+                final double currentPosZ = MathUti.interpolate(local.prevPosZ, local.posZ, partialTicks);
 
-                final double playerPosX = MathUtils.interpolate(entity.prevPosX, entity.posX, partialTicks);
-                final double playerPosZ = MathUtils.interpolate(entity.prevPosZ, entity.posZ, partialTicks);
+                final double playerPosX = MathUti.interpolate(entity.prevPosX, entity.posX, partialTicks);
+                final double playerPosZ = MathUti.interpolate(entity.prevPosZ, entity.posZ, partialTicks);
 
-                final float yawToPlayer = RotationUtils.calculateYawFromSrcToDst(currentRotation, currentPosX, currentPosZ,
+                final float yawToPlayer = RotationUtil.calculateYawFromSrcToDst(currentRotation, currentPosX, currentPosZ,
                         playerPosX, playerPosZ) - currentRotation;
 
                 glPushMatrix();
@@ -100,13 +100,13 @@ public class Indicators extends Module {
                         radius * -Math.cos(rads), 0);
                 glDisable(GL_TEXTURE_2D);
 
-                GLUtils.startBlend();
+                GLUtil.startBlend();
 
 
                 int color;
 
                 if (entity instanceof EntityPlayer) {
-                    color = getModule(HackerDetector.class).isHacker((EntityPlayer) entity) ? new Color(255, 0, 0).getRGB() : (PlayerUtils.isInTeam(entity) ? new Color(96, 252, 66).getRGB() : new Color(252, 96, 66).getRGB());
+                    color = getModule(HackerDetector.class).isHacker((EntityPlayer) entity) ? new Color(255, 0, 0).getRGB() : (PlayerUtil.isInTeam(entity) ? new Color(96, 252, 66).getRGB() : new Color(252, 96, 66).getRGB());
                 } else if (entity instanceof EntityArrow) {
                     color = new Color(184, 184, 184).getRGB();
                 } else if (entity instanceof EntityFireball) {
@@ -128,17 +128,17 @@ public class Indicators extends Module {
 
                     final float health = player.getHealth() / player.getMaxHealth();
 
-                    final int healthColor = ColorUtils.getColorFromPercentage(health);
+                    final int healthColor = ColorUtil.getColorFromPercentage(health);
 
                     final double barSize = arrowSize + 4;
                     glBegin(GL_QUADS);
                     {
                         // Background
-                        RenderUtils.color(0x96000000);
+                        RenderUtil.color(0x96000000);
                         addQuadVertices(-barSize / 2.0, arrowSize / 2.0 + 2, barSize, 2);
 
                         // Colored bar
-                        RenderUtils.color(healthColor);
+                        RenderUtil.color(healthColor);
                         final double filled = (barSize - 1) * health;
                         addQuadVertices(-barSize / 2.0 + 0.5, arrowSize / 2.0 + 2 + 0.5, filled, 1);
                     }
@@ -149,14 +149,14 @@ public class Indicators extends Module {
 
                 if (outline.get()) {
                     // Draw Outline
-                    RenderUtils.color(color | 0xFF000000);
+                    RenderUtil.color(color | 0xFF000000);
 
                     glBegin(GL_LINE_LOOP);
                     {
                         addTriangleVertices(arrowSize);
                     }
 
-                    RenderUtils.resetColor();
+                    RenderUtil.resetColor();
                     glEnd();
                 }
 
@@ -165,20 +165,20 @@ public class Indicators extends Module {
                 glEnable(GL_POLYGON_SMOOTH);
                 glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 
-                RenderUtils.color(color);
+                RenderUtil.color(color);
 
                 glBegin(GL_TRIANGLES);
                 {
                     addTriangleVertices(arrowSize);
                 }
 
-                RenderUtils.resetColor();
+                RenderUtil.resetColor();
                 glEnd();
 
                 glDisable(GL_POLYGON_SMOOTH);
                 glHint(GL_POLYGON_SMOOTH_HINT, GL_DONT_CARE);
 
-                GLUtils.endBlend();
+                GLUtil.endBlend();
                 glEnable(GL_TEXTURE_2D);
 
                 glPopMatrix();

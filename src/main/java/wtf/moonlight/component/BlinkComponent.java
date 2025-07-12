@@ -21,9 +21,9 @@ import com.cubk.EventPriority;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.misc.WorldEvent;
 import wtf.moonlight.events.packet.PacketEvent;
-import wtf.moonlight.utils.misc.InstanceAccess;
-import wtf.moonlight.utils.TimerUtils;
-import wtf.moonlight.utils.packet.PacketUtils;
+import wtf.moonlight.util.misc.InstanceAccess;
+import wtf.moonlight.util.TimerUtil;
+import wtf.moonlight.util.packet.PacketUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +34,7 @@ public final class BlinkComponent implements InstanceAccess {
     public static final ConcurrentLinkedQueue<Packet<?>> packets = new ConcurrentLinkedQueue<>();
     public static boolean blinking, dispatch;
     public static ArrayList<Class<?>> exemptedPackets = new ArrayList<>();
-    public static TimerUtils exemptionWatch = new TimerUtils();
+    public static TimerUtil exemptionWatch = new TimerUtil();
 
     public static void setExempt(Class<?>... packets) {
         exemptedPackets = new ArrayList<>(Arrays.asList(packets));

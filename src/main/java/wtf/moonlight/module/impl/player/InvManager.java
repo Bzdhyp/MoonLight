@@ -18,21 +18,21 @@ import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.AttackEvent;
 import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.movement.InvMove;
 import wtf.moonlight.module.impl.movement.Scaffold;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.MathUtils;
-import wtf.moonlight.utils.TimerUtils;
-import wtf.moonlight.utils.packet.PacketUtils;
-import wtf.moonlight.utils.player.InventoryUtils;
-import wtf.moonlight.utils.player.PlayerUtils;
+import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.TimerUtil;
+import wtf.moonlight.util.packet.PacketUtils;
+import wtf.moonlight.util.player.InventoryUtil;
+import wtf.moonlight.util.player.PlayerUtil;
 import wtf.moonlight.component.SelectorDetectionComponent;
 
-@ModuleInfo(name = "InvManager", category = ModuleCategory.Player)
+@ModuleInfo(name = "InvManager", category = Categor.Player)
 public class InvManager extends Module {
     private final BoolValue autoArmor = new BoolValue("AutoArmor", true, this);
     private final BoolValue keepSync = new BoolValue("Keep Sync", false, this);
@@ -48,7 +48,7 @@ public class InvManager extends Module {
 
     private final ListValue modeValue = new ListValue("Mode", new String[]{"Basic", "OpenInv"},  "Basic", this);
 
-    public final TimerUtils timerUtil = new TimerUtils();
+    public final TimerUtil timerUtil = new TimerUtil();
     private int chestTicks, attackTicks, placeTicks;
     @Getter
     private boolean moved, open;
@@ -143,7 +143,7 @@ public class InvManager extends Module {
                     }
                 }
 
-                if (!InventoryUtils.isValid(stack)) {
+                if (!InventoryUtil.isValid(stack)) {
                     this.throwItem(i);
                     continue;
                 }
@@ -265,8 +265,8 @@ public class InvManager extends Module {
                     ItemStack currentStack = mc.thePlayer.inventory.getStackInSlot(potion);
                     if (currentStack != null) {
                         ItemPotion currentItemPotion = (ItemPotion) currentStack.getItem();
-                        int currentRank = PlayerUtils.potionRanking(currentItemPotion.getEffects(currentStack).get(0).getPotionID());
-                        int newRank = PlayerUtils.potionRanking(itemPotion.getEffects(stack).get(0).getPotionID());
+                        int currentRank = PlayerUtil.potionRanking(currentItemPotion.getEffects(currentStack).get(0).getPotionID());
+                        int newRank = PlayerUtil.potionRanking(itemPotion.getEffects(stack).get(0).getPotionID());
 
                         if (newRank > currentRank) {
                             potion = i;
@@ -412,7 +412,7 @@ public class InvManager extends Module {
     }
 
     private void updateNextClick() {
-        this.nextClick = Math.round((float) MathUtils.getRandom(this.delay.getValue().intValue(), this.delay.getValue().intValue()));
+        this.nextClick = Math.round((float) MathUti.getRandom(this.delay.getValue().intValue(), this.delay.getValue().intValue()));
         this.timerUtil.reset();
         moved = true;
     }

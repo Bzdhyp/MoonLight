@@ -34,21 +34,21 @@ import wtf.moonlight.events.misc.TickEvent;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.*;
 import wtf.moonlight.module.Module;
-import wtf.moonlight.module.ModuleCategory;
+import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.utils.TimerUtils;
-import wtf.moonlight.utils.packet.PacketUtils;
-import wtf.moonlight.utils.player.MovementUtils;
-import wtf.moonlight.utils.player.PlayerUtils;
-import wtf.moonlight.utils.player.RotationUtils;
+import wtf.moonlight.util.TimerUtil;
+import wtf.moonlight.util.packet.PacketUtils;
+import wtf.moonlight.util.player.MovementUtil;
+import wtf.moonlight.util.player.PlayerUtil;
+import wtf.moonlight.util.player.RotationUtil;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-@ModuleInfo(name = "Velocity", category = ModuleCategory.Combat)
+@ModuleInfo(name = "Velocity", category = Categor.Combat)
 public class Velocity extends Module {
     private final ListValue mode = new ListValue("Mode", new String[]{"Grim", "Delay", "Legit", "Boost", "Jump Reset"}, "Delay", this);
     private final ListValue delayMode = new ListValue("Delay Mode", new String[]{"Packet", "Ping Spoof"}, "Packet", this, () -> mode.is("Delay"));
@@ -79,7 +79,7 @@ public class Velocity extends Module {
     public static boolean jump = false;
     private static boolean lastResult = false;
 
-    private final TimerUtils timerUtil = new TimerUtils();
+    private final TimerUtil timerUtil = new TimerUtil();
 
     private final Random random = new Random();
     private ArrayList<Packet<?>> delayedPackets = new ArrayList<>();
@@ -296,7 +296,7 @@ public class Velocity extends Module {
                 idk++;
             }
             if (idk == reverseTick.getValue()) {
-                MovementUtils.strafe(MovementUtils.getSpeed() * reverseStrength.getValue(), RotationUtils.currentRotation != null ? RotationUtils.currentRotation[0] : MovementUtils.getDirection());
+                MovementUtil.strafe(MovementUtil.getSpeed() * reverseStrength.getValue(), RotationUtil.currentRotation != null ? RotationUtil.currentRotation[0] : MovementUtil.getDirection());
                 veloPacket = false;
                 idk = 0;
             }
@@ -337,9 +337,9 @@ public class Velocity extends Module {
             ArrayList<Vec3> vec3s = new ArrayList<>();
             HashMap<Vec3, Integer> map = new HashMap<>();
             Vec3 playerPos = new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-            Vec3 onlyForward = PlayerUtils.getPredictedPos(1.0F, 0.0F).add(playerPos);
-            Vec3 strafeLeft = PlayerUtils.getPredictedPos(1.0F, 1.0F).add(playerPos);
-            Vec3 strafeRight = PlayerUtils.getPredictedPos(1.0F, -1.0F).add(playerPos);
+            Vec3 onlyForward = PlayerUtil.getPredictedPos(1.0F, 0.0F).add(playerPos);
+            Vec3 strafeLeft = PlayerUtil.getPredictedPos(1.0F, 1.0F).add(playerPos);
+            Vec3 strafeRight = PlayerUtil.getPredictedPos(1.0F, -1.0F).add(playerPos);
             map.put(onlyForward, 0);
             map.put(strafeLeft, 1);
             map.put(strafeRight, -1);
