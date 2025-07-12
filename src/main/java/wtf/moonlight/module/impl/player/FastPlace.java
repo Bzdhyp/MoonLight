@@ -27,7 +27,6 @@ public class FastPlace extends Module {
 
     @EventTarget
     public void onMotion(MotionEvent event) {
-        setTag(MathUtils.incValue(speed.getValue(), 1) + "");
         if (!PlayerUtils.nullCheck())
             return;
         if (mc.thePlayer.getHeldItem() == null)

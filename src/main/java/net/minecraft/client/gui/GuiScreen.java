@@ -647,8 +647,17 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
         return keyID == 30 && isCtrlKeyDown() && !isShiftKeyDown() && !isAltKeyDown();
     }
 
-    public void onResize(Minecraft mcIn, int w, int h)
-    {
+    public boolean GuiInvMove() {
+        return false;
+    }
+
+    /**
+     * Called when the GUI is resized in order to update the world and the resolution
+     *
+     * @param w The width of the screen
+     * @param h The height of the screen
+     */
+    public void onResize(Minecraft mcIn, int w, int h) {
         this.setWorldAndResolution(mcIn, w, h);
     }
 }

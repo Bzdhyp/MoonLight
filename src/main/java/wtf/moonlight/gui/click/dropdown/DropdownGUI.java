@@ -55,6 +55,10 @@ public class DropdownGUI extends GuiScreen {
         super.initGui();
     }
 
+    public boolean GuiInvMove() {
+        return true;
+    }
+
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 

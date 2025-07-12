@@ -35,7 +35,7 @@ import net.optifine.CustomColors;
 import wtf.moonlight.Client;
 import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.module.impl.display.Interface;
-import wtf.moonlight.module.impl.visual.Shaders;
+import wtf.moonlight.module.impl.visual.PostProcessing;
 import wtf.moonlight.utils.misc.SpoofSlotUtils;
 import wtf.moonlight.utils.render.RoundedUtils;
 
@@ -290,7 +290,7 @@ public class GuiIngame extends Gui
             this.overlayPlayerList.updatePlayerList(false);
         }
 
-        Client.INSTANCE.getModuleManager().getModule(Shaders.class).renderShaders();
+        Client.INSTANCE.getModuleManager().getModule(PostProcessing.class).renderShaders();
         Client.INSTANCE.getEventManager().call(new Render2DEvent(partialTicks, scaledresolution));
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

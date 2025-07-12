@@ -47,7 +47,7 @@ public class AutoPearl extends Module {
         if (event.isPost() && this.calculating && (this.calculationFuture == null || this.calculationFuture.isDone())) {
             this.calculating = false;
             if (this.calculationFuture != null) {
-                getModule(Freeze.class).throwPearl(this.calculationFuture.get());
+                Freeze.throwPearl(this.calculationFuture.get());
             }
         }
         final boolean overVoid = !mc.thePlayer.onGround && !PlayerUtils.isBlockUnder(30.0, true);

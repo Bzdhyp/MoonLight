@@ -14,7 +14,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
 import net.minecraft.client.renderer.GlStateManager;
 import wtf.moonlight.Client;
-import wtf.moonlight.module.impl.visual.ESP;
+import wtf.moonlight.module.impl.visual.ESP2D;
 import wtf.moonlight.module.values.Value;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.click.neverlose.components.espelements.BoxElement;
@@ -38,7 +38,7 @@ public class ESPPreviewComponent extends Component implements InstanceAccess {
     private int posX,posY,dragX,dragY;
     private boolean dragging = false;
     private boolean adsorb = true;
-    private final List<Value> values = Client.INSTANCE.getModuleManager().getModule(ESP.class).getValues();
+    private final List<Value> values = Client.INSTANCE.getModuleManager().getModule(ESP2D.class).getValues();
     private final ObjectArrayList<Component> elements = new ObjectArrayList<>();
 
     public ESPPreviewComponent() {

@@ -10,7 +10,7 @@
  */
 package wtf.moonlight.gui.click.neverlose.components.espelements;
 
-import wtf.moonlight.module.impl.visual.ESP;
+import wtf.moonlight.module.impl.visual.ESP2D;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.GLUtils;
@@ -27,7 +27,7 @@ public class HealthElement extends Component {
 
         float y2 = y + 170;
 
-        if (INSTANCE.getModuleManager().getModule(ESP.class).healthBar.get()) {
+        if (INSTANCE.getModuleManager().getModule(ESP2D.class).healthBar.get()) {
 
             glDisable(GL_TEXTURE_2D);
             GLUtils.startBlend();
@@ -77,7 +77,7 @@ public class HealthElement extends Component {
 
             final float absorptionPercentage = Math.min(1.0F, absorption / 20.0F);
 
-            final int absorptionColor = INSTANCE.getModuleManager().getModule(ESP.class).absorptionColor.getValue().getRGB();
+            final int absorptionColor = INSTANCE.getModuleManager().getModule(ESP2D.class).absorptionColor.getValue().getRGB();
 
             final float absorptionHeight = heightDif * absorptionPercentage;
 

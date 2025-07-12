@@ -24,7 +24,6 @@ import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.utils.render.ColorUtils;
 import wtf.moonlight.utils.render.GLUtils;
 import wtf.moonlight.utils.render.RenderUtils;
-import wtf.moonlight.utils.render.shader.impl.Blur;
 
 import java.util.Arrays;
 
@@ -43,13 +42,11 @@ public class Camera extends Module {
             new BoolValue("Bright Players", false),
             new BoolValue("Motion Camera",false),
             new BoolValue("Motion Blur",false),
-            new BoolValue("World Bloom", false),
             new BoolValue("Minimal Bobbing",true)
     ), this);
     public final SliderValue cameraDistance = new SliderValue("Distance", 4.0f, 1.0f, 8.0f, 1.0f, this, () -> setting.isEnabled("Third Person Distance"));
     public final SliderValue interpolation = new SliderValue("Motion Interpolation", 0.15f, 0.05f, 0.5f, 0.05f,this, () -> setting.isEnabled("Motion Camera"));
     public final SliderValue amount = new SliderValue("Motion Blur Amount", 1, 1, 10, 1, this, () -> setting.isEnabled("Motion Blur"));
-    public final SliderValue bloomAmount = new SliderValue("Bloom Amount", 1, 0.05f, 0.75f, 0.05f,this, () -> setting.isEnabled("World Bloom"));
 
     @EventTarget
     public void onTick(TickEvent event) {
@@ -134,10 +131,6 @@ public class Camera extends Module {
                 glEnable(GL_TEXTURE_2D);
             }
         }
-    }
-
-    public void drawWorldBloom() {
-        Blur.renderBlur(this.bloomAmount.getValue());
     }
 
     public boolean canMinimalBobbing(){

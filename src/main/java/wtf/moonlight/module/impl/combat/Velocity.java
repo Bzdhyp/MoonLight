@@ -21,7 +21,9 @@ import net.minecraft.network.play.client.C00PacketKeepAlive;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
+import net.minecraft.network.play.server.S00PacketKeepAlive;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
+import net.minecraft.network.play.server.S32PacketConfirmTransaction;
 import net.minecraft.network.status.client.C00PacketServerQuery;
 import net.minecraft.network.status.client.C01PacketPing;
 import net.minecraft.util.Vec3;
@@ -161,19 +163,21 @@ public class Velocity extends Module {
         }
 
         if (mode.is("Delay") && delayMode.is("Packet") && delay) {
-            velocityTicks = velocityTicks + 1;
+            velocityTicks++;
 
-            boolean canProcess = mc.thePlayer.onGround && isValid();
-            boolean shouldTimeout = !isValid() || velocityTicks >= 41;
-
-            if (canProcess || shouldTimeout) {
-                delayedPackets.forEach(p -> PacketUtils.sendPacketNoEvent(p));
-
-                if (canProcess) {
-                    mc.thePlayer.motionY = 0.42f;
+            if (mc.thePlayer.onGround && isValid()) {
+                for (Packet<?> packet : delayedPackets) {
+                    PacketUtils.sendPacketNoEvent(packet);
                 }
-
-                delayedPackets = new ArrayList<>();
+                delayedPackets.clear();
+                mc.thePlayer.jump();
+                delay = false;
+                velocityTicks = 0;
+            } else if (!isValid() || velocityTicks > 40) {
+                for (Packet<?> packet : delayedPackets) {
+                    PacketUtils.sendPacketNoEvent(packet);
+                }
+                delayedPackets.clear();
                 delay = false;
                 velocityTicks = 0;
             }
@@ -253,18 +257,15 @@ public class Velocity extends Module {
                 }
                 case "Delay": {
                     if (delayMode.is("Packet")) {
-                        boolean conditionsMet = isValid();
-                        boolean shouldInitiate = conditionsMet && !delay;
-
-                        if (conditionsMet) {
+                        if (isValid()) {
                             velocityTicks = 0;
-                            if (shouldInitiate) {
-                                delayedPackets = new ArrayList<>();
+                            if (!delay) {
+                                delayedPackets.clear();
                                 delay = true;
                             }
                         }
 
-                        if (event.getState() == PacketEvent.State.OUTGOING && delay && conditionsMet) {
+                        if (event.getState() == PacketEvent.State.OUTGOING && delay) {
                             event.setCancelled(true);
                             delayedPackets.add(event.getPacket());
                         }
@@ -366,7 +367,7 @@ public class Velocity extends Module {
     }
 
     public static boolean getGrimPost() {
-        final boolean result = Client.INSTANCE.getModuleManager().getModule(Velocity.class).isEnabled() &&
+        boolean result = Client.INSTANCE.getModuleManager().getModule(Velocity.class).isEnabled() &&
                 (Client.INSTANCE.getModuleManager().getModule(Velocity.class).delayMode.is("Ping Spoof") && Client.INSTANCE.getModuleManager().getModule(Velocity.class).mode.is("Delay")) &&
                 mc.thePlayer != null && mc.thePlayer.isEntityAlive() && mc.thePlayer.ticksExisted >= 10 && !(mc.currentScreen instanceof GuiDownloadTerrain);
         if (lastResult && !result) {
@@ -375,6 +376,18 @@ public class Velocity extends Module {
         }
 
         return lastResult = result;
+    }
+
+    public static boolean grimPostDelay(final Packet<?> packet) {
+        if (mc.thePlayer == null) return false;
+
+        if (mc.currentScreen instanceof GuiDownloadTerrain) return false;
+
+        if (packet instanceof S12PacketEntityVelocity sPacketEntityVelocity) {
+            return sPacketEntityVelocity.getEntityID() == mc.thePlayer.getEntityId();
+        }
+
+        return packet instanceof S32PacketConfirmTransaction || packet instanceof S00PacketKeepAlive;
     }
 
     public static void processPackets() {

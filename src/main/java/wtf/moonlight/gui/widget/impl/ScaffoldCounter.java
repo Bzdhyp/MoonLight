@@ -8,7 +8,7 @@
  *
  * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
  */
-package wtf.moonlight.module.impl.visual;
+package wtf.moonlight.gui.widget.impl;
 
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;

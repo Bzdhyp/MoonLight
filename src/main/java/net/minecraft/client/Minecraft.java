@@ -1522,13 +1522,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         }
     }
 
-    private void resize(int width, int height)
-    {
+    public void resize(int width, int height) {
         this.displayWidth = Math.max(1, width);
         this.displayHeight = Math.max(1, height);
 
-        if (this.currentScreen != null)
-        {
+        if (this.currentScreen != null) {
             ScaledResolution scaledresolution = new ScaledResolution(this);
             this.currentScreen.onResize(this, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight());
         }

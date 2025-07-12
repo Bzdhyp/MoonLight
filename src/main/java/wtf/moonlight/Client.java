@@ -22,11 +22,9 @@ import wtf.moonlight.config.ConfigManager;
 import wtf.moonlight.gui.click.arcane.ArcaneClickGui;
 import wtf.moonlight.utils.friend.FriendManager;
 import wtf.moonlight.module.ModuleManager;
-import wtf.moonlight.module.impl.visual.ScaffoldCounter;
-import wtf.moonlight.gui.click.astolfo.AstolfoGui;
+import wtf.moonlight.gui.widget.impl.ScaffoldCounter;
 import wtf.moonlight.gui.click.dropdown.DropdownGUI;
 import wtf.moonlight.gui.click.neverlose.NeverLose;
-import wtf.moonlight.gui.click.skeet.SkeetUI;
 import wtf.moonlight.gui.notification.NotificationManager;
 import wtf.moonlight.gui.notification.NotificationType;
 import wtf.moonlight.gui.widget.WidgetManager;
@@ -74,8 +72,6 @@ public class Client {
     private NeverLose neverLose;
     private DropdownGUI dropdownGUI;
     private ArcaneClickGui arcaneClickGui;
-    private SkeetUI skeetGUI;
-    private AstolfoGui astolfoGui;
 
     private DiscordInfo discordRP;
 
@@ -137,8 +133,6 @@ public class Client {
         neverLose = new NeverLose();
         dropdownGUI = new DropdownGUI();
         arcaneClickGui = new ArcaneClickGui();
-        skeetGUI = new SkeetUI();
-        astolfoGui = new AstolfoGui();
     }
 
     private void registerEventHandlers() {

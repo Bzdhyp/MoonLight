@@ -10,7 +10,7 @@
  */
 package wtf.moonlight.gui.click.neverlose.components.espelements;
 
-import wtf.moonlight.module.impl.visual.ESP;
+import wtf.moonlight.module.impl.visual.ESP2D;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.utils.render.GLUtils;
 import wtf.moonlight.utils.render.RenderUtils;
@@ -20,7 +20,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class BoxElement extends Component {
     @Override
     public void drawScreen(int mouseX, int mouseY) {
-        if (INSTANCE.getModuleManager().getModule(ESP.class).box.get()) {
+        if (INSTANCE.getModuleManager().getModule(ESP2D.class).box.get()) {
             float x = INSTANCE.getNeverLose().espPreviewComponent.getPosX() + INSTANCE.getNeverLose().getWidth() + 65;
             float y = (float) (INSTANCE.getNeverLose().espPreviewComponent.getPosY() + 45 + 75 * (1 - INSTANCE.getNeverLose().espPreviewComponent.getElementsManage().open.getOutput()));
             float x2 = x + 90;
@@ -59,7 +59,7 @@ public class BoxElement extends Component {
                 glVertex2f(x2 - 1.5F, y2 - 1.5F);
             }
 
-            RenderUtils.color(INSTANCE.getModuleManager().getModule(ESP.class).boxColor.getValue().getRGB());
+            RenderUtils.color(INSTANCE.getModuleManager().getModule(ESP2D.class).boxColor.getValue().getRGB());
 
             // Box
             {

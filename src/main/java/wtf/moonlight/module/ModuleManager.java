@@ -121,19 +121,19 @@ public final class ModuleManager {
                 ClickGUI.class,
                 DashTrail.class,
                 DeadEffect.class,
-                ESP.class,
-                FireFlies.class,
+                ESP2D.class,
+                Particles.class,
                 FreeLook.class,
                 FullBright.class,
                 GifTest.class,
                 GlowESP.class,
-                Hat.class,
+                ChinaHat.class,
                 HitBubbles.class,
                 Indicators.class,
                 JumpCircles.class,
                 LineGlyphs.class,
-                Rotation.class,
-                Shaders.class,
+                SilentView.class,
+                PostProcessing.class,
                 Trajectories.class,
                 TargetESP.class,
                 Breadcrumbs.class,
@@ -199,10 +199,6 @@ public final class ModuleManager {
     @Nullable
     public Module getModule(String name) {
         return CollectionsKt.firstOrNull(modules, m -> m.getName().equalsIgnoreCase(name));
-    }
-
-    public Collection<Module> getAllModules() {
-        return Collections.unmodifiableCollection(modules);
     }
 
     /**

@@ -7,7 +7,7 @@ import wtf.moonlight.Client;
 import wtf.moonlight.gui.click.arcane.panel.CategoryPanel;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.module.ModuleCategory;
-import wtf.moonlight.module.impl.visual.ESP;
+import wtf.moonlight.module.impl.visual.ESP2D;
 import wtf.moonlight.utils.animations.advanced.Animation;
 import wtf.moonlight.utils.animations.advanced.Direction;
 import wtf.moonlight.utils.animations.advanced.impl.DecelerateAnimation;
@@ -70,6 +70,10 @@ public class ArcaneClickGui extends GuiScreen {
         y = 50;
     }
 
+    public boolean GuiInvMove() {
+        return true;
+    }
+
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         if (dragging) {
@@ -108,7 +112,7 @@ public class ArcaneClickGui extends GuiScreen {
         }
         RoundedUtils.drawRound((float) (x + 10 + (96 / 2) * animations2.getOutput()), y + 44, 96 / 2, 25, 5, smallbackgroundColor2);
 
-        if (Client.INSTANCE.getModuleManager().getModule(ESP.class).isEnabled() && sb) {
+        if (Client.INSTANCE.getModuleManager().getModule(ESP2D.class).isEnabled() && sb) {
             espPreviewComponent.drawScreen(mouseX, mouseY);
         }
 

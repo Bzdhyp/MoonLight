@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import wtf.moonlight.Client;
-import wtf.moonlight.module.impl.visual.ESP;
+import wtf.moonlight.module.impl.visual.ESP2D;
 import wtf.moonlight.module.impl.display.Interface;
 
 public class ModelPlayer extends ModelBiped
@@ -128,10 +128,10 @@ public class ModelPlayer extends ModelBiped
         copyModelAngles(this.bipedLeftArm, this.bipedLeftArmwear);
         copyModelAngles(this.bipedRightArm, this.bipedRightArmwear);
         copyModelAngles(this.bipedBody, this.bipedBodyWear);
-        if (Client.INSTANCE.getModuleManager().getModule(ESP.class).shouldDrawSkeletons() && Client.INSTANCE.getModuleManager().getModule(ESP.class).isValid(entityIn))
-            Client.INSTANCE.getModuleManager().getModule(ESP.class).addEntity((EntityPlayer) entityIn, this);
-        else if(Client.INSTANCE.getModuleManager().getModule(ESP.class).playerRotationMap.containsKey(entityIn))
-            Client.INSTANCE.getModuleManager().getModule(ESP.class).playerRotationMap.remove(entityIn,this);
+        if (Client.INSTANCE.getModuleManager().getModule(ESP2D.class).shouldDrawSkeletons() && Client.INSTANCE.getModuleManager().getModule(ESP2D.class).isValid(entityIn))
+            Client.INSTANCE.getModuleManager().getModule(ESP2D.class).addEntity((EntityPlayer) entityIn, this);
+        else if(Client.INSTANCE.getModuleManager().getModule(ESP2D.class).playerRotationMap.containsKey(entityIn))
+            Client.INSTANCE.getModuleManager().getModule(ESP2D.class).playerRotationMap.remove(entityIn,this);
     }
 
     public void renderRightArm()

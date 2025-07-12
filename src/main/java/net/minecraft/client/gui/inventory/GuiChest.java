@@ -25,6 +25,10 @@ public class GuiChest extends GuiContainer
         this.ySize = j + this.inventoryRows * 18;
     }
 
+    public boolean GuiInvMove() {
+        return true;
+    }
+
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
         this.fontRendererObj.drawString(this.lowerChestInventory.getDisplayName().getUnformattedText(), 8, 6, 4210752);

@@ -8,7 +8,7 @@
  *
  * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
  */
-package wtf.moonlight.module.impl.visual;
+package wtf.moonlight.module.impl.misc;
 
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
@@ -25,9 +25,8 @@ import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.utils.MathUtils;
 import wtf.moonlight.utils.render.RenderUtils;
 
-@ModuleInfo(name = "Rotation", category = ModuleCategory.Visual)
-public class Rotation extends Module {
-
+@ModuleInfo(name = "SilentView", category = ModuleCategory.Misc)
+public class SilentView extends Module {
     public final BoolValue body = new BoolValue("Render Body", true, this);
     public final BoolValue realistic = new BoolValue("Realistic", true, this, body::get);
     public final BoolValue fixAim = new BoolValue("Fix Aim", true, this);

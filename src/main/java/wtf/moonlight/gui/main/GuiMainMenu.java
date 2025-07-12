@@ -21,7 +21,6 @@ import wtf.moonlight.gui.button.MenuButton;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.main.alt.GuiAccountManager;
 import wtf.moonlight.utils.render.RoundedUtils;
-import wtf.moonlight.utils.render.shader.impl.Blur;
 import wtf.moonlight.utils.render.shader.impl.MainMenu;
 
 import java.awt.*;
@@ -70,9 +69,7 @@ public class GuiMainMenu extends GuiScreen {
 
         RoundedUtils.drawRound(width / 2f - buttonWidth / 2f - 20,(height / 2f) - 60,buttonWidth + 20 * 2,200,10,new Color(0,0,0,64));
 
-        Blur.startBlur();
         RoundedUtils.drawRound(width / 2f - buttonWidth / 2f - 20,(height / 2f) - 60,buttonWidth + 20 * 2,200,10,new Color(0,0,0,64));
-        Blur.endBlur(10,3);
 
         Fonts.interBold.get(35).drawCenteredString(Client.INSTANCE.getClientName(), (width / 2f - buttonWidth / 2f) + buttonWidth / 2, (height / 2f) + count - (buttons.size() * buttonHeight) / 2f, -1);
         Fonts.interMedium.get(14).drawStringWithShadow("Welcome back," + EnumChatFormatting.AQUA + Client.INSTANCE.getDiscordRP().getName(), width - (2 + Fonts.interMedium.get(14).getStringWidth("Welcome back," + Client.INSTANCE.getDiscordRP().getName())), height - (2 + Fonts.interMedium.get(14).getHeight()), -1);

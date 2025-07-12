@@ -26,6 +26,10 @@ public class GuiInventory extends InventoryEffectRenderer
         this.allowUserInput = true;
     }
 
+    public boolean GuiInvMove() {
+        return true;
+    }
+
     public void updateScreen()
     {
         if (this.mc.playerController.isInCreativeMode())

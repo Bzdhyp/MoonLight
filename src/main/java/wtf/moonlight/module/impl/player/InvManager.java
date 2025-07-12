@@ -44,7 +44,7 @@ public class InvManager extends Module {
     private final SliderValue axeSlot = new SliderValue("Axe Slot", 5, 1, 9, this);
     private final SliderValue blockSlot = new SliderValue("Block Slot", 6, 1, 9, this);
     private final SliderValue potionSlot = new SliderValue("Potion Slot", 8, 1, 9, this);
-    private final SliderValue delay = new SliderValue("Delay", 150, 0, 500, 50, this);
+    private final SliderValue delay = new SliderValue("Delay", 150, 0, 500, 10, this);
 
     private final ListValue modeValue = new ListValue("Mode", new String[]{"Basic", "OpenInv"},  "Basic", this);
 

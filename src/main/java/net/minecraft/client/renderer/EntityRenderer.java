@@ -1290,10 +1290,6 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 if (!this.mc.gameSettings.hideGUI || this.mc.currentScreen != null)
                 {
 
-                    if (Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Camera.class).setting.isEnabled("World Bloom")) {
-                        Client.INSTANCE.getModuleManager().getModule(Camera.class).drawWorldBloom();
-                    }
-
                     GlStateManager.alphaFunc(516, 0.1F);
                     this.mc.ingameGUI.renderGameOverlay(partialTicks);
 

@@ -147,8 +147,17 @@ public class RenderUtils implements InstanceAccess {
         return createFrameBuffer(framebuffer, false);
     }
 
+    public static boolean needsNewFramebuffer(Framebuffer framebuffer) {
+        return framebuffer == null || framebuffer.framebufferWidth != mc.displayWidth || framebuffer.framebufferHeight != mc.displayHeight;
+    }
+
+    public static Framebuffer createResizedFramebuffer(Framebuffer fb, boolean stencil) {
+        if (fb != null) fb.deleteFramebuffer();
+        return new Framebuffer(mc.displayWidth, mc.displayHeight, stencil);
+    }
+
     public static Framebuffer createFrameBuffer(Framebuffer framebuffer, boolean depth) {
-        if (framebuffer == null || framebuffer.framebufferWidth != mc.displayWidth || framebuffer.framebufferHeight != mc.displayHeight) {
+        if (needsNewFramebuffer(framebuffer)) {
             if (framebuffer != null) {
                 framebuffer.deleteFramebuffer();
             }

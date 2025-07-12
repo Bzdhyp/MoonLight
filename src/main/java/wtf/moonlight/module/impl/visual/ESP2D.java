@@ -46,8 +46,8 @@ import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
 
-@ModuleInfo(name = "ESP", category = ModuleCategory.Visual)
-public class ESP extends Module {
+@ModuleInfo(name = "ESP2D", category = ModuleCategory.Visual)
+public class ESP2D extends Module {
     public final BoolValue tags = new BoolValue("Tags", true, this);
     public final BoolValue fontTags = new BoolValue("Font Tags", true, this);
     public final BoolValue fonttagsBackground = new BoolValue("Font Tags Background", true, this, fontTags::get);

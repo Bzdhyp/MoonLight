@@ -164,9 +164,7 @@ public class KillAura extends Module {
         if (renderBlocking) {
             renderBlocking = false;
         }
-        if (blinked) {
-            BlinkComponent.dispatch();
-        }
+        BlinkComponent.dispatch();
         target = null;
         targets.clear();
         index = 0;

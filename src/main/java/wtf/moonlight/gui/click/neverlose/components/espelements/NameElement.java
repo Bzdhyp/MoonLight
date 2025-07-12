@@ -13,7 +13,7 @@ package wtf.moonlight.gui.click.neverlose.components.espelements;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import wtf.moonlight.module.impl.visual.ESP;
+import wtf.moonlight.module.impl.visual.ESP2D;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.utils.MathUtils;
 import wtf.moonlight.utils.render.RenderUtils;
@@ -30,23 +30,23 @@ public class NameElement extends Component {
             x = INSTANCE.getNeverLose().espPreviewComponent.getPosX() + INSTANCE.getNeverLose().getWidth() + 120;
             y = (int) (INSTANCE.getNeverLose().espPreviewComponent.getPosY() + 35 + 75 * (1 - INSTANCE.getNeverLose().espPreviewComponent.getElementsManage().open.getOutput()));
 
-        if (INSTANCE.getModuleManager().getModule(ESP.class).tags.get()) {
+        if (INSTANCE.getModuleManager().getModule(ESP2D.class).tags.get()) {
             final FontRenderer fontRenderer = mc.fontRendererObj;
             final String name = mc.thePlayer.getDisplayName().getFormattedText() + " " + (MathUtils.roundToHalf(mc.thePlayer.getHealth())) + EnumChatFormatting.RED + "❤";
 
-            if (INSTANCE.getModuleManager().getModule(ESP.class).tagsBackground.get()) {
+            if (INSTANCE.getModuleManager().getModule(ESP2D.class).tagsBackground.get()) {
 
                 RenderUtils.drawRect(
-                        (x - fontRenderer.getStringWidth(name) / 2f * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue()),
+                        (x - fontRenderer.getStringWidth(name) / 2f * INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue()),
                         (y - 2),
-                        fontRenderer.getStringWidth(name) * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue(),
-                        fontRenderer.FONT_HEIGHT * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue() + 1,
+                        fontRenderer.getStringWidth(name) * INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue(),
+                        fontRenderer.FONT_HEIGHT * INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue() + 1,
                         0x96000000);
             }
-            fontRenderer.drawScaledString(name, (x - fontRenderer.getStringWidth(name) / 2f * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue()), y, INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue(), -1);
+            fontRenderer.drawScaledString(name, (x - fontRenderer.getStringWidth(name) / 2f * INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue()), y, INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue(), -1);
 
 
-            if (INSTANCE.getModuleManager().getModule(ESP.class).item.get()) {
+            if (INSTANCE.getModuleManager().getModule(ESP2D.class).item.get()) {
                 List<ItemStack> items = new ArrayList<>();
                 if (mc.thePlayer.getHeldItem() != null) {
                     items.add(mc.thePlayer.getHeldItem());
@@ -57,11 +57,11 @@ public class NameElement extends Component {
                         items.add(stack);
                     }
                 }
-                float armorX = x - fontRenderer.getStringWidth(name) / 2f - ((float) (items.size() * 18) / 2) * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue();
+                float armorX = x - fontRenderer.getStringWidth(name) / 2f - ((float) (items.size() * 18) / 2) * INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue();
 
                 for (ItemStack stack : items) {
-                    RenderUtils.renderItemStack(stack, armorX, y - 25 * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue(), INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue() + INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue() / 2, true);
-                    armorX += 18 * INSTANCE.getModuleManager().getModule(ESP.class).tagsSize.getValue();
+                    RenderUtils.renderItemStack(stack, armorX, y - 25 * INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue(), INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue() + INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue() / 2, true);
+                    armorX += 18 * INSTANCE.getModuleManager().getModule(ESP2D.class).tagsSize.getValue();
                 }
             }
         }

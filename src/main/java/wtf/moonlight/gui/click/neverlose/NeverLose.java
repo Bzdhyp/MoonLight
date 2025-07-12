@@ -15,7 +15,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.EnumChatFormatting;
 import wtf.moonlight.Client;
 import wtf.moonlight.module.ModuleCategory;
-import wtf.moonlight.module.impl.visual.ESP;
+import wtf.moonlight.module.impl.visual.ESP2D;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.gui.click.neverlose.panel.Panel;
 import wtf.moonlight.gui.click.neverlose.components.ESPPreviewComponent;
@@ -95,6 +95,10 @@ public class NeverLose extends GuiScreen {
         iconRGB = new Color(0x00BBFF).getRGB();
         outlineTextRGB = new Color(0x00BBFF).getRGB();
         moduleTextRGB = new Color(0x2c313b).getRGB();
+    }
+
+    public boolean GuiInvMove() {
+        return true;
     }
 
     @Override
@@ -226,7 +230,7 @@ public class NeverLose extends GuiScreen {
                 if (panel.isSelected()) {
                     RoundedUtils.drawRound(posX + 8, panel.getCategory().ordinal() >= 7 ? posY + 92 + panel.getCategory().ordinal() * 24 : panel.getCategory().ordinal() >= 6 ? posY + 78 + panel.getCategory().ordinal() * 24 : panel.getCategory().ordinal() >= 2 ? posY + 65 + panel.getCategory().ordinal() * 24
                             : posY + 52 + panel.getCategory().ordinal() * 24, 120, 19, 5, categoryBgColor);
-                    if (panel.getCategory() == ModuleCategory.Visual && Client.INSTANCE.getModuleManager().getModule(ESP.class).isEnabled()) {
+                    if (panel.getCategory() == ModuleCategory.Visual && Client.INSTANCE.getModuleManager().getModule(ESP2D.class).isEnabled()) {
                         espPreviewComponent.drawScreen(mouseX, mouseY);
                     }
                 }
@@ -323,7 +327,7 @@ public class NeverLose extends GuiScreen {
     public void stuffToBlur(){
         RoundedUtils.drawRound(posX,posY,135,height,6f,bgColor);
         Panel visualPanel = getPanelByCategory(ModuleCategory.Visual);
-        if (visualPanel != null && visualPanel.isSelected() && Client.INSTANCE.getModuleManager().getModule(ESP.class).isEnabled()) {
+        if (visualPanel != null && visualPanel.isSelected() && Client.INSTANCE.getModuleManager().getModule(ESP2D.class).isEnabled()) {
             RoundedUtils.drawRoundOutline(posX + width + 12,posY + 10,200,height - 20,2,.1f, ColorUtils.applyOpacity(bgColor2,1f),new Color(0x08111d).brighter());
         }
     }
@@ -338,7 +342,7 @@ public class NeverLose extends GuiScreen {
             selected.mouseReleased(mouseX, mouseY, state);
         }
         Panel visualPanel = getPanelByCategory(ModuleCategory.Visual);
-        if (visualPanel != null && visualPanel.isSelected() && Client.INSTANCE.getModuleManager().getModule(ESP.class).isEnabled()) {
+        if (visualPanel != null && visualPanel.isSelected() && Client.INSTANCE.getModuleManager().getModule(ESP2D.class).isEnabled()) {
             espPreviewComponent.mouseReleased(mouseX,mouseY,state);
         }
         super.mouseReleased(mouseX, mouseY, state);

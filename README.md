@@ -18,7 +18,8 @@ ArcaneClickGui By GuyueMang
 - Fix BlinkComponent
 - NoSlowDown bypass Hypixel
 - Prediction LongJump
-- new AltManger
+- new AltManger ResourcePack ClickGui Interface
+- InvMove bypass Hypixel
 - Revise the project structure
 
 ## Play Hypixel

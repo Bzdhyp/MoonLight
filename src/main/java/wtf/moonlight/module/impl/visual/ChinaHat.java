@@ -34,8 +34,8 @@ import java.awt.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
-@ModuleInfo(name = "Hat", category = ModuleCategory.Visual)
-public class Hat extends Module {
+@ModuleInfo(name = "ChinaHat", category = ModuleCategory.Visual)
+public class ChinaHat extends Module {
     public final ListValue mode = new ListValue("Mode", new String[]{"Astolfo", "Sexy", "Fade", "Dynamic"}, "Sexy", this);
     public final SliderValue points = new SliderValue("Points", 30, 3, 180, this);
     public final SliderValue size = new SliderValue("Size", 0.5f, 0.1f, 3.0f, 0.1f, this);

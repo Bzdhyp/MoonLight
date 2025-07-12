@@ -26,7 +26,7 @@ import java.nio.FloatBuffer;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.glUniform1fv;
 
-public class Shadow implements InstanceAccess {
+public class KawaseBloom implements InstanceAccess {
 
     public static ShaderUtils bloomShader = new ShaderUtils("shadow");
     public static Framebuffer bloomFramebuffer = new Framebuffer(1, 1, false);

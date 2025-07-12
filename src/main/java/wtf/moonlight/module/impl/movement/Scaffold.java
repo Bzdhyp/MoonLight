@@ -447,7 +447,7 @@ public class Scaffold extends Module {
         }
 
         if (mc.thePlayer.onGround) {
-            if (((addons.isEnabled("Keep Y") || mode.is("Telly") || wdKeepY.canDisplay())) && MovementUtils.isMoving() && !towering() && !towerMoving() && (addons.isEnabled("Keep Y") && !isEnabled(Speed.class))) {
+            if (((mode.is("Telly") || wdKeepY.canDisplay())) && MovementUtils.isMoving() && !towering() && !towerMoving()) {
                 mc.thePlayer.jump();
             }
         }
@@ -760,28 +760,61 @@ public class Scaffold extends Module {
         return Keyboard.isKeyDown(mc.gameSettings.keyBindJump.getKeyCode()) && MovementUtils.isMoving();
     }
 
+    private static int lastSelectedSlot = -1;
+    private static long lastSwitchTime = 0;
+
     public int getBlockSlot() {
-        int slot = -1, size = 0;
+        int slot = -1;
+        int size = 0;
+        final int minSwitchThreshold = 4;
 
         if (getBlockCount() == 0) {
             return -1;
         }
 
-        for (int i = 36; i < 45; i++) {
-            final Slot s = mc.thePlayer.inventoryContainer.getSlot(i);
-
-            if (s.getHasStack()) {
-                final Item item = s.getStack().getItem();
-                final ItemStack is = s.getStack();
-
-                if (item instanceof ItemBlock && !blacklistedBlocks.contains(((ItemBlock) item).getBlock()) && (biggestStack.get() && is.stackSize > size || !biggestStack.get())) {
-                    size = is.stackSize;
-                    slot = i;
+        if (!biggestStack.get()) {
+            for (int i = 36; i < 45; i++) {
+                Slot s = mc.thePlayer.inventoryContainer.getSlot(i);
+                if (s.getHasStack() && isBlockValid(s.getStack())) {
+                    return i - 36;
                 }
+            }
+            return -1;
+        }
+
+        for (int i = 36; i < 45; i++) {
+            Slot s = mc.thePlayer.inventoryContainer.getSlot(i);
+            if (!s.getHasStack()) continue;
+
+            ItemStack stack = s.getStack();
+            if (!isBlockValid(stack)) continue;
+
+            int stackSize = stack.stackSize;
+
+            if (i - 36 == lastSelectedSlot && stackSize > minSwitchThreshold) {
+                return lastSelectedSlot;
+            }
+
+            if (stackSize > size && (size <= minSwitchThreshold || lastSelectedSlot == -1)) {
+                size = stackSize;
+                slot = i;
             }
         }
 
-        return slot - 36;
+        long currentTime = System.currentTimeMillis();
+        if (slot != -1 && (currentTime - lastSwitchTime > 200 || lastSelectedSlot == -1)) {
+            lastSelectedSlot = slot - 36;
+            lastSwitchTime = currentTime;
+            return lastSelectedSlot;
+        } else {
+            return lastSelectedSlot != -1 ? lastSelectedSlot : 0;
+        }
+    }
+
+    private boolean isBlockValid(ItemStack stack) {
+        if (!(stack.getItem() instanceof ItemBlock)) return false;
+        Block block = ((ItemBlock) stack.getItem()).getBlock();
+        return !blacklistedBlocks.contains(block);
     }
 
     public int getBlockCount() {
@@ -790,7 +823,7 @@ public class Scaffold extends Module {
         for (int i = 36; i < 45; ++i) {
             if (!mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) continue;
 
-            final ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
+            ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
 
             if (!(is.getItem() instanceof ItemBlock && !blacklistedBlocks.contains(((ItemBlock) is.getItem()).getBlock()))) {
                 continue;

@@ -5,7 +5,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumChatFormatting;
 import wtf.moonlight.gui.click.Component;
-import wtf.moonlight.module.impl.visual.ESP;
+import wtf.moonlight.module.impl.visual.ESP2D;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.utils.MathUtils;
 import wtf.moonlight.utils.render.ColorUtils;
@@ -37,7 +37,7 @@ public class ESPComponent extends Component {
         GlStateManager.pushMatrix();
         drawEntityOnScreen((int) posX + 50, (int) posY + 180, 80, 0, 0, mc.thePlayer);
         GlStateManager.popMatrix();
-        if (INSTANCE.getModuleManager().getModule(ESP.class).box.get()) {
+        if (INSTANCE.getModuleManager().getModule(ESP2D.class).box.get()) {
             float x = posX + 5;
             float y = (float) (posY + 20);
             float x2 = x + 90;
@@ -75,10 +75,10 @@ public class ESPComponent extends Component {
                 glVertex2f(x2 - 1.5F, y2 - 1.5F);
             }
 
-            if (INSTANCE.getModuleManager().getModule(ESP.class).boxSyncColor.get()) {
-                INSTANCE.getModuleManager().getModule(ESP.class).color(INSTANCE.getModuleManager().getModule(Interface.class).color(7));
+            if (INSTANCE.getModuleManager().getModule(ESP2D.class).boxSyncColor.get()) {
+                INSTANCE.getModuleManager().getModule(ESP2D.class).color(INSTANCE.getModuleManager().getModule(Interface.class).color(7));
             } else {
-                INSTANCE.getModuleManager().getModule(ESP.class).color(INSTANCE.getModuleManager().getModule(ESP.class).boxColor.getColor().getRGB());
+                INSTANCE.getModuleManager().getModule(ESP2D.class).color(INSTANCE.getModuleManager().getModule(ESP2D.class).boxColor.getColor().getRGB());
             }
 
             // Box
@@ -119,7 +119,7 @@ public class ESPComponent extends Component {
         int y = (int) posY + 20;
         float y2 = y + 170;
 
-        if (INSTANCE.getModuleManager().getModule(ESP.class).healthBar.get()) {
+        if (INSTANCE.getModuleManager().getModule(ESP2D.class).healthBar.get()) {
 
             glDisable(GL_TEXTURE_2D);
             GLUtils.startBlend();
@@ -151,14 +151,14 @@ public class ESPComponent extends Component {
 
             final float topOfHealthBar = y2 + 0.5F + healthBarHeight;
 
-            if (INSTANCE.getModuleManager().getModule(ESP.class).healthBarSyncColor.get()) {
+            if (INSTANCE.getModuleManager().getModule(ESP2D.class).healthBarSyncColor.get()) {
                 final int syncedcolor = INSTANCE.getModuleManager().getModule(Interface.class).color(1);
 
-                INSTANCE.getModuleManager().getModule(ESP.class).color(syncedcolor);
+                INSTANCE.getModuleManager().getModule(ESP2D.class).color(syncedcolor);
             } else {
                 final int color = ColorUtils.getColorFromPercentage(healthPercentage);
 
-                INSTANCE.getModuleManager().getModule(ESP.class).color(color);
+                INSTANCE.getModuleManager().getModule(ESP2D.class).color(color);
             }
 
             // Bar
@@ -175,16 +175,16 @@ public class ESPComponent extends Component {
 
             final float absorptionPercentage = Math.min(1.0F, absorption / 20.0F);
 
-            final int absorptionColor = INSTANCE.getModuleManager().getModule(ESP.class).absorptionColor.getColor().getRGB();
+            final int absorptionColor = INSTANCE.getModuleManager().getModule(ESP2D.class).absorptionColor.getColor().getRGB();
 
             final float absorptionHeight = heightDif * absorptionPercentage;
 
             final float topOfAbsorptionBar = y2 + 0.5F + absorptionHeight;
 
-            if (INSTANCE.getModuleManager().getModule(ESP.class).healthBarSyncColor.get()) {
-                INSTANCE.getModuleManager().getModule(ESP.class).color(INSTANCE.getModuleManager().getModule(Interface.class).color(7));
+            if (INSTANCE.getModuleManager().getModule(ESP2D.class).healthBarSyncColor.get()) {
+                INSTANCE.getModuleManager().getModule(ESP2D.class).color(INSTANCE.getModuleManager().getModule(Interface.class).color(7));
             } else {
-                INSTANCE.getModuleManager().getModule(ESP.class).color(absorptionColor);
+                INSTANCE.getModuleManager().getModule(ESP2D.class).color(absorptionColor);
             }
 
             // Absorption Bar
@@ -206,8 +206,8 @@ public class ESPComponent extends Component {
         x = posX;
         y = posY;
 
-        if (INSTANCE.getModuleManager().getModule(ESP.class).fontTags.get()) {
-            final String healthString = INSTANCE.getModuleManager().getModule(ESP.class).fonttagsHealth.get() ? " |" + EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + " " + (MathUtils.roundToHalf(mc.thePlayer.getHealth())) + "❤" + EnumChatFormatting.RESET + "" : "";
+        if (INSTANCE.getModuleManager().getModule(ESP2D.class).fontTags.get()) {
+            final String healthString = INSTANCE.getModuleManager().getModule(ESP2D.class).fonttagsHealth.get() ? " |" + EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + " " + (MathUtils.roundToHalf(mc.thePlayer.getHealth())) + "❤" + EnumChatFormatting.RESET + "" : "";
             final String name = mc.thePlayer.getDisplayName().getFormattedText() + healthString;
             float halfWidth = (float) mc.fontRendererObj.getStringWidth(name) * 0.5f;
             final float middle = x + halfWidth;
@@ -216,7 +216,7 @@ public class ESPComponent extends Component {
 
             final float left = middle - halfWidth - 1;
             final float right = middle + halfWidth + 1;
-            if (INSTANCE.getModuleManager().getModule(ESP.class).fonttagsBackground.get()) {
+            if (INSTANCE.getModuleManager().getModule(ESP2D.class).fonttagsBackground.get()) {
                 Gui.drawRect(left, renderY - 6, right, renderY + textHeight + 1, new Color(0, 0, 0, 50).getRGB());
             }
 

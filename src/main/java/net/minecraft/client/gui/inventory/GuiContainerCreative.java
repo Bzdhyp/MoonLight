@@ -46,6 +46,10 @@ public class GuiContainerCreative extends InventoryEffectRenderer
     private boolean field_147057_D;
     private CreativeCrafting field_147059_E;
 
+    public boolean GuiInvMove() {
+        return true;
+    }
+
     public GuiContainerCreative(EntityPlayer p_i1088_1_)
     {
         super(new GuiContainerCreative.ContainerCreative(p_i1088_1_));

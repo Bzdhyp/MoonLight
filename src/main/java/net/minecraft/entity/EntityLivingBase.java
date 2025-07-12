@@ -58,7 +58,7 @@ import wtf.moonlight.events.misc.EntityUpdateEvent;
 import wtf.moonlight.events.player.*;
 import wtf.moonlight.module.impl.movement.NoFluid;
 import wtf.moonlight.module.impl.visual.Animations;
-import wtf.moonlight.module.impl.visual.Rotation;
+import wtf.moonlight.module.impl.misc.SilentView;
 import wtf.moonlight.utils.animations.advanced.ContinualAnimation;
 import wtf.moonlight.utils.player.MovementUtils;
 import wtf.moonlight.utils.player.RotationUtils;
@@ -1643,7 +1643,7 @@ public abstract class EntityLivingBase extends Entity
         if (this.swingProgress > 0.0F)
         {
             //f1 = this.rotationYaw;
-            f1 = RotationUtils.shouldRotate() && this ==  Minecraft.getMinecraft().thePlayer && Client.INSTANCE.getModuleManager().getModule(Rotation.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Rotation.class).realistic.get() ? RotationUtils.currentRotation[0] : this.rotationYaw;
+            f1 = RotationUtils.shouldRotate() && this ==  Minecraft.getMinecraft().thePlayer && Client.INSTANCE.getModuleManager().getModule(SilentView.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(SilentView.class).realistic.get() ? RotationUtils.currentRotation[0] : this.rotationYaw;
         }
 
         if (!this.onGround)
@@ -1705,7 +1705,7 @@ public abstract class EntityLivingBase extends Entity
     {
         float rotationYaw = this.rotationYaw;
         if (this instanceof EntityPlayerSP) {
-            if (RotationUtils.shouldRotate() && this ==  Minecraft.getMinecraft().thePlayer && Client.INSTANCE.getModuleManager().getModule(Rotation.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Rotation.class).body.get()) {
+            if (RotationUtils.shouldRotate() && this ==  Minecraft.getMinecraft().thePlayer && Client.INSTANCE.getModuleManager().getModule(SilentView.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(SilentView.class).body.get()) {
                 rotationYaw = RotationUtils.currentRotation[0];
             }
         }
@@ -1724,7 +1724,7 @@ public abstract class EntityLivingBase extends Entity
             f1 = 75.0F;
         }
 
-        if(RotationUtils.shouldRotate() && Client.INSTANCE.getModuleManager().getModule(Rotation.class).isEnabled() && !Client.INSTANCE.getModuleManager().getModule(Rotation.class).realistic.get())
+        if(RotationUtils.shouldRotate() && Client.INSTANCE.getModuleManager().getModule(SilentView.class).isEnabled() && !Client.INSTANCE.getModuleManager().getModule(SilentView.class).realistic.get())
             f1 = 0;
 
         this.renderYawOffset = rotationYaw - f1;
@@ -1791,7 +1791,7 @@ public abstract class EntityLivingBase extends Entity
         {
             this.worldObj.theProfiler.startSection("newAi");
             this.updateEntityActionState();
-            this.rotationYawHead = RotationUtils.shouldRotate() && this ==  Minecraft.getMinecraft().thePlayer && Client.INSTANCE.getModuleManager().getModule(Rotation.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Rotation.class).realistic.get() ? RotationUtils.currentRotation[0] : this.rotationYawHead;
+            this.rotationYawHead = RotationUtils.shouldRotate() && this ==  Minecraft.getMinecraft().thePlayer && Client.INSTANCE.getModuleManager().getModule(SilentView.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(SilentView.class).realistic.get() ? RotationUtils.currentRotation[0] : this.rotationYawHead;
             this.worldObj.theProfiler.endSection();
         }
 
