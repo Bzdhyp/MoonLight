@@ -73,6 +73,19 @@ public class MovementUtil implements InstanceAccess {
         return rotationYaw;
     }
 
+    public static double predictedSumMotion(double motion, int ticks) {
+        if (ticks == 0) {
+            return motion;
+        }
+        double predicted = motion;
+        double sum = 0.0d + predicted;
+        for (int i = 0; i < ticks; i++) {
+            predicted = (predicted - 0.08d) * 0.9800000190734863d;
+            sum += predicted;
+        }
+        return sum;
+    }
+
     public static boolean isMoving() {
         return isMoving(mc.thePlayer);
     }

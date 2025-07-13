@@ -913,7 +913,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
                 {
                     packetIn.func_149174_e().animationsToGo = 5;
                 }
-                packetIn.func_149174_e().realStackSize = entityplayer.inventory.mainInventory[packetIn.func_149173_d() - 36].realStackSize;
+
                 entityplayer.inventoryContainer.putStackInSlot(packetIn.func_149173_d(), packetIn.func_149174_e());
             }
             else if (packetIn.func_149175_c() == entityplayer.openContainer.windowId && (packetIn.func_149175_c() != 0 || !flag))

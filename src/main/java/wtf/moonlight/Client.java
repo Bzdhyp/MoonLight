@@ -141,7 +141,6 @@ public class Client {
         eventManager.register(new BadPacketsComponent());
         eventManager.register(new PingSpoofComponent());
         eventManager.register(new FreeLookComponent());
-        eventManager.register(new SlotComponent());
         eventManager.register(new BlinkComponent());
         eventManager.register(new SpoofSlotComponent());
 

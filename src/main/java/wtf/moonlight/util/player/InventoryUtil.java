@@ -245,18 +245,35 @@ public class InventoryUtil implements InstanceAccess {
         return true;
     }
 
-    public static int getEnchantment(ItemStack itemStack, Enchantment enchantment) {
-        if (itemStack == null || itemStack.getEnchantmentTagList() == null || itemStack.getEnchantmentTagList().hasNoTags())
-            return 0;
-
-        for (int i = 0; i < itemStack.getEnchantmentTagList().tagCount(); i++) {
-            final NBTTagCompound tagCompound = itemStack.getEnchantmentTagList().getCompoundTagAt(i);
-
-            if ((tagCompound.hasKey("ench") && tagCompound.getShort("ench") == enchantment.effectId) || (tagCompound.hasKey("id") && tagCompound.getShort("id") == enchantment.effectId))
-                return tagCompound.getShort("lvl");
+    public static int pickHotarBlock(boolean biggestStack) {
+        if (biggestStack) {
+            int currentStackSize = 0;
+            int currentSlot = 36;
+            for (int i = 36; i < 45; i++) {
+                ItemStack itemStack = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
+                if (itemStack != null && (itemStack.getItem() instanceof ItemBlock) && itemStack.stackSize > currentStackSize) {
+                    Block block = ((ItemBlock) itemStack.getItem()).getBlock();
+                    if (block.isFullCube() && !ScaffoldUtil.blacklistedBlocks.contains(block)) {
+                        currentStackSize = itemStack.stackSize;
+                        currentSlot = i;
+                    }
+                }
+            }
+            if (currentStackSize > 0) {
+                return currentSlot - 36;
+            }
+            return -1;
         }
-
-        return 0;
+        for (int i2 = 36; i2 < 45; i2++) {
+            ItemStack itemStack2 = mc.thePlayer.inventoryContainer.getSlot(i2).getStack();
+            if (itemStack2 != null && (itemStack2.getItem() instanceof ItemBlock) && itemStack2.stackSize > 0) {
+                Block block2 = ((ItemBlock) itemStack2.getItem()).getBlock();
+                if (block2.isFullCube() && !ScaffoldUtil.blacklistedBlocks.contains(block2)) {
+                    return i2 - 36;
+                }
+            }
+        }
+        return -1;
     }
 
     @FunctionalInterface

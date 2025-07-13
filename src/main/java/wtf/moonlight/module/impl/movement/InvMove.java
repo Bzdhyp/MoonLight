@@ -19,6 +19,7 @@ import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.player.InvManager;
 import wtf.moonlight.module.values.impl.ListValue;
+import wtf.moonlight.util.misc.ServerUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,8 @@ public class InvMove extends Module {
     @EventTarget
     private void onPacket(PacketEvent event) {
         if (mode.is("LastPacket")) {
+            if (ServerUtil.isHypixelLobby()) return;
+
             if (event.getPacket() instanceof C16PacketClientStatus p && c16C == null) {
                 if (p.getStatus() == C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT) {
                     c16C = p;
@@ -102,6 +105,8 @@ public class InvMove extends Module {
         setTag(mode.getValue());
 
         if (mode.is("LastPacket") && e.isPre()) {
+            if (ServerUtil.isHypixelLobby()) return;
+
             if (mc.currentScreen == null) {
                 if (pc != null) {
                     if (c16C != null && !InvPacketList.isEmpty()) {

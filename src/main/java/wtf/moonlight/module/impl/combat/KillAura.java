@@ -40,6 +40,7 @@ import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.impl.movement.AntiFall;
 import wtf.moonlight.module.impl.player.BedNuker;
 import wtf.moonlight.module.impl.movement.Scaffold;
+import wtf.moonlight.module.impl.player.Clutch;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.MultiBoolValue;

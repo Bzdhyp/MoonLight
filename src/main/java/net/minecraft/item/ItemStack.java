@@ -36,7 +36,7 @@ import net.minecraft.world.World;
 public final class ItemStack
 {
     public static final DecimalFormat DECIMALFORMAT = new DecimalFormat("#.###");
-    public int stackSize, realStackSize, ticksSinceModified = 9999999;
+    public int stackSize;
     public int animationsToGo;
     private Item item;
     private NBTTagCompound stackTagCompound;
@@ -391,23 +391,14 @@ public final class ItemStack
         return this.stackSize + "x" + this.item.getUnlocalizedName() + "@" + this.itemDamage;
     }
 
-    /**
-     * Called each tick as long the ItemStack in on player inventory. Used to progress the pickup animation and update
-     * maps.
-     */
-    public void updateAnimation(final World worldIn, final Entity entityIn, final int inventorySlot, final boolean isCurrentItem) {
-        if (this.animationsToGo > 0) {
+    public void updateAnimation(World worldIn, Entity entityIn, int inventorySlot, boolean isCurrentItem)
+    {
+        if (this.animationsToGo > 0)
+        {
             --this.animationsToGo;
         }
 
-        this.ticksSinceModified++;
-        if (this.ticksSinceModified >= 20) {
-            this.realStackSize = stackSize;
-        }
-
-        if (this.item != null) {
-            this.item.onUpdate(this, worldIn, entityIn, inventorySlot, isCurrentItem);
-        }
+        this.item.onUpdate(this, worldIn, entityIn, inventorySlot, isCurrentItem);
     }
 
     public void onCrafting(World worldIn, EntityPlayer playerIn, int amount)
