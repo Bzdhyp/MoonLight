@@ -1,5 +1,7 @@
 package net.minecraft.client.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -15,6 +17,7 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.passive.EntityHorse;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -43,6 +46,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
 {
     public final NetHandlerPlayClient sendQueue;
     private final StatFileWriter statWriter;
+    public int rotIncrement;
     private double lastReportedPosX;
     private double lastReportedPosY;
     private double lastReportedPosZ;
@@ -67,12 +71,18 @@ public class EntityPlayerSP extends AbstractClientPlayer
     public float timeInPortal;
     public float prevTimeInPortal;
     public boolean omniSprint;
+    @Getter @Setter
+    private Vec3 severPosition;
+    @Getter @Setter
+    private Vec3 lastServerPosition;
 
     public EntityPlayerSP(Minecraft mcIn, World worldIn, NetHandlerPlayClient netHandler, StatFileWriter statFile)
     {
         super(worldIn, netHandler.getGameProfile());
         this.sendQueue = netHandler;
         this.statWriter = statFile;
+        this.severPosition = new Vec3(0.0, 0.0, 0.0);
+        this.lastServerPosition = new Vec3(0.0, 0.0, 0.0);
         this.mc = mcIn;
         this.dimension = 0;
     }
@@ -679,7 +689,6 @@ public class EntityPlayerSP extends AbstractClientPlayer
         boolean flag2 = this.movementInput.moveForward >= f;
         this.movementInput.updatePlayerMoveState();
         this.keyMovementInput.updatePlayerMoveState();
-
         if ((this.isUsingItem() || Client.INSTANCE.getModuleManager().getModule(KillAura.class).target != null && Client.INSTANCE.getModuleManager().getModule(KillAura.class).slow.get() &&
                 Client.INSTANCE.getModuleManager().getModule(KillAura.class).shouldBlock() && Client.INSTANCE.getModuleManager().getModule(KillAura.class).isBlocking ||
                 Client.INSTANCE.getModuleManager().getModule(AutoGap.class).eating

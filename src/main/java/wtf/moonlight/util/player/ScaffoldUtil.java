@@ -106,31 +106,29 @@ public class ScaffoldUtil implements InstanceAccess {
     }
 
     public static Scaffold.PlaceData getPlaceData(final BlockPos pos) {
-        EnumFacing[] facings = {EnumFacing.EAST, EnumFacing.WEST, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.UP};
+        EnumFacing[] horizontalFacings = {EnumFacing.EAST, EnumFacing.WEST, EnumFacing.NORTH, EnumFacing.SOUTH};
+        EnumFacing[] allFacings = {EnumFacing.EAST, EnumFacing.WEST, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.UP};
 
-        // 1 of the 4 directions around player
-        for (EnumFacing facing : facings) {
+        for (EnumFacing facing : horizontalFacings) {
             final BlockPos blockPos = pos.add(facing.getOpposite().getDirectionVec());
             if (canBePlacedOn(blockPos)) {
                 return new Scaffold.PlaceData(blockPos, facing);
             }
         }
 
-        // 2 Blocks Under e.g. When jumping
-        final BlockPos posBelow = pos.add(0, -1, 0);
-        if (canBePlacedOn(posBelow)) {
-            return new Scaffold.PlaceData(posBelow, EnumFacing.UP);
-        }
-
-        // 2 Block extension & diagonal
-        for (EnumFacing facing : facings) {
+        for (EnumFacing facing : allFacings) {
             final BlockPos blockPos = pos.add(facing.getOpposite().getDirectionVec());
-            for (EnumFacing facing1 : facings) {
+            for (EnumFacing facing1 : allFacings) {
                 final BlockPos blockPos1 = blockPos.add(facing1.getOpposite().getDirectionVec());
                 if (canBePlacedOn(blockPos1)) {
                     return new Scaffold.PlaceData(blockPos1, facing1);
                 }
             }
+        }
+
+        final BlockPos posBelow = pos.add(0, -1, 0);
+        if (canBePlacedOn(posBelow)) {
+            return new Scaffold.PlaceData(posBelow, EnumFacing.UP);
         }
 
         return null;

@@ -73,6 +73,22 @@ public class NotificationManager implements InstanceAccess {
                 float yVal;
                 float actualOffset = 0;
                 switch (INSTANCE.getModuleManager().getModule(Interface.class).notificationMode.getValue()) {
+                    case "Augustus": {
+                        animation.setDuration(500);
+                        actualOffset = 10;
+
+                        x = sr.getScaledWidth() - (width) * (float) animation.getOutput();
+                        y = sr.getScaledHeight() - (yOffset + 18 + height);
+
+                        RoundedUtil.drawRound(x, y, width, height, 4f, new Color(INSTANCE.getModuleManager().getModule(Interface.class).bgColor(0), true));
+
+                        if (!shader) {
+                            Fonts.esp.get(15).drawStringWithShadow(notification.getDescription(), x + 13, y + 15, -1);
+                        }
+
+                        yOffset += (float) ((height + actualOffset) * animation.getOutput());
+                        break;
+                    }
                     case "Default":
                         actualOffset = 3;
 

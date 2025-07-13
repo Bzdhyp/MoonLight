@@ -127,9 +127,11 @@ public abstract class EntityLivingBase extends Entity
     private float landMovementFactor;
     public int jumpTicks;
     private float absorptionAmount;
+    public int realPosX;
+    public int realPosY;
+    public int realPosZ;
 
     public ContinualAnimation healthAnimation = new ContinualAnimation();
-    public ContinualAnimation hurtTimeAnimation = new ContinualAnimation();
 
     public void onKillCommand()
     {

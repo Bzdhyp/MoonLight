@@ -43,12 +43,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @ModuleInfo(name = "Velocity", category = Categor.Combat)
 public class Velocity extends Module {
-    private final ListValue mode = new ListValue("Mode", new String[]{"Grim", "Delay", "Legit", "Boost", "Jump Reset"}, "Delay", this);
+    public final ListValue mode = new ListValue("Mode", new String[]{"Grim", "Delay", "Legit", "Intave", "Boost", "Jump Reset"}, "Delay", this);
     private final ListValue delayMode = new ListValue("Delay Mode", new String[]{"Packet", "Ping Spoof"}, "Packet", this, () -> mode.is("Delay"));
 
     private final SliderValue hurtDelay = new SliderValue("Hurt Delay", 1.0f, 0.0f, 20.0f, 0.1f, this, () -> mode.is("Grim") || (mode.is("Delay") && delayMode.is("Ping Spoof")));
     private final SliderValue pingDelay = new SliderValue("Ping Delay", 1.0f, 0.0f, 20.0f, 0.1f, this, () -> mode.is("Grim") || (mode.is("Delay") && delayMode.is("Ping Spoof")));
-    public final BoolValue jumpValue = new BoolValue("Jump Rest", true, this, () -> mode.is("Grim") || mode.is("Delay") && delayMode.is("Ping Spoof"));
+    public final BoolValue jumpValue = new BoolValue("Jump Rest", true, this, () -> (mode.is("Grim") || mode.is("Delay")) && delayMode.is("Ping Spoof") || mode.is("Intave"));
 
     private final SliderValue reverseTick = new SliderValue("Boost Tick", 1, 1, 5, 1, this, () -> mode.is("Boost"));
     private final SliderValue reverseStrength = new SliderValue("Boost Strength", 1, 0.1f, 1, 0.01f, this, () -> mode.is("Boost"));
@@ -62,6 +62,7 @@ public class Velocity extends Module {
     private final SliderValue ticksUntilJump = new SliderValue("Ticks Until Jump", 2, 1, 20, 1, this, () -> mode.is("Jump Reset") && jumpResetMode.is("Advanced"));
 
     private int idk = 0;
+    private int counter = 0;
     private int velocityTicks;
     private int hitsCount = 0;
     private int ticksCount = 0;
@@ -365,6 +366,12 @@ public class Velocity extends Module {
 
     @EventTarget
     public void onMoveInput(MoveInputEvent event) {
+        if (mode.is("Intave")) {
+            if (this.jumpValue.get() && mc.thePlayer.hurtTime == 9 && mc.thePlayer.onGround && this.counter++ % 2 == 0) {
+                mc.thePlayer.movementInput.jump = true;
+            }
+        }
+
         if (mode.is("Legit") && getModule(KillAura.class).target != null && mc.thePlayer.hurtTime > 0) {
             ArrayList<Vec3> vec3s = new ArrayList<>();
             HashMap<Vec3, Integer> map = new HashMap<>();

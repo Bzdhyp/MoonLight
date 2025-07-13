@@ -100,7 +100,7 @@ public class Scaffold extends Module {
     private final BoolValue unPatch = new BoolValue("Un Patch Test", true, this, () -> mode.is("Watchdog") && addons.isEnabled("Sprint") && (addons.isEnabled("Keep Y") || addons.isEnabled("Speed Keep Y")));
     private final SliderValue straightSpeed = new SliderValue("Keep Y Straight Speed", 1, 0.5f, 1f, 0.01f, this, () -> mode.is("Watchdog") && addons.isEnabled("Sprint") && (addons.isEnabled("Keep Y") || addons.isEnabled("Speed Keep Y")));
     private final SliderValue diagonalSpeed = new SliderValue("Keep Y Diagonal Speed", 0.95f, 0.5f, 1f, 0.01f, this, () -> mode.is("Watchdog") && addons.isEnabled("Sprint") && (addons.isEnabled("Keep Y") || addons.isEnabled("Speed Keep Y")));
-    public final ListValue counter = new ListValue("Counter", new String[]{"None", "Simple", "Normal", "Exhibition", "Adjust", "Novo"}, "Normal", this);
+    public final ListValue counter = new ListValue("Counter", new String[]{"None", "Simple", "Normal", "Exhibition", "Adjust", "Novo", "Augustus"}, "Normal", this);
 
     public PlaceData data;
     BlockPos targetBlock;

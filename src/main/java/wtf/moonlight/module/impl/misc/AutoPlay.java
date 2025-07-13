@@ -15,7 +15,6 @@ import wtf.moonlight.module.impl.combat.KillAura;
 import wtf.moonlight.module.impl.player.ChestStealer;
 import wtf.moonlight.module.impl.player.InvManager;
 import wtf.moonlight.module.values.impl.BoolValue;
-import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.module.values.impl.StringValue;
 import wtf.moonlight.util.DebugUtil;
@@ -31,9 +30,9 @@ import java.util.concurrent.TimeUnit;
 public class AutoPlay extends Module {
     private final BoolValue autoGG = new BoolValue("AutoGG", true);
     private final StringValue autoGGMessage = new StringValue("AutoGG Message", "gg", this);
-    private final BoolValue autoPlay = new BoolValue("AutoPlay", true);
+    private final BoolValue autoPlay = new BoolValue("AutoPlay", true, this);
     private final SliderValue autoPlayDelay = new SliderValue("Delay", 3.5f, 1, 10, 0.5f, this);
-    private final BoolValue respawnProperty = new BoolValue("On Respawn", true);
+    private final BoolValue respawnProperty = new BoolValue("On Respawn", true, this);
     private List<Module> disableOnRespawn;
     private final TimerUtil respawnTimer = new TimerUtil();
 

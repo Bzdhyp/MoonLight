@@ -65,6 +65,7 @@ public final class ModuleManager {
                 TickBase.class,
                 Velocity.class,
                 AutoRod.class,
+                TimerRange.class,
 
                 // Misc
                 Blink.class,
@@ -145,6 +146,7 @@ public final class ModuleManager {
                 TargetHUD.class,
                 KeyBindHUD.class,
                 Watermark.class,
+                Settings.class,
                 PotionHUD.class
         );
 

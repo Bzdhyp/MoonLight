@@ -18,12 +18,14 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.display.Interface;
+import wtf.moonlight.module.impl.display.Settings;
 import wtf.moonlight.module.values.Value;
 import wtf.moonlight.gui.notification.NotificationType;
 import wtf.moonlight.util.misc.InstanceAccess;
 import wtf.moonlight.util.animations.Translate;
 import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
 import wtf.moonlight.util.packet.PacketUtils;
+import wtf.moonlight.util.render.SoundUtil;
 
 import java.util.*;
 
@@ -217,7 +219,18 @@ public abstract class Module implements InstanceAccess {
      */
     private void playClickSound(float volume) {
         if (mc.thePlayer != null) {
-            mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("random.click"), volume));
+            switch (Client.INSTANCE.getModuleManager().getModule(Settings.class).soundMode.getValue()) {
+                case "Default":
+                    mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("random.click"), volume));
+                    break;
+                case "Augustus":
+                    if (state) {
+                        SoundUtil.playSound(new ResourceLocation("moonlight/sound/enable.wav"), 1);
+                    } else {
+                        SoundUtil.playSound(new ResourceLocation("moonlight/sound/disable.wav"), 1);
+                    }
+                    break;
+            }
         }
     }
 

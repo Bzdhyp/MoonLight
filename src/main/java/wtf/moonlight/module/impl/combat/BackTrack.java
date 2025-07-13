@@ -1,40 +1,70 @@
 package wtf.moonlight.module.impl.combat;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S14PacketEntity;
-import net.minecraft.network.play.server.S18PacketEntityTeleport;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Vec3;
 import com.cubk.EventTarget;
+import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.EnumPacketDirection;
+import net.minecraft.network.INetHandler;
+import net.minecraft.network.Packet;
+import net.minecraft.network.ThreadQuickExitException;
+import net.minecraft.network.play.server.*;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import wtf.moonlight.Client;
-import wtf.moonlight.component.PingSpoofComponent;
 import wtf.moonlight.events.misc.TickEvent;
 import wtf.moonlight.events.packet.PacketEvent;
-import wtf.moonlight.events.player.AttackEvent;
-import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.events.render.Render3DEvent;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
-import wtf.moonlight.module.values.impl.ListValue;
+import wtf.moonlight.module.values.impl.MultiBoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.util.animations.advanced.ContinualAnimation;
+import wtf.moonlight.module.values.impl.ListValue;
+import wtf.moonlight.util.TimerUtil;
+import wtf.moonlight.util.player.PlayerUtil;
 import wtf.moonlight.util.render.RenderUtil;
+import wtf.moonlight.util.animations.advanced.ContinualAnimation;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 @ModuleInfo(name = "BackTrack", category = Categor.Combat)
 public class BackTrack extends Module {
-    private final ListValue mode = new ListValue("Mode", new String[]{"Tick", "Ping"}, "Tick", this);
-    private final SliderValue amount = new SliderValue("Amount", 1.0f, 1.0f, 3.0f, 0.1f, this, () -> mode.is("Tick"));
-    private final SliderValue range = new SliderValue("Range", 3.0f, 1.0f, 5.0f, 0.1f, this, () -> mode.is("Tick"));
-    private final SliderValue interval = new SliderValue("Interval Tick", 1, 0, 10, 1f, this, () -> mode.is("Tick"));
-    private final SliderValue maxPingSpoof = new SliderValue("Max Ping Spoof", 1000, 50, 10000, 1, this);
+    public final MultiBoolValue packetsToDelay = new MultiBoolValue("Packets To Delay", Arrays.asList(
+            new BoolValue("Velocity", true),
+            new BoolValue("Velocity Explosion", false),
+            new BoolValue("Time Update", false),
+            new BoolValue("Keep Alive", false)
+    ), this);
 
+    public final MultiBoolValue targets = new MultiBoolValue("Targets", Arrays.asList(
+            new BoolValue("Player", true),
+            new BoolValue("Mob", false),
+            new BoolValue("Animal", false),
+            new BoolValue("Villager", false),
+            new BoolValue("ArmorStand", false)
+    ), this);
+
+    private final SliderValue range = new SliderValue("Pre Aim Range", 4, 0, 15, this);
+    private final SliderValue hitRange = new SliderValue("Max Hit Range", 6, 3, 6, this);
+    private final SliderValue timerDelay = new SliderValue("Time", 4000, 0f, 30000, 100, this);
+
+    private final BoolValue onlyWhenNeed = new BoolValue("Only WhenNeed", true, this);
+    private final BoolValue onlyKillAura = new BoolValue("Only KillAura", true, this);
+
+    // ESP Settings
     private final BoolValue esp = new BoolValue("ESP", true, this);
     private final ListValue espMode = new ListValue("ESP Mode", new String[]{"Box"}, "Box", this, esp::get);
     private final ListValue espColorMode = new ListValue("ESP Color", new String[]{"Sync", "Static", "Rainbow", "Health"}, "Static", this, esp::get);
@@ -43,139 +73,242 @@ public class BackTrack extends Module {
     private final BoolValue espOutline = new BoolValue("ESP Outline", true, this, esp::get);
     private final BoolValue espTargetOnly = new BoolValue("Target Only", true, this, esp::get);
 
-    private EntityLivingBase target;
-    private Vec3 realPosition = new Vec3(0.0D, 0.0D, 0.0D);
+    public boolean b;
+    public boolean bb;
+
+    private WorldClient lastWorld;
+    public AxisAlignedBB boundingBox;
+    private EntityLivingBase entity = null;
+    private INetHandler packetListener = null;
+    private final TimerUtil timeHelper = new TimerUtil();
+    private final ArrayList<Packet<?>> packets = new ArrayList<>();
+
     private final ContinualAnimation animatedX = new ContinualAnimation();
     private final ContinualAnimation animatedY = new ContinualAnimation();
     private final ContinualAnimation animatedZ = new ContinualAnimation();
-    private int tick = 0;
+    private Vec3 realPosition = new Vec3(0.0D, 0.0D, 0.0D);
     private KillAura killAura;
 
     @Override
     public void onEnable() {
-        killAura = Client.INSTANCE.getModuleManager().getModule(KillAura.class);
+        super.onEnable();
+        this.b = true;
+        this.killAura = Client.INSTANCE.getModuleManager().getModule(KillAura.class);
+
+        if (mc.theWorld != null && mc.thePlayer != null) {
+            for (final Entity entity : mc.theWorld.loadedEntityList) {
+                if (entity instanceof EntityLivingBase entityLivingBase) {
+                    entityLivingBase.realPosX = entityLivingBase.serverPosX;
+                    entityLivingBase.realPosZ = entityLivingBase.serverPosZ;
+                    entityLivingBase.realPosY = entityLivingBase.serverPosY;
+                }
+            }
+        }
     }
 
-    @EventTarget
+    @Override
     public void onDisable() {
-        tick = 0;
+        super.onDisable();
+        if (!this.packets.isEmpty() && this.packetListener != null) {
+            this.resetPackets(this.packetListener);
+        }
+        this.packets.clear();
     }
 
     @EventTarget
-    public void onAttack(AttackEvent event) {
-        if (killAura != null && killAura.isEnabled() &&
-                event.getTargetEntity() instanceof EntityLivingBase newTarget && !newTarget.isDead) {
-            target = newTarget;
-            realPosition = new Vec3(target.posX, target.posY, target.posZ);
+    public void onEventEarlyTick(final TickEvent event) {
+        setTag(timerDelay.getValue().intValue() + "ms");
+
+        if (isEnabled(KillAura.class)) {
+            this.entity = getModule(KillAura.class).target;
         } else {
-            target = null;
-        }
-    }
+            final List<Entity> listOfTargets = mc.theWorld.loadedEntityList.stream()
+                    .filter(this::canAttacked)
+                    .sorted(Comparator.comparingDouble(entity -> mc.thePlayer.getDistanceToEntity(entity)))
+                    .toList();
 
-    private EntityLivingBase getEffectiveTarget() {
-        if (killAura != null && killAura.isEnabled() && killAura.target != null && !killAura.target.isDead) {
-            return killAura.target;
-        }
-
-        return target;
-    }
-
-    @EventTarget
-    public void onTick(TickEvent e) {
-        setTag(mode.getValue());
-        EntityLivingBase currentTarget = getEffectiveTarget();
-
-        if (mode.is("Tick")) {
-            if (currentTarget == null) {
-                target = null;
-                return;
+            if (!listOfTargets.isEmpty()) {
+                this.entity = (EntityLivingBase) listOfTargets.get(0);
             }
 
-            if (this.tick <= this.interval.getValue())
-                this.tick++;
-            if (mc.thePlayer.getDistanceToEntity(currentTarget) <= this.range.getValue()
-                    && (new Vec3(currentTarget.posX, currentTarget.posY, currentTarget.posZ)).distanceTo(this.realPosition) < this.amount.getValue()
-                    && this.tick > this.interval.getValue()) {
-                currentTarget.posX = currentTarget.prevPosX;
-                currentTarget.posY = currentTarget.prevPosY;
-                currentTarget.posZ = currentTarget.prevPosZ;
-                tick = 0;
+            if (this.onlyKillAura.get()) {
+                this.entity = null;
             }
         }
-    }
 
-    @EventTarget
-    public void onMotion(MotionEvent e) {
-        if (mode.is("Ping")) {
-            EntityLivingBase currentTarget = killAura != null && killAura.isEnabled() ? killAura.target : null;
+        if (this.entity != null) {
+            realPosition = new Vec3(entity.realPosX / 32.0, entity.realPosY / 32.0, entity.realPosZ / 32.0);
+        }
 
-            if (currentTarget == null) {
-                target = null;
-                PingSpoofComponent.disable();
-                PingSpoofComponent.dispatch();
-                return;
+        if (this.entity != null && mc.thePlayer != null && this.packetListener != null && mc.theWorld != null) {
+            final double d0 = this.entity.realPosX / 32.0;
+            final double d2 = this.entity.realPosY / 32.0;
+            final double d3 = this.entity.realPosZ / 32.0;
+            final double d4 = this.entity.serverPosX / 32.0;
+            final double d5 = this.entity.serverPosY / 32.0;
+            final double d6 = this.entity.serverPosZ / 32.0;
+            final float f = this.entity.width / 2.0f;
+
+            final AxisAlignedBB entityServerPos = new AxisAlignedBB(d4 - f, d5, d6 - f, d4 + f, d5 + this.entity.height, d6 + f);
+
+            final Vec3 positionEyes = mc.thePlayer.getPositionEyes(mc.timer.renderPartialTicks);
+            final double currentX = MathHelper.clamp_double(positionEyes.xCoord, entityServerPos.minX, entityServerPos.maxX);
+            final double currentY = MathHelper.clamp_double(positionEyes.yCoord, entityServerPos.minY, entityServerPos.maxY);
+            final double currentZ = MathHelper.clamp_double(positionEyes.zCoord, entityServerPos.minZ, entityServerPos.maxZ);
+
+            final AxisAlignedBB entityPosMe = new AxisAlignedBB(d0 - f, d2, d3 - f, d0 + f, d2 + this.entity.height, d3 + f);
+
+            final double realX = MathHelper.clamp_double(positionEyes.xCoord, entityPosMe.minX, entityPosMe.maxX);
+            final double realY = MathHelper.clamp_double(positionEyes.yCoord, entityPosMe.minY, entityPosMe.maxY);
+            final double realZ = MathHelper.clamp_double(positionEyes.zCoord, entityPosMe.minZ, entityPosMe.maxZ);
+
+            double distance = this.hitRange.getValue();
+
+            if (!mc.thePlayer.canEntityBeSeen(this.entity)) {
+                distance = (Math.min(distance, 3.0));
             }
 
-            if (currentTarget != target) {
-                target = currentTarget;
-                realPosition = new Vec3(target.posX, target.posY, target.posZ);
+            final double collision = this.entity.getCollisionBorderSize();
+            final double width = mc.thePlayer.width / 2.0f;
+            final double mePosXForPlayer = mc.thePlayer.getLastServerPosition().xCoord + (mc.thePlayer.getSeverPosition().xCoord - mc.thePlayer.getLastServerPosition().xCoord) / MathHelper.clamp_int(mc.thePlayer.rotIncrement, 1, 3);
+            final double mePosYForPlayer = mc.thePlayer.getLastServerPosition().yCoord + (mc.thePlayer.getSeverPosition().yCoord - mc.thePlayer.getLastServerPosition().yCoord) / MathHelper.clamp_int(mc.thePlayer.rotIncrement, 1, 3);
+            final double mePosZForPlayer = mc.thePlayer.getLastServerPosition().zCoord + (mc.thePlayer.getSeverPosition().zCoord - mc.thePlayer.getLastServerPosition().zCoord) / MathHelper.clamp_int(mc.thePlayer.rotIncrement, 1, 3);
+            AxisAlignedBB mePosForPlayerBox = new AxisAlignedBB(mePosXForPlayer - width, mePosYForPlayer, mePosZForPlayer - width, mePosXForPlayer + width, mePosYForPlayer + mc.thePlayer.height, mePosZForPlayer + width);
+            mePosForPlayerBox = mePosForPlayerBox.expand(collision, collision, collision);
+            final Vec3 entityPosEyes = new Vec3(d4, d5 + this.entity.getEyeHeight(), d6);
+            final double bestX = MathHelper.clamp_double(entityPosEyes.xCoord, mePosForPlayerBox.minX, mePosForPlayerBox.maxX);
+            final double bestY = MathHelper.clamp_double(entityPosEyes.yCoord, mePosForPlayerBox.minY, mePosForPlayerBox.maxY);
+            final double bestZ = MathHelper.clamp_double(entityPosEyes.zCoord, mePosForPlayerBox.minZ, mePosForPlayerBox.maxZ);
+            boolean b = entityPosEyes.distanceTo(new Vec3(bestX, bestY, bestZ)) > 3.0 || (mc.thePlayer.hurtTime < 8 && mc.thePlayer.hurtTime > 3);
+
+            if (!this.onlyWhenNeed.get()) {
+                b = true;
             }
-
-            if (!(mc.thePlayer.isSwingInProgress && killAura.isEnabled())) {
-                PingSpoofComponent.disable();
-                PingSpoofComponent.dispatch();
-                return;
-            }
-
-            double realDistance = realPosition.distanceTo(new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ));
-            double clientDistance = target.getDistanceToEntity(mc.thePlayer);
-
-            boolean shouldActivate = realDistance > clientDistance && realDistance > 2.3 && realDistance < 5.9;
-
-            if (shouldActivate) {
-                PingSpoofComponent.spoof(maxPingSpoof.getValue().intValue(), true, true, true, true);
-            } else {
-                PingSpoofComponent.disable();
-                PingSpoofComponent.dispatch();
+            if (b && positionEyes.distanceTo(new Vec3(realX, realY, realZ)) > positionEyes.distanceTo(new Vec3(currentX, currentY, currentZ)) && mc.thePlayer.getSeverPosition().distanceTo(new Vec3(d0, d2, d3)) < distance && !this.timeHelper.reached(this.timerDelay.getValue().longValue())) {
+                this.resetPackets(this.packetListener);
+                this.timeHelper.reset();
             }
         }
     }
 
     @EventTarget
-    public void onPacket(PacketEvent event) {
-        Packet<?> packet = event.getPacket();
+    public synchronized void onEventReadPacket(PacketEvent event) {
+        if (event.getNetHandler() != null) {
+            this.packetListener = event.getNetHandler();
+        }
 
-        if (target == null) return;
+        if (event.getDirection() != EnumPacketDirection.CLIENTBOUND) return;
 
-        if (mode.is("Tick")) {
-            if (event.getPacket() instanceof S18PacketEntityTeleport s18) {
-                if (s18.getEntityId() == target.getEntityId())
-                    realPosition = new Vec3(s18.getX() / 32.0D, s18.getY() / 32.0D, s18.getZ() / 32.0D);
-            }
-        } else {
-            if (packet instanceof S14PacketEntity s14PacketEntity) {
-                if (s14PacketEntity.getEntityId() == target.getEntityId()) {
-                    realPosition.xCoord += s14PacketEntity.getPosX() / 32D;
-                    realPosition.yCoord += s14PacketEntity.getPosY() / 32D;
-                    realPosition.zCoord += s14PacketEntity.getPosZ() / 32D;
-                }
-            } else if (packet instanceof S18PacketEntityTeleport s18PacketEntityTeleport) {
+        Packet<?> p = event.getPacket();
+        if (p instanceof S08PacketPlayerPosLook) this.resetPackets(event.getNetHandler());
 
-                if (s18PacketEntityTeleport.getEntityId() == target.getEntityId()) {
-                    realPosition = new Vec3(s18PacketEntityTeleport.getX() / 32D, s18PacketEntityTeleport.getY() / 32D, s18PacketEntityTeleport.getZ() / 32D);
+        if (p instanceof S14PacketEntity packet) {
+            final Entity entity1 = mc.theWorld.getEntityByID(packet.getEntityId());
+            if (entity1 instanceof EntityLivingBase) {
+                final EntityLivingBase entityLivingBase2;
+                final EntityLivingBase entityLivingBase = entityLivingBase2 = (EntityLivingBase)entity1;
+                entityLivingBase2.realPosX += packet.getX();
+                entityLivingBase.realPosY += packet.getY();
+                entityLivingBase.realPosZ += packet.getZ();
+
+                if (entity1 == this.entity) {
+                    realPosition.xCoord += packet.getX() / 32D;
+                    realPosition.yCoord += packet.getY() / 32D;
+                    realPosition.zCoord += packet.getZ() / 32D;
                 }
             }
         }
+
+        if (p instanceof S18PacketEntityTeleport packet2) {
+            final Entity entity1 = mc.theWorld.getEntityByID(packet2.getEntityId());
+
+            if (entity1 instanceof EntityLivingBase entityLivingBase) {
+                entityLivingBase.realPosX = packet2.getX();
+                entityLivingBase.realPosY = packet2.getY();
+                entityLivingBase.realPosZ = packet2.getZ();
+
+                if (entity1 == this.entity) {
+                    realPosition = new Vec3(packet2.getX() / 32D, packet2.getY() / 32D, packet2.getZ() / 32D);
+                }
+            }
+        }
+
+        if (this.entity == null) {
+            this.resetPackets(event.getNetHandler());
+            return;
+        }
+
+        if (mc.theWorld != null && mc.thePlayer != null) {
+            if (this.lastWorld != mc.theWorld) {
+                this.resetPackets(event.getNetHandler());
+                this.lastWorld = mc.theWorld;
+                return;
+            }
+            this.addPackets(p, event);
+        }
+
+        this.lastWorld = mc.theWorld;
+    }
+
+    private boolean canAttacked(Entity entity) {
+        if (!(entity instanceof EntityLivingBase livingEntity) || entity == mc.thePlayer) {
+            return false;
+        }
+
+        if (livingEntity.isInvisible() || livingEntity.deathTime > 1 || livingEntity.isDead || livingEntity.ticksExisted < 50) {
+            return false;
+        }
+
+        if (mc.thePlayer.getDistanceToEntity(livingEntity) >= this.range.getValue()) {
+            return false;
+        }
+
+        if (livingEntity instanceof EntityArmorStand && !targets.isEnabled("Armor Stand")) {
+            return false;
+        }
+
+        if (livingEntity instanceof EntityAnimal && !targets.isEnabled("Animal")) {
+            return false;
+        }
+
+        if (livingEntity instanceof EntityMob && !targets.isEnabled("Mob")) {
+            return false;
+        }
+
+        if (livingEntity instanceof EntityVillager && !targets.isEnabled("Villager")) {
+            return false;
+        }
+
+        if (livingEntity instanceof EntityPlayer player) {
+            String name = player.getName();
+
+            if (name.equals("§aShop") || name.equals("SHOP") || name.equals("UPGRADES")) {
+                return false;
+            }
+
+            if (getModule(KillAura.class).filter.isEnabled("Teams") && PlayerUtil.isInTeam(player)) {
+                return false;
+            }
+
+            if (getModule(KillAura.class).filter.isEnabled("Friends") &&
+                    Client.INSTANCE.getFriendManager().isFriend(player)) {
+                return false;
+            }
+
+            if (isEnabled(AntiBot.class)) return !getModule(AntiBot.class).isBot(player);
+        }
+
+        return true;
     }
 
     @EventTarget
     public void onRender3D(Render3DEvent event) {
         if (!isEnabled() || !esp.get()) return;
 
-        EntityLivingBase renderTarget = getEffectiveTarget();
+        EntityLivingBase renderTarget = this.entity;
         if (!shouldRenderESP(renderTarget)) return;
 
-        if (killAura != null && killAura.isEnabled() && killAura.target != renderTarget) {
+        if (killAura != null && killAura.isEnabled() && killAura.target != renderTarget && espTargetOnly.get()) {
             return;
         }
 
@@ -236,5 +369,57 @@ public class BackTrack extends Module {
                 baseColor.getBlue(),
                 fillAlpha
         );
+    }
+
+    private void resetPackets(INetHandler netHandler) {
+        if (!this.packets.isEmpty()) {
+            while (!this.packets.isEmpty()) {
+                Packet packet = this.packets.get(0);
+
+                try {
+                    if (packet != null) {
+                        if (isEnabled(Velocity.class) && (getModule(Velocity.class).mode.is("Boost"))) {
+                            if (!(packet instanceof S12PacketEntityVelocity)) {
+                                if (!(packet instanceof S27PacketExplosion) || !getModule(Velocity.class).mode.is("Boost")) {
+                                    packet.processPacket(netHandler);
+                                }
+                            }
+                        } else {
+                            packet.processPacket(netHandler);
+                        }
+                    }
+                } catch (ThreadQuickExitException e) {
+                    // e.printStackTrace();
+                }
+                this.packets.remove(this.packets.get(0));
+            }
+        }
+    }
+
+    private void addPackets(Packet<?> packet, PacketEvent eventReadPacket) {
+        synchronized (this.packets) {
+            if (this.delayPackets(packet)) {
+                this.packets.add(packet);
+                eventReadPacket.setCancelled(true);
+            }
+        }
+    }
+
+    private boolean delayPackets(Packet<?> packet) {
+        if (mc.currentScreen != null) return false;
+
+        if (packet instanceof S03PacketTimeUpdate) return packetsToDelay.isEnabled("Time Update");
+
+        if (packet instanceof S00PacketKeepAlive) return packetsToDelay.isEnabled("Keep Alive");
+
+        if (packet instanceof S12PacketEntityVelocity) return packetsToDelay.isEnabled("Velocity");
+
+        if (packet instanceof S27PacketExplosion) return packetsToDelay.isEnabled("Velocity Explosion");
+
+        if (packet instanceof S19PacketEntityStatus entityStatus) {
+            return entityStatus.getOpCode() != 2 || !(mc.theWorld.getEntityByID(entityStatus.getEntityId()) instanceof EntityLivingBase);
+        }
+
+        return !(packet instanceof S06PacketUpdateHealth) && !(packet instanceof S29PacketSoundEffect) && !(packet instanceof S3EPacketTeams) && !(packet instanceof S0CPacketSpawnPlayer);
     }
 }

@@ -38,6 +38,7 @@ public enum Fonts {
     Icon("icon"),
     Regular("regular"),
     Light("light"),
+    esp("esp"),
     Semibold("semibold");
 
     private final String file;

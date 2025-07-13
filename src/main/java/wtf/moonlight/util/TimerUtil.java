@@ -12,7 +12,6 @@ package wtf.moonlight.util;
 
 
 public class TimerUtil {
-
     public long lastMS = System.currentTimeMillis();
 
     public void reset() {
@@ -34,6 +33,10 @@ public class TimerUtil {
 
     public boolean hasTimeElapsed(double time) {
         return hasTimeElapsed((long) time);
+    }
+
+    public boolean reached(long currentTime) {
+        return Math.max(0L, System.currentTimeMillis() - this.lastMS) >= currentTime;
     }
 
     public long getTime() {

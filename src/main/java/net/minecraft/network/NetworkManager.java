@@ -25,6 +25,7 @@ import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.*;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Validate;
@@ -133,10 +134,19 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
         this.packetListener = handler;
     }
 
-    public void sendPacket(Packet packetIn) {
+    public void sendPacket(Packet<?> packetIn) {
 
-        PacketEvent event = new PacketEvent(packetIn, PacketEvent.State.OUTGOING);
+        PacketEvent event = new PacketEvent(packetIn, this.packetListener, this.direction, PacketEvent.State.OUTGOING);
         if (direction == CLIENTBOUND) Client.INSTANCE.getEventManager().call(event);
+
+        if ((packetIn instanceof C03PacketPlayer.C04PacketPlayerPosition || packetIn instanceof C03PacketPlayer.C05PacketPlayerLook || packetIn instanceof C03PacketPlayer.C06PacketPlayerPosLook) && Minecraft.getMinecraft().theWorld != null && Minecraft.getMinecraft().thePlayer != null) {
+            final C03PacketPlayer c03PacketPlayer = (C03PacketPlayer) packetIn;
+            Minecraft.getMinecraft().thePlayer.rotIncrement = 3;
+            if (!(packetIn instanceof C03PacketPlayer.C05PacketPlayerLook)) {
+                Minecraft.getMinecraft().thePlayer.setLastServerPosition(Minecraft.getMinecraft().thePlayer.getSeverPosition());
+                Minecraft.getMinecraft().thePlayer.setSeverPosition(new Vec3(c03PacketPlayer.getPositionX(), c03PacketPlayer.getPositionY(), c03PacketPlayer.getPositionZ()));
+            }
+        }
 
         if(event.isCancelled())
             return;
@@ -453,7 +463,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
                 } else if (Velocity.getGrimPost() && Velocity.grimPostDelay(p_channelRead0_2_)) {
                     Minecraft.getMinecraft().addScheduledTask(() -> Velocity.storedPackets.add((Packet<INetHandler>) p_channelRead0_2_));
                 } else {
-                    PacketEvent event = new PacketEvent(p_channelRead0_2_, PacketEvent.State.INCOMING);
+                    PacketEvent event = new PacketEvent(p_channelRead0_2_, this.packetListener, this.direction, PacketEvent.State.INCOMING);
                     Client.INSTANCE.getEventManager().call(event);
 
                     if (event.isCancelled()) return;
