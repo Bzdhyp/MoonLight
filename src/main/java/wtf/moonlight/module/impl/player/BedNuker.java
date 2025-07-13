@@ -43,6 +43,7 @@ import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.font.Fonts;
+import wtf.moonlight.util.MovementCorrection;
 import wtf.moonlight.util.animations.advanced.ContinualAnimation;
 import wtf.moonlight.util.player.PlayerUtil;
 import wtf.moonlight.util.player.RotationUtil;
@@ -53,6 +54,8 @@ import java.awt.*;
 
 @ModuleInfo(name = "BedNuker", category = Categor.Player)
 public class BedNuker extends Module {
+    private final BoolValue movefix = new BoolValue("Movement Fix", true, this);
+
     public final SliderValue breakRange = new SliderValue("Break Range", 4, 1, 5, 1, this);
     public final BoolValue breakSurroundings = new BoolValue("Break Top", true, this);
     public final BoolValue autoTool = new BoolValue("Auto Tool", true, this);
@@ -111,7 +114,7 @@ public class BedNuker extends Module {
         if (bedPos != null) {
             if (rotate) {
                 float[] rot = RotationUtil.getRotations(bedPos);
-                RotationUtil.setRotation(rot);
+                RotationUtil.setRotation(rot, movefix.get() ? MovementCorrection.SILENT : MovementCorrection.OFF);
                 rotate = false;
             }
             mine(bedPos);
