@@ -26,7 +26,7 @@ import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.util.TimerUtil;
 import wtf.moonlight.component.SpoofSlotComponent;
-import wtf.moonlight.util.player.MovementCorrection;
+import wtf.moonlight.util.MovementCorrection;
 import wtf.moonlight.util.player.PlayerUtil;
 import wtf.moonlight.util.player.RotationUtil;
 

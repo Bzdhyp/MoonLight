@@ -31,8 +31,8 @@ import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.combat.KillAura;
 import wtf.moonlight.module.impl.visual.Animations;
-import wtf.moonlight.module.impl.visual.Camera;
 import wtf.moonlight.component.SpoofSlotComponent;
+import wtf.moonlight.module.impl.visual.Camera;
 
 public class ItemRenderer
 {
@@ -648,7 +648,7 @@ public class ItemRenderer
 
             if (this.mc.thePlayer.isBurning() && !Reflector.callBoolean(Reflector.ForgeEventFactory_renderFireOverlay, this.mc.thePlayer, partialTicks))
             {
-                this.renderFireInFirstPerson(partialTicks);
+                this.renderFireInFirstPerson();
             }
         }
 
@@ -714,10 +714,8 @@ public class ItemRenderer
         }
     }
 
-    private void renderFireInFirstPerson(float partialTicks)
-    {
-        if(Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Camera.class).setting.isEnabled("No Fire"))
-            return;
+    private void renderFireInFirstPerson() {
+        Camera camera = Client.INSTANCE.getModuleManager().getModule(Camera.class);
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 0.9F);
@@ -727,8 +725,7 @@ public class ItemRenderer
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         float f = 1.0F;
 
-        for (int i = 0; i < 2; ++i)
-        {
+        for (int i = 0; i < 2; ++i) {
             GlStateManager.pushMatrix();
             TextureAtlasSprite textureatlassprite = this.mc.getTextureMapBlocks().getAtlasSprite("minecraft:blocks/fire_layer_1");
             this.mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
@@ -736,13 +733,13 @@ public class ItemRenderer
             float f2 = textureatlassprite.getMaxU();
             float f3 = textureatlassprite.getMinV();
             float f4 = textureatlassprite.getMaxV();
-            float f5 = (0.0F - f) / 2.0F;
+            float f5 = (0.0F - f) / 2.0F; // X
             float f6 = f5 + f;
-            float f7 = 0.0F - f / 2.0F;
+            float f7 = camera.isEnabled() && camera.noFire.get() ? camera.noFireValue.getValue() : (float) (0.0 - f / 2.0F); // Y
             float f8 = f7 + f;
             float f9 = -0.5F;
-            GlStateManager.translate((float)(-(i * 2 - 1)) * 0.24F, -0.3F, 0.0F);
-            GlStateManager.rotate((float)(i * 2 - 1) * 10.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.translate((float) (-(i * 2 - 1)) * 0.24F, -0.3F, 0.0F);
+            GlStateManager.rotate((float) (i * 2 - 1) * 10.0F, 0.0F, 1.0F, 0.0F);
             worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
             worldrenderer.setSprite(textureatlassprite);
             worldrenderer.pos(f5, f7, f9).tex(f2, f4).endVertex();
@@ -762,7 +759,6 @@ public class ItemRenderer
     public void updateEquippedItem()
     {
         this.prevEquippedProgress = this.equippedProgress;
-        EntityPlayer entityplayer = this.mc.thePlayer;
         ItemStack itemstack = SpoofSlotComponent.getSpoofedStack();
         boolean flag = false;
 

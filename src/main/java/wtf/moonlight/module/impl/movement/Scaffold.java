@@ -11,12 +11,7 @@
 package wtf.moonlight.module.impl.movement;
 import lombok.AllArgsConstructor;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
@@ -37,8 +32,9 @@ import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.MultiBoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.component.SpoofSlotComponent;
+import wtf.moonlight.util.MovementCorrection;
 import wtf.moonlight.util.player.*;
 import wtf.moonlight.util.render.RenderUtil;
 
@@ -47,7 +43,7 @@ import java.util.*;
 @ModuleInfo(name = "Scaffold", category = Categor.Movement)
 public class Scaffold extends Module {
     private final ListValue switchBlock = new ListValue("Switch Block", new String[]{"Silent", "Switch", "Spoof"}, "Spoof", this);
-    private final BoolValue biggestStack = new BoolValue("Biggest Stack", false, this);
+    public final BoolValue biggestStack = new BoolValue("Biggest Stack", false, this);
     private final ListValue mode = new ListValue("Mode", new String[]{"Normal", "Telly", "Snap", "Watchdog"}, "Normal", this);
     private final SliderValue minTellyTicks = new SliderValue("Min Telly Ticks", 2, 1, 5, this, () -> mode.is("Telly"));
     private final SliderValue maxTellyTicks = new SliderValue("Max Telly Ticks", 4, 1, 5, this, () -> mode.is("Telly"));
@@ -105,41 +101,30 @@ public class Scaffold extends Module {
     private final SliderValue straightSpeed = new SliderValue("Keep Y Straight Speed", 1, 0.5f, 1f, 0.01f, this, () -> mode.is("Watchdog") && addons.isEnabled("Sprint") && (addons.isEnabled("Keep Y") || addons.isEnabled("Speed Keep Y")));
     private final SliderValue diagonalSpeed = new SliderValue("Keep Y Diagonal Speed", 0.95f, 0.5f, 1f, 0.01f, this, () -> mode.is("Watchdog") && addons.isEnabled("Sprint") && (addons.isEnabled("Keep Y") || addons.isEnabled("Speed Keep Y")));
     public final ListValue counter = new ListValue("Counter", new String[]{"None", "Simple", "Normal", "Exhibition", "Adjust", "Novo"}, "Normal", this);
+
     public PlaceData data;
-    private int oloSlot = -1;
-    private double onGroundY;
     BlockPos targetBlock;
+
+    private boolean placed;
+    private boolean flagged;
+    private boolean placing;
+    private boolean isOnRightSide;
+    private boolean canPlace = true;
+
+    private double onGroundY;
+
+    private int tellyTicks;
+    private int oloSlot = -1;
+    private int blocksPlaced;
+
+    private float derpYaw;
     private float[] rotation;
     private float[] previousRotation;
-    private boolean canPlace = true;
-    private int blocksPlaced;
-    private boolean placing;
-    private int tellyTicks;
-    private boolean placed;
-    private boolean isOnRightSide;
-    private boolean flagged;
-    private float derpYaw;
 
     private HoverState hoverState = HoverState.DONE;
-    private static final Set<Block> blacklistedBlocks = Set.of(Blocks.air, Blocks.water, Blocks.flowing_water, Blocks.lava, Blocks.wooden_slab, Blocks.chest, Blocks.flowing_lava,
-            Blocks.enchanting_table, Blocks.carpet, Blocks.glass_pane, Blocks.skull, Blocks.stained_glass_pane, Blocks.iron_bars, Blocks.snow_layer, Blocks.ice, Blocks.packed_ice,
-            Blocks.coal_ore, Blocks.diamond_ore, Blocks.emerald_ore, Blocks.trapped_chest, Blocks.torch, Blocks.anvil,
-            Blocks.noteblock, Blocks.jukebox, Blocks.tnt, Blocks.gold_ore, Blocks.iron_ore, Blocks.lapis_ore, Blocks.lit_redstone_ore, Blocks.quartz_ore, Blocks.redstone_ore,
-            Blocks.wooden_pressure_plate, Blocks.stone_pressure_plate, Blocks.light_weighted_pressure_plate, Blocks.heavy_weighted_pressure_plate,
-            Blocks.stone_button, Blocks.wooden_button, Blocks.lever, Blocks.tallgrass, Blocks.tripwire, Blocks.tripwire_hook, Blocks.rail, Blocks.waterlily, Blocks.red_flower,
-            Blocks.red_mushroom, Blocks.brown_mushroom, Blocks.vine, Blocks.trapdoor, Blocks.yellow_flower, Blocks.ladder, Blocks.furnace, Blocks.sand, Blocks.cactus,
-            Blocks.dispenser, Blocks.dropper, Blocks.crafting_table, Blocks.pumpkin, Blocks.sapling, Blocks.cobblestone_wall,
-            Blocks.oak_fence, Blocks.activator_rail, Blocks.detector_rail, Blocks.golden_rail, Blocks.redstone_torch, Blocks.acacia_stairs,
-            Blocks.birch_stairs, Blocks.brick_stairs, Blocks.dark_oak_stairs, Blocks.jungle_stairs, Blocks.nether_brick_stairs, Blocks.oak_stairs,
-            Blocks.quartz_stairs, Blocks.red_sandstone_stairs, Blocks.sandstone_stairs, Blocks.spruce_stairs, Blocks.stone_brick_stairs, Blocks.stone_stairs, Blocks.double_wooden_slab, Blocks.stone_slab, Blocks.double_stone_slab, Blocks.stone_slab2, Blocks.double_stone_slab2,
-            Blocks.web, Blocks.gravel, Blocks.daylight_detector_inverted, Blocks.daylight_detector, Blocks.soul_sand, Blocks.piston, Blocks.piston_extension,
-            Blocks.piston_head, Blocks.sticky_piston, Blocks.iron_trapdoor, Blocks.ender_chest, Blocks.end_portal, Blocks.end_portal_frame, Blocks.standing_banner,
-            Blocks.wall_banner, Blocks.deadbush, Blocks.slime_block, Blocks.acacia_fence_gate, Blocks.birch_fence_gate, Blocks.dark_oak_fence_gate,
-            Blocks.jungle_fence_gate, Blocks.spruce_fence_gate, Blocks.oak_fence_gate);
 
     @Override
     public void onEnable() {
-
         if (addons.isEnabled("Hover") && mc.thePlayer.onGround && !isEnabled(Speed.class)) {
             hoverState = HoverState.JUMP;
         } else {
@@ -161,6 +146,12 @@ public class Scaffold extends Module {
         flagged = false;
 
         canPlace = true;
+    }
+
+    enum HoverState {
+        JUMP,
+        FALL,
+        DONE
     }
 
     @Override
@@ -196,7 +187,7 @@ public class Scaffold extends Module {
 
         data = null;
 
-        if (getBlockSlot() == -1)
+        if (ScaffoldUtil.getBlockSlot() == -1)
             return;
 
         // must be on here so the yaw is updated properly
@@ -206,13 +197,13 @@ public class Scaffold extends Module {
 
         switch (switchBlock.getValue()) {
             case "Silent":
-                sendPacketNoEvent(new C09PacketHeldItemChange(getBlockSlot()));
+                sendPacketNoEvent(new C09PacketHeldItemChange(ScaffoldUtil.getBlockSlot()));
                 break;
             case "Switch":
-                mc.thePlayer.inventory.currentItem = getBlockSlot();
+                mc.thePlayer.inventory.currentItem = ScaffoldUtil.getBlockSlot();
                 break;
             case "Spoof":
-                mc.thePlayer.inventory.currentItem = getBlockSlot();
+                mc.thePlayer.inventory.currentItem = ScaffoldUtil.getBlockSlot();
                 SpoofSlotComponent.startSpoofing(oloSlot);
                 break;
         }
@@ -236,7 +227,7 @@ public class Scaffold extends Module {
         }
 
         if (mode.is("Telly") && mc.thePlayer.onGround) {
-            tellyTicks = MathUti.randomizeInt(minTellyTicks.getValue().intValue(), maxTellyTicks.getValue().intValue());
+            tellyTicks = MathUtil.randomizeInt(minTellyTicks.getValue().intValue(), maxTellyTicks.getValue().intValue());
         }
 
         double posX = mc.thePlayer.posX;
@@ -244,11 +235,11 @@ public class Scaffold extends Module {
 
         targetBlock = new BlockPos(posX, posY, posZ).offset(EnumFacing.DOWN);
 
-        data = getPlaceData(targetBlock);
+        data = ScaffoldUtil.getPlaceData(targetBlock);
 
         if (tower.canDisplay() && towering() && !isEnabled(Speed.class) && tower.is("Watchdog") && !placing) {
             BlockPos xPos = data.blockPos.add(-1, 0, 0);
-            if (canBePlacedOn(xPos)) {
+            if (ScaffoldUtil.canBePlacedOn(xPos)) {
                 data.blockPos = xPos;
             }
         }
@@ -260,7 +251,7 @@ public class Scaffold extends Module {
         }
 
         if (mode.is("Telly") && mc.thePlayer.onGround) {
-            tellyTicks = MathUti.randomizeInt(minTellyTicks.getValue().intValue(), maxTellyTicks.getValue().intValue());
+            tellyTicks = MathUtil.randomizeInt(minTellyTicks.getValue().intValue(), maxTellyTicks.getValue().intValue());
         }
 
         if (addons.isEnabled("Sprint")) {
@@ -641,11 +632,13 @@ public class Scaffold extends Module {
             break;
             case "Strict": {
                 if (data != null)
-                    rotation = RotationUtil.getRotations(getHitVecOptimized(data.blockPos, data.facing));
+                    rotation = RotationUtil.getRotations(ScaffoldUtil.getHitVecOptimized(data.blockPos, data.facing));
             }
             case "Back": {
-                if (data != null)
-                    rotation = new float[]{mc.thePlayer.rotationYaw + 180, 80};
+                if (data != null) {
+                    // @Author：zyyzs
+                    rotation = new float[]{RotationUtil.oppositeYaw(MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw)), (float) (75 + Math.random() + mc.thePlayer.offGroundTicks * 0.2)};
+                }
             }
             break;
 
@@ -743,83 +736,7 @@ public class Scaffold extends Module {
         return Keyboard.isKeyDown(mc.gameSettings.keyBindJump.getKeyCode()) && MovementUtil.isMoving();
     }
 
-    private static int lastSelectedSlot = -1;
-    private static long lastSwitchTime = 0;
-
-    public int getBlockSlot() {
-        int slot = -1;
-        int size = 0;
-        final int minSwitchThreshold = 4;
-
-        if (getBlockCount() == 0) {
-            return -1;
-        }
-
-        if (!biggestStack.get()) {
-            for (int i = 36; i < 45; i++) {
-                Slot s = mc.thePlayer.inventoryContainer.getSlot(i);
-                if (s.getHasStack() && isBlockValid(s.getStack())) {
-                    return i - 36;
-                }
-            }
-            return -1;
-        }
-
-        for (int i = 36; i < 45; i++) {
-            Slot s = mc.thePlayer.inventoryContainer.getSlot(i);
-            if (!s.getHasStack()) continue;
-
-            ItemStack stack = s.getStack();
-            if (!isBlockValid(stack)) continue;
-
-            int stackSize = stack.stackSize;
-
-            if (i - 36 == lastSelectedSlot && stackSize > minSwitchThreshold) {
-                return lastSelectedSlot;
-            }
-
-            if (stackSize > size && (size <= minSwitchThreshold || lastSelectedSlot == -1)) {
-                size = stackSize;
-                slot = i;
-            }
-        }
-
-        long currentTime = System.currentTimeMillis();
-        if (slot != -1 && (currentTime - lastSwitchTime > 200 || lastSelectedSlot == -1)) {
-            lastSelectedSlot = slot - 36;
-            lastSwitchTime = currentTime;
-            return lastSelectedSlot;
-        } else {
-            return lastSelectedSlot != -1 ? lastSelectedSlot : 0;
-        }
-    }
-
-    private boolean isBlockValid(ItemStack stack) {
-        if (!(stack.getItem() instanceof ItemBlock)) return false;
-        Block block = ((ItemBlock) stack.getItem()).getBlock();
-        return !blacklistedBlocks.contains(block);
-    }
-
-    public int getBlockCount() {
-        int blockCount = 0;
-
-        for (int i = 36; i < 45; ++i) {
-            if (!mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) continue;
-
-            ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
-
-            if (!(is.getItem() instanceof ItemBlock && !blacklistedBlocks.contains(((ItemBlock) is.getItem()).getBlock()))) {
-                continue;
-            }
-
-            blockCount += is.stackSize;
-        }
-
-        return blockCount;
-    }
-
     private void place(BlockPos pos, EnumFacing facing, Vec3 hitVec) {
-
         if (canPlace && data != null) {
 
             if (!addons.isEnabled("Ray Trace")) {
@@ -847,12 +764,6 @@ public class Scaffold extends Module {
                 }
             }
         }
-    }
-
-    public Vec3 getHitVecOptimized(BlockPos blockPos, EnumFacing facing) {
-        Vec3 eyes = new Vec3(mc.thePlayer.posX, mc.thePlayer.posY + mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
-
-        return MathUti.closestPointOnFace(new AxisAlignedBB(blockPos, blockPos.add(1, 1, 1)), facing, eyes);
     }
 
     public float[] getBestRotation(BlockPos blockPos, EnumFacing face) {
@@ -917,44 +828,6 @@ public class Scaffold extends Module {
         return bestRot;
     }
 
-    private PlaceData getPlaceData(final BlockPos pos) {
-        EnumFacing[] facings = {EnumFacing.EAST, EnumFacing.WEST, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.UP};
-
-        // 1 of the 4 directions around player
-        for (EnumFacing facing : facings) {
-            final BlockPos blockPos = pos.add(facing.getOpposite().getDirectionVec());
-            if (canBePlacedOn(blockPos)) {
-                return new PlaceData(blockPos, facing);
-            }
-        }
-
-        // 2 Blocks Under e.g. When jumping
-        final BlockPos posBelow = pos.add(0, -1, 0);
-        if (canBePlacedOn(posBelow)) {
-            return new PlaceData(posBelow, EnumFacing.UP);
-        }
-
-        // 2 Block extension & diagonal
-        for (EnumFacing facing : facings) {
-            final BlockPos blockPos = pos.add(facing.getOpposite().getDirectionVec());
-            for (EnumFacing facing1 : facings) {
-                final BlockPos blockPos1 = blockPos.add(facing1.getOpposite().getDirectionVec());
-                if (canBePlacedOn(blockPos1)) {
-                    return new PlaceData(blockPos1, facing1);
-                }
-            }
-        }
-
-        return null;
-
-    }
-
-    public static boolean canBePlacedOn(final BlockPos blockPos) {
-        final Material material = mc.theWorld.getBlockState(blockPos).getBlock().getMaterial();
-
-        return (material.blocksMovement() && material.isSolid() && !(PlayerUtil.getBlock(blockPos) instanceof BlockAir));
-    }
-
     private Vec3 getVec3(PlaceData data) {
         BlockPos pos = data.blockPos;
         EnumFacing face = data.facing;
@@ -972,12 +845,5 @@ public class Scaffold extends Module {
     public static class PlaceData {
         public BlockPos blockPos;
         public EnumFacing facing;
-    }
-
-
-    enum HoverState {
-        JUMP,
-        FALL,
-        DONE
     }
 }

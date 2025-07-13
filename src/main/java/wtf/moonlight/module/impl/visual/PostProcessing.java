@@ -8,8 +8,8 @@ import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.util.render.RenderUtil;
-import wtf.moonlight.util.render.shader.impl.KawaseBloom;
-import wtf.moonlight.util.render.shader.impl.KawaseBlur;
+import wtf.moonlight.util.render.shader.KawaseBloom;
+import wtf.moonlight.util.render.shader.KawaseBlur;
 
 @ModuleInfo(name = "PostProcessing", category = Categor.Visual)
 public class PostProcessing extends Module {

@@ -25,7 +25,7 @@ import wtf.moonlight.util.animations.advanced.Animation;
 import wtf.moonlight.util.animations.advanced.Direction;
 import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
 import wtf.moonlight.util.animations.advanced.impl.SmoothStepAnimation;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.render.MouseUtil;
 import wtf.moonlight.util.render.RenderUtil;
 
@@ -70,7 +70,7 @@ public class Panel implements IComponent, InstanceAccess {
                 module.drawScreen(mouseX, mouseY);
 
                 double scroll = getScroll();
-                module.setScroll((int) MathUti.roundToHalf(scroll));
+                module.setScroll((int) MathUtil.roundToHalf(scroll));
                 onScroll(30, mouseX, mouseY);
 
                 maxScroll = Math.max(0, moduleComponents.isEmpty() ? 0 : moduleComponents.get(moduleComponents.size() - 1).getMaxScroll());

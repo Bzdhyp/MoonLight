@@ -11,6 +11,7 @@
 package wtf.moonlight.util.player;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
@@ -50,8 +51,26 @@ public class MovementUtil implements InstanceAccess {
     public static final double UNLOADED_CHUNK_MOTION = -0.09800000190735147;
     public static final double HEAD_HITTER_MOTION = -0.0784000015258789;
 
-    public static float getMovingYaw() {
-        return (float) (getDirection() * 180F / Math.PI);
+    public static float getBindsDirection(float rotationYaw) {
+        int moveForward = 0;
+        if (GameSettings.isKeyDown(mc.gameSettings.keyBindForward)) moveForward++;
+        if (GameSettings.isKeyDown(mc.gameSettings.keyBindBack)) moveForward--;
+
+        int moveStrafing = 0;
+        if (GameSettings.isKeyDown(mc.gameSettings.keyBindRight)) moveStrafing++;
+        if (GameSettings.isKeyDown(mc.gameSettings.keyBindLeft)) moveStrafing--;
+
+        boolean reversed = moveForward < 0;
+        double strafingYaw = 90 * (moveForward > 0 ? .5 : reversed ? -.5 : 1);
+
+        if (reversed)
+            rotationYaw += 180.f;
+        if (moveStrafing > 0)
+            rotationYaw += strafingYaw;
+        else if (moveStrafing < 0)
+            rotationYaw -= strafingYaw;
+
+        return rotationYaw;
     }
 
     public static boolean isMoving() {

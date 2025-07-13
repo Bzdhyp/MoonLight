@@ -25,7 +25,7 @@ import wtf.moonlight.module.impl.movement.Scaffold;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.TimerUtil;
 import wtf.moonlight.util.packet.PacketUtils;
 import wtf.moonlight.util.player.InventoryUtil;
@@ -412,7 +412,7 @@ public class InvManager extends Module {
     }
 
     private void updateNextClick() {
-        this.nextClick = Math.round((float) MathUti.getRandom(this.delay.getValue().intValue(), this.delay.getValue().intValue()));
+        this.nextClick = Math.round((float) MathUtil.getRandom(this.delay.getValue().intValue(), this.delay.getValue().intValue()));
         this.timerUtil.reset();
         moved = true;
     }

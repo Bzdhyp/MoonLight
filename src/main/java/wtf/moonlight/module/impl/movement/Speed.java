@@ -30,7 +30,7 @@ import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.DebugUtil;
 import wtf.moonlight.util.player.MovementUtil;
 import wtf.moonlight.util.player.PlayerUtil;
@@ -514,7 +514,7 @@ public class Speed extends Module {
             if (extraStrafe.get()) {
                 double attempt_angle = MathHelper.wrapAngleTo180_double(Math.toDegrees(MovementUtil.getDirection()));
                 double movement_angle = MathHelper.wrapAngleTo180_double(Math.toDegrees(Math.atan2(mc.thePlayer.motionZ, mc.thePlayer.motionX)) - 90);
-                if (MathUti.wrappedDifference(attempt_angle, movement_angle) > 90) {
+                if (MathUtil.wrappedDifference(attempt_angle, movement_angle) > 90) {
                     MovementUtil.strafe(MovementUtil.getSpeed(), (float) movement_angle - 180);
                 }
             }

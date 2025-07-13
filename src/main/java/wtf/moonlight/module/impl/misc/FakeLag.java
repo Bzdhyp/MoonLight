@@ -22,7 +22,7 @@ import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.*;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.TimerUtil;
 import wtf.moonlight.component.PingSpoofComponent;
 
@@ -153,7 +153,7 @@ public class FakeLag extends Module {
     }
 
     private int getRandomDelay() {
-        return (int) MathUti.getAdvancedRandom(minDelay.getValue(), maxDelay.getValue());
+        return (int) MathUtil.getAdvancedRandom(minDelay.getValue(), maxDelay.getValue());
     }
 
     @Override

@@ -1,16 +1,7 @@
-/*
- * MoonLight Hacked Client
- *
- * A free and open-source hacked client for Minecraft.
- * Developed using Minecraft's resources.
- *
- * Repository: https://github.com/randomguy3725/MoonLight
- *
- * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
- */
 package wtf.moonlight.module.impl.combat;
 
 import net.minecraft.client.gui.GuiDownloadTerrain;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.Packet;
@@ -26,11 +17,13 @@ import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraft.network.play.server.S32PacketConfirmTransaction;
 import net.minecraft.network.status.client.C00PacketServerQuery;
 import net.minecraft.network.status.client.C01PacketPing;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import com.cubk.EventTarget;
 import org.lwjglx.input.Keyboard;
 import wtf.moonlight.Client;
 import wtf.moonlight.events.misc.TickEvent;
+import wtf.moonlight.events.misc.WorldEvent;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.*;
 import wtf.moonlight.module.Module;
@@ -60,10 +53,11 @@ public class Velocity extends Module {
     private final SliderValue reverseTick = new SliderValue("Boost Tick", 1, 1, 5, 1, this, () -> mode.is("Boost"));
     private final SliderValue reverseStrength = new SliderValue("Boost Strength", 1, 0.1f, 1, 0.01f, this, () -> mode.is("Boost"));
 
-    private final ListValue jumpResetMode = new ListValue("Jump Reset Mode", new String[]{"Hurt Time", "Packet", "Advanced"}, "Packet", this, () -> mode.is("Jump Reset"));
+    private final ListValue jumpResetMode = new ListValue("Jump Reset Mode", new String[]{"Legit", "Packet", "Advanced", "Hurt Time"}, "Packet", this, () -> mode.is("Jump Reset"));
     private final SliderValue jumpResetHurtTime = new SliderValue("Jump Reset Hurt Time", 9, 1, 10, 1,
             this, () -> mode.is("Jump Reset") && (jumpResetMode.is("Hurt Time") || jumpResetMode.is("Advanced")));
-    private final SliderValue jumpResetChance = new SliderValue("Jump Reset Chance", 100, 0, 100, 1, this, () -> mode.is("Jump Reset") && jumpResetMode.is("Advanced"));
+    private final SliderValue jumpResetChance = new SliderValue("Jump Reset Chance", 100, 0, 100, 1, this, () -> mode.is("Jump Reset") &&
+            (jumpResetMode.is("Legit") || jumpResetMode.is("Advanced")));
     private final SliderValue hitsUntilJump = new SliderValue("Hits Until Jump", 2, 1, 10, 1, this, () -> mode.is("Jump Reset") && jumpResetMode.is("Advanced"));
     private final SliderValue ticksUntilJump = new SliderValue("Ticks Until Jump", 2, 1, 20, 1, this, () -> mode.is("Jump Reset") && jumpResetMode.is("Advanced"));
 
@@ -72,6 +66,7 @@ public class Velocity extends Module {
     private int hitsCount = 0;
     private int ticksCount = 0;
 
+    boolean enable;
     private boolean delay;
     private boolean isFallDamage;
     public static boolean send = false;
@@ -82,7 +77,7 @@ public class Velocity extends Module {
     private final TimerUtil timerUtil = new TimerUtil();
 
     private final Random random = new Random();
-    private ArrayList<Packet<?>> delayedPackets = new ArrayList<>();
+    private final ArrayList<Packet<?>> delayedPackets = new ArrayList<>();
     public static List<Packet<INetHandler>> storedPackets= new CopyOnWriteArrayList<>();
 
     @Override
@@ -107,9 +102,22 @@ public class Velocity extends Module {
         lastResult = false;
         veloPacket = false;
 
+        if (mode.is("Jump Reset") && jumpResetMode.is("Legit")) {
+            mc.gameSettings.keyBindJump.setPressed(false);
+            mc.gameSettings.keyBindForward.setPressed(false);
+        }
+
         storedPackets.clear();
         delayedPackets.clear();
         super.onDisable();
+    }
+
+    @EventTarget
+    public void onWorld(WorldEvent event) {
+        if (mode.is("Jump Reset") && jumpResetMode.is("Legit")) {
+            mc.gameSettings.keyBindJump.setPressed(false);
+            mc.gameSettings.keyBindForward.setPressed(false);
+        }
     }
 
     @EventTarget
@@ -119,15 +127,6 @@ public class Velocity extends Module {
         // @Author：haogemc
         if (!send) {
             if (!storedPackets.isEmpty()) {
-                if (mode.is("Jump Reset")) {
-                    if (jumpResetMode.is("Advanced")) {
-                        if (mc.thePlayer.hurtTime == 9) {
-                            hitsCount++;
-                        }
-                        ticksCount++;
-                    }
-                }
-
                 if (mode.is("Grim")) {
                     for (Packet<?> p : storedPackets) {
                         if (p instanceof S12PacketEntityVelocity) {
@@ -159,6 +158,39 @@ public class Velocity extends Module {
                 }
             } else {
                 timerUtil.reset();
+            }
+        }
+        if (mode.is("Jump Reset")) {
+            if (jumpResetMode.is("Advanced")) {
+                if (mc.thePlayer.hurtTime == 9) {
+                    hitsCount++;
+                }
+                ticksCount++;
+            }
+
+            if (jumpResetMode.is("Legit")) {
+                if (mc.currentScreen == null && Client.INSTANCE.getModuleManager().getModule(KillAura.class).target != null) {
+                    if (mc.thePlayer.hurtTime == 10) {
+                        this.enable = MathHelper.getRandomDoubleInRange(new Random(), 0.0d, 1.0d) <= jumpResetChance.getValue().doubleValue();
+                    }
+
+                    if (this.enable) {
+                        if (mc.thePlayer.hurtTime >= 8) {
+                            mc.gameSettings.keyBindJump.setPressed(true);
+                        }
+                        if (mc.thePlayer.hurtTime >= 7) {
+                            mc.gameSettings.keyBindForward.setPressed(true);
+                            return;
+                        }
+                        if (mc.thePlayer.hurtTime >= 4) {
+                            mc.gameSettings.keyBindJump.setPressed(false);
+                            mc.gameSettings.keyBindForward.setPressed(false);
+                        } else if (mc.thePlayer.hurtTime > 1) {
+                            mc.gameSettings.keyBindForward.setPressed(GameSettings.isKeyDown(mc.gameSettings.keyBindForward));
+                            mc.gameSettings.keyBindJump.setPressed(GameSettings.isKeyDown(mc.gameSettings.keyBindJump));
+                        }
+                    }
+                }
             }
         }
 

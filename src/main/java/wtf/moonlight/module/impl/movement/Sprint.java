@@ -17,7 +17,7 @@ import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
-import wtf.moonlight.util.player.MovementCorrection;
+import wtf.moonlight.util.MovementCorrection;
 import wtf.moonlight.util.player.MovementUtil;
 import wtf.moonlight.util.player.RotationUtil;
 

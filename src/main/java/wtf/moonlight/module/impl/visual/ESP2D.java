@@ -33,7 +33,7 @@ import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ColorValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.render.GLUtil;
 import wtf.moonlight.util.render.RenderUtil;
@@ -114,7 +114,7 @@ public class ESP2D extends Module {
             if (fontTags.get()) {
 
                 final String hacker = getModule(HackerDetector.class).isHacker(player) ? EnumChatFormatting.RED + "[Hacker] " + EnumChatFormatting.RESET : "";
-                final String healthString = fonttagsHealth.get() ? EnumChatFormatting.WHITE + "" + EnumChatFormatting.BOLD + " " + (MathUti.roundToHalf(player.getHealth())) + EnumChatFormatting.RESET + "" : "";
+                final String healthString = fonttagsHealth.get() ? EnumChatFormatting.WHITE + "" + EnumChatFormatting.BOLD + " " + (MathUtil.roundToHalf(player.getHealth())) + EnumChatFormatting.RESET + "" : "";
                 final String name = hacker + player.getDisplayName().getFormattedText() + healthString;
                 float halfWidth = (float) Fonts.interMedium.get(15).getStringWidth(name) * 0.5f;
                 final float xDif = x2 - x;
@@ -140,7 +140,7 @@ public class ESP2D extends Module {
                 final FontRenderer fontRenderer = mc.fontRendererObj;
 
                 final String hacker = getModule(HackerDetector.class).isHacker(player) ? EnumChatFormatting.RED + "[Hacker] " + EnumChatFormatting.RESET : "";
-                final String healthString = tagsHealth.get() ? " " + (MathUti.roundToHalf(player.getHealth())) + EnumChatFormatting.RED + "❤" : "";
+                final String healthString = tagsHealth.get() ? " " + (MathUtil.roundToHalf(player.getHealth())) + EnumChatFormatting.RED + "❤" : "";
                 final String name = hacker + player.getDisplayName().getFormattedText() + healthString;
                 float halfWidth = (float) fontRenderer.getStringWidth(name) / 2 * tagsSize.getValue();
                 final float xDif = x2 - x;
@@ -397,11 +397,11 @@ public class ESP2D extends Module {
         for (final EntityPlayer player : mc.theWorld.playerEntities) {
             if (project2D) {
 
-                final double posX = (MathUti.interpolate(player.prevPosX, player.posX, partialTicks) -
+                final double posX = (MathUtil.interpolate(player.prevPosX, player.posX, partialTicks) -
                         mc.getRenderManager().viewerPosX);
-                final double posY = (MathUti.interpolate(player.prevPosY, player.posY, partialTicks) -
+                final double posY = (MathUtil.interpolate(player.prevPosY, player.posY, partialTicks) -
                         mc.getRenderManager().viewerPosY);
-                final double posZ = (MathUti.interpolate(player.prevPosZ, player.posZ, partialTicks) -
+                final double posZ = (MathUtil.interpolate(player.prevPosZ, player.posZ, partialTicks) -
                         mc.getRenderManager().viewerPosZ);
 
                 final double halfWidth = player.width / 2.0D;
@@ -453,16 +453,16 @@ public class ESP2D extends Module {
         float[][] entPos;
         if ((entPos = playerRotationMap.get(player)) != null) {
             glPushMatrix();
-            float x = (float) (MathUti.interpolate(player.prevPosX, player.posX, pt) -
+            float x = (float) (MathUtil.interpolate(player.prevPosX, player.posX, pt) -
                     mc.getRenderManager().renderPosX);
-            float y = (float) (MathUti.interpolate(player.prevPosY, player.posY, pt) -
+            float y = (float) (MathUtil.interpolate(player.prevPosY, player.posY, pt) -
                     mc.getRenderManager().renderPosY);
-            float z = (float) (MathUti.interpolate(player.prevPosZ, player.posZ, pt) -
+            float z = (float) (MathUtil.interpolate(player.prevPosZ, player.posZ, pt) -
                     mc.getRenderManager().renderPosZ);
             glTranslated(x, y, z);
             boolean sneaking = player.isSneaking();
 
-            final float xOff = MathUti.interpolate(player.prevRenderYawOffset, player.renderYawOffset, pt);
+            final float xOff = MathUtil.interpolate(player.prevRenderYawOffset, player.renderYawOffset, pt);
             float yOff = sneaking ? 0.6F : 0.75F;
             glRotatef(-xOff, 0.0F, 1.0F, 0.0F);
             glTranslatef(0.0F, 0.0F, sneaking ? -0.235F : 0.0F);

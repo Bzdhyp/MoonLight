@@ -20,7 +20,6 @@ import net.minecraft.client.gui.GuiSelectWorld;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.util.misc.InstanceAccess;
-import wtf.moonlight.util.packet.Workers;
 import wtf.moonlight.util.misc.ServerUtil;
 
 public class DiscordInfo implements InstanceAccess {

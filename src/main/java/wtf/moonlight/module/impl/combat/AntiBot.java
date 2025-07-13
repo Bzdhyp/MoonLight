@@ -28,7 +28,7 @@ import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.MultiBoolValue;
-import wtf.moonlight.util.packet.Workers;
+import wtf.moonlight.util.Workers;
 import wtf.moonlight.util.render.RenderUtil;
 
 import java.util.Arrays;

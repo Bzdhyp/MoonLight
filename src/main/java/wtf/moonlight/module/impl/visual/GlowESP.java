@@ -26,10 +26,10 @@ import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.player.PlayerUtil;
 import wtf.moonlight.util.render.RenderUtil;
-import wtf.moonlight.util.render.shader.ShaderUtil;
+import wtf.moonlight.util.render.ShaderUtil;
 
 import java.awt.*;
 import java.nio.FloatBuffer;
@@ -131,7 +131,7 @@ public class GlowESP extends Module {
 
         final FloatBuffer buffer = BufferUtils.createFloatBuffer(256);
         for (int i = 1; i <= radius.getValue(); i++) {
-            buffer.put(MathUti.calculateGaussianValue(i, radius.getValue() / 2));
+            buffer.put(MathUtil.calculateGaussianValue(i, radius.getValue() / 2));
         }
         buffer.rewind();
 

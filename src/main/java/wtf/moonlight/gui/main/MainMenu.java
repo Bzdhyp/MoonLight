@@ -12,9 +12,8 @@ import wtf.moonlight.util.animations.advanced.Animation;
 import wtf.moonlight.util.animations.advanced.Direction;
 import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
 import wtf.moonlight.util.render.ColorUtil;
-import wtf.moonlight.util.render.RenderUtil;
 import wtf.moonlight.util.render.RoundedUtil;
-import wtf.moonlight.util.render.shader.impl.KawaseBlur;
+import wtf.moonlight.util.render.shader.KawaseBlur;
 
 import java.awt.*;
 import java.io.IOException;
@@ -50,10 +49,10 @@ public class MainMenu extends GuiScreen {
         float buttonHeight = 20;
         float frameY = height / 2f - (buttons.size() * (buttonHeight + 2)) / 2f - 16;
 
-        RoundedUtil.drawRound(width / 2f - buttonWidth / 2f - 14,(height / 2f) - 80,buttonWidth + 14 * 2, 180,8, new Color(0, 0, 0, 74));
+        RoundedUtil.drawRound(width / 2f - buttonWidth / 2f - 14, (height / 2f) - 80, buttonWidth + 14 * 2, 180, 8, new Color(0, 0, 0, 74));
         KawaseBlur.startBlur();
-        RoundedUtil.drawRound(width / 2f - buttonWidth / 2f - 14,(height / 2f) - 80,buttonWidth + 14 * 2, 180,8, new Color(0, 0, 0, 74));
-        KawaseBlur.endBlur(10,2);
+        RoundedUtil.drawRound(width / 2f - buttonWidth / 2f - 14, (height / 2f) - 80, buttonWidth + 14 * 2, 180, 8, new Color(0, 0, 0, 74));
+        KawaseBlur.endBlur(10, 2);
 
         String text = Client.INSTANCE.getModuleManager().getModule(Interface.class).clientName.getValue();
         int textColor = ColorUtil.swapAlpha(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(), 255);
@@ -61,38 +60,38 @@ public class MainMenu extends GuiScreen {
         float y = frameY + 6;
 
         FontRenderer font = Fonts.interBold.get(40);
-        if (fadeInAnimation.getOutput() >= 0.35f) {
-            if (text != null && !text.isEmpty()) {
-                int length = text.length();
 
-                String colorPart;
-                String whitePart;
+        if (text != null && !text.isEmpty()) {
+            int length = text.length();
 
-                if (length >= 8) {
-                    colorPart = text.substring(0, 4);
-                    whitePart = text.substring(4);
-                } else {
-                    colorPart = text.substring(0, 1);
-                    whitePart = text.substring(1);
-                }
+            String colorPart;
+            String whitePart;
 
-                int colorPartWidth = font.getStringWidth(colorPart);
-                int whitePartWidth = font.getStringWidth(whitePart);
-                int totalWidth = colorPartWidth + whitePartWidth;
-
-                float x = width / 2f - totalWidth / 2f;
-
-                font.drawStringWithShadow(colorPart, x, y, textColor);
-                font.drawStringWithShadow(whitePart, x + colorPartWidth, y, defaultColor);
+            if (length >= 8) {
+                colorPart = text.substring(0, 4);
+                whitePart = text.substring(4);
             } else {
-                String clientName = Client.INSTANCE.getClientName();
-                int totalWidth = font.getStringWidth(clientName);
-                float x = width / 2f - totalWidth / 2f;
-                float y2 = frameY + 10;
-
-                font.drawStringWithShadow(clientName, x, y2, defaultColor);
+                colorPart = text.substring(0, 1);
+                whitePart = text.substring(1);
             }
+
+            int colorPartWidth = font.getStringWidth(colorPart);
+            int whitePartWidth = font.getStringWidth(whitePart);
+            int totalWidth = colorPartWidth + whitePartWidth;
+
+            float x = width / 2f - totalWidth / 2f;
+
+            font.drawStringWithShadow(colorPart, x, y, textColor);
+            font.drawStringWithShadow(whitePart, x + colorPartWidth, y, defaultColor);
+        } else {
+            String clientName = Client.INSTANCE.getClientName();
+            int totalWidth = font.getStringWidth(clientName);
+            float x = width / 2f - totalWidth / 2f;
+            float y2 = frameY + 10;
+
+            font.drawStringWithShadow(clientName, x, y2, defaultColor);
         }
+
 
         for (MenuButton button : buttons) {
             button.x = width / 2f - buttonWidth / 2f;

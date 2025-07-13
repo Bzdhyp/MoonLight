@@ -3,68 +3,90 @@ package wtf.moonlight.util.player;
 import com.google.common.base.Predicates;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.*;
-import net.optifine.reflect.Reflector;
+import org.lwjglx.util.vector.Vector2f;
 import wtf.moonlight.util.misc.InstanceAccess;
 
 import java.util.List;
 
 public class RaytraceUtil implements InstanceAccess {
-    public static Entity raycastEntity(final double range, final IEntityFilter entityFilter) {
-        return raycastEntity(range, RotationUtil.currentRotation[0], RotationUtil.currentRotation[1],
-                entityFilter);
+    public static MovingObjectPosition rayCast(final Vector2f rotation, final double range) {
+        return rayCast(rotation, range, 0);
     }
 
-    public interface IEntityFilter {
-        boolean canRaycast(final Entity entity);
+    public static MovingObjectPosition rayCast(final Vector2f rotation, final double range, final float expand) {
+        return rayCast(rotation, range, expand, mc.thePlayer);
     }
 
-    public static Entity raycastEntity(final double range, final float yaw, final float pitch, final IEntityFilter entityFilter) {
-        final Entity renderViewEntity = mc.getRenderViewEntity();
+    public static boolean overBlock(final float[] rotation, final EnumFacing enumFacing, final BlockPos pos, final boolean strict) {
+        final MovingObjectPosition movingObjectPosition = mc.thePlayer.rayTraceCustom(4.5f, rotation[0], rotation[1]);
 
-        if (renderViewEntity != null && mc.theWorld != null) {
-            double blockReachDistance = range;
-            final Vec3 eyePosition = renderViewEntity.getPositionEyes(1F);
+        if (movingObjectPosition == null) return false;
 
-            final float yawCos = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
-            final float yawSin = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
-            final float pitchCos = -MathHelper.cos(-pitch * 0.017453292F);
-            final float pitchSin = MathHelper.sin(-pitch * 0.017453292F);
+        final Vec3 hitVec = movingObjectPosition.hitVec;
+        if (hitVec == null) return false;
 
-            final Vec3 entityLook = new Vec3(yawSin * pitchCos, pitchSin, yawCos * pitchCos);
-            final Vec3 vector = eyePosition.addVector(entityLook.xCoord * blockReachDistance, entityLook.yCoord * blockReachDistance, entityLook.zCoord * blockReachDistance);
-            final List<Entity> entityList = mc.theWorld.getEntitiesInAABBexcluding(renderViewEntity, renderViewEntity.getEntityBoundingBox().addCoord(entityLook.xCoord * blockReachDistance, entityLook.yCoord * blockReachDistance, entityLook.zCoord * blockReachDistance).expand(1D, 1D, 1D), Predicates.and(EntitySelectors.NOT_SPECTATING, Entity::canBeCollidedWith));
+        return movingObjectPosition.getBlockPos().equals(pos) && (!strict || movingObjectPosition.sideHit == enumFacing);
+    }
 
+    public static boolean overBlock(final EnumFacing enumFacing, final BlockPos pos, final boolean strict) {
+        final MovingObjectPosition movingObjectPosition = mc.objectMouseOver;
+
+        if (movingObjectPosition == null) return false;
+
+        final Vec3 hitVec = movingObjectPosition.hitVec;
+        if (hitVec == null || movingObjectPosition.getBlockPos() == null) return false;
+
+        return movingObjectPosition.getBlockPos().equals(pos) && (!strict || movingObjectPosition.sideHit == enumFacing);
+    }
+
+    public static MovingObjectPosition rayCast(final Vector2f rotation, final double range, final float expand, Entity entity) {
+        final float partialTicks = mc.timer.renderPartialTicks;
+        MovingObjectPosition objectMouseOver;
+
+        if (entity != null && mc.theWorld != null) {
+            objectMouseOver = entity.rayTraceCustom(range, rotation.x, rotation.y);
+            double d1 = range;
+            final Vec3 vec3 = entity.getPositionEyes(partialTicks);
+
+            if (objectMouseOver != null) {
+                d1 = objectMouseOver.hitVec.distanceTo(vec3);
+            }
+
+            final Vec3 vec31 = mc.thePlayer.getVectorForRotation(rotation.y, rotation.x);
+            final Vec3 vec32 = vec3.addVector(vec31.xCoord * range, vec31.yCoord * range, vec31.zCoord * range);
             Entity pointedEntity = null;
+            Vec3 vec33 = null;
+            final float f = 1.0F;
+            final List<Entity> list = mc.theWorld.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().addCoord(vec31.xCoord * range, vec31.yCoord * range, vec31.zCoord * range).expand(f, f, f), Predicates.and(EntitySelectors.NOT_SPECTATING, Entity::canBeCollidedWith));
+            double d2 = d1;
 
-            for (final Entity entity : entityList) {
-                if (!entityFilter.canRaycast(entity))
-                    continue;
+            for (final Entity entity1 : list) {
+                final float f1 = entity1.getCollisionBorderSize() + expand;
+                final AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().expand(f1, f1, f1);
+                final MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(vec3, vec32);
 
-                final float collisionBorderSize = entity.getCollisionBorderSize();
-                final AxisAlignedBB axisAlignedBB = entity.getEntityBoundingBox().expand(collisionBorderSize, collisionBorderSize, collisionBorderSize);
-                final MovingObjectPosition movingObjectPosition = axisAlignedBB.calculateIntercept(eyePosition, vector);
-
-                if (axisAlignedBB.isVecInside(eyePosition)) {
-                    if (blockReachDistance >= 0.0D) {
-                        pointedEntity = entity;
-                        blockReachDistance = 0.0D;
+                if (axisalignedbb.isVecInside(vec3)) {
+                    if (d2 >= 0.0D) {
+                        pointedEntity = entity1;
+                        vec33 = movingobjectposition == null ? vec3 : movingobjectposition.hitVec;
+                        d2 = 0.0D;
                     }
-                } else if (movingObjectPosition != null) {
-                    final double eyeDistance = eyePosition.distanceTo(movingObjectPosition.hitVec);
+                } else if (movingobjectposition != null) {
+                    final double d3 = vec3.distanceTo(movingobjectposition.hitVec);
 
-                    if (eyeDistance < blockReachDistance || blockReachDistance == 0.0D) {
-                        if (entity == renderViewEntity.ridingEntity && !Reflector.callBoolean(entity, Reflector.ForgeEntity_canRiderInteract, new Object[0])) {
-                            if (blockReachDistance == 0.0D)
-                                pointedEntity = entity;
-                        } else {
-                            pointedEntity = entity;
-                            blockReachDistance = eyeDistance;
-                        }
+                    if (d3 < d2 || d2 == 0.0D) {
+                        pointedEntity = entity1;
+                        vec33 = movingobjectposition.hitVec;
+                        d2 = d3;
                     }
                 }
             }
 
-            return pointedEntity;
+            if (pointedEntity != null && (d2 < d1 || objectMouseOver == null)) {
+                objectMouseOver = new MovingObjectPosition(pointedEntity, vec33);
+            }
+
+            return objectMouseOver;
         }
 
         return null;

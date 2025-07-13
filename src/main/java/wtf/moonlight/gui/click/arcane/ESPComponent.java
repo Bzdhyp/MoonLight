@@ -7,7 +7,7 @@ import net.minecraft.util.EnumChatFormatting;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.module.impl.visual.ESP2D;
 import wtf.moonlight.module.impl.display.Interface;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.render.GLUtil;
 import wtf.moonlight.util.render.RenderUtil;
@@ -207,7 +207,7 @@ public class ESPComponent extends Component {
         y = posY;
 
         if (INSTANCE.getModuleManager().getModule(ESP2D.class).fontTags.get()) {
-            final String healthString = INSTANCE.getModuleManager().getModule(ESP2D.class).fonttagsHealth.get() ? " |" + EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + " " + (MathUti.roundToHalf(mc.thePlayer.getHealth())) + "❤" + EnumChatFormatting.RESET + "" : "";
+            final String healthString = INSTANCE.getModuleManager().getModule(ESP2D.class).fonttagsHealth.get() ? " |" + EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + " " + (MathUtil.roundToHalf(mc.thePlayer.getHealth())) + "❤" + EnumChatFormatting.RESET + "" : "";
             final String name = mc.thePlayer.getDisplayName().getFormattedText() + healthString;
             float halfWidth = (float) mc.fontRendererObj.getStringWidth(name) * 0.5f;
             final float middle = x + halfWidth;

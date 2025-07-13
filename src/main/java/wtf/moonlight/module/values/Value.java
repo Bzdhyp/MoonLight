@@ -30,7 +30,6 @@ public abstract class Value {
         Optional.ofNullable(module).ifPresent(m -> m.addValue(this));
     }
 
-
     public Boolean canDisplay() {
         return this.visible.get();
     }

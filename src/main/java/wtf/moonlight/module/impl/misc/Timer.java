@@ -21,7 +21,7 @@ import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.TimerUtil;
 import wtf.moonlight.util.animations.advanced.ContinualAnimation;
 import wtf.moonlight.util.packet.*;
@@ -62,7 +62,7 @@ public class Timer extends Module {
 
     @EventTarget
     public void onMotion(MotionEvent event) {
-        setTag(mode.getValue() + " " + MathUti.roundToHalf(speed.getValue()));
+        setTag(mode.getValue() + " " + MathUtil.roundToHalf(speed.getValue()));
 
         switch (mode.getValue()) {
             case "Vanilla":

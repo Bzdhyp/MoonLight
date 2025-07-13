@@ -29,7 +29,7 @@ import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.util.animations.advanced.Direction;
 import wtf.moonlight.util.animations.advanced.impl.SmoothStepAnimation;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -119,9 +119,9 @@ public class LineGlyphs extends Module {
             double z = vec3i.getZ();
             if (!vec3is.isEmpty() && vec3i == vec3is.get(vec3is.size() - 1)) {
                 Vec3i prevVec3i = vec3is.get(vec3is.size() - 2);
-                x = MathUti.lerp(moveAdvance, prevVec3i.getX(), x);
-                y = MathUti.lerp(moveAdvance, prevVec3i.getY(), y);
-                z = MathUti.lerp(moveAdvance, prevVec3i.getZ(), z);
+                x = MathUtil.lerp(moveAdvance, prevVec3i.getX(), x);
+                y = MathUtil.lerp(moveAdvance, prevVec3i.getY(), y);
+                z = MathUtil.lerp(moveAdvance, prevVec3i.getZ(), z);
             }
             this.temp3dVecs.add(new Vec3(x, y, z));
         }

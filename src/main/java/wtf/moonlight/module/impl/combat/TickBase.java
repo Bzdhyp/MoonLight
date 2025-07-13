@@ -17,11 +17,11 @@ import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.TimerUtil;
 import wtf.moonlight.util.player.PlayerUtil;
 import wtf.moonlight.util.player.RotationUtil;
-import wtf.moonlight.util.player.SimulatedPlayer;
+import wtf.moonlight.util.SimulatedPlayer;
 import wtf.moonlight.util.render.RenderUtil;
 
 import java.awt.*;
@@ -159,7 +159,7 @@ public class TickBase extends Module {
 
         return predictProcesses.get((int) (maxTick.getValue() - 1)).position.distanceTo(target.getPositionVector()) <
                 mc.thePlayer.getPositionVector().distanceTo(target.getPositionVector()) &&
-                MathUti.inBetween(minActiveRange.getValue(), maxActiveRange.getValue(),
+                MathUtil.inBetween(minActiveRange.getValue(), maxActiveRange.getValue(),
                         predictProcesses.get((int) (maxTick.getValue() - 1)).position.distanceTo(target.getPositionVector())) &&
                 mc.thePlayer.canEntityBeSeen(target) &&
                 target.canEntityBeSeen(mc.thePlayer) &&

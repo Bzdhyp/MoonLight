@@ -105,7 +105,7 @@ import net.optifine.entity.model.CustomEntityModels;
 import net.optifine.player.PlayerItemsLayer;
 import net.optifine.reflect.Reflector;
 import net.optifine.shaders.Shaders;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 
 public class RenderManager
 {
@@ -323,10 +323,10 @@ public class RenderManager
             entity.lastTickPosY = entity.posY;
             entity.lastTickPosZ = entity.posZ;
         }
-        double d0 = MathUti.interpolate(entity.lastTickPosX,entity.posX, partialTicks);
-        double d1 = MathUti.interpolate(entity.lastTickPosY,entity.posY, partialTicks);
-        double d2 = MathUti.interpolate(entity.lastTickPosZ,entity.posZ, partialTicks);
-        float f = MathUti.interpolate(entity.prevRotationYaw, entity.rotationYaw, partialTicks);
+        double d0 = MathUtil.interpolate(entity.lastTickPosX,entity.posX, partialTicks);
+        double d1 = MathUtil.interpolate(entity.lastTickPosY,entity.posY, partialTicks);
+        double d2 = MathUtil.interpolate(entity.lastTickPosZ,entity.posZ, partialTicks);
+        float f = MathUtil.interpolate(entity.prevRotationYaw, entity.rotationYaw, partialTicks);
         int i = entity.getBrightnessForRender(partialTicks);
 
         int j = i % 65536;

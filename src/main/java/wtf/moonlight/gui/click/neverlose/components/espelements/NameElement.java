@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import wtf.moonlight.module.impl.visual.ESP2D;
 import wtf.moonlight.gui.click.Component;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.render.RenderUtil;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class NameElement extends Component {
 
         if (INSTANCE.getModuleManager().getModule(ESP2D.class).tags.get()) {
             final FontRenderer fontRenderer = mc.fontRendererObj;
-            final String name = mc.thePlayer.getDisplayName().getFormattedText() + " " + (MathUti.roundToHalf(mc.thePlayer.getHealth())) + EnumChatFormatting.RED + "❤";
+            final String name = mc.thePlayer.getDisplayName().getFormattedText() + " " + (MathUtil.roundToHalf(mc.thePlayer.getHealth())) + EnumChatFormatting.RED + "❤";
 
             if (INSTANCE.getModuleManager().getModule(ESP2D.class).tagsBackground.get()) {
 

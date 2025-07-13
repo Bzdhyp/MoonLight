@@ -44,9 +44,10 @@ import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.MultiBoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
+import wtf.moonlight.util.MovementCorrection;
 import wtf.moonlight.util.animations.advanced.Direction;
 import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.TimerUtil;
 import wtf.moonlight.component.BlinkComponent;
 import wtf.moonlight.util.player.*;
@@ -351,7 +352,7 @@ public class KillAura extends Module {
         double max = maxAps.getValue();
         switch (apsMode.getValue()) {
             case "Random":
-                if (attackTimer.hasTimeElapsed(1000L / (MathUti.nextInt((int) min, (int) max))) && target != null) {
+                if (attackTimer.hasTimeElapsed(1000L / (MathUtil.nextInt((int) min, (int) max))) && target != null) {
                     clicks++;
                     attackTimer.reset();
                 }
@@ -368,10 +369,10 @@ public class KillAura extends Module {
                 break;
             }
             case "Full Random": {
-                min *= MathUti.nextDouble(0, 1);
-                max *= MathUti.nextDouble(0, 1);
+                min *= MathUtil.nextDouble(0, 1);
+                max *= MathUtil.nextDouble(0, 1);
 
-                double time = (max / min) * (MathUti.nextDouble(min, max));
+                double time = (max / min) * (MathUtil.nextDouble(min, max));
 
                 if (attackTimer.hasTimeElapsed((float) (1000L / time))) {
                     clicks++;
@@ -686,8 +687,8 @@ public class KillAura extends Module {
         if(this.randomize.get()) {
             switch (this.randomizerot.getValue()) {
                 case "Random" -> {
-                    yaw += MathUti.randomizeDouble(-this.yawStrength.getValue(), this.yawStrength.getValue());
-                    pitch += MathUti.randomizeDouble(-this.pitchStrength.getValue(), this.pitchStrength.getValue());
+                    yaw += MathUtil.randomizeDouble(-this.yawStrength.getValue(), this.yawStrength.getValue());
+                    pitch += MathUtil.randomizeDouble(-this.pitchStrength.getValue(), this.pitchStrength.getValue());
                 }
                 case "Advanced" -> {
                     if(rdadvanceaddons.isEnabled("Sin Cos Random")) {
@@ -701,8 +702,8 @@ public class KillAura extends Module {
                     }
 
                     if(rdadvanceaddons.isEnabled("Randomize")) {
-                        yaw += MathUti.randomizeDouble(-this.yawStrengthAddon.getValue(), this.yawStrengthAddon.getValue());
-                        pitch += MathUti.randomizeDouble(-this.pitchStrengthAddon.getValue(), this.pitchStrengthAddon.getValue());
+                        yaw += MathUtil.randomizeDouble(-this.yawStrengthAddon.getValue(), this.yawStrengthAddon.getValue());
+                        pitch += MathUtil.randomizeDouble(-this.pitchStrengthAddon.getValue(), this.pitchStrengthAddon.getValue());
                     }
                 }
             }

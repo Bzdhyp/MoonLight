@@ -32,7 +32,7 @@ import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.render.RenderUtil;
 
@@ -167,7 +167,7 @@ public class JumpCircles extends Module {
             float aPC;
             for (int i = 1; i < (int) polygons; i++) {
                 float iPC = i / polygons, extY = extMaxY * i / polygons - extMaxY / polygons;
-                if ((aPC = MathUti.lerp(alphaPC * minAPC, 0, iPC)) * 255 < 1) continue;
+                if ((aPC = MathUtil.lerp(alphaPC * minAPC, 0, iPC)) * 255 < 1) continue;
                 float radiusPost = radius + (float) easeOutCirc(valWave01(iPC - 1.5F / polygons)) * extMaxXZ;
                 worldRenderer.pos(-radiusPost / 2.F, extY, -radiusPost / 2.F).tex(0, 0).color(ColorUtil.darker(colors[0], aPC)).endVertex();
                 worldRenderer.pos(-radiusPost / 2.F, extY, radiusPost / 2.F).tex(0, 1).color(ColorUtil.darker(colors[1], aPC)).endVertex();

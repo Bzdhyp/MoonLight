@@ -37,7 +37,7 @@ import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.util.animations.advanced.Animation;
 import wtf.moonlight.util.animations.advanced.Direction;
 import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.TimerUtil;
 import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.render.GLUtil;
@@ -124,7 +124,7 @@ public class TargetESP extends Module {
                 double distance = 19;
                 int lenght = 20;
 
-                Vec3 interpolated = MathUti.interpolate(new Vec3(target.lastTickPosX, target.lastTickPosY, target.lastTickPosZ), target.getPositionVector(), event.partialTicks());
+                Vec3 interpolated = MathUtil.interpolate(new Vec3(target.lastTickPosX, target.lastTickPosY, target.lastTickPosZ), target.getPositionVector(), event.partialTicks());
                 interpolated.yCoord += 0.75f;
 
                 RenderUtil.setupOrientationMatrix(interpolated.xCoord, interpolated.yCoord + 0.5f, interpolated.zCoord);
@@ -262,9 +262,9 @@ public class TargetESP extends Module {
 
     private void points() {
         if (target != null) {
-            double markerX = MathUti.interporate(mc.timer.renderPartialTicks, target.lastTickPosX, target.posX);
-            double markerY = MathUti.interporate(mc.timer.renderPartialTicks, target.lastTickPosY, target.posY) + target.height / 1.6f;
-            double markerZ = MathUti.interporate(mc.timer.renderPartialTicks, target.lastTickPosZ, target.posZ);
+            double markerX = MathUtil.interporate(mc.timer.renderPartialTicks, target.lastTickPosX, target.posX);
+            double markerY = MathUtil.interporate(mc.timer.renderPartialTicks, target.lastTickPosY, target.posY) + target.height / 1.6f;
+            double markerZ = MathUtil.interporate(mc.timer.renderPartialTicks, target.lastTickPosZ, target.posZ);
             float time = (float) ((((System.currentTimeMillis() - lastTime) / 1500F)) + (Math.sin((((System.currentTimeMillis() - lastTime) / 1500F))) / 10f));
             float alpha = ((Shaders.shaderPackLoaded ? 1 : 0.5f) * 1);
             float pl = 0;
@@ -272,7 +272,7 @@ public class TargetESP extends Module {
             for (int iteration = 0; iteration < 3; iteration++) {
                 for (float i = time * 360; i < time * 360 + 90; i += 2) {
                     float max = time * 360 + 90;
-                    float dc = MathUti.normalize(i, time * 360 - 45, max);
+                    float dc = MathUtil.normalize(i, time * 360 - 45, max);
                     float rf = 0.6f;
                     double radians = Math.toRadians(i);
                     double plY = pl + Math.sin(radians * 1.2f) * 0.1f;
@@ -358,9 +358,9 @@ public class TargetESP extends Module {
     private float[] targetESPSPos(EntityLivingBase entity) {
         EntityRenderer entityRenderer = mc.entityRenderer;
         float partialTicks = mc.timer.renderPartialTicks;
-        double x = MathUti.interpolate(entity.prevPosX, entity.posX, partialTicks);
-        double y = MathUti.interpolate(entity.prevPosY, entity.posY, partialTicks);
-        double z = MathUti.interpolate(entity.prevPosZ, entity.posZ, partialTicks);
+        double x = MathUtil.interpolate(entity.prevPosX, entity.posX, partialTicks);
+        double y = MathUtil.interpolate(entity.prevPosY, entity.posY, partialTicks);
+        double z = MathUtil.interpolate(entity.prevPosZ, entity.posZ, partialTicks);
         double height = entity.height / (entity.isChild() ? 1.75f : 1.0f) / 2.0f;
         AxisAlignedBB bb = new AxisAlignedBB(x - 0.0, y, z - 0.0, x + 0.0, y + height, z + 0.0);
         final double[][] vectors = {{bb.minX, bb.minY, bb.minZ},

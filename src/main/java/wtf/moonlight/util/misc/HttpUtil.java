@@ -13,6 +13,7 @@ package wtf.moonlight.util.misc;
 import kotlin.io.ByteStreamsKt;
 import kotlin.io.TextStreamsKt;
 import wtf.moonlight.Client;
+import wtf.moonlight.util.HttpResponse;
 
 import java.io.*;
 import java.net.HttpURLConnection;

@@ -4,7 +4,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.util.misc.InstanceAccess;
-import wtf.moonlight.util.render.Particle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,7 @@ public class ParticleRenderer implements InstanceAccess {
             for (int i = 0; i <= 10; i++) {
                 Particle particle = new Particle();
                 particle.init(x + 20, y + 20, (float) (((Math.random() - 0.5) * 2) * 1.4), (float) (((Math.random() - 0.5) * 2) * 1.4),
-                        (float) (MathUti.randomizeDouble(4, 5)), i % 2 == 0 ? INSTANCE.getModuleManager().getModule(Interface.class).color(i * 100, 255) :INSTANCE.getModuleManager().getModule(Interface.class).color(-i * 100, 255));
+                        (float) (MathUtil.randomizeDouble(4, 5)), i % 2 == 0 ? INSTANCE.getModuleManager().getModule(Interface.class).color(i * 100, 255) :INSTANCE.getModuleManager().getModule(Interface.class).color(-i * 100, 255));
                 particles.add(particle);
             }
             sentParticles = true;

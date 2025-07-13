@@ -27,7 +27,7 @@ import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.widget.Widget;
 import wtf.moonlight.util.misc.InstanceAccess;
 import wtf.moonlight.util.animations.advanced.Animation;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.ParticleRenderer;
 import wtf.moonlight.util.render.RenderUtil;
@@ -207,11 +207,11 @@ class TargetDisplay implements InstanceAccess {
                     RoundedUtil.drawRound(x + 5 * 2 + 26.5f, y + 6.8f, 0.5f, 26.5f, 2, new Color(30, 30, 30));
 
                     Fonts.interSemiBold.get(14).drawString(target.getDisplayName().getFormattedText(), x + 5 * 3 + 26.5f, y + 6.8f + (float) Fonts.interSemiBold.get(14).getHeight() / 2, -1);
-                    Fonts.interRegular.get(12).drawString((int) (MathUti.roundToHalf(target.getHealth())) + "HP", x + 5 * 3 + 26.5f, y + 6.8f * 2.25 + (float) Fonts.interSemiBold.get(14).getHeight() / 2, -1);
+                    Fonts.interRegular.get(12).drawString((int) (MathUtil.roundToHalf(target.getHealth())) + "HP", x + 5 * 3 + 26.5f, y + 6.8f * 2.25 + (float) Fonts.interSemiBold.get(14).getHeight() / 2, -1);
 
                     RoundedUtil.drawGradientHorizontal(x + 5 * 3 + 26.5f, y + 26.5f, target.healthAnimation.getOutput(), 3.8f, 2, new Color(setting.color(0)), new Color(setting.color(90)));
 
-                    RenderUtil.drawRect(x + 5 * 3 + 26.5f + Fonts.interRegular.get(12).getStringWidth((int) (MathUti.roundToHalf(target.getHealth())) + "HP") + 2, y + 6.8f * 2.25f + 1.5f, 0.5f, Fonts.psRegular.get(12).getHeight(), new Color(128, 128, 128).getRGB());
+                    RenderUtil.drawRect(x + 5 * 3 + 26.5f + Fonts.interRegular.get(12).getStringWidth((int) (MathUtil.roundToHalf(target.getHealth())) + "HP") + 2, y + 6.8f * 2.25f + 1.5f, 0.5f, Fonts.psRegular.get(12).getHeight(), new Color(128, 128, 128).getRGB());
 
                     List<ItemStack> items = new ArrayList<>();
                     if (target.getHeldItem() != null) {
@@ -226,7 +226,7 @@ class TargetDisplay implements InstanceAccess {
                     float i = 0;
 
                     for (ItemStack stack : items) {
-                        RenderUtil.renderItemStack(stack, i + x + 5 * 3 + 26.5f + Fonts.interRegular.get(12).getStringWidth((int) (MathUti.roundToHalf(target.getHealth())) + "HP") + 2 + 1, y + 6.8f * 2.25f + 1.5f, 0.5f);
+                        RenderUtil.renderItemStack(stack, i + x + 5 * 3 + 26.5f + Fonts.interRegular.get(12).getStringWidth((int) (MathUtil.roundToHalf(target.getHealth())) + "HP") + 2 + 1, y + 6.8f * 2.25f + 1.5f, 0.5f);
                         i += 7.5f;
                     }
 

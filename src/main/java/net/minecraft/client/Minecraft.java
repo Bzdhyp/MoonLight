@@ -183,7 +183,7 @@ import org.lwjglx.util.glu.GLU;
 import wtf.moonlight.Client;
 import wtf.moonlight.events.misc.KeyPressEvent;
 import wtf.moonlight.events.misc.TickEvent;
-import wtf.moonlight.util.player.MovementInputFromKeyboard;
+import wtf.moonlight.util.MovementInputFromKeyboard;
 
 public class Minecraft implements IThreadListener, IPlayerUsage
 {

@@ -17,7 +17,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import wtf.moonlight.util.packet.Workers;
+import wtf.moonlight.util.Workers;
 
 public class GuiConnecting extends GuiScreen
 {

@@ -19,8 +19,8 @@ import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.movement.Freeze;
-import wtf.moonlight.util.packet.Workers;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.Workers;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.TimerUtil;
 import wtf.moonlight.util.DebugUtil;
 import wtf.moonlight.component.FallDistanceComponent;
@@ -94,12 +94,12 @@ public class AutoPearl extends Module {
         public Vector2f call() {
             final TimerUtil timer = new TimerUtil();
             timer.reset();
-            Vector2f solution = new Vector2f((float) MathUti.randomizeDouble(-180, 180), (float) MathUti.randomizeDouble(-90, 90));
+            Vector2f solution = new Vector2f((float) MathUtil.randomizeDouble(-180, 180), (float) MathUtil.randomizeDouble(-90, 90));
             Vector2f current = solution;
             this.energy = this.predictor.assessRotation(solution);
             double solutionE = this.energy;
             while (this.temperature >= 1.0E-4 && !this.stop) {
-                final Vector2f rotation = new Vector2f((float) (current.x + MathUti.randomizeDouble(-this.temperature * 18.0, this.temperature * 18.0)), (float) (current.y + MathUti.randomizeDouble(-this.temperature * 9.0, this.temperature * 9.0)));
+                final Vector2f rotation = new Vector2f((float) (current.x + MathUtil.randomizeDouble(-this.temperature * 18.0, this.temperature * 18.0)), (float) (current.y + MathUtil.randomizeDouble(-this.temperature * 9.0, this.temperature * 9.0)));
                 if (rotation.y > 90.0f) {
                     rotation.y = 90.0f;
                 }
@@ -108,7 +108,7 @@ public class AutoPearl extends Module {
                 }
                 final double assessment = this.predictor.assessRotation(rotation);
                 final double deltaE = assessment - this.energy;
-                if (deltaE >= 0.0 || MathUti.randomizeDouble(0, 1) < Math.exp(-deltaE / this.temperature * 100.0)) {
+                if (deltaE >= 0.0 || MathUtil.randomizeDouble(0, 1) < Math.exp(-deltaE / this.temperature * 100.0)) {
                     this.energy = assessment;
                     current = rotation;
                     if (assessment > solutionE) {

@@ -12,7 +12,7 @@ package wtf.moonlight.util.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 
 import java.awt.*;
 
@@ -43,8 +43,8 @@ public class ColorUtil {
         float[] color1HSB = Color.RGBtoHSB(color1.getRed(), color1.getGreen(), color1.getBlue(), null);
         float[] color2HSB = Color.RGBtoHSB(color2.getRed(), color2.getGreen(), color2.getBlue(), null);
 
-        Color resultColor = Color.getHSBColor(MathUti.interpolateFloat(color1HSB[0], color2HSB[0], amount),
-                MathUti.interpolateFloat(color1HSB[1], color2HSB[1], amount), MathUti.interpolateFloat(color1HSB[2], color2HSB[2], amount));
+        Color resultColor = Color.getHSBColor(MathUtil.interpolateFloat(color1HSB[0], color2HSB[0], amount),
+                MathUtil.interpolateFloat(color1HSB[1], color2HSB[1], amount), MathUtil.interpolateFloat(color1HSB[2], color2HSB[2], amount));
 
         return ColorUtil.applyOpacity(resultColor, interpolateInt(color1.getAlpha(), color2.getAlpha(), amount) / 255f);
     }
@@ -142,10 +142,10 @@ public class ColorUtil {
     }
 
     public static int getOverallColorFrom(int color1, int color2, float percentTo2) {
-        final int finalRed = (int) MathUti.lerp(color1 >> 16 & 0xFF, color2 >> 16 & 0xFF, percentTo2),
-                finalGreen = (int) MathUti.lerp(color1 >> 8 & 0xFF, color2 >> 8 & 0xFF, percentTo2),
-                finalBlue = (int) MathUti.lerp(color1 & 0xFF, color2 & 0xFF, percentTo2),
-                finalAlpha = (int) MathUti.lerp(color1 >> 24 & 0xFF, color2 >> 24 & 0xFF, percentTo2);
+        final int finalRed = (int) MathUtil.lerp(color1 >> 16 & 0xFF, color2 >> 16 & 0xFF, percentTo2),
+                finalGreen = (int) MathUtil.lerp(color1 >> 8 & 0xFF, color2 >> 8 & 0xFF, percentTo2),
+                finalBlue = (int) MathUtil.lerp(color1 & 0xFF, color2 & 0xFF, percentTo2),
+                finalAlpha = (int) MathUtil.lerp(color1 >> 24 & 0xFF, color2 >> 24 & 0xFF, percentTo2);
         return new Color(finalRed, finalGreen, finalBlue, finalAlpha).getRGB();
     }
 

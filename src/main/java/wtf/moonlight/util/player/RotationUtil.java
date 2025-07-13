@@ -29,8 +29,10 @@ import wtf.moonlight.events.misc.TickEvent;
 import wtf.moonlight.events.misc.WorldEvent;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.*;
+import wtf.moonlight.util.MovementCorrection;
 import wtf.moonlight.util.misc.InstanceAccess;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
+import wtf.moonlight.util.vector.Vector3d;
 
 import java.util.List;
 import java.util.Objects;
@@ -87,7 +89,7 @@ public class RotationUtil implements InstanceAccess {
     }
 
     public static void setRotation(float[] rotation, String mode, final MovementCorrection correction, float minYawRotSpeed, float maxYawRotSpeed, float minPitchRotSpeed, float maxPitchRotSpeed,float bezierP0,float bezierP1,float bezierP2,float bezierP3,float bezierP4,float bezierP5,float bezierP6,float bezierP7,float elasticity,float dampingFactor, boolean smoothlyReset) {
-        RotationUtil.currentRotation = smooth(serverRotation, rotation, mode, MathUti.randomizeInt(minYawRotSpeed,maxYawRotSpeed), MathUti.randomizeInt(minPitchRotSpeed,maxPitchRotSpeed), bezierP0, bezierP1, bezierP2, bezierP3, bezierP4, bezierP5, bezierP6, bezierP7,elasticity,dampingFactor);
+        RotationUtil.currentRotation = smooth(serverRotation, rotation, mode, MathUtil.randomizeInt(minYawRotSpeed,maxYawRotSpeed), MathUtil.randomizeInt(minPitchRotSpeed,maxPitchRotSpeed), bezierP0, bezierP1, bezierP2, bezierP3, bezierP4, bezierP5, bezierP6, bezierP7,elasticity,dampingFactor);
         currentCorrection = correction;
         RotationUtil.smoothlyReset = smoothlyReset;
         cachedMinYawRotSpeed = minYawRotSpeed;
@@ -110,7 +112,7 @@ public class RotationUtil implements InstanceAccess {
     }
 
     public static void setRotation(float[] rotation, String mode, final MovementCorrection correction, float minYawRotSpeed, float maxYawRotSpeed, float minPitchRotSpeed, float maxPitchRotSpeed,float bezierP0,float bezierP1,float bezierP2,float bezierP3,float bezierP4,float bezierP5,float bezierP6,float bezierP7,float elasticity,float dampingFactor,int keepLength, boolean smoothlyReset) {
-        RotationUtil.currentRotation = smooth(serverRotation, rotation, mode, MathUti.randomizeInt(minYawRotSpeed,maxYawRotSpeed), MathUti.randomizeInt(minPitchRotSpeed,maxPitchRotSpeed), bezierP0, bezierP1, bezierP2, bezierP3, bezierP4, bezierP5, bezierP6, bezierP7,elasticity,dampingFactor);
+        RotationUtil.currentRotation = smooth(serverRotation, rotation, mode, MathUtil.randomizeInt(minYawRotSpeed,maxYawRotSpeed), MathUtil.randomizeInt(minPitchRotSpeed,maxPitchRotSpeed), bezierP0, bezierP1, bezierP2, bezierP3, bezierP4, bezierP5, bezierP6, bezierP7,elasticity,dampingFactor);
         currentCorrection = correction;
         RotationUtil.smoothlyReset = smoothlyReset;
         cachedMinYawRotSpeed = minYawRotSpeed;
@@ -159,7 +161,7 @@ public class RotationUtil implements InstanceAccess {
             }
 
             if (distanceToPlayerRotation > 0) {
-                RotationUtil.currentRotation = smooth(Objects.requireNonNullElse(currentRotation, serverRotation), new float[]{mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch}, cachedMode, MathUti.randomizeInt(cachedMinYawRotSpeed,cachedMaxYawRotSpeed), MathUti.randomizeInt(cachedMinPitchRotSpeed,cachedMaxPitchRotSpeed), bezierP0, bezierP1, bezierP2, bezierP3, bezierP4, bezierP5, bezierP6, bezierP7,elasticity,dampingFactor);
+                RotationUtil.currentRotation = smooth(Objects.requireNonNullElse(currentRotation, serverRotation), new float[]{mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch}, cachedMode, MathUtil.randomizeInt(cachedMinYawRotSpeed,cachedMaxYawRotSpeed), MathUtil.randomizeInt(cachedMinPitchRotSpeed,cachedMaxPitchRotSpeed), bezierP0, bezierP1, bezierP2, bezierP3, bezierP4, bezierP5, bezierP6, bezierP7,elasticity,dampingFactor);
             }
         }
     }
@@ -225,7 +227,7 @@ public class RotationUtil implements InstanceAccess {
                 }
 
                 if (distanceToPlayerRotation > 0) {
-                    RotationUtil.currentRotation = smooth(Objects.requireNonNullElse(currentRotation, serverRotation), new float[]{mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch}, cachedMode, MathUti.randomizeInt(cachedMinYawRotSpeed,cachedMaxYawRotSpeed), MathUti.randomizeInt(cachedMinPitchRotSpeed,cachedMaxPitchRotSpeed), bezierP0, bezierP1, bezierP2, bezierP3, bezierP4, bezierP5, bezierP6, bezierP7,elasticity,dampingFactor);
+                    RotationUtil.currentRotation = smooth(Objects.requireNonNullElse(currentRotation, serverRotation), new float[]{mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch}, cachedMode, MathUtil.randomizeInt(cachedMinYawRotSpeed,cachedMaxYawRotSpeed), MathUtil.randomizeInt(cachedMinPitchRotSpeed,cachedMaxPitchRotSpeed), bezierP0, bezierP1, bezierP2, bezierP3, bezierP4, bezierP5, bezierP6, bezierP7,elasticity,dampingFactor);
                 }
             }
         }
@@ -359,6 +361,17 @@ public class RotationUtil implements InstanceAccess {
                 yaw - player.rotationYaw), player.rotationPitch + MathHelper.wrapAngleTo180_float(pitch - player.rotationPitch)};
     }
 
+    public static float oppositeYaw(float yaw) {
+        Vector2f from = new Vector2f((float)mc.thePlayer.lastTickPosX, (float)mc.thePlayer.lastTickPosZ);
+        Vector2f to = new Vector2f((float)mc.thePlayer.posX, (float)mc.thePlayer.posZ);
+        Vector2f difference = new Vector2f(to.x - from.x, to.y - from.y);
+        float x = difference.x, z = difference.y;
+        if (x != 0f && z != 0f) {
+            yaw = (float) Math.toDegrees((Math.atan2(-x, z) + MathHelper.PI2) % MathHelper.PI2);
+        }
+        return yaw - 180f;
+    }
+
     public static float i(final double n, final double n2) {
         return (float) (Math.atan2(n - mc.thePlayer.posX, n2 - mc.thePlayer.posZ) * 57.295780181884766 * -1.0);
     }
@@ -391,15 +404,31 @@ public class RotationUtil implements InstanceAccess {
         return (float) hypot(Math.abs(getAngleDifference(a[0], b[0])), Math.abs(a[1] - b[1]));
     }
 
-    public static float oppositeYaw(float yaw) {
-        Vector2f from = new Vector2f((float)mc.thePlayer.lastTickPosX, (float)mc.thePlayer.lastTickPosZ);
-        Vector2f to = new Vector2f((float)mc.thePlayer.posX, (float)mc.thePlayer.posZ);
-        Vector2f difference = new Vector2f(to.x - from.x, to.y - from.y);
-        float x = difference.x, z = difference.y;
-        if (x != 0f && z != 0f) {
-            yaw = (float) Math.toDegrees((Math.atan2(-x, z) + MathHelper.PI2) % MathHelper.PI2);
-        }
-        return yaw - 180f;
+    public static Vector2f calculate(final Vec3 to) {
+        return calculate(mc.thePlayer.getCustomPositionVector().add(0, mc.thePlayer.getEyeHeight(), 0), new Vector3d(to.xCoord, to.yCoord, to.zCoord));
+    }
+
+    public static Vector2f calculate(final Vector3d to) {
+        return calculate(mc.thePlayer.getCustomPositionVector().add(0, mc.thePlayer.getEyeHeight(), 0), to);
+    }
+
+    public static Vector2f calculate(final Vector3d position, final EnumFacing enumFacing) {
+        double x = position.getX() + 0.5D;
+        double y = position.getY() + 0.5D;
+        double z = position.getZ() + 0.5D;
+
+        x += (double) enumFacing.getDirectionVec().getX() * 0.5D;
+        y += (double) enumFacing.getDirectionVec().getY() * 0.5D;
+        z += (double) enumFacing.getDirectionVec().getZ() * 0.5D;
+        return calculate(new Vector3d(x, y, z));
+    }
+
+    public static Vector2f calculate(final Vector3d from, final Vector3d to) {
+        final Vector3d diff = to.subtract(from);
+        final double distance = Math.hypot(diff.getX(), diff.getZ());
+        final float yaw = (float) (MathHelper.atan2(diff.getZ(), diff.getX()) * MathUtil.TO_DEGREES) - 90.0F;
+        final float pitch = (float) (-(MathHelper.atan2(diff.getY(), distance) * MathUtil.TO_DEGREES));
+        return new Vector2f(yaw, pitch);
     }
 
     public static MovingObjectPosition rayTrace(float[] rot, double blockReachDistance, float partialTicks) {
@@ -439,15 +468,22 @@ public class RotationUtil implements InstanceAccess {
     }
 
 
-    public static float calculateYawFromSrcToDst(final float yaw,
-                                                 final double srcX,
-                                                 final double srcZ,
-                                                 final double dstX,
-                                                 final double dstZ) {
-        final double xDist = dstX - srcX;
-        final double zDist = dstZ - srcZ;
-        final float var1 = (float) (StrictMath.atan2(zDist, xDist) * 180.0 / Math.PI) - 90.0F;
-        return yaw + MathHelper.wrapAngleTo180_float(var1 - yaw);
+    public static float getPitchByYawToBlock(float yaw, BlockPos pos) {
+        Vec3 playerEyePos = mc.thePlayer.getPositionVector()
+                .addVector(0.0D, mc.thePlayer.getEyeHeight(), 0.0D);
+        Vec3 blockCenter = new Vec3(pos.getX() + 0.5D,
+                pos.getY() + 0.5D,
+                pos.getZ() + 0.5D);
+        double dx = blockCenter.xCoord - playerEyePos.xCoord;
+        double dy = blockCenter.yCoord - playerEyePos.yCoord;
+        double dz = blockCenter.zCoord - playerEyePos.zCoord;
+        double yawRad = Math.toRadians(yaw + 90.0);
+        double projectedDistance = dx * Math.cos(yawRad) + dz * Math.sin(yawRad);
+        if (projectedDistance == 0) {
+            projectedDistance = 0.0001;
+        }
+
+        return (float)(-Math.toDegrees(Math.atan2(dy, projectedDistance)));
     }
 
     public static Vec3 getBestHitVec(final Entity entity) {
@@ -653,9 +689,9 @@ public class RotationUtil implements InstanceAccess {
         double maxZ = MathHelper.clamp_double(
                 xyz.zCoord + boxSize, entity.getEntityBoundingBox().minZ - (double)f11, entity.getEntityBoundingBox().maxZ + (double)f11
         );
-        xyz.xCoord = MathHelper.clamp_double(xyz.xCoord + MathUti.randomSin(), minX, maxX);
-        xyz.yCoord = MathHelper.clamp_double(xyz.yCoord + MathUti.randomSin(), minY, maxY);
-        xyz.zCoord = MathHelper.clamp_double(xyz.zCoord + MathUti.randomSin(), minZ, maxZ);
+        xyz.xCoord = MathHelper.clamp_double(xyz.xCoord + MathUtil.randomSin(), minX, maxX);
+        xyz.yCoord = MathHelper.clamp_double(xyz.yCoord + MathUtil.randomSin(), minY, maxY);
+        xyz.zCoord = MathHelper.clamp_double(xyz.zCoord + MathUtil.randomSin(), minZ, maxZ);
         return xyz;
     }
 }

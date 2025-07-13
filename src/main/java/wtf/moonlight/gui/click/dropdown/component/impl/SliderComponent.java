@@ -15,7 +15,7 @@ import wtf.moonlight.module.impl.visual.ClickGUI;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.render.MouseUtil;
 import wtf.moonlight.util.render.RenderUtil;
 import wtf.moonlight.util.render.RoundedUtil;
@@ -50,7 +50,7 @@ public class SliderComponent extends Component {
 
         if (dragging) {
             final double difference = setting.getMax() - setting.getMin(), value = setting.getMin() + MathHelper.clamp_float((mouseX - getX()) / getWidth(), 0, 1) * difference;
-            setting.setValue((float) MathUti.incValue(value, setting.getIncrement()));
+            setting.setValue((float) MathUtil.incValue(value, setting.getIncrement()));
         }
     }
 

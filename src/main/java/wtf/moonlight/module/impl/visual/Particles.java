@@ -28,7 +28,7 @@ import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.util.animations.advanced.impl.SmoothStepAnimation;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.render.RenderUtil;
 
@@ -67,21 +67,21 @@ public class Particles extends Module {
             FirePart newPart;
 
             spawnPos = mc.thePlayer.getPositionVector().addVector(
-                    MathUti.randomizeDouble(-72.0, 72.0), // X
-                    MathUti.randomizeDouble(-40.0, 80.0), // Y
-                    MathUti.randomizeDouble(-85.0, 85.0) // Z
+                    MathUtil.randomizeDouble(-72.0, 72.0), // X
+                    MathUtil.randomizeDouble(-20.0, 80.0), // Y
+                    MathUtil.randomizeDouble(-85.0, 85.0) // Z
             );
 
             if (physics.is("Drop")) {
                 newPart = new FirePart(spawnPos);
                 newPart.motionX = 0;
                 newPart.motionZ = 0;
-                newPart.motionY = (float) MathUti.randomizeDouble(-0.08f, -0.03f);
+                newPart.motionY = (float) MathUtil.randomizeDouble(-0.08f, -0.03f);
             } else {
                 newPart = new FirePart(spawnPos);
-                newPart.motionX = (float) MathUti.randomizeDouble(-0.4f, 0.4f);
-                newPart.motionZ = (float) MathUti.randomizeDouble(-0.4f, 0.4f);
-                newPart.motionY = (float) MathUti.randomizeDouble(-0.1f, 0.1f);
+                newPart.motionX = (float) MathUtil.randomizeDouble(-0.4f, 0.4f);
+                newPart.motionZ = (float) MathUtil.randomizeDouble(-0.4f, 0.4f);
+                newPart.motionY = (float) MathUtil.randomizeDouble(-0.1f, 0.1f);
             }
 
             FIRE_PARTS_LIST.add(newPart);
@@ -239,7 +239,7 @@ public class Particles extends Module {
         Vec3 pos;
         public SmoothStepAnimation animation = new SmoothStepAnimation(400,1);
         float motionX, motionY, motionZ;
-        protected int age = (int) MathUti.randomizeDouble(100, 300);
+        protected int age = (int) MathUtil.randomizeDouble(100, 300);
         @Getter
         boolean toRemove;
 

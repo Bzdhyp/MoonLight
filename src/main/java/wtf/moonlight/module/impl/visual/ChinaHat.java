@@ -17,7 +17,7 @@ import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Client;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.render.Render3DEvent;
-import wtf.moonlight.util.friend.Friend;
+import wtf.moonlight.config.impl.friend.Friend;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
@@ -26,7 +26,7 @@ import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ColorValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.render.GLUtil;
 
@@ -146,12 +146,12 @@ public class ChinaHat extends Module {
 
         // Yaw
         {
-            glRotatef(MathUti.interpolate(player.prevRotationYawHead, player.rotationYawHead, partialTicks), 0, -1, 0);
+            glRotatef(MathUtil.interpolate(player.prevRotationYawHead, player.rotationYawHead, partialTicks), 0, -1, 0);
         }
 
         // Pitch
         {
-            final float pitch = MathUti.interpolate(player.prevRotationPitchHead, player.rotationPitchHead, partialTicks);
+            final float pitch = MathUtil.interpolate(player.prevRotationPitchHead, player.rotationPitchHead, partialTicks);
             glRotatef(pitch / 3.f, 1, 0, 0);
             glTranslated(0, 0, pitch / 270.f);
         }

@@ -18,9 +18,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiDownloadTerrain;
+import wtf.moonlight.component.FreeLookComponent;
 import wtf.moonlight.events.misc.MouseOverEvent;
 import wtf.moonlight.module.impl.movement.Speed;
-import wtf.moonlight.module.impl.visual.AspectRatio;
 import wtf.moonlight.module.impl.visual.Atmosphere;
 import wtf.moonlight.module.impl.visual.Camera;
 import wtf.moonlight.module.impl.misc.FreeLook;
@@ -103,7 +103,6 @@ import org.lwjglx.opengl.GLContext;
 import org.lwjglx.util.glu.Project;
 import wtf.moonlight.Client;
 import wtf.moonlight.events.render.Render3DEvent;
-import wtf.moonlight.util.render.shader.impl.Sky;
 
 public class EntityRenderer implements IResourceManagerReloadListener
 {
@@ -499,27 +498,23 @@ public class EntityRenderer implements IResourceManagerReloadListener
         }
     }
 
-    private void updateFovModifierHand()
-    {
+    private void updateFovModifierHand() {
         float f = 1.0F;
 
-        if (this.mc.getRenderViewEntity() instanceof AbstractClientPlayer abstractclientplayer)
-        {
+        if (this.mc.getRenderViewEntity() instanceof AbstractClientPlayer abstractclientplayer) {
             f = abstractclientplayer.getFovModifier();
         }
 
         this.fovModifierHandPrev = this.fovModifierHand;
         this.fovModifierHand += (f - this.fovModifierHand) * 0.5F;
 
-        if (this.fovModifierHand > 1.5F)
-        {
-            this.fovModifierHand = 1.5F;
-        }
+        this.fovModifierHand = Math.min(this.fovModifierHand, 1.5F);
+        this.fovModifierHand = Math.max(this.fovModifierHand, 0.1F);
 
-        if (this.fovModifierHand < 0.1F)
-        {
-            this.fovModifierHand = 0.1F;
-        }
+        // Client
+        Camera camera = Client.INSTANCE.getModuleManager().getModule(Camera.class);
+
+        this.fovModifierHand = camera.isEnabled() && camera.noFovValue.get() ? camera.fovValue.getValue() : this.fovModifierHand;
     }
 
     private float getFOVModifier(float partialTicks, boolean useFOVSetting)
@@ -592,12 +587,9 @@ public class EntityRenderer implements IResourceManagerReloadListener
         }
     }
 
-    private void hurtCameraEffect(float partialTicks)
-    {
-        if (this.mc.getRenderViewEntity() instanceof EntityLivingBase entitylivingbase)
-        {
-            if (Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Camera.class).setting.isEnabled("No Hurt Cam"))
-                return;
+    private void hurtCameraEffect(float partialTicks) {
+        if (this.mc.getRenderViewEntity() instanceof EntityLivingBase entitylivingbase) {
+            if (Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Camera.class).setting.isEnabled("No Hurt Cam")) return;
 
             float f = (float)entitylivingbase.hurtTime - partialTicks;
 
@@ -646,7 +638,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
     {
         Entity entity = this.mc.getRenderViewEntity();
         Camera camera = Client.INSTANCE.getModuleManager().getModule(Camera.class);
-        FreeLook freeLook = Client.INSTANCE.getModuleManager().getModule(FreeLook.class);
+
         float f = entity.getEyeHeight();
         double d0 = entity.prevPosX + (entity.posX - entity.prevPosX) * (double)partialTicks;
         double d1 = entity.prevPosY + (entity.posY - entity.prevPosY) * (double)partialTicks + (double)f;
@@ -776,23 +768,19 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 GlStateManager.rotate(f7, 1.0F, 0.0F, 0.0F);
                 GlStateManager.rotate(f6, 0.0F, 1.0F, 0.0F);
             }
-        }
-        else if (!this.mc.gameSettings.debugCamEnable)
-        {
-            if (freeLook.isEnabled() && Mouse.isButtonDown(2)) {
-                GlStateManager.rotate(entity.cameraRotationPitch, 1.0F, 0.0F, 0.0F);
+        } else if (!this.mc.gameSettings.debugCamEnable) {
+            if (FreeLookComponent.freelooking) {
+                GlStateManager.rotate(FreeLookComponent.cameraPitch, 1f, 0f, 0f);
             } else {
                 GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 1.0F, 0.0F, 0.0F);
             }
 
-            if (entity instanceof EntityAnimal entityanimal1) {
-                GlStateManager.rotate(entityanimal1.prevRotationYawHead + (entityanimal1.rotationYawHead - entityanimal1.prevRotationYawHead) * partialTicks + 180.0F, 0.0F, 1.0F, 0.0F);
+            if (entity instanceof EntityAnimal entityanimal) {
+                GlStateManager.rotate(entityanimal.prevRotationYawHead + (entityanimal.rotationYawHead - entityanimal.prevRotationYawHead) * partialTicks + 180.0F, 0.0F, 1.0F, 0.0F);
+            } else if (FreeLookComponent.freelooking) {
+                GlStateManager.rotate(FreeLookComponent.cameraYaw, 0f, 1f, 0f);
             } else {
-                if (freeLook.isEnabled() && Mouse.isButtonDown(2)) {
-                    GlStateManager.rotate(entity.cameraRotationYaw + 180.0F, 0.0F, 1.0F, 0.0F);
-                } else {
-                    GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks + 180.0F, 0.0F, 1.0F, 0.0F);
-                }
+                GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks + 180.0F, 0.0F, 1.0F, 0.0F);
             }
         }
 
@@ -839,7 +827,8 @@ public class EntityRenderer implements IResourceManagerReloadListener
             GlStateManager.scale(this.cameraZoom, this.cameraZoom, 1.0D);
         }
 
-        float aspect = Client.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Client.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.getValue() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
+        float aspect = Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Camera.class).aspectRatio.get()
+                ? Client.INSTANCE.getModuleManager().getModule(Camera.class).aspectValue.getValue() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
         Project.gluPerspective(this.getFOVModifier(partialTicks, true), aspect, 0.05F, this.clipDistance);
         GlStateManager.matrixMode(5888);
         GlStateManager.loadIdentity();
@@ -851,7 +840,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
         this.hurtCameraEffect(partialTicks);
 
-        if (this.mc.gameSettings.viewBobbing && !Client.INSTANCE.getModuleManager().getModule(Camera.class).canMinimalBobbing()) {
+        if (this.mc.gameSettings.viewBobbing) {
             this.setupViewBobbing(partialTicks);
         }
 
@@ -924,8 +913,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 Shaders.applyHandDepth();
             }
 
-            float aspect = Client.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Client.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.getValue() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
-            Project.gluPerspective(this.getFOVModifier(p_renderHand_1_, false), aspect, 0.05F, this.farPlaneDistance * 2.0F);
+            Project.gluPerspective(this.getFOVModifier(p_renderHand_1_, false), (float)this.mc.displayWidth / (float)this.mc.displayHeight, 0.05F, this.farPlaneDistance * 2.0F);
             GlStateManager.matrixMode(5888);
             GlStateManager.loadIdentity();
 
@@ -1215,8 +1203,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             Mouse.setGrabbed(true);
         }
 
-        if (this.mc.inGameHasFocus && flag)
-        {
+        if (this.mc.inGameHasFocus && flag) {
             this.mc.mouseHelper.mouseXYChange();
             float f = this.mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
             float f1 = f * f * f * 8.0F;
@@ -1224,26 +1211,30 @@ public class EntityRenderer implements IResourceManagerReloadListener
             float f3 = (float)this.mc.mouseHelper.deltaY * f1;
             int i = 1;
 
-            if (this.mc.gameSettings.invertMouse)
-            {
+            if (this.mc.gameSettings.invertMouse) {
                 i = -1;
             }
 
-            if (this.mc.gameSettings.smoothCamera)
-            {
+            if (this.mc.gameSettings.smoothCamera) {
                 this.smoothCamYaw += f2;
                 this.smoothCamPitch += f3;
                 float f4 = partialTicks - this.smoothCamPartialTicks;
                 this.smoothCamPartialTicks = partialTicks;
                 f2 = this.smoothCamFilterX * f4;
                 f3 = this.smoothCamFilterY * f4;
-                this.mc.thePlayer.setAngles(f2, f3 * (float)i);
-            }
-            else
-            {
+                if (FreeLookComponent.freelooking) {
+                    FreeLookComponent.overrideMouse(f2, f3 * (float)i);
+                } else {
+                    this.mc.thePlayer.setAngles(f2, f3 * (float)i);
+                }
+            } else {
+                if (FreeLookComponent.freelooking) {
+                    FreeLookComponent.overrideMouse(f2, f3 * (float)i);
+                } else {
+                    this.mc.thePlayer.setAngles(f2, f3 * (float)i);
+                }
                 this.smoothCamYaw = 0.0F;
                 this.smoothCamPitch = 0.0F;
-                this.mc.thePlayer.setAngles(f2, f3 * (float)i);
             }
         }
 
@@ -1508,61 +1499,44 @@ public class EntityRenderer implements IResourceManagerReloadListener
         double d1 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double)partialTicks;
         double d2 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double)partialTicks;
 
-        if (flag)
-        {
+        if (flag) {
             ShadersRender.setFrustrumPosition(icamera, d0, d1, d2);
-        }
-        else
-        {
+        } else {
             icamera.setPosition(d0, d1, d2);
         }
 
-        if (Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Camera.class).setting.isEnabled("Shader Sky")){
-            Sky.draw(Client.INSTANCE.getStartTime());
-        }
-
-        if ((Config.isSkyEnabled() || Config.isSunMoonEnabled() || Config.isStarsEnabled()) && !Shaders.isShadowPass)
-        {
-
+        if ((Config.isSkyEnabled() || Config.isSunMoonEnabled() || Config.isStarsEnabled()) && !Shaders.isShadowPass) {
             this.setupFog(-1, partialTicks);
-            if (Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && !Client.INSTANCE.getModuleManager().getModule(Camera.class).setting.isEnabled("Shader Sky") || !Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled()) {
-                this.mc.mcProfiler.endStartSection("sky");
-            }
+            this.mc.mcProfiler.endStartSection("sky");
             GlStateManager.matrixMode(5889);
             GlStateManager.loadIdentity();
-            float aspect = Client.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Client.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.getValue() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
+            float aspect = Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Camera.class).aspectRatio.get()
+                    ? Client.INSTANCE.getModuleManager().getModule(Camera.class).aspectValue.getValue() : (float)this.mc.displayWidth / (float)this.mc.displayHeight;
             Project.gluPerspective(this.getFOVModifier(partialTicks, true), aspect ,0.05F, this.clipDistance);
             GlStateManager.matrixMode(5888);
 
-            if (Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && !Client.INSTANCE.getModuleManager().getModule(Camera.class).setting.isEnabled("Shader Sky") || !Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled()) {
-
-                if (flag) {
-                    Shaders.beginSky();
-                }
-
-                renderglobal.renderSky(partialTicks, pass);
-
-                if (flag) {
-                    Shaders.endSky();
-                }
+            if (flag) {
+                Shaders.beginSky();
             }
 
+            renderglobal.renderSky(partialTicks, pass);
+
+            if (flag) {
+                Shaders.endSky();
+            }
 
             GlStateManager.matrixMode(5889);
             GlStateManager.loadIdentity();
             Project.gluPerspective(this.getFOVModifier(partialTicks, true), aspect, 0.05F, this.clipDistance);
             GlStateManager.matrixMode(5888);
-        }
-        else
-        {
+        } else {
             GlStateManager.disableBlend();
         }
 
         this.setupFog(0, partialTicks);
         GlStateManager.shadeModel(7425);
 
-        if (entity.posY + (double)entity.getEyeHeight() < 128.0D + (double)(this.mc.gameSettings.ofCloudsHeight * 128.0F))
-        {
+        if (entity.posY + (double)entity.getEyeHeight() < 128.0D + (double)(this.mc.gameSettings.ofCloudsHeight * 128.0F)) {
             this.renderCloudsCheck(renderglobal, partialTicks, pass);
         }
 
@@ -1573,17 +1547,13 @@ public class EntityRenderer implements IResourceManagerReloadListener
         this.mc.mcProfiler.endStartSection("terrain_setup");
         this.checkLoadVisibleChunks(entity, partialTicks, icamera, this.mc.thePlayer.isSpectator());
 
-        if (flag)
-        {
+        if (flag) {
             ShadersRender.setupTerrain(renderglobal, entity, partialTicks, icamera, this.frameCount++, this.mc.thePlayer.isSpectator());
-        }
-        else
-        {
+        } else {
             renderglobal.setupTerrain(entity, partialTicks, icamera, this.frameCount++, this.mc.thePlayer.isSpectator());
         }
 
-        if (pass == 0 || pass == 2)
-        {
+        if (pass == 0 || pass == 2) {
             this.mc.mcProfiler.endStartSection("updatechunks");
             Lagometer.timerChunkUpload.start();
             this.mc.renderGlobal.updateChunks(finishTimeNano);
@@ -1850,12 +1820,10 @@ public class EntityRenderer implements IResourceManagerReloadListener
         }
     }
 
-    private void renderCloudsCheck(RenderGlobal renderGlobalIn, float partialTicks, int pass)
-    {
-        if (this.mc.gameSettings.renderDistanceChunks >= 4 && !Config.isCloudsOff() && Shaders.shouldRenderClouds(this.mc.gameSettings))
-        {
-
-            float aspect = Client.INSTANCE.getModuleManager().getModule(AspectRatio.class).isEnabled() ? Client.INSTANCE.getModuleManager().getModule(AspectRatio.class).aspect.getValue() :(float)this.mc.displayWidth / (float)this.mc.displayHeight;
+    private void renderCloudsCheck(RenderGlobal renderGlobalIn, float partialTicks, int pass) {
+        if (this.mc.gameSettings.renderDistanceChunks >= 4 && !Config.isCloudsOff() && Shaders.shouldRenderClouds(this.mc.gameSettings)) {
+            float aspect = Client.INSTANCE.getModuleManager().getModule(Camera.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Camera.class).aspectRatio.get()
+                    ? Client.INSTANCE.getModuleManager().getModule(Camera.class).aspectValue.getValue() : (float)this.mc.displayWidth / (float)this.mc.displayHeight;
             this.mc.mcProfiler.endStartSection("clouds");
             GlStateManager.matrixMode(5889);
             GlStateManager.loadIdentity();

@@ -26,6 +26,7 @@ import wtf.moonlight.util.misc.InstanceAccess;
 import wtf.moonlight.util.animations.advanced.Animation;
 import wtf.moonlight.util.animations.advanced.Direction;
 import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.player.ScaffoldUtil;
 import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.render.RenderUtil;
 import wtf.moonlight.util.render.RoundedUtil;
@@ -43,9 +44,9 @@ public class ScaffoldCounter implements InstanceAccess {
             case "normal": {
                 anim.setDirection(scaffold.isEnabled() ? Direction.FORWARDS : Direction.BACKWARDS);
                 //if (!scaffold.isEnabled() && anim.isDone()) return;
-                int slot = scaffold.getBlockSlot();
+                int slot = ScaffoldUtil.getBlockSlot();
                 ItemStack heldItem = slot == -1 ? null : mc.thePlayer.inventory.mainInventory[slot];
-                int count = slot == -1 ? 0 : scaffold.getBlockCount();
+                int count = slot == -1 ? 0 : ScaffoldUtil.getBlockCount();
                 String countStr = String.valueOf(count);
                 float x, y;
                 float output = (float) anim.getOutput();
@@ -77,48 +78,48 @@ public class ScaffoldCounter implements InstanceAccess {
             case "exhibition": {
                 if (!scaffold.isEnabled()) return;
                 int c = ColorUtil.getColor(255, 0, 0, 150);
-                if (scaffold.getBlockCount() >= 64 && 128 > scaffold.getBlockCount()) {
+                if (ScaffoldUtil.getBlockCount() >= 64 && 128 > ScaffoldUtil.getBlockCount()) {
                     c = ColorUtil.getColor(255, 255, 0, 150);
-                } else if (scaffold.getBlockCount() >= 128) {
+                } else if (ScaffoldUtil.getBlockCount() >= 128) {
                     c = ColorUtil.getColor(0, 255, 0, 150);
                 }
                 ScaledResolution scaledResolution = new ScaledResolution(mc);
-                mc.fontRendererObj.drawString(String.valueOf(scaffold.getBlockCount()), scaledResolution.getScaledWidth() / 2f - (mc.fontRendererObj.getStringWidth(String.valueOf(scaffold.getBlockCount())) / 2f) - 1, scaledResolution.getScaledHeight() / 2f - 36, 0xff000000, false);
-                mc.fontRendererObj.drawString(String.valueOf(scaffold.getBlockCount()), scaledResolution.getScaledWidth() / 2f - (mc.fontRendererObj.getStringWidth(String.valueOf(scaffold.getBlockCount())) / 2f) + 1, scaledResolution.getScaledHeight() / 2f - 36, 0xff000000, false);
-                mc.fontRendererObj.drawString(String.valueOf(scaffold.getBlockCount()), scaledResolution.getScaledWidth() / 2f - (mc.fontRendererObj.getStringWidth(String.valueOf(scaffold.getBlockCount())) / 2f), scaledResolution.getScaledHeight() / 2f - 35, 0xff000000, false);
-                mc.fontRendererObj.drawString(String.valueOf(scaffold.getBlockCount()), scaledResolution.getScaledWidth() / 2f - (mc.fontRendererObj.getStringWidth(String.valueOf(scaffold.getBlockCount())) / 2f), scaledResolution.getScaledHeight() / 2f - 37, 0xff000000, false);
-                mc.fontRendererObj.drawString(String.valueOf(scaffold.getBlockCount()), scaledResolution.getScaledWidth() / 2f - (mc.fontRendererObj.getStringWidth(String.valueOf(scaffold.getBlockCount())) / 2f), scaledResolution.getScaledHeight() / 2f - 36, c, false);
+                mc.fontRendererObj.drawString(String.valueOf(ScaffoldUtil.getBlockCount()), scaledResolution.getScaledWidth() / 2f - (mc.fontRendererObj.getStringWidth(String.valueOf(ScaffoldUtil.getBlockCount())) / 2f) - 1, scaledResolution.getScaledHeight() / 2f - 36, 0xff000000, false);
+                mc.fontRendererObj.drawString(String.valueOf(ScaffoldUtil.getBlockCount()), scaledResolution.getScaledWidth() / 2f - (mc.fontRendererObj.getStringWidth(String.valueOf(ScaffoldUtil.getBlockCount())) / 2f) + 1, scaledResolution.getScaledHeight() / 2f - 36, 0xff000000, false);
+                mc.fontRendererObj.drawString(String.valueOf(ScaffoldUtil.getBlockCount()), scaledResolution.getScaledWidth() / 2f - (mc.fontRendererObj.getStringWidth(String.valueOf(ScaffoldUtil.getBlockCount())) / 2f), scaledResolution.getScaledHeight() / 2f - 35, 0xff000000, false);
+                mc.fontRendererObj.drawString(String.valueOf(ScaffoldUtil.getBlockCount()), scaledResolution.getScaledWidth() / 2f - (mc.fontRendererObj.getStringWidth(String.valueOf(ScaffoldUtil.getBlockCount())) / 2f), scaledResolution.getScaledHeight() / 2f - 37, 0xff000000, false);
+                mc.fontRendererObj.drawString(String.valueOf(ScaffoldUtil.getBlockCount()), scaledResolution.getScaledWidth() / 2f - (mc.fontRendererObj.getStringWidth(String.valueOf(ScaffoldUtil.getBlockCount())) / 2f), scaledResolution.getScaledHeight() / 2f - 36, c, false);
                 break;
             }
             case "adjust":
                 if (!scaffold.isEnabled()) return;
-                //Fonts.interRegular.get(16).drawStringWithShadow("blocks", sr.getScaledWidth() / 2f + Fonts.Tahoma.get(16).getStringWidth(scaffold.getBlockCount() + "") / 2f, sr.getScaledHeight() / 2f + 22, new Color(255,255,255).getRGB());
-                //Fonts.Tahoma.get(16).drawStringWithShadow(scaffold.getBlockCount() + "", sr.getScaledWidth() / 2f - Fonts.interRegular.get(16).getStringWidth("blocks") / 2f, sr.getScaledHeight() / 2f + 22, new Color(Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).color()).getRGB());
+                //Fonts.interRegular.get(16).drawStringWithShadow("blocks", sr.getScaledWidth() / 2f + Fonts.Tahoma.get(16).getStringWidth(ScaffoldUtil.getBlockCount() + "") / 2f, sr.getScaledHeight() / 2f + 22, new Color(255,255,255).getRGB());
+                //Fonts.Tahoma.get(16).drawStringWithShadow(ScaffoldUtil.getBlockCount() + "", sr.getScaledWidth() / 2f - Fonts.interRegular.get(16).getStringWidth("blocks") / 2f, sr.getScaledHeight() / 2f + 22, new Color(Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).color()).getRGB());
 
-                Fonts.interRegular.get(16).drawCenteredStringWithShadow(scaffold.getBlockCount() + " " + EnumChatFormatting.GRAY + "blocks", sr.getScaledWidth() / 2f, sr.getScaledHeight() / 2f + 22, -1);
+                Fonts.interRegular.get(16).drawCenteredStringWithShadow(ScaffoldUtil.getBlockCount() + " " + EnumChatFormatting.GRAY + "blocks", sr.getScaledWidth() / 2f, sr.getScaledHeight() / 2f + 22, -1);
                 break;
             case "simple": {
                 if (!scaffold.isEnabled()) return;
                 int c = ColorUtil.getColor(255, 0, 0, 150);
-                if (scaffold.getBlockCount() >= 64 && 128 > scaffold.getBlockCount()) {
+                if (ScaffoldUtil.getBlockCount() >= 64 && 128 > ScaffoldUtil.getBlockCount()) {
                     c = ColorUtil.getColor(255, 255, 0, 150);
-                } else if (scaffold.getBlockCount() >= 128) {
+                } else if (ScaffoldUtil.getBlockCount() >= 128) {
                     c = ColorUtil.getColor(0, 255, 0, 150);
                 }
-                Fonts.interMedium.get(18).drawCenteredStringWithShadow(String.valueOf(scaffold.getBlockCount()), sr.getScaledWidth() / 2f, sr.getScaledHeight() / 2f + 10, new Color(c).brighter().getRGB());
+                Fonts.interMedium.get(18).drawCenteredStringWithShadow(String.valueOf(ScaffoldUtil.getBlockCount()), sr.getScaledWidth() / 2f, sr.getScaledHeight() / 2f + 10, new Color(c).brighter().getRGB());
                 break;
             }
 
             case "novo": {
                 if (!scaffold.isEnabled()) return;
-                ItemStack stack = mc.thePlayer.inventory.getStackInSlot(scaffold.getBlockSlot());
+                ItemStack stack = mc.thePlayer.inventory.getStackInSlot(ScaffoldUtil.getBlockSlot());
 
                 if (stack != null && stack.getItem() instanceof ItemBlock) {
-                    float width = Fonts.interRegular.get(18).getStringWidth("/" + scaffold.getBlockCount());
+                    float width = Fonts.interRegular.get(18).getStringWidth("/" + ScaffoldUtil.getBlockCount());
                     float x = sr.getScaledWidth() / 2f - width / 2, y = sr.getScaledHeight() / 2f;
 
                     RenderUtil.renderItemStack(stack, x - 5.0F, y + 11, 1);
-                    Fonts.interRegular.get(18).drawStringWithShadow(Integer.toString(scaffold.getBlockCount()), x + 11.0F, y + 16, -1);
+                    Fonts.interRegular.get(18).drawStringWithShadow(Integer.toString(ScaffoldUtil.getBlockCount()), x + 11.0F, y + 16, -1);
                 }
             }
 
@@ -133,9 +134,9 @@ public class ScaffoldCounter implements InstanceAccess {
             case "normal": {
                 anim.setDirection(scaffold.isEnabled() ? Direction.FORWARDS : Direction.BACKWARDS);
                 //if (!scaffold.isEnabled() && anim.isDone()) return;
-                int slot = scaffold.getBlockSlot();
+                int slot = ScaffoldUtil.getBlockSlot();
                 ItemStack heldItem = slot == -1 ? null : mc.thePlayer.inventory.mainInventory[slot];
-                int count = slot == -1 ? 0 : scaffold.getBlockCount();
+                int count = slot == -1 ? 0 : ScaffoldUtil.getBlockCount();
                 String countStr = String.valueOf(count);
                 ScaledResolution sr = new ScaledResolution(mc);
                 float x, y;

@@ -80,8 +80,8 @@ import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.combat.KeepSprint;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.util.player.RotationUtil;
-import wtf.moonlight.util.waveycapes.config.Config;
-import wtf.moonlight.util.waveycapes.sim.StickSimulation;
+import com.tr7zw.waveycapes.config.Config;
+import com.tr7zw.waveycapes.StickSimulation;
 
 @SuppressWarnings("incomplete-switch")
 public abstract class EntityPlayer extends EntityLivingBase {

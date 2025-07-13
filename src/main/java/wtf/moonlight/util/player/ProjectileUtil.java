@@ -17,7 +17,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.*;
 import org.joml.Vector2f;
 import wtf.moonlight.util.misc.InstanceAccess;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 
 import java.util.List;
 import java.util.Objects;
@@ -90,7 +90,7 @@ public class ProjectileUtil implements InstanceAccess {
             for (double rate = 0.0; rate <= 1.0; rate += 0.3333) {
                 for (int yaw = -1; yaw <= 1; ++yaw) {
                     for (int pitch = -1; pitch <= 1; ++pitch) {
-                        mul *= this.assessSingleRotation(new Vector2f(rotation.x + yaw * 0.5f, rotation.y + pitch * 0.5f), MathUti.interpolate(this.minMotionY, this.maxMotionY, rate));
+                        mul *= this.assessSingleRotation(new Vector2f(rotation.x + yaw * 0.5f, rotation.y + pitch * 0.5f), MathUtil.interpolate(this.minMotionY, this.maxMotionY, rate));
                         ++cnt;
                     }
                 }

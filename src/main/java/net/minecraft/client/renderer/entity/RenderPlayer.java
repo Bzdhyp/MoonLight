@@ -19,7 +19,7 @@ import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.ResourceLocation;
 import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.visual.Camera;
-import wtf.moonlight.util.waveycapes.renderlayers.CustomCapeRenderLayer;
+import com.tr7zw.waveycapes.renderlayers.CustomCapeRenderLayer;
 
 public class RenderPlayer extends RendererLivingEntity<AbstractClientPlayer>
 {

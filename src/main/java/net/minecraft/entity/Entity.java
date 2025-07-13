@@ -53,6 +53,7 @@ import org.lwjglx.input.Mouse;
 import wtf.moonlight.Client;
 import wtf.moonlight.events.player.*;
 import wtf.moonlight.module.impl.misc.FreeLook;
+import wtf.moonlight.util.vector.Vector3d;
 
 public abstract class Entity implements ICommandSender
 {
@@ -78,8 +79,6 @@ public abstract class Entity implements ICommandSender
     public float rotationPitch;
     public float prevRotationYaw;
     public float prevRotationPitch;
-    public float cameraRotationPitch;
-    public float cameraRotationYaw;
     private AxisAlignedBB boundingBox;
     public boolean onGround;
     public boolean isCollidedHorizontally;
@@ -109,6 +108,7 @@ public abstract class Entity implements ICommandSender
     protected Random rand;
     public int ticksSinceStep;
     public int ticksExisted;
+    public int ticksSinceTeleport;
     public int fireResistance;
     public int fire;
     protected boolean inWater;
@@ -261,23 +261,14 @@ public abstract class Entity implements ICommandSender
         this.setEntityBoundingBox(new AxisAlignedBB(x - (double)f, y, z - (double)f, x + (double)f, y + (double)f1, z + (double)f));
     }
 
-    public void setAngles(float yaw, float pitch)
-    {
-        float f = rotationPitch;
-        float f1 = rotationYaw;
-        FreeLook freeLook = Client.INSTANCE.getModuleManager().getModule(FreeLook.class);
-        if (!(freeLook.isEnabled() && Mouse.isButtonDown(2))) {
-            this.rotationYaw = (float) ((double) rotationYaw + (double) yaw * 0.15D);
-            this.rotationPitch = (float) ((double) rotationPitch - (double) pitch * 0.15D);
-            this.rotationPitch = MathHelper.clamp_float(rotationPitch, -90.0F, 90.0F);
-            this.prevRotationPitch += rotationPitch - f;
-            this.prevRotationYaw += rotationYaw - f1;
-            this.cameraRotationYaw = rotationYaw;
-            this.cameraRotationPitch = rotationPitch;
-        }
-        this.cameraRotationPitch = (float) ((double) cameraRotationPitch - (double) pitch * 0.15D);
-        this.cameraRotationPitch = MathHelper.clamp_float(cameraRotationPitch, -90.0F, 90.0F);
-        this.cameraRotationYaw = (float) ((double) cameraRotationYaw + (double) yaw * 0.15D);
+    public void setAngles(float yaw, float pitch) {
+        float f = this.rotationPitch;
+        float f1 = this.rotationYaw;
+        this.rotationYaw = (float) ((double) this.rotationYaw + (double) yaw * 0.15D);
+        this.rotationPitch = (float) ((double) this.rotationPitch - (double) pitch * 0.15D);
+        this.rotationPitch = MathHelper.clamp_float(this.rotationPitch, -90.0F, 90.0F);
+        this.prevRotationPitch += this.rotationPitch - f;
+        this.prevRotationYaw += this.rotationYaw - f1;
     }
 
     public void onUpdate()
@@ -1329,13 +1320,8 @@ public abstract class Entity implements ICommandSender
         return new Vec3(f1 * f2, f3, f * f2);
     }
 
-    public final Vec3 getVectorForRotation(float[] rotation)
-    {
-        float f = MathHelper.cos(-rotation[0] * 0.017453292F - (float)Math.PI);
-        float f1 = MathHelper.sin(-rotation[0] * 0.017453292F - (float)Math.PI);
-        float f2 = -MathHelper.cos(-rotation[1] * 0.017453292F);
-        float f3 = MathHelper.sin(-rotation[1] * 0.017453292F);
-        return new Vec3(f1 * f2, f3, f * f2);
+    public Vector3d getCustomPositionVector() {
+        return new Vector3d(posX, posY, posZ);
     }
 
     public Vec3 getPositionEyes(float partialTicks)
@@ -1363,6 +1349,13 @@ public abstract class Entity implements ICommandSender
 
     public MovingObjectPosition rayTraceCustom(double blockReachDistance,float partialTicks, float yaw, float pitch) {
         final Vec3 vec3 = this.getPositionEyes(partialTicks);
+        final Vec3 vec31 = this.getLookCustom(yaw, pitch);
+        final Vec3 vec32 = vec3.addVector(vec31.xCoord * blockReachDistance, vec31.yCoord * blockReachDistance, vec31.zCoord * blockReachDistance);
+        return this.worldObj.rayTraceBlocks(vec3, vec32, false, false, true);
+    }
+
+    public MovingObjectPosition rayTraceCustom(double blockReachDistance, float yaw, float pitch) {
+        final Vec3 vec3 = this.getPositionEyes(1.0F);
         final Vec3 vec31 = this.getLookCustom(yaw, pitch);
         final Vec3 vec32 = vec3.addVector(vec31.xCoord * blockReachDistance, vec31.yCoord * blockReachDistance, vec31.zCoord * blockReachDistance);
         return this.worldObj.rayTraceBlocks(vec3, vec32, false, false, true);

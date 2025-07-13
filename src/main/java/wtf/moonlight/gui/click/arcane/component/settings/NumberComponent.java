@@ -5,7 +5,7 @@ import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.animations.advanced.Animation;
 import wtf.moonlight.util.animations.advanced.Direction;
 import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
@@ -49,7 +49,7 @@ public class NumberComponent extends Component {
                     .getMin(), //
                     value = this.setting.getMin() + MathHelper
                             .clamp_double((mouseX - (getX() + 10)) / w, 0, 1) * difference;
-            setting.setValue((float) MathUti.incValue(value, setting.getIncrement()));
+            setting.setValue((float) MathUtil.incValue(value, setting.getIncrement()));
         }
     }
 

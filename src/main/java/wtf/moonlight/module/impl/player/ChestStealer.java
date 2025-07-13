@@ -48,10 +48,10 @@ import wtf.moonlight.module.impl.movement.Scaffold;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.TimerUtil;
 import wtf.moonlight.util.player.InventoryUtil;
-import wtf.moonlight.util.player.MovementCorrection;
+import wtf.moonlight.util.MovementCorrection;
 import wtf.moonlight.util.player.RotationUtil;
 import wtf.moonlight.util.render.RenderUtil;
 import wtf.moonlight.util.render.RoundedUtil;
@@ -269,7 +269,7 @@ public final class ChestStealer extends Module {
                     }
 
                     for (int i = 0; i < container.getLowerChestInventory().getSizeInventory(); ++i) {
-                        if (container.getLowerChestInventory().getStackInSlot(i) != null && (timer.hasTimeElapsed((long) (MathUti.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue())) * 100L) || MathUti.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) == 0) && InventoryUtil.isValid(container.getLowerChestInventory().getStackInSlot(i))) {
+                        if (container.getLowerChestInventory().getStackInSlot(i) != null && (timer.hasTimeElapsed((long) (MathUtil.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue())) * 100L) || MathUtil.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) == 0) && InventoryUtil.isValid(container.getLowerChestInventory().getStackInSlot(i))) {
                             slot = i;
                             mc.playerController.windowClick(container.windowId, i, 0, 1, mc.thePlayer);
                             timer.reset();
@@ -287,7 +287,7 @@ public final class ChestStealer extends Module {
                 if (mc.thePlayer.openContainer instanceof ContainerFurnace container) {
                     if (isStealing) {
                         for (index = 0; index < container.tileFurnace.getSizeInventory(); ++index) {
-                            if (container.tileFurnace.getStackInSlot(index) != null || (timer.hasTimeElapsed(MathUti.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) * 100L) || MathUti.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) == 0)) {
+                            if (container.tileFurnace.getStackInSlot(index) != null || (timer.hasTimeElapsed(MathUtil.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) * 100L) || MathUtil.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) == 0)) {
                                 mc.playerController.windowClick(container.windowId, index, 0, 1, mc.thePlayer);
                                 timer.reset();
                             }
@@ -305,7 +305,7 @@ public final class ChestStealer extends Module {
                 if (mc.thePlayer.openContainer instanceof ContainerBrewingStand container) {
                     if (isStealing) {
                         for (index = 0; index < container.tileBrewingStand.getSizeInventory(); ++index) {
-                            if (container.tileBrewingStand.getStackInSlot(index) != null || (timer.hasTimeElapsed(MathUti.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) * 100L) || MathUti.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) == 0)) {
+                            if (container.tileBrewingStand.getStackInSlot(index) != null || (timer.hasTimeElapsed(MathUtil.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) * 100L) || MathUtil.nextInt(minDelay.getValue().intValue(), maxDelay.getValue().intValue()) == 0)) {
                                 mc.playerController.windowClick(container.windowId, index, 0, 1, mc.thePlayer);
                                 timer.reset();
                             }

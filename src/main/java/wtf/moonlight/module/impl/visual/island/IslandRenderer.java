@@ -16,6 +16,7 @@ import wtf.moonlight.util.misc.InstanceAccess;
 import wtf.moonlight.util.animations.advanced.Animation;
 import wtf.moonlight.util.animations.advanced.ContinualAnimation;
 import wtf.moonlight.util.animations.advanced.Direction;
+import wtf.moonlight.util.player.ScaffoldUtil;
 import wtf.moonlight.util.render.RenderUtil;
 import wtf.moonlight.util.render.RoundedUtil;
 
@@ -61,10 +62,10 @@ public class IslandRenderer implements InstanceAccess {
             this.title = "";
         }
 
-        if (Client.INSTANCE.getModuleManager().getModule(Scaffold.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Scaffold.class).getBlockCount() > 0) {
+        if (Client.INSTANCE.getModuleManager().getModule(Scaffold.class).isEnabled() && ScaffoldUtil.getBlockCount() > 0) {
 
             title = "Block Counter";
-            int size = Client.INSTANCE.getModuleManager().getModule(Scaffold.class).getBlockCount();
+            int size = ScaffoldUtil.getBlockCount();
             description = "Stack Size: " + (size > 64 ? EnumChatFormatting.GREEN : size > 32 ? EnumChatFormatting.YELLOW : EnumChatFormatting.RED) + size;
 
             width = Math.max(medium.getStringWidth(description), largest.getStringWidth(title) + 10) + 10;

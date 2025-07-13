@@ -24,7 +24,7 @@ import wtf.moonlight.util.animations.advanced.Animation;
 import wtf.moonlight.util.animations.advanced.Direction;
 import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
 import wtf.moonlight.util.animations.advanced.impl.SmoothStepAnimation;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.render.MouseUtil;
 import wtf.moonlight.util.render.RenderUtil;
@@ -86,7 +86,7 @@ public class ConfigPanel extends Panel {
                 configRect.drawScreen(mouseX, mouseY);
 
                 double scroll = getScroll();
-                configRect.setScroll((int) MathUti.roundToHalf(scroll));
+                configRect.setScroll((int) MathUtil.roundToHalf(scroll));
                 onScroll(30, mouseX, mouseY);
                 maxScroll = Math.max(0, configMap.isEmpty() ? 0 : configMap.keySet().stream().toList().get(configMap.keySet().stream().toList().size() - 1).getMaxScroll());
 

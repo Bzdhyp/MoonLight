@@ -16,7 +16,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 import wtf.moonlight.util.misc.InstanceAccess;
-import wtf.moonlight.util.render.shader.ShaderUtil;
 
 import java.awt.*;
 

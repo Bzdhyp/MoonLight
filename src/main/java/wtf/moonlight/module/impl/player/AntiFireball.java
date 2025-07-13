@@ -25,7 +25,7 @@ import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.util.TimerUtil;
-import wtf.moonlight.util.player.MovementCorrection;
+import wtf.moonlight.util.MovementCorrection;
 import wtf.moonlight.util.player.RotationUtil;
 
 @ModuleInfo(name = "AntiFireball", category = Categor.Player)

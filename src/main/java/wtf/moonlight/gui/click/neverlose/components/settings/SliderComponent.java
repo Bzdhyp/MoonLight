@@ -17,7 +17,7 @@ import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.util.animations.advanced.Animation;
 import wtf.moonlight.util.animations.advanced.Direction;
 import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
-import wtf.moonlight.util.MathUti;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.render.MouseUtil;
 import wtf.moonlight.util.render.RenderUtil;
@@ -57,7 +57,7 @@ public class SliderComponent extends Component {
                     .getMin(), //
                     value = this.setting.getMin() + MathHelper
                             .clamp_double((mouseX - (getX() + 90)) / 60, 0, 1) * difference;
-            setting.setValue((float) MathUti.incValue(value, setting.getIncrement()));
+            setting.setValue((float) MathUtil.incValue(value, setting.getIncrement()));
         }
         super.drawScreen(mouseX, mouseY);
     }

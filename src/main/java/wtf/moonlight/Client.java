@@ -18,10 +18,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.cubk.EventManager;
 import wtf.moonlight.command.CommandManager;
+import wtf.moonlight.component.*;
 import wtf.moonlight.config.ConfigManager;
 import wtf.moonlight.gui.click.arcane.ArcaneClickGui;
-import wtf.moonlight.component.VideoComponent;
-import wtf.moonlight.util.friend.FriendManager;
+import wtf.moonlight.config.impl.friend.FriendManager;
 import wtf.moonlight.module.ModuleManager;
 import wtf.moonlight.gui.widget.impl.ScaffoldCounter;
 import wtf.moonlight.gui.click.dropdown.DropdownGUI;
@@ -30,11 +30,6 @@ import wtf.moonlight.gui.notification.NotificationManager;
 import wtf.moonlight.gui.notification.NotificationType;
 import wtf.moonlight.gui.widget.WidgetManager;
 import wtf.moonlight.util.DiscordInfo;
-import wtf.moonlight.component.SpoofSlotComponent;
-import wtf.moonlight.component.BadPacketsComponent;
-import wtf.moonlight.component.BlinkComponent;
-import wtf.moonlight.component.PingSpoofComponent;
-import wtf.moonlight.component.FallDistanceComponent;
 import wtf.moonlight.util.player.RotationUtil;
 
 import javax.imageio.ImageIO;
@@ -145,6 +140,8 @@ public class Client {
         eventManager.register(new FallDistanceComponent());
         eventManager.register(new BadPacketsComponent());
         eventManager.register(new PingSpoofComponent());
+        eventManager.register(new FreeLookComponent());
+        eventManager.register(new SlotComponent());
         eventManager.register(new BlinkComponent());
         eventManager.register(new SpoofSlotComponent());
 
