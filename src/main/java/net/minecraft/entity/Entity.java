@@ -108,6 +108,7 @@ public abstract class Entity implements ICommandSender
     protected Random rand;
     public int ticksSinceStep;
     public int ticksExisted;
+    public int ticksSinceVelocity, ticksSincePlayerVelocity;
     public int ticksSinceTeleport;
     public int fireResistance;
     public int fire;

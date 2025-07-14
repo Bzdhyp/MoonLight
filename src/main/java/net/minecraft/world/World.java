@@ -1429,6 +1429,9 @@ public abstract class World implements IBlockAccess
             try
             {
                 ++entity.ticksExisted;
+                ++entity.ticksSinceVelocity;
+                ++entity.ticksSincePlayerVelocity;
+                ++entity.ticksSinceTeleport;
                 entity.onUpdate();
             }
             catch (Throwable throwable2)
@@ -1654,7 +1657,9 @@ public abstract class World implements IBlockAccess
             entityIn.prevRotationPitch = entityIn.rotationPitch;
 
             if (forceUpdate && entityIn.addedToChunk) {
+                ++entityIn.ticksSinceVelocity;
                 ++entityIn.ticksExisted;
+                ++entityIn.ticksSincePlayerVelocity;
                 ++entityIn.ticksSinceTeleport;
 
                 if (entityIn.ridingEntity != null)

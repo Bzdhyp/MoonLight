@@ -22,6 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjglx.input.Keyboard;
 import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.combat.KillAura;
+import wtf.moonlight.module.impl.movement.InvMove;
 import wtf.moonlight.module.impl.player.InvManager;
 import wtf.moonlight.module.impl.player.ChestStealer;
 import wtf.moonlight.gui.font.Fonts;
@@ -75,33 +76,21 @@ public abstract class GuiContainer extends GuiScreen
         this.buttonList.add(new GuiButton(1003, 3, 45, 120, 21, "Disable Stealer"));
     }
 
-    public void drawScreen(int mouseX, int mouseY, float partialTicks)
-    {
-        ChestStealer stealer = Client.INSTANCE.getModuleManager().getModule(ChestStealer.class);
-        if (stealer.isStealing) {
-            if (stealer.silent.get()) {
-                Minecraft mc = Minecraft.getMinecraft();
-                GuiScreen guiScreen = mc.currentScreen;
-                String text = "Stealing";
-
-                if (guiScreen instanceof GuiChest chest) {
-                    if (chest.lowerChestInventory != null) {
-                        mc.setIngameFocus();
-                        mc.currentScreen = guiScreen;
-                        Fonts.interSemiBold.get(15).drawString(text, (float) this.width / 2.0F - Fonts.interSemiBold.get(15).getStringWidth(text) / 2.0F, (float) this.height / 2.0F + 40.0F, -1, false);
-                        
-                        return;
-                    }
-                }
-
-                if (guiScreen instanceof GuiFurnace || guiScreen instanceof GuiBrewingStand) {
-                    mc.setIngameFocus();
-                    mc.currentScreen = guiScreen;
-                    Fonts.interSemiBold.get(15).drawString(text, (float) this.width / 2.0F - Fonts.interSemiBold.get(15).getStringWidth(text) / 2.0F, (float) this.height / 2.0F + 40.0F, -1, false);
-                    return;
-                }
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        ChestStealer module = Client.INSTANCE.getModuleManager().getModule(ChestStealer.class);
+        if (module.canSteal()) {
+            if (module.silent.get()) {
+                module.stealing = true;
+                mc.inGameHasFocus = true;
+                mc.mouseHelper.grabMouseCursor();
+                mc.currentScreen = null;
+                return;
+            } else if (module.freeLook.get()) {
+                mc.inGameHasFocus = true;
+                mc.mouseHelper.grabMouseCursor();
             }
         }
+
         this.drawDefaultBackground();
         int i = this.guiLeft;
         int j = this.guiTop;

@@ -56,6 +56,10 @@ public class ColorUtil {
         return new Color(Color.HSBtoRGB((float) ((double) Minecraft.getMinecraft().thePlayer.ticksExisted / 50.0 + Math.sin((double) 1 / 50.0 * 1.6)) % 1.0f, 0.5f, 1.0f));
     }
 
+    public static int getRainbow(int speed, int offset) {
+        return Color.HSBtoRGB((float)((System.currentTimeMillis() + (offset * 10L)) % (long)speed) / (float)speed, 0.55f, 0.9f);
+    }
+
     public static int interpolateInt(int oldValue, int newValue, double interpolationValue) {
         return interpolate(oldValue, newValue, (float) interpolationValue).intValue();
     }

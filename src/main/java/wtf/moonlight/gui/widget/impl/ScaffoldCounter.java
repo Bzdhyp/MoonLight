@@ -58,7 +58,7 @@ public class ScaffoldCounter implements InstanceAccess {
                 if (!scaffold.isEnabled()) return;
 
                 String textX = "§l" + countStr + "§r";
-                float totalWidth = (Fonts.interBold.get(18).getStringWidth(textX) + blockWH + spacing + 6);
+                float totalWidth = (mc.fontRendererObj.getStringWidth(textX) + blockWH + spacing + 6);
                 x = sr.getScaledWidth() / 2f - (totalWidth / 2f);
                 y = sr.getScaledHeight() - (sr.getScaledHeight() / 2f - 70);
                 float height = 20;
@@ -75,7 +75,7 @@ public class ScaffoldCounter implements InstanceAccess {
                     RenderHelper.disableStandardItemLighting();
                 }
 
-                Fonts.interBold.get(18).drawString(textX, x + 3 + blockWH + spacing, y + height / 2F - Fonts.interBold.get(18).getHeight() / 2F + 2.5f, -1);
+                mc.fontRendererObj.drawStringWithShadow(textX, x + 3 + blockWH + spacing, y + height / 2F / 2F + 2.5f, -1);
 
                 GL11.glDisable(GL11.GL_SCISSOR_TEST);
                 GL11.glPopMatrix();
@@ -177,7 +177,7 @@ public class ScaffoldCounter implements InstanceAccess {
                 if (!scaffold.isEnabled()) return;
 
                 String textX = "§l" + countStr + "§r";
-                float totalWidth = (Fonts.interBold.get(18).getStringWidth(textX) + blockWH + spacing + 6);
+                float totalWidth = (mc.fontRendererObj.getStringWidth(textX) + blockWH + spacing + 6);
                 x = sr.getScaledWidth() / 2f - (totalWidth / 2f);
                 y = sr.getScaledHeight() - (sr.getScaledHeight() / 2f - 70);
                 float height = 20;
@@ -194,7 +194,7 @@ public class ScaffoldCounter implements InstanceAccess {
                     RenderHelper.disableStandardItemLighting();
                 }
 
-                Fonts.interBold.get(18).drawString(textX, x + 3 + blockWH + spacing, y + height / 2F - Fonts.interBold.get(18).getHeight() / 2F + 2.5f, Color.BLACK.getRGB());
+                mc.fontRendererObj.drawStringWithShadow(textX, x + 3 + blockWH + spacing, y + height / 2F / 2F + 2.5f, Color.BLACK.getRGB());
 
                 GL11.glDisable(GL11.GL_SCISSOR_TEST);
                 GL11.glPopMatrix();

@@ -50,7 +50,7 @@ public class RenderDragon extends RenderLiving<EntityDragon>
         }
     }
 
-    protected void renderModel(EntityDragon entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float scaleFactor)
+    public void renderModel(EntityDragon entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float scaleFactor)
     {
         if (entitylivingbaseIn.deathTicks > 0)
         {

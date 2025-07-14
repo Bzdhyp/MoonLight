@@ -10,6 +10,8 @@
  */
 package wtf.moonlight.module.impl.combat;
 
+import com.cubk.EventTarget;
+import wtf.moonlight.events.player.KeepSprintEvent;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
@@ -18,5 +20,8 @@ import wtf.moonlight.module.values.impl.ListValue;
 @ModuleInfo(name = "KeepSprint", category = Categor.Combat)
 public class KeepSprint extends Module {
 
-    public final ListValue mode = new ListValue("Mode", new String[]{"Vanilla"}, "Vanilla", this);
+    @EventTarget
+    public void onKeepSprint(KeepSprintEvent event) {
+        event.setCancelled(true);
+    }
 }

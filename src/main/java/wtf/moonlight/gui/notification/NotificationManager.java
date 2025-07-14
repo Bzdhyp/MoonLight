@@ -89,6 +89,26 @@ public class NotificationManager implements InstanceAccess {
                         yOffset += (float) ((height + actualOffset) * animation.getOutput());
                         break;
                     }
+
+                    case "Augustus 2": {
+                        if (!shader) {
+                            notification.getAnimation().setDuration(300);
+                            actualOffset = 2;
+
+                            x = (float) (sr.getScaledWidth() - (width + 2) * animation.getOutput());
+                            y = sr.getScaledHeight() - 2 - height - yOffset;
+
+                            RenderUtil.drawRect(x, y, width, height, INSTANCE.getModuleManager().getModule(Interface.class).bgColor());
+                            mc.fontRendererObj.drawStringWithShadow(notification.getTitle(), x + 7, y + 7, new Color(255, 255, 255, 255).getRGB());
+                            mc.fontRendererObj.drawStringWithShadow(notification.getDescription(), x + 7, y + 18f, new Color(255, 255, 255, 120).getRGB());
+                            RenderUtil.drawRect(x, y + height - 1, width * Math.min((notification.getTimerUtil().getTime() / notification.getTime()), 1), 1, INSTANCE.getModuleManager().getModule(Interface.class).color());
+                        } else {
+                            RenderUtil.drawRect(x, y, width, height, INSTANCE.getModuleManager().getModule(Interface.class).bgColor());
+                        }
+                        yOffset += (height + actualOffset) * (float) notification.getAnimation().getOutput();
+                        break;
+                    }
+
                     case "Default":
                         actualOffset = 3;
 

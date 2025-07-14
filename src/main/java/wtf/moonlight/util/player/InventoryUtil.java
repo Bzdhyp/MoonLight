@@ -22,9 +22,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import wtf.moonlight.module.impl.combat.AutoProjectile;
@@ -52,6 +50,25 @@ public class InventoryUtil implements InstanceAccess {
     private static final IntSet BAD_EFFECTS_IDS = IntSet.of(
             Potion.poison.id, Potion.weakness.id, Potion.wither.id, Potion.blindness.id, Potion.digSlowdown.id, Potion.harm.id
     );
+
+    public static boolean isValid(ItemStack stack) {
+        if (stack == null) return false;
+        if (stack.getItem() instanceof ItemBlock) {
+            return isGoodBlockStack(stack);
+        } else if (stack.getItem() instanceof ItemSword) {
+            return isBestSword(stack);
+        } else if (stack.getItem() instanceof ItemTool) {
+            return isBestTool(stack);
+        } else if (stack.getItem() instanceof ItemArmor) {
+            return isBestArmor(stack);
+        } else if (stack.getItem() instanceof ItemPotion) {
+            return isBuffPotion(stack);
+        } else if (stack.getItem() instanceof ItemFood) {
+            return isGoodFood(stack);
+        } else if (stack.getItem() instanceof ItemEnderPearl) {
+            return true;
+        } else return isGoodItem(stack);
+    }
 
     public static boolean isBuffPotion(final ItemStack stack) {
         final ItemPotion potion = (ItemPotion) stack.getItem();
@@ -208,41 +225,6 @@ public class InventoryUtil implements InstanceAccess {
                 (!(item instanceof ItemFishingRod) && !INSTANCE.getModuleManager().getModule(AutoRod.class).isEnabled() ||
                         INSTANCE.getModuleManager().getModule(AutoRod.class).isEnabled()) &&
                 !(item instanceof ItemSkull) && !(item instanceof ItemBucket);
-    }
-
-    public static boolean isValid(ItemStack stack) {
-        if (stack == null) return false;
-        if (stack.getItem() instanceof ItemBlock) {
-            return isGoodBlockStack(stack);
-        } else if (stack.getItem() instanceof ItemSword) {
-            return isBestSword(stack);
-        } else if (stack.getItem() instanceof ItemTool) {
-            return isBestTool(stack);
-        } else if (stack.getItem() instanceof ItemArmor) {
-            return isBestArmor(stack);
-        } else if (stack.getItem() instanceof ItemPotion) {
-            return isBuffPotion(stack);
-        } else if (stack.getItem() instanceof ItemFood) {
-            return isGoodFood(stack);
-        } else if (stack.getItem() instanceof ItemEnderPearl) {
-            return true;
-        } else return isGoodItem(stack);
-    }
-
-    public static boolean isInventoryEmpty(IInventory inventory) {
-        for (int i = 0; i < inventory.getSizeInventory(); i++) {
-            if (InventoryUtil.isValid(inventory.getStackInSlot(i)))
-                return false;
-        }
-        return true;
-    }
-
-    public static boolean isInventoryFull() {
-        for (int i = 9; i < 45; i++) {
-            if (!mc.thePlayer.inventoryContainer.getSlot(i).getHasStack())
-                return false;
-        }
-        return true;
     }
 
     public static int pickHotarBlock(boolean biggestStack) {

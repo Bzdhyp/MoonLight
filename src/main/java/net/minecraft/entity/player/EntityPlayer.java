@@ -77,7 +77,9 @@ import net.minecraft.world.LockCode;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 import wtf.moonlight.Client;
+import wtf.moonlight.events.player.KeepSprintEvent;
 import wtf.moonlight.module.impl.combat.KeepSprint;
+import wtf.moonlight.module.impl.combat.Velocity;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.util.player.RotationUtil;
 import com.tr7zw.waveycapes.config.Config;
@@ -1219,13 +1221,11 @@ public abstract class EntityPlayer extends EntityLivingBase {
 
                     if (flag2)
                     {
-                        if (i > 0)
-                        {
-                            if(!Client.INSTANCE.getModuleManager().getModule(KeepSprint.class).isEnabled()) {
-
-                                float yaw = RotationUtil.currentRotation != null ? RotationUtil.currentRotation[0] : this.rotationYaw;
-
-                                targetEntity.addVelocity(-MathHelper.sin(yaw * (float) Math.PI / 180.0F) * (float) i * 0.5F, 0.1D, MathHelper.cos(yaw * (float) Math.PI / 180.0F) * (float) i * 0.5F);
+                        if (i > 0) {
+                            targetEntity.addVelocity(-MathHelper.sin(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F, 0.1D, MathHelper.cos(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F);
+                            KeepSprintEvent event = new KeepSprintEvent();
+                            Client.INSTANCE.getEventManager().call(event);
+                            if(!event.isCancelled()) {
                                 this.motionX *= 0.6D;
                                 this.motionZ *= 0.6D;
                                 this.setSprinting(false);

@@ -83,7 +83,7 @@ public class Interface extends Module {
     public final ListValue tags = new ListValue("Suffix", new String[]{"None", "Simple", "Bracket", "Dash"}, "None", this, () -> elements.isEnabled("Arraylist"));
     public final BoolValue line = new BoolValue("Line",true,this, () -> elements.isEnabled("Arraylist"));
     public final BoolValue outLine = new BoolValue("Outline",true,this, () -> line.canDisplay() && line.get());
-    public final ListValue notificationMode = new ListValue("Notification Mode", new String[]{"Default", "Test","Type 2","Type 3","Type 4","Type 5", "Test2","Exhi", "Augustus"}, "Default", this,() -> elements.isEnabled("Notification"));
+    public final ListValue notificationMode = new ListValue("Notification Mode", new String[]{"Default", "Test","Type 2","Type 3","Type 4","Type 5", "Test2","Exhi", "Augustus", "Augustus 2"}, "Default", this,() -> elements.isEnabled("Notification"));
     public final BoolValue centerNotif = new BoolValue("Center Notification",true,this,() -> notificationMode.is("Exhi"));
     public final ListValue color = new ListValue("Color Setting", new String[]{"Custom", "Rainbow", "Dynamic", "Fade","Astolfo","NeverLose"}, "NeverLose", this);
     public final ColorValue mainColor = new ColorValue("Main Color", new Color(128, 128, 255), this,() -> !color.is("NeverLose"));
@@ -143,7 +143,7 @@ public class Interface extends Module {
     @EventTarget
     public void onRenderGui(RenderGuiEvent event){
         if(elements.isEnabled("Health")) {
-            if (mc.currentScreen instanceof GuiInventory || mc.currentScreen instanceof GuiChest && !getModule(ChestStealer.class).isStealing || mc.currentScreen instanceof GuiContainerCreative) {
+            if (mc.currentScreen instanceof GuiInventory || mc.currentScreen instanceof GuiChest || mc.currentScreen instanceof GuiContainerCreative) {
                 renderHealth();
             }
         }

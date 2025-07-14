@@ -33,7 +33,10 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Client;
 import wtf.moonlight.events.render.RenderNameTagEvent;
+import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.impl.visual.Chams;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.RenderUtil;
 
 public abstract class RendererLivingEntity<T extends EntityLivingBase> extends Render<T>
 {
@@ -327,67 +330,69 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
 
-    protected void renderModel(T entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float scaleFactor)
-    {
+    public void renderModel(T entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float scaleFactor) {
         boolean flag = !entitylivingbaseIn.isInvisible();
         boolean flag1 = !flag && !entitylivingbaseIn.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer);
+        Chams chams = Client.INSTANCE.getModuleManager().getModule(Chams.class);
+        Interface hud = Client.INSTANCE.getModuleManager().getModule(Interface.class);
 
-        if (flag || flag1)
-        {
-            final Chams instance = Client.INSTANCE.getModuleManager().getModule(Chams.class);
-            if (!this.bindEntityTexture(entitylivingbaseIn))
-            {
+        if (flag || flag1) {
+            if (!this.bindEntityTexture(entitylivingbaseIn)) {
                 return;
             }
-
-            if (flag1)
-            {
+            if (flag1) {
                 GlStateManager.pushMatrix();
-                GlStateManager.color(1.0F, 1.0F, 1.0F, 0.15F);
+                GlStateManager.color(1.0f, 1.0f, 1.0f, 0.15f);
                 GlStateManager.depthMask(false);
                 GlStateManager.enableBlend();
                 GlStateManager.blendFunc(770, 771);
-                GlStateManager.alphaFunc(516, 0.003921569F);
+                GlStateManager.alphaFunc(516, 0.003921569f);
             }
 
-            if(instance.isEnabled()) {
-                if (entitylivingbaseIn instanceof EntityPlayer) {
-                    boolean visibleFlat = instance.visibleFlatProperty.get();
-                    boolean occludedFlat = instance.occludedFlatProperty.get();
-                    int visibleColor = instance.visibleColorProperty.getValue().getRGB();
-                    int occludedColor = instance.occludedColorProperty.getValue().getRGB();
-
-                    boolean isTextureActive = true;
-
-                    final boolean textureVisible = instance.textureVisibleProperty.get();
-                    final boolean textureOccluded = instance.textureOccludedProperty.get();
-
-                    Chams.preRenderOccluded(!textureOccluded, occludedColor, occludedFlat);
-
-                    if (!textureOccluded) {
-                        isTextureActive = false;
-                    }
-
-                    this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);
-
-                    Chams.preRenderVisible(!textureVisible && isTextureActive, textureVisible && !isTextureActive, visibleColor, visibleFlat, occludedFlat);
-
-                    isTextureActive = textureVisible;
-
-                    this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);
-                    Chams.postRender(!isTextureActive, visibleFlat);
-                } else {
-                    this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);
+            if (chams.isEnabled() && chams.isValid(entitylivingbaseIn) && (chams.getModeValue().is("Color") || chams.getModeValue().is("CSGO"))) {
+                GlStateManager.pushAttrib();
+                GlStateManager.disableAlpha();
+                GlStateManager.disableTexture2D();
+                if (!chams.getModeValue().is("CSGO")) {
+                    GlStateManager.disableLighting();
                 }
+                GlStateManager.enableBlend();
+                GlStateManager.blendFunc(770, 771);
+
+                float originalLineWidth = GL11.glGetFloat(GL11.GL_LINE_WIDTH);
+                GL11.glLineWidth(1.5f);
+
+                GlStateManager.enableDepth();
+                GlStateManager.disableDepth();
+                GlStateManager.depthMask(false);
+                GlStateManager.enableCull();
+                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0f, 240.0f);
+
+                long ms = hud.fadeSpeed.getValue().longValue() * 15L;
+                RenderUtil.glColor(chams.getRainbow().get() ? ColorUtil.getRainbow(925, (int)(System.currentTimeMillis() / ms)) : chams.getInvisibleColorValue().get().getRGB());
+                this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);
+
+                GlStateManager.enableDepth();
+                GlStateManager.depthMask(true);
+                RenderUtil.glColor(chams.getRainbow().get() ? ColorUtil.getRainbow(925, (int)(System.currentTimeMillis() / ms)) : chams.getVisibleColorValue().get().getRGB());
+                this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);
+
+                if (!chams.getModeValue().is("CSGO")) {
+                    GlStateManager.enableLighting();
+                }
+
+                GlStateManager.enableTexture2D();
+                GlStateManager.disableBlend();
+                GL11.glLineWidth(originalLineWidth);
+
+                GlStateManager.popAttrib();
             } else {
                 this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);
             }
 
-
-            if (flag1)
-            {
+            if (flag1) {
                 GlStateManager.disableBlend();
-                GlStateManager.alphaFunc(516, 0.1F);
+                GlStateManager.alphaFunc(516, 0.1f);
                 GlStateManager.popMatrix();
                 GlStateManager.depthMask(true);
             }

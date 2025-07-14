@@ -430,7 +430,7 @@ class TargetDisplay implements InstanceAccess {
 
                     RoundedUtil.drawRound(x + 45, y + 23f, (100 * space), 10, 5, new Color(0, 0, 0, 255));
 
-                    RoundedUtil.drawRound(x + 45, y + 23f, target.healthAnimation.getOutput(), 10f, 4, new Color(255, 0, 0));
+                    RoundedUtil.drawRound(x + 45, y + 23f, target.healthAnimation.getOutput(), 10f, 4, new Color(setting.color()));
                     RenderUtil.renderPlayer2D(target, x + 2.5f + (hurtTime) / 2, y + 2.5f + (hurtTime) / 2, 35 - hurtTime, 15, ColorUtil.interpolateColor2(Color.WHITE, Color.RED, hurtTime / 7));
                     Fonts.interSemiBold.get(18).drawString(target.getName(), x + 52.5F, y + 10.5f, -1);
                 } else {

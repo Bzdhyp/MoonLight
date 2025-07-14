@@ -32,6 +32,9 @@ import wtf.moonlight.util.player.InventoryUtil;
 import wtf.moonlight.util.player.PlayerUtil;
 import wtf.moonlight.component.SelectorDetectionComponent;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @ModuleInfo(name = "InvManager", category = Categor.Player)
 public class InvManager extends Module {
     private final BoolValue autoArmor = new BoolValue("AutoArmor", true, this);
@@ -86,7 +89,7 @@ public class InvManager extends Module {
     }
 
     @EventTarget
-    public void onPreMotionEvent(MotionEvent event) {
+    public void onMotion(MotionEvent event) {
         if (event.isPre()) {
             if (mc.thePlayer.ticksExisted <= 40) return;
 
@@ -110,249 +113,133 @@ public class InvManager extends Module {
 
             this.moved = false;
 
-            int helmet = -1;
-            int chestplate = -1;
-            int leggings = -1;
-            int boots = -1;
+            int helmet = -1, chestplate = -1, leggings = -1, boots = -1;
+            int sword = -1, pickaxe = -1, axe = -1, block = -1, potion = -1, food = -1;
+            Set<Integer> keepSlots = new HashSet<>();
 
-            int sword = -1;
-            int pickaxe = -1;
-            int axe = -1;
-            int block = -1;
-            int potion = -1;
-            int food = -1;
-
-            int ARMOR_SLOTS = 4;
-            int INVENTORY_ROWS = 4;
-            int INVENTORY_COLUMNS = 9;
-            int INVENTORY_SLOTS = (INVENTORY_ROWS * INVENTORY_COLUMNS) + ARMOR_SLOTS;
+            int INVENTORY_SLOTS = 4 * 9 + 4;
 
             for (int i = 0; i < INVENTORY_SLOTS; i++) {
-                final ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
+                ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
+                if (stack == null) continue;
 
-                if (stack == null) {
-                    continue;
-                }
+                Item item = stack.getItem();
 
-                final Item item = stack.getItem();
-
-                if (item instanceof ItemFood) {
-                    if (item != Item.getItemById(322) && item != Item.getItemById(466)) {
-                        this.throwItem(i);
-                        continue;
-                    }
-                }
-
-                if (!InventoryUtil.isValid(stack)) {
-                    this.throwItem(i);
-                    continue;
-                }
+                if (item instanceof ItemFood && item != Item.getItemById(322) && item != Item.getItemById(466)) continue;
+                if (!InventoryUtil.isValid(stack)) continue;
 
                 if (autoArmor.get() && item instanceof ItemArmor armor) {
-                    final int reduction = this.armorReduction(stack);
-                    int currentBestSlot;
-                    int currentBestReduction;
-
+                    int reduction = armorReduction(stack);
                     switch (armor.armorType) {
-                        case 0: // 头盔
-                            currentBestSlot = helmet;
-                            currentBestReduction = helmet == -1 ? -1 : armorReduction(mc.thePlayer.inventory.getStackInSlot(helmet));
-                            if (currentBestSlot == -1 || reduction > currentBestReduction) {
-                                helmet = i;
-                            }
+                        case 0:
+                            if (helmet == -1 || reduction > armorReduction(mc.thePlayer.inventory.getStackInSlot(helmet))) helmet = i;
                             break;
-
-                        case 1: // 胸甲
-                            currentBestSlot = chestplate;
-                            currentBestReduction = chestplate == -1 ? -1 : armorReduction(mc.thePlayer.inventory.getStackInSlot(chestplate));
-                            if (currentBestSlot == -1 || reduction > currentBestReduction) {
-                                chestplate = i;
-                            }
+                        case 1:
+                            if (chestplate == -1 || reduction > armorReduction(mc.thePlayer.inventory.getStackInSlot(chestplate))) chestplate = i;
                             break;
-
-                        case 2: // 护腿
-                            currentBestSlot = leggings;
-                            currentBestReduction = leggings == -1 ? -1 : armorReduction(mc.thePlayer.inventory.getStackInSlot(leggings));
-                            if (currentBestSlot == -1 || reduction > currentBestReduction) {
-                                leggings = i;
-                            }
+                        case 2:
+                            if (leggings == -1 || reduction > armorReduction(mc.thePlayer.inventory.getStackInSlot(leggings))) leggings = i;
                             break;
-
-                        case 3: // 靴子
-                            currentBestSlot = boots;
-                            currentBestReduction = boots == -1 ? -1 : armorReduction(mc.thePlayer.inventory.getStackInSlot(boots));
-                            if (currentBestSlot == -1 || reduction > currentBestReduction) {
-                                boots = i;
-                            }
+                        case 3:
+                            if (boots == -1 || reduction > armorReduction(mc.thePlayer.inventory.getStackInSlot(boots))) boots = i;
                             break;
                     }
                     continue;
                 }
 
-                if (item instanceof ItemSpade) {
-                    this.throwItem(i);
-                    continue;
-                }
+                if (item instanceof ItemSpade) continue;
 
                 if (item instanceof ItemSword) {
-                    boolean hasFireAspect = EnchantmentHelper.getEnchantmentLevel(Enchantment.fireAspect.effectId, stack) > 0;
                     int durability = stack.getMaxDamage() - stack.getItemDamage();
+                    if (sword == -1) sword = i;
+                    else {
+                        ItemStack best = mc.thePlayer.inventory.getStackInSlot(sword);
+                        int bestDurability = best.getMaxDamage() - best.getItemDamage();
+                        boolean fire = EnchantmentHelper.getEnchantmentLevel(Enchantment.fireAspect.effectId, stack) > 0;
+                        boolean bestFire = EnchantmentHelper.getEnchantmentLevel(Enchantment.fireAspect.effectId, best) > 0;
 
-                    if (sword == -1) {
-                        sword = i;
-                    } else {
-                        ItemStack currentBest = mc.thePlayer.inventory.getStackInSlot(sword);
-                        boolean currentHasFireAspect = EnchantmentHelper.getEnchantmentLevel(Enchantment.fireAspect.effectId, currentBest) > 0;
-                        int currentDurability = currentBest.getMaxDamage() - currentBest.getItemDamage();
-
-                        if (currentDurability <= 10 && durability > currentDurability) {
-                            sword = i;
-                        } else if (hasFireAspect && !currentHasFireAspect) {
-                            sword = i;
-                        } else if (hasFireAspect == currentHasFireAspect && damage(stack) > damage(currentBest)) {
-                            sword = i;
-                        }
+                        if (bestDurability <= 10 && durability > bestDurability) sword = i;
+                        else if (fire && !bestFire) sword = i;
+                        else if (fire == bestFire && damage(stack) > damage(best)) sword = i;
                     }
                     continue;
                 }
 
                 if (item instanceof ItemPickaxe) {
-                    if (pickaxe == -1) {
-                        pickaxe = i;
-                    } else if (mineSpeed(stack) > mineSpeed(mc.thePlayer.inventory.getStackInSlot(pickaxe))) {
-                        this.throwItem(pickaxe);
-                        pickaxe = i;
-                    } else {
-                        this.throwItem(i);
-                    }
+                    if (pickaxe == -1 || mineSpeed(stack) > mineSpeed(mc.thePlayer.inventory.getStackInSlot(pickaxe))) pickaxe = i;
+                    continue;
                 }
 
                 if (item instanceof ItemAxe) {
-                    if (axe == -1) {
-                        axe = i;
-                    } else if (mineSpeed(stack) > mineSpeed(mc.thePlayer.inventory.getStackInSlot(axe))) {
-                        this.throwItem(axe);
-                        axe = i;
-                    } else {
-                        this.throwItem(i);
-                    }
+                    if (axe == -1 || mineSpeed(stack) > mineSpeed(mc.thePlayer.inventory.getStackInSlot(axe))) axe = i;
+                    continue;
                 }
 
                 if (item instanceof ItemBlock) {
-                    if (block == -1) {
-                        final ItemStack blockStack = mc.thePlayer.inventory.getStackInSlot((int) (this.blockSlot.getValue() - 1));
+                    if (block == -1) block = i;
+                    else if (stack.stackSize > mc.thePlayer.inventory.getStackInSlot(block).stackSize) block = i;
+                    continue;
+                }
 
-                        if (blockStack == null || !(blockStack.getItem() instanceof ItemBlock)) {
-                            block = i;
-                        } else {
-                            block = (int) (this.blockSlot.getValue() - 1);
-                        }
-                    }
-
-                    final ItemStack currentStack = mc.thePlayer.inventory.getStackInSlot(block);
-                    if (currentStack != null && stack.stackSize > currentStack.stackSize) {
-                        block = i;
+                if (item instanceof ItemPotion potionItem) {
+                    if (potion == -1) potion = i;
+                    else {
+                        int curRank = PlayerUtil.potionRanking(((ItemPotion) mc.thePlayer.inventory.getStackInSlot(potion).getItem()).getEffects(mc.thePlayer.inventory.getStackInSlot(potion)).get(0).getPotionID());
+                        int newRank = PlayerUtil.potionRanking(potionItem.getEffects(stack).get(0).getPotionID());
+                        if (newRank > curRank) potion = i;
                     }
                     continue;
                 }
 
-                if (item instanceof ItemPotion itemPotion) {
-                    if (potion == -1) {
-                        ItemStack potionStack = mc.thePlayer.inventory.getStackInSlot((int) (this.potionSlot.getValue() - 1));
-                        potion = (potionStack == null || !(potionStack.getItem() instanceof ItemPotion)) ? i : (int) (this.potionSlot.getValue() - 1);
+                if (item instanceof ItemFood foodItem) {
+                    if (food == -1) food = i;
+                    else {
+                        float curSat = ((ItemFood) mc.thePlayer.inventory.getStackInSlot(food).getItem()).getSaturationModifier(mc.thePlayer.inventory.getStackInSlot(food));
+                        float newSat = foodItem.getSaturationModifier(stack);
+                        if (newSat > curSat) food = i;
                     }
-
-                    ItemStack currentStack = mc.thePlayer.inventory.getStackInSlot(potion);
-                    if (currentStack != null) {
-                        ItemPotion currentItemPotion = (ItemPotion) currentStack.getItem();
-                        int currentRank = PlayerUtil.potionRanking(currentItemPotion.getEffects(currentStack).get(0).getPotionID());
-                        int newRank = PlayerUtil.potionRanking(itemPotion.getEffects(stack).get(0).getPotionID());
-
-                        if (newRank > currentRank) {
-                            potion = i;
-                        }
-                    }
-                    continue;
                 }
+            }
 
-                if (item instanceof ItemFood itemFood) {
-                    if (food == -1) {
-                        ItemStack foodStack = mc.thePlayer.inventory.getStackInSlot((int) (this.gappleSlot.getValue() - 1));
-                        food = (foodStack == null || !(foodStack.getItem() instanceof ItemFood)) ? i : (int) (this.gappleSlot.getValue() - 1);
-                    }
+            if (helmet != -1) keepSlots.add(helmet);
+            if (chestplate != -1) keepSlots.add(chestplate);
+            if (leggings != -1) keepSlots.add(leggings);
+            if (boots != -1) keepSlots.add(boots);
+            if (sword != -1) keepSlots.add(sword);
+            if (pickaxe != -1) keepSlots.add(pickaxe);
+            if (axe != -1) keepSlots.add(axe);
+            if (block != -1) keepSlots.add(block);
+            if (potion != -1) keepSlots.add(potion);
+            if (food != -1) keepSlots.add(food);
 
-                    ItemStack currentStack = mc.thePlayer.inventory.getStackInSlot(food);
-                    if (currentStack != null) {
-                        ItemFood currentItemFood = (ItemFood) currentStack.getItem();
-                        if (itemFood.getSaturationModifier(stack) > currentItemFood.getSaturationModifier(currentStack)) {
-                            food = i;
-                        }
+            for (int i = 0; i < INVENTORY_SLOTS; i++) {
+                if (!keepSlots.contains(i)) {
+                    ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
+                    if (stack == null) continue;
+                    Item item = stack.getItem();
+                    if (item instanceof ItemSpade || !InventoryUtil.isValid(stack)) {
+                        throwItem(i);
+                    } else if (item instanceof ItemFood && item != Item.getItemById(322) && item != Item.getItemById(466)) {
+                        throwItem(i);
                     }
                 }
             }
 
             if (autoArmor.get()) {
-                for (int i = 0; i < INVENTORY_SLOTS; i++) {
-                    final ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
-                    if (stack == null || !(stack.getItem() instanceof ItemArmor armor)) continue;
-
-                    switch (armor.armorType) {
-                        case 0: if (i != helmet) this.throwItem(i); break;
-                        case 1: if (i != chestplate) this.throwItem(i); break;
-                        case 2: if (i != leggings) this.throwItem(i); break;
-                        case 3: if (i != boots) this.throwItem(i); break;
-                    }
-                }
+                if (helmet != -1 && helmet != 39) equipItem(helmet);
+                if (chestplate != -1 && chestplate != 38) equipItem(chestplate);
+                if (leggings != -1 && leggings != 37) equipItem(leggings);
+                if (boots != -1 && boots != 36) equipItem(boots);
             }
 
-            if (autoArmor.get()) {
-                if (helmet != -1 && helmet != 39) this.equipItem(helmet);
-                if (chestplate != -1 && chestplate != 38) this.equipItem(chestplate);
-                if (leggings != -1 && leggings != 37) this.equipItem(leggings);
-                if (boots != -1 && boots != 36) this.equipItem(boots);
-            }
+            if (sword != -1 && sword != swordSlot.getValue() - 1) moveItem(sword, (int) (swordSlot.getValue() - 37));
+            if (pickaxe != -1 && pickaxe != pickaxeSlot.getValue() - 1) moveItem(pickaxe, (int) (pickaxeSlot.getValue() - 37));
+            if (axe != -1 && axe != axeSlot.getValue() - 1) moveItem(axe, (int) (axeSlot.getValue() - 37));
+            if (block != -1 && block != blockSlot.getValue() - 1 && !isEnabled(Scaffold.class)) moveItem(block, (int) (blockSlot.getValue() - 37));
+            if (potion != -1 && potion != potionSlot.getValue() - 1) moveItem(potion, (int) (potionSlot.getValue() - 37));
+            if (food != -1 && food != gappleSlot.getValue() - 1) moveItem(food, (int) (gappleSlot.getValue() - 37));
 
-            if (sword != -1) {
-                ItemStack currentSword = mc.thePlayer.inventory.getStackInSlot(sword);
-                int currentDurability = currentSword.getMaxDamage() - currentSword.getItemDamage();
-
-                if (currentDurability <= 3) {
-                    for (int i = 0; i < 36; i++) {
-                        ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
-                        if (stack != null && stack.getItem() instanceof ItemSword && i != sword) {
-                            this.moveItem(i, (int) (this.swordSlot.getValue() - 37));
-                            break;
-                        }
-                    }
-                }
-
-                if (sword != this.swordSlot.getValue() - 1) {
-                    this.moveItem(sword, (int) (this.swordSlot.getValue() - 37));
-                }
-            }
-
-            if (pickaxe != -1 && pickaxe != this.pickaxeSlot.getValue() - 1) {
-                this.moveItem(pickaxe, (int) (this.pickaxeSlot.getValue() - 37));
-            }
-
-            if (axe != -1 && axe != this.axeSlot.getValue() - 1) {
-                this.moveItem(axe, (int) (this.axeSlot.getValue() - 37));
-            }
-
-            if (block != -1 && block != this.blockSlot.getValue() - 1 && !isEnabled(Scaffold.class))
-                this.moveItem(block, (int) (this.blockSlot.getValue() - 37));
-
-            if (potion != -1 && potion != this.potionSlot.getValue() - 1) {
-                this.moveItem(potion, (int) (this.potionSlot.getValue() - 37));
-            }
-
-            if (food != -1 && food != this.gappleSlot.getValue() - 1) {
-                this.moveItem(food, (int) (this.gappleSlot.getValue() - 37));
-            }
-
-            if (this.canOpenInventory() && !this.moved) {
-                this.closeInventory();
-            }
+            if (canOpenInventory() && !moved) closeInventory();
         }
     }
 

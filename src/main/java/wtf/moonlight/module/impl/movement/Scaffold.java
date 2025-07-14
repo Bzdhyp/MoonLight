@@ -19,6 +19,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.util.*;
 import org.lwjglx.input.Keyboard;
 import com.cubk.EventTarget;
+import wtf.moonlight.component.BlinkComponent;
 import wtf.moonlight.events.misc.WorldEvent;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.*;

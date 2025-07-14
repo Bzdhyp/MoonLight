@@ -27,7 +27,6 @@ ArcaneClickGui By GuyueMang
 
 ## Play Hypixel
 - use 1.8.9
-- config use "Use the hyp（Config） file from the project." （使用项目中的 hyp 配置文件。）
 ## Acknowledgements
 This project is built upon various inspirations and contributions from the community. Special thanks to:
 

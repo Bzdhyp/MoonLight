@@ -86,6 +86,11 @@ public class MovementUtil implements InstanceAccess {
         return sum;
     }
 
+    public static void b(double d, float f) {
+        mc.thePlayer.motionX += (-MathHelper.sin((float) Math.toRadians(f))) * d;
+        mc.thePlayer.motionZ += MathHelper.cos((float) Math.toRadians(f)) * d;
+    }
+
     public static boolean isMoving() {
         return isMoving(mc.thePlayer);
     }
