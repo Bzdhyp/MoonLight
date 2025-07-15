@@ -9,36 +9,6 @@ import wtf.moonlight.util.misc.InstanceAccess;
 import java.util.List;
 
 public class RaytraceUtil implements InstanceAccess {
-    public static MovingObjectPosition rayCast(final Vector2f rotation, final double range) {
-        return rayCast(rotation, range, 0);
-    }
-
-    public static MovingObjectPosition rayCast(final Vector2f rotation, final double range, final float expand) {
-        return rayCast(rotation, range, expand, mc.thePlayer);
-    }
-
-    public static boolean overBlock(final float[] rotation, final EnumFacing enumFacing, final BlockPos pos, final boolean strict) {
-        final MovingObjectPosition movingObjectPosition = mc.thePlayer.rayTraceCustom(4.5f, rotation[0], rotation[1]);
-
-        if (movingObjectPosition == null) return false;
-
-        final Vec3 hitVec = movingObjectPosition.hitVec;
-        if (hitVec == null) return false;
-
-        return movingObjectPosition.getBlockPos().equals(pos) && (!strict || movingObjectPosition.sideHit == enumFacing);
-    }
-
-    public static boolean overBlock(final EnumFacing enumFacing, final BlockPos pos, final boolean strict) {
-        final MovingObjectPosition movingObjectPosition = mc.objectMouseOver;
-
-        if (movingObjectPosition == null) return false;
-
-        final Vec3 hitVec = movingObjectPosition.hitVec;
-        if (hitVec == null || movingObjectPosition.getBlockPos() == null) return false;
-
-        return movingObjectPosition.getBlockPos().equals(pos) && (!strict || movingObjectPosition.sideHit == enumFacing);
-    }
-
     public static MovingObjectPosition rayCast(final Vector2f rotation, final double range, final float expand, Entity entity) {
         final float partialTicks = mc.timer.renderPartialTicks;
         MovingObjectPosition objectMouseOver;

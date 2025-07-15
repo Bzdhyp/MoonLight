@@ -467,25 +467,6 @@ public class RotationUtil implements InstanceAccess {
         return getRotations(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, mc.thePlayer.posX, mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
     }
 
-
-    public static float getPitchByYawToBlock(float yaw, BlockPos pos) {
-        Vec3 playerEyePos = mc.thePlayer.getPositionVector()
-                .addVector(0.0D, mc.thePlayer.getEyeHeight(), 0.0D);
-        Vec3 blockCenter = new Vec3(pos.getX() + 0.5D,
-                pos.getY() + 0.5D,
-                pos.getZ() + 0.5D);
-        double dx = blockCenter.xCoord - playerEyePos.xCoord;
-        double dy = blockCenter.yCoord - playerEyePos.yCoord;
-        double dz = blockCenter.zCoord - playerEyePos.zCoord;
-        double yawRad = Math.toRadians(yaw + 90.0);
-        double projectedDistance = dx * Math.cos(yawRad) + dz * Math.sin(yawRad);
-        if (projectedDistance == 0) {
-            projectedDistance = 0.0001;
-        }
-
-        return (float)(-Math.toDegrees(Math.atan2(dy, projectedDistance)));
-    }
-
     public static Vec3 getBestHitVec(final Entity entity) {
         final Vec3 positionEyes = mc.thePlayer.getPositionEyes(1);
         final AxisAlignedBB entityBoundingBox = entity.getEntityBoundingBox();

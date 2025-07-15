@@ -47,15 +47,7 @@ public class NoSlowdown extends Module {
             final Item item = mc.thePlayer.getCurrentEquippedItem().getItem();
 
             if (mc.thePlayer.isUsingItem()) {
-                if (item instanceof ItemSword && swordValue.get()) {
-                    BlinkComponent.blinking = true;
-
-                    if (mc.thePlayer.ticksExisted % 5 == 0) {
-                        PacketUtils.sendPacket(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-                        BlinkComponent.dispatch();
-                        mc.getNetHandler().addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.getCurrentEquippedItem()));
-                    }
-                } else if (item instanceof ItemFood && foodValue.get() || item instanceof ItemBow && bowValue.get()) {
+                if (item instanceof ItemFood && foodValue.get() || item instanceof ItemPotion && potionValue.get() || item instanceof ItemBow && bowValue.get()) {
                     BlinkComponent.blinking = true;
                 }
 

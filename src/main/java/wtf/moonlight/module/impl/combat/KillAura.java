@@ -10,6 +10,7 @@
  */
 package wtf.moonlight.module.impl.combat;
 
+import com.cubk.EventPriority;
 import com.viaversion.viarewind.protocol.protocol1_8to1_9.Protocol1_8To1_9;
 import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.api.protocol.packet.PacketWrapper;
@@ -308,9 +309,7 @@ public class KillAura extends Module {
                 }
             }
 
-            if (shouldBlock()) {
-                renderBlocking = true;
-            }
+            if (shouldBlock()) renderBlocking = true;
 
             if (preTickBlock()) return;
 

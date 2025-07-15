@@ -16,11 +16,12 @@ ArcaneClickGui By GuyueMang
 ## What changes were made?
 - TargetHUD Mode
 - Scaffold bypass Hypixel? (10% lag)
-- CCBlueX FakeLag
-- Delay Velocity
+- Aug FakeLag Backtrack
+- TickBase
 - Fix BlinkComponent
 - NoSlowDown bypass Hypixel
 - Prediction LongJump
+- New InvManager Stealer
 - new AltManger ResourcePack ClickGui Interface
 - InvMove bypass Hypixel
 - Revise the project structure

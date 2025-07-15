@@ -63,17 +63,18 @@ public abstract class Module implements InstanceAccess {
         this.keyBind = moduleInfo.key();
     }
 
-    /**
-     * Method called when the module is enabled.
-     */
+    /** Method called when the module is enabled. */
     public void onEnable() {
         // Module-specific implementation
     }
 
-    /**
-     * Method called when the module is disabled.
-     */
+    /** Method called when the module is disabled. */
     public void onDisable() {
+        // Module-specific implementation
+    }
+
+    /** Method called when the module is PreDisabled. */
+    public void onPreDisable() {
         // Module-specific implementation
     }
 
@@ -158,7 +159,7 @@ public abstract class Module implements InstanceAccess {
      */
     public <M extends Module> boolean isDisabled(Class<M> module) {
         Module mod = Client.INSTANCE.getModuleManager().getModule(module);
-        return mod == null || mod.isDisabled();
+        return mod.isDisabled();
     }
 
     /**
@@ -179,6 +180,7 @@ public abstract class Module implements InstanceAccess {
             if (enabled) {
                 enable();
             } else {
+                this.onPreDisable();
                 disable();
             }
         }

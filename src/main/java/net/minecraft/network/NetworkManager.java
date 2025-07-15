@@ -165,6 +165,27 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
         }
     }
 
+    public void sendPacketDirect(final Packet packetIn) {
+        if ((packetIn instanceof C03PacketPlayer.C04PacketPlayerPosition || packetIn instanceof C03PacketPlayer.C06PacketPlayerPosLook) && Minecraft.getMinecraft().theWorld != null && Minecraft.getMinecraft().thePlayer != null) {
+            final C03PacketPlayer c03PacketPlayer = (C03PacketPlayer)packetIn;
+            Minecraft.getMinecraft().thePlayer.setLastServerPosition(Minecraft.getMinecraft().thePlayer.getSeverPosition());
+            Minecraft.getMinecraft().thePlayer.setSeverPosition(new Vec3(c03PacketPlayer.getPositionX(), c03PacketPlayer.getPositionY(), c03PacketPlayer.getPositionZ()));
+        }
+        if (this.isChannelOpen()) {
+            this.flushOutboundQueue();
+            this.dispatchPacket(packetIn, null);
+        }
+        else {
+            this.readWriteLock.writeLock().lock();
+            try {
+                this.outboundPacketsQueue.add(new InboundHandlerTuplePacketListener(packetIn, (GenericFutureListener<? extends Future<? super Void>>[])null));
+            }
+            finally {
+                this.readWriteLock.writeLock().unlock();
+            }
+        }
+    }
+
     public void sendPacketNoEvent(Packet<?> packetIn) {
         if (this.isChannelOpen()) {
             this.flushOutboundQueue();

@@ -39,6 +39,10 @@ public class TimerUtil {
         return Math.max(0L, System.currentTimeMillis() - this.lastMS) >= currentTime;
     }
 
+    public boolean hasReached(long delay) {
+        return System.currentTimeMillis() - lastMS >= delay;
+    }
+
     public long getTime() {
         return System.currentTimeMillis() - lastMS;
     }

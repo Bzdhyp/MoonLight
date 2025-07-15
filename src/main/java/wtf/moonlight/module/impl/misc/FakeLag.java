@@ -1,165 +1,125 @@
-/*
- * MoonLight Hacked Client
- *
- * A free and open-source hacked client for Minecraft.
- * Developed using Minecraft's resources.
- *
- * Repository: https://github.com/randomguy3725/MoonLight
- *
- * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
- */
 package wtf.moonlight.module.impl.misc;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.*;
-import net.minecraft.network.play.server.*;
 import com.cubk.EventTarget;
+import net.minecraft.network.play.client.C02PacketUseEntity;
+import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.util.Vec3;
+import wtf.moonlight.events.misc.TickEvent;
 import wtf.moonlight.events.packet.PacketEvent;
-import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
+import wtf.moonlight.module.impl.combat.KillAura;
+import wtf.moonlight.module.impl.movement.Scaffold;
 import wtf.moonlight.module.values.impl.*;
-import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.TimerUtil;
-import wtf.moonlight.component.PingSpoofComponent;
+import wtf.moonlight.util.player.RotationUtil;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 
 @ModuleInfo(name = "FakeLag", category = Categor.Misc)
 public class FakeLag extends Module {
-    private final ListValue mode = new ListValue("Mode", new String[]{"Constant", "Dynamic"}, "Dynamic", this);
-    private final SliderValue minDelay = new SliderValue("Min Delay", 300, 0, 1000, 1, this);
-    private final SliderValue maxDelay = new SliderValue("Max Delay", 600, 0, 1000, 1, this);
-    private final SliderValue recoilTime = new SliderValue("Recoil Time", 250, 0, 1000, 1, this);
-    private final SliderValue range = new SliderValue("Range", 3.5f, 0, 10, 0.1f, this);
+    public final BoolValue combat = new BoolValue("Combat", false, this);
+    public final BoolValue onlyMove = new BoolValue("Only Move", false, this);
+    private final SliderValue startDelay = new SliderValue("Start Delay", 300, 0, 1000, 1, this);
+    private final SliderValue lagDuration = new SliderValue("Lag Packets", 600, 0, 1000, 1, this);
 
-    public final MultiBoolValue flushOn = new MultiBoolValue("Flush On", Arrays.asList(
-            new BoolValue("Entity Interact", false),
-            new BoolValue("Block Interact", false),
-            new BoolValue("Action", false)), this);
-
-    private final TimerUtil chronometer = new TimerUtil();
+    public int sentC03Packets = 0;
+    private boolean shouldBlockPackets;
     private final TimerUtil delayTimer = new TimerUtil();
-    private int nextDelay;
-    private boolean isEnemyNearby;
+    private final ArrayList<Packet<?>> packets = new ArrayList<>();
 
-    public FakeLag() {
-        nextDelay = getRandomDelay();
-        delayTimer.reset();
+    @Override
+    public void onEnable() {
+        this.shouldBlockPackets = false;
+        super.onEnable();
+    }
+
+    @Override
+    public void onPreDisable() {
+        this.resetPackets();
+        super.onPreDisable();
     }
 
     @EventTarget
-    public void onUpdate(UpdateEvent event) {
-        isEnemyNearby = isEnemyNearby(range.getValue());
-
-        if (delayTimer.hasTimeElapsed(nextDelay)) {
-            nextDelay = getRandomDelay();
-            delayTimer.reset();
-            PingSpoofComponent.dispatch();
-        }
-
-        setTag(mode.getValue());
-    }
-
-    private boolean isEnemyNearby(float range) {
-        if (mc.theWorld == null || mc.thePlayer == null) {
-            return false;
-        }
-
-        List<Entity> entities = mc.theWorld.getLoadedEntityList();
-        for (Entity entity : entities) {
-            if (entity instanceof EntityPlayer player && entity != mc.thePlayer) {
-
-                if (mc.thePlayer.getDistanceToEntity(player) <= range &&
-                        player.isEntityAlive() &&
-                        !player.isInvisible()) {
-                    return true;
-                }
+    public void onTick(TickEvent event) {
+        int count = 0;
+        for (final Packet<?> p : this.packets) {
+            if (p instanceof C03PacketPlayer) {
+                ++count;
             }
         }
-        return false;
+        this.sentC03Packets = count;
+
+        if (this.combat.get()) {
+            if (count > this.lagDuration.getValue() || getModule(Scaffold.class).isEnabled()) {
+                this.shouldBlockPackets = false;
+            }
+        } else if (count <= this.lagDuration.getValue() && !getModule(Scaffold.class).isEnabled()) {
+            this.shouldBlockPackets = true;
+        } else {
+            this.shouldBlockPackets = false;
+            this.resetPackets();
+        }
+
+        if (count <= this.lagDuration.getValue() && !getModule(Scaffold.class).isEnabled()) {
+            if (!this.combat.get()) {
+                this.shouldBlockPackets = true;
+            }
+        } else {
+            this.shouldBlockPackets = false;
+            this.resetPackets();
+        }
     }
 
     @EventTarget
     public void onPacket(PacketEvent event) {
         Packet<?> packet = event.getPacket();
 
-        if (event.getState() == PacketEvent.State.INCOMING || mc.thePlayer.isDead || mc.thePlayer.isInWater() ||
-                mc.currentScreen != null || !chronometer.hasTimeElapsed(recoilTime.getValue().longValue())) {
-            return;
-        }
+        if (this.combat.get()) {
+            if (packet instanceof C02PacketUseEntity) {
+                this.shouldBlockPackets = false;
+                this.resetPackets();
+            } else if (packet instanceof C03PacketPlayer && getModule(KillAura.class).isEnabled() && getModule(KillAura.class).target != null) {
+                EntityLivingBase entityLivingBase = getModule(KillAura.class).target;
+                if (entityLivingBase instanceof EntityPlayer player) {
+                    Vec3 positionEyes = mc.thePlayer.getPositionEyes(1.0f);
+                    Vec3 positionEyesServer = mc.thePlayer.getSeverPosition().addVector(0.0, mc.thePlayer.getEyeHeight(), 0.0);
+                    Vec3 bestHitVec = RotationUtil.getBestHitVec(player);
 
-        if (shouldFlush(packet)) {
-            chronometer.reset();
-            delayTimer.reset();
-            PingSpoofComponent.dispatch();
-            event.setCancelled(false);
-            return;
-        }
-
-        if (mc.thePlayer.isUsingItem() && mc.thePlayer.getHeldItem() != null &&
-                mc.thePlayer.getHeldItem().getItem().isItemTool(mc.thePlayer.getHeldItem())) {
-            return;
-        }
-
-        if (mode.is("Constant")) {
-            event.setCancelled(true);
-            PingSpoofComponent.spoof(nextDelay, true, true, true, true, true, true);
-        } else if (mode.is("Dynamic")) {
-            if (!isEnemyNearby) return;
-
-            event.setCancelled(true);
-            PingSpoofComponent.spoof(nextDelay, true, true, true, true, true, true);
-        }
-    }
-
-    private boolean shouldFlush(Packet<?> packet) {
-        // Position/status packets
-        if (packet instanceof S08PacketPlayerPosLook || packet instanceof C19PacketResourcePackStatus) {
-            return true;
-        }
-
-        // Entity interact
-        if ((packet instanceof C02PacketUseEntity || packet instanceof C0APacketAnimation) &&
-                flushOn.isEnabled("Entity Interact")) {
-            return true;
-        }
-
-        // Block interact
-        if ((packet instanceof C08PacketPlayerBlockPlacement || packet instanceof C12PacketUpdateSign) &&
-                flushOn.isEnabled("Block Interact")) {
-            return true;
-        }
-
-        // Action
-        if (packet instanceof C07PacketPlayerDigging && flushOn.isEnabled("Action")) {
-            return true;
-        }
-
-        // Knock back
-        if (packet instanceof S12PacketEntityVelocity velocity) {
-            if (velocity.getEntityID() == mc.thePlayer.getEntityId() &&
-                    (velocity.getMotionX() != 0 || velocity.getMotionY() != 0 || velocity.getMotionZ() != 0)) {
-                return true;
+                    if (!this.shouldBlockPackets && player.hurtTime < 3 && positionEyes.distanceTo(bestHitVec) > 2.9 &&
+                            positionEyes.distanceTo(bestHitVec) < 3.3 && positionEyes.distanceTo(bestHitVec) < positionEyesServer.distanceTo(bestHitVec)) {
+                        this.shouldBlockPackets = true;
+                    }
+                }
             }
         }
 
-        // Damage
-        return packet instanceof S06PacketUpdateHealth;
+        if (mc.theWorld != null && this.shouldBlockPackets && this.delayTimer.reached(this.startDelay.getValue().longValue())) {
+            if (this.onlyMove.get()) {
+                if (packet instanceof C03PacketPlayer && !this.packets.contains(packet)) {
+                    this.packets.add(packet);
+                    event.setCancelled(true);
+                }
+            } else if (!this.packets.contains(packet)) {
+                this.packets.add(packet);
+                event.setCancelled(true);
+            }
+        }
     }
 
-    private int getRandomDelay() {
-        return (int) MathUtil.getAdvancedRandom(minDelay.getValue(), maxDelay.getValue());
-    }
-
-    @Override
-    public void onDisable() {
-        isEnemyNearby = false;
-        PingSpoofComponent.dispatch();
-        super.onDisable();
+    private void resetPackets() {
+        if (mc.thePlayer != null) {
+            if (!this.packets.isEmpty()) {
+                this.packets.forEach(packet -> mc.thePlayer.sendQueue.addToSendQueueDirect(packet));
+                this.packets.clear();
+            }
+        }
+        else {
+            this.packets.clear();
+        }
     }
 }

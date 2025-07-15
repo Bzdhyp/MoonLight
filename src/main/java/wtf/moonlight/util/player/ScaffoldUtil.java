@@ -1,7 +1,6 @@
 package wtf.moonlight.util.player;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockAir;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Slot;
@@ -41,7 +40,6 @@ public class ScaffoldUtil implements InstanceAccess {
 
         for (int i = 36; i < 45; ++i) {
             if (!mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) continue;
-
             ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
 
             if (!(is.getItem() instanceof ItemBlock && !blacklistedBlocks.contains(((ItemBlock) is.getItem()).getBlock()))) {
@@ -106,32 +104,65 @@ public class ScaffoldUtil implements InstanceAccess {
     }
 
     public static Scaffold.PlaceData getPlaceData(final BlockPos pos) {
-        EnumFacing[] horizontalFacings = {EnumFacing.EAST, EnumFacing.WEST, EnumFacing.NORTH, EnumFacing.SOUTH};
-        EnumFacing[] allFacings = {EnumFacing.EAST, EnumFacing.WEST, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.UP};
+        EnumFacing[] facings = {EnumFacing.EAST, EnumFacing.WEST, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.UP};
+        BlockPos[] offsets = {new BlockPos(-1, 0, 0), new BlockPos(1, 0, 0), new BlockPos(0, 0, 1), new BlockPos(0, 0, -1), new BlockPos(0, -1, 0)};
 
-        for (EnumFacing facing : horizontalFacings) {
-            final BlockPos blockPos = pos.add(facing.getOpposite().getDirectionVec());
+        Scaffold module = Client.INSTANCE.getModuleManager().getModule(Scaffold.class);
+
+        if (module.previousBlock != null && module.previousBlock.getY() > mc.thePlayer.posY) {
+            module.previousBlock = null;
+        }
+
+        // 1 of the 4 directions around player
+        for (int i = 0; i < offsets.length; i++) {
+            BlockPos blockPos = pos.add(offsets[i]);
             if (canBePlacedOn(blockPos)) {
-                return new Scaffold.PlaceData(blockPos, facing);
+                return new Scaffold.PlaceData(blockPos, facings[i]);
             }
         }
 
-        for (EnumFacing facing : allFacings) {
-            final BlockPos blockPos = pos.add(facing.getOpposite().getDirectionVec());
-            for (EnumFacing facing1 : allFacings) {
-                final BlockPos blockPos1 = blockPos.add(facing1.getOpposite().getDirectionVec());
-                if (canBePlacedOn(blockPos1)) {
-                    return new Scaffold.PlaceData(blockPos1, facing1);
-                }
-            }
-        }
-
-        final BlockPos posBelow = pos.add(0, -1, 0);
+        // 2 Blocks Under e.g. When jumping
+        BlockPos posBelow = pos.add(0, -1, 0);
         if (canBePlacedOn(posBelow)) {
             return new Scaffold.PlaceData(posBelow, EnumFacing.UP);
         }
 
+        // 2 Block extension & diagonal
+        for (BlockPos offset : offsets) {
+            BlockPos blockPos = pos.add(offset);
+            for (int i = 0; i < offsets.length; i++) {
+                BlockPos blockPos1 = blockPos.add(offsets[i]);
+                if (canBePlacedOn(blockPos1)) {
+                    return new Scaffold.PlaceData(blockPos1, facings[i]);
+                }
+            }
+        }
+
+        // Original checks for previousBlock and interactable blocks
+        for (int lastCheck = 0; lastCheck < 2; lastCheck++) {
+            for (int i = 0; i < offsets.length; i++) {
+                BlockPos newPos = pos.add(offsets[i]);
+                Block block = mc.theWorld.getBlockState(newPos).getBlock();
+                if (newPos.equals(module.previousBlock)) {
+                    return new Scaffold.PlaceData(newPos, facings[i]);
+                }
+                if (lastCheck == 0) {
+                    continue;
+                }
+                if (!block.getMaterial().isReplaceable() && isInteractable(block)) {
+                    return new Scaffold.PlaceData(newPos, facings[i]);
+                }
+            }
+        }
+
         return null;
+    }
+
+    private static boolean isInteractable(Block block) {
+        return !(block instanceof BlockFurnace) && !(block instanceof BlockFenceGate) &&
+                !(block instanceof BlockChest) && !(block instanceof BlockEnderChest) &&
+                !(block instanceof BlockEnchantmentTable) && !(block instanceof BlockBrewingStand) && !(block instanceof BlockBed) &&
+                !(block instanceof BlockDispenser) && !(block instanceof BlockHopper) && !(block instanceof BlockAnvil) && block != Blocks.crafting_table;
     }
 
     static final List<Block> blacklistedBlocks = Arrays.asList(Blocks.air, Blocks.water, Blocks.flowing_water, Blocks.lava, Blocks.wooden_slab, Blocks.chest, Blocks.flowing_lava,

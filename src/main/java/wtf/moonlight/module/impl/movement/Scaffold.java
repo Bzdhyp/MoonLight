@@ -105,6 +105,7 @@ public class Scaffold extends Module {
 
     public PlaceData data;
     BlockPos targetBlock;
+    public BlockPos previousBlock;
 
     private boolean placed;
     private boolean flagged;

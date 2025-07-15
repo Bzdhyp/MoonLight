@@ -596,9 +596,12 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         }
     }
 
-    public void addToSendQueue(Packet p_147297_1_)
-    {
+    public void addToSendQueue(Packet p_147297_1_) {
         this.netManager.sendPacket(p_147297_1_);
+    }
+
+    public void addToSendQueueDirect(final Packet p_147297_1_) {
+        this.netManager.sendPacketDirect(p_147297_1_);
     }
 
     public void sendPacketNoEvent(Packet<?> p_147297_1_)

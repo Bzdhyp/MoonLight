@@ -89,6 +89,14 @@ public class C03PacketPlayer implements Packet<INetHandlerPlayServer>
         this.y = y;
     }
 
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setZ(double z) {
+        this.z = z;
+    }
+
     public static class C04PacketPlayerPosition extends C03PacketPlayer
     {
         public C04PacketPlayerPosition()

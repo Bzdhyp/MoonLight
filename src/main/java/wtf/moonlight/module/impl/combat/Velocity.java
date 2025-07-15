@@ -4,7 +4,9 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import com.cubk.EventTarget;
 import wtf.moonlight.Client;
@@ -14,10 +16,8 @@ import wtf.moonlight.events.player.*;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
-import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.util.TimerUtil;
 import wtf.moonlight.util.player.MovementUtil;
 import wtf.moonlight.util.player.PlayerUtil;
 import wtf.moonlight.util.player.RotationUtil;
@@ -27,9 +27,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @ModuleInfo(name = "Velocity", category = Categor.Combat)
 public class Velocity extends Module {
-    public final ListValue mode = new ListValue("Mode", new String[]{"Legit", "Intave", "Boost", "Jump Reset", "Skip Tick"}, "Delay", this);
-    public final BoolValue jumpValue = new BoolValue("Jump Rest", true, this, () ->  mode.is("Intave"));
-    public final BoolValue stopMove = new BoolValue("Stop Move", false, this, () ->  mode.is("Skip Tick"));
+    public final ListValue mode = new ListValue("Mode",
+            new String[]{"Delay", "Legit", "Polar", "Intave", "Boost", "Skip Tick", "Jump Reset", "Matrix Semi", "Matrix Reverse", "Polar Under-Block"}, "Skip Tick", this);
 
     private final SliderValue reverseTick = new SliderValue("Boost Tick", 1, 1, 5, 1, this, () -> mode.is("Boost"));
     private final SliderValue reverseStrength = new SliderValue("Boost Strength", 1, 0.1f, 1, 0.01f, this, () -> mode.is("Boost"));
@@ -46,24 +45,21 @@ public class Velocity extends Module {
     private final SliderValue ticksUntilJump = new SliderValue("Ticks Until Jump", 2, 1, 20, 1, this, () -> mode.is("Jump Reset") && jumpResetMode.is("Advanced"));
 
     private int idk = 0;
-    private int counter = 0;
     private int hitsCount = 0;
     private int ticksCount = 0;
     private int skipTickCounter = 0;
 
     boolean enable;
+    private boolean attacked;
     private boolean isFallDamage;
     private boolean veloPacket = false;
     public static boolean jump = false;
-
-    private final TimerUtil timerUtil = new TimerUtil();
 
     private final Random random = new Random();
     public static List<Packet<INetHandler>> storedPackets= new CopyOnWriteArrayList<>();
 
     @Override
     public void onEnable() {
-        timerUtil.reset();
         ticksCount = 0;
         veloPacket = false;
         skipTickCounter = 0;
@@ -74,9 +70,7 @@ public class Velocity extends Module {
 
     @Override
     public void onDisable() {
-        mc.timer.timerSpeed = 1f;
         ticksCount = 0;
-        timerUtil.reset();
         veloPacket = false;
         skipTickCounter = 0;
 
@@ -148,28 +142,77 @@ public class Velocity extends Module {
     public void onPacket(PacketEvent event) {
         Packet<?> packet = event.getPacket();
 
-        if (packet instanceof S12PacketEntityVelocity s12 && s12.getEntityID() == mc.thePlayer.getEntityId()) {
+        if (packet instanceof S12PacketEntityVelocity velocity && velocity.getEntityID() == mc.thePlayer.getEntityId()) {
             switch (mode.getValue()) {
                 case "Skip Tick": {
                     if (random.nextInt(100) < skipChance.getValue()) {
                         skipTickCounter = skipTicks.getValue().intValue();
-
-                        if (stopMove.get()) {
-                            s12.motionX = 0;
-                            s12.motionY = 0;
-                            s12.motionZ = 0;
-                        }
                     }
                     break;
                 }
 
                 case "Boost": {
                     if (mc.thePlayer.onGround) {
-                        s12.motionX = (int) (mc.thePlayer.motionX * 8000);
-                        s12.motionZ = (int) (mc.thePlayer.motionZ * 8000);
+                        velocity.motionX = (int) (mc.thePlayer.motionX * 8000);
+                        velocity.motionZ = (int) (mc.thePlayer.motionZ * 8000);
                     } else {
                         veloPacket = true;
                     }
+                    break;
+                }
+
+                case "Polar Under-Block": {
+                    AxisAlignedBB axisAlignedBB = mc.thePlayer.getEntityBoundingBox().offset(0.0, 1.0, 0.0);
+
+                    if (!mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, axisAlignedBB).isEmpty()) {
+                        event.setCancelled(true);
+                        mc.thePlayer.motionY = ((S12PacketEntityVelocity) packet).getMotionY() / 8000.0;
+                    }
+                    break;
+                }
+
+                case "Matrix Reverse": {
+                    if (mc.thePlayer.hurtTime > 0) {
+                        mc.thePlayer.motionX *= -0.3;
+                        mc.thePlayer.motionZ *= -0.3;
+                    }
+                    break;
+                }
+                case "Matrix Semi": {
+                    if (mc.thePlayer.hurtTime > 0) {
+                        mc.thePlayer.motionX *= 0.6;
+                        mc.thePlayer.motionZ *= 0.6;
+                    }
+                    break;
+                }
+
+                case "Polar": {
+                    if (mc.thePlayer.isSwingInProgress) {
+                        attacked = true;
+                    }
+
+                    if (mc.objectMouseOver.typeOfHit.equals(MovingObjectPosition.MovingObjectType.ENTITY) && mc.thePlayer.hurtTime > 0 && !attacked) {
+                        mc.thePlayer.motionX *= 0.45D;
+                        mc.thePlayer.motionZ *= 0.45D;
+                        mc.thePlayer.setSprinting(false);
+                    }
+
+                    attacked = false;
+                    break;
+                }
+
+                case "Intave": {
+                    if (mc.thePlayer.isSwingInProgress) {
+                        attacked = true;
+                    }
+
+                    if (mc.objectMouseOver.typeOfHit.equals(MovingObjectPosition.MovingObjectType.ENTITY) && mc.thePlayer.hurtTime > 0 && !attacked) {
+                        mc.thePlayer.motionX *= 0.6D;
+                        mc.thePlayer.motionZ *= 0.6D;
+                        mc.thePlayer.setSprinting(false);
+                    }
+
+                    attacked = false;
                     break;
                 }
 
@@ -177,9 +220,9 @@ public class Velocity extends Module {
                     if (jumpResetMode.is("Packet")) {
                         veloPacket = true;
                     } else if (jumpResetMode.is("Advanced")) {
-                        double velocityX = s12.getMotionX() / 8000.0;
-                        double velocityY = s12.getMotionY() / 8000.0;
-                        double velocityZ = s12.getMotionZ() / 8000.0;
+                        double velocityX = velocity.getMotionX() / 8000.0;
+                        double velocityY = velocity.getMotionY() / 8000.0;
+                        double velocityZ = velocity.getMotionZ() / 8000.0;
 
                         isFallDamage = velocityX == 0.0 && velocityZ == 0.0 && velocityY < 0;
                     }
@@ -234,12 +277,6 @@ public class Velocity extends Module {
 
     @EventTarget
     public void onMoveInput(MoveInputEvent event) {
-        if (mode.is("Intave")) {
-            if (this.jumpValue.get() && mc.thePlayer.hurtTime == 9 && mc.thePlayer.onGround && this.counter++ % 2 == 0) {
-                mc.thePlayer.movementInput.jump = true;
-            }
-        }
-
         if (mode.is("Legit") && getModule(KillAura.class).target != null && mc.thePlayer.hurtTime > 0) {
             ArrayList<Vec3> vec3s = new ArrayList<>();
             HashMap<Vec3, Integer> map = new HashMap<>();
