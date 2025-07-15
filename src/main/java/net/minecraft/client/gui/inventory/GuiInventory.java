@@ -12,6 +12,8 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import wtf.moonlight.Client;
+import wtf.moonlight.module.impl.movement.InvMove;
 
 import java.io.IOException;
 
@@ -27,7 +29,7 @@ public class GuiInventory extends InventoryEffectRenderer
     }
 
     public boolean GuiInvMove() {
-        return true;
+        return Client.INSTANCE.getModuleManager().getModule(InvMove.class).noInventoryValue.get();
     }
 
     public void updateScreen()

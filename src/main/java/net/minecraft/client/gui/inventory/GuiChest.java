@@ -5,6 +5,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
+import wtf.moonlight.Client;
+import wtf.moonlight.module.impl.movement.InvMove;
 
 public class GuiChest extends GuiContainer
 {
@@ -26,7 +28,7 @@ public class GuiChest extends GuiContainer
     }
 
     public boolean GuiInvMove() {
-        return true;
+        return Client.INSTANCE.getModuleManager().getModule(InvMove.class).noChestValue.get();
     }
 
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)

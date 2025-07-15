@@ -31,6 +31,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjglx.input.Keyboard;
 import org.lwjglx.input.Mouse;
+import wtf.moonlight.Client;
+import wtf.moonlight.module.impl.movement.InvMove;
 
 public class GuiContainerCreative extends InventoryEffectRenderer
 {
@@ -47,7 +49,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer
     private CreativeCrafting field_147059_E;
 
     public boolean GuiInvMove() {
-        return true;
+        return Client.INSTANCE.getModuleManager().getModule(InvMove.class).noInventoryValue.get();
     }
 
     public GuiContainerCreative(EntityPlayer p_i1088_1_)

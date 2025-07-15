@@ -18,17 +18,21 @@ import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.player.InvManager;
+import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.util.misc.ServerUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * @Author：haogemc
  */
 @ModuleInfo(name = "InvMove", category = Categor.Movement)
 public class InvMove extends Module {
     public final ListValue mode = new ListValue("Mode", new String[]{"Basic", "Hypixel", "LastPacket"}, "Basic", this);
+    public final BoolValue noChestValue = new BoolValue("Chest", false, this);
+    public final BoolValue noInventoryValue = new BoolValue("Inventory", false, this);
 
     int tick = 0;
     double dist = 0;
@@ -74,12 +78,11 @@ public class InvMove extends Module {
                 }
                 c16 = true;
             }
-            if (event.getPacket() instanceof C0EPacketClickWindow && (tick > 0 || OpenInventory)) {
-                C0EPacketClickWindow p = (C0EPacketClickWindow) event.getPacket();
+
+            if (event.getPacket() instanceof C0EPacketClickWindow p && (tick > 0 || OpenInventory)) {
                 InvPacketList.add(p);
                 event.setCancelled(true);
             }
-
 
             if (event.getPacket() instanceof C0DPacketCloseWindow) {
                 if (c0d && !(tick > 1) && OpenInventory) {
