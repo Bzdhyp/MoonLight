@@ -7,6 +7,9 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+import wtf.moonlight.util.render.GLUtil;
+
+import static org.lwjgl.opengl.GL11.GL_QUADS;
 
 public class Gui
 {
@@ -73,6 +76,22 @@ public class Gui
         tessellator.draw();
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
+    }
+
+    public static void drawRect2(double x, double y, double width, double height, int color) {
+        GLUtil.setup2DRendering(true);
+
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+
+        worldrenderer.begin(GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        worldrenderer.pos(x, y, 0.0D).color(color).endVertex();
+        worldrenderer.pos(x, y + height, 0.0D).color(color).endVertex();
+        worldrenderer.pos(x + width, y + height, 0.0D).color(color).endVertex();
+        worldrenderer.pos(x + width, y, 0.0D).color(color).endVertex();
+        tessellator.draw();
+
+        GLUtil.end2DRendering();
     }
 
     public static void drawRect(float left, float top, float right, float bottom, int color)

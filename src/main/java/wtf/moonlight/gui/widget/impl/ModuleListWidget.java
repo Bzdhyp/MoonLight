@@ -168,7 +168,7 @@ public class ModuleListWidget extends Widget {
 
     private void renderBackground(float localX, float localY, float offset, int width, int height, int middle, int index) {
         if (localX < middle) {
-            RenderUtil.drawRect(localX - PADDING, localY + offset, width + 3,
+            RenderUtil  .drawRect(localX - PADDING, localY + offset, width + 3,
                     height + PADDING + setting.textHeight.getValue(), setting.bgColor(index));
         } else {
             RenderUtil.drawRect(localX + this.width - 4 - width, localY + offset + 1,

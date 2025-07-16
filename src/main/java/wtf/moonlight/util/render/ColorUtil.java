@@ -52,6 +52,14 @@ public class ColorUtil {
         return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
     }
 
+    public static int reAlpha(int color, float alpha) {
+        Color c = new Color(color);
+        float r = ((float) 1 / 255) * c.getRed();
+        float g = ((float) 1 / 255) * c.getGreen();
+        float b = ((float) 1 / 255) * c.getBlue();
+        return new Color(r, g, b, alpha).getRGB();
+    }
+
     public static Color getRainbow() {
         return new Color(Color.HSBtoRGB((float) ((double) Minecraft.getMinecraft().thePlayer.ticksExisted / 50.0 + Math.sin((double) 1 / 50.0 * 1.6)) % 1.0f, 0.5f, 1.0f));
     }
@@ -119,6 +127,10 @@ public class ColorUtil {
         int inverseBlue = Math.round((float) firstColor.getBlue() + blueInverseDiff * (float) (now % (long) time));
 
         return now % ((long) time * 2L) < (long) time ? (new Color(inverseRed, inverseGreen, inverseBlue, (int) alpha)) : (new Color(red, green, blue, (int) alpha));
+    }
+
+    public static int darker(int color) {
+        return darker(color, 0.6F);
     }
 
     public static int darker(int color, float factor) {

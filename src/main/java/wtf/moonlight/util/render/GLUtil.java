@@ -36,6 +36,19 @@ public class GLUtil {
         GlStateManager.depthMask(true);
     }
 
+    public static void enableBlending() {
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    public static void color(int color) {
+        glColor4ub(
+                (byte) (color >> 16 & 0xFF),
+                (byte) (color >> 8 & 0xFF),
+                (byte) (color & 0xFF),
+                (byte) (color >> 24 & 0xFF));
+    }
+
     public static void disableDepth() {
         GlStateManager.disableDepth();
         GlStateManager.depthMask(false);
@@ -61,6 +74,18 @@ public class GLUtil {
         f.run();
         glEnable(GL_TEXTURE_2D);
         GlStateManager.disableBlend();
+    }
+
+    public static void setup2DRendering(boolean blend) {
+        if (blend) {
+            startBlend();
+        }
+        GlStateManager.disableTexture2D();
+    }
+
+    public static void end2DRendering() {
+        GlStateManager.enableTexture2D();
+        endBlend();
     }
 
     public static float[] project2D(float x,

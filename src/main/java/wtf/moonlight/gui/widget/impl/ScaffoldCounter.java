@@ -1,31 +1,26 @@
-/*
- * MoonLight Hacked Client
- *
- * A free and open-source hacked client for Minecraft.
- * Developed using Minecraft's resources.
- *
- * Repository: https://github.com/randomguy3725/MoonLight
- *
- * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
- */
 package wtf.moonlight.gui.widget.impl;
 
+import com.cubk.EventTarget;
+
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.opengl.GL11;
-import com.cubk.EventTarget;
+import wtf.moonlight.Client;
 import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.events.render.Shader2DEvent;
+import wtf.moonlight.gui.font.FontRenderer;
+import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.impl.movement.Scaffold;
-import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.util.misc.InstanceAccess;
+import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.animations.advanced.ContinualAnimation;
 import wtf.moonlight.util.animations.advanced.Direction;
 import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.misc.InstanceAccess;
 import wtf.moonlight.util.player.ScaffoldUtil;
 import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.render.RenderUtil;
@@ -34,187 +29,227 @@ import wtf.moonlight.util.render.RoundedUtil;
 import java.awt.*;
 
 public class ScaffoldCounter implements InstanceAccess {
-    private final Animation anim = new DecelerateAnimation(175, 1);
+    private final Scaffold scaffold = Client.INSTANCE.getModuleManager().getModule(Scaffold.class);
+    private final ContinualAnimation animation = new ContinualAnimation();
+    private final Animation anim = new DecelerateAnimation(250, 1);
 
     @EventTarget
     public void drawCounter(Render2DEvent event) {
-        Scaffold scaffold = INSTANCE.getModuleManager().getModule(Scaffold.class);
-        ScaledResolution sr = event.scaledResolution();
-        anim.setDirection(scaffold.isEnabled() ? Direction.FORWARDS : Direction.BACKWARDS);
+        if (!scaffold.counter.is("Normal")) {
+            if (!scaffold.isEnabled()) return;
+        }
 
         int slot = ScaffoldUtil.getBlockSlot();
-        ItemStack heldItem = slot == -1 ? null : mc.thePlayer.inventory.mainInventory[slot];
+        ScaledResolution sr = new ScaledResolution(mc);
         int count = slot == -1 ? 0 : ScaffoldUtil.getBlockCount();
         String countStr = String.valueOf(count);
-        float x, y;
+
+        String str = countStr + " block" + (count != 1 ? "s" : "");
+        net.minecraft.client.gui.FontRenderer fr = mc.fontRendererObj;
+        ItemStack heldItem = slot == -1 ? null : mc.thePlayer.inventory.mainInventory[slot];
         float output = (float) anim.getOutput();
-        float blockWH = heldItem != null ? 15 : -2;
-        int spacing = 3;
-        String text = "§l" + countStr + "§r block" + (count != 1 ? "s" : "");
-        float textWidth = Fonts.interBold.get(18).getStringWidth(text);
 
-        switch (scaffold.counter.getValue().toLowerCase()) {
-            case "augustus": {
-                if (!scaffold.isEnabled()) return;
+        switch (scaffold.counter.getValue()) {
+            case "None":
+                break;
 
-                String textX = "§l" + countStr + "§r";
-                float totalWidth = (mc.fontRendererObj.getStringWidth(textX) + blockWH + spacing + 6);
+            case "Hanabi": {
+                hanabiBlockCount(sr.getScaledWidth(), sr.getScaledHeight() / 2f);
+                break;
+            }
+
+            case "Basic": {
+                float x = sr.getScaledWidth() / 2F - fr.getStringWidth(str) / 2F + 1;
+                float y = sr.getScaledHeight() / 2F + 10;
+
+                fr.drawStringWithShadow(str, x, y, -1);
+                break;
+            }
+
+            case "Adjust": {
+                Fonts.interRegular.get(16).drawCenteredStringWithShadow(
+                        countStr + " " + EnumChatFormatting.GRAY + "blocks", sr.getScaledWidth() / 2f, sr.getScaledHeight() / 2f + 22,
+                        Client.INSTANCE.getModuleManager().getModule(Interface.class).color(0));
+                break;
+            }
+
+            case "Simple": {
+                float percentage = Math.min(1.0f, ScaffoldUtil.getBlockCount() / 128.0f);
+
+                int color = Color.HSBtoRGB(percentage / 3, 1.0F, 1.0F);
+                if (!mc.gameSettings.showDebugInfo) {
+                    fr.drawStringWithShadow(countStr, sr.getScaledWidth() / 2.0f - fr.getStringWidth(countStr) / 2.0f, sr.getScaledHeight() / 2.0f - 25.0f, color);
+                }
+                break;
+            }
+
+            case "Counter": {
+                float x = sr.getScaledWidth() / 2.0F;
+                float y = sr.getScaledHeight() / 2.0F + (12);
+                float thickness = 2.5F;
+
+                float percentage = Math.min(1, ScaffoldUtil.getBlockCount() / 128.0F);
+                animation.animate(percentage, 18);
+                float percentageWidth = animation.getOutput();
+
+                float width = 80.0F;
+                float half = width / 2;
+
+                Gui.drawRect2(x - half - 0.5, y - 0.6, 81, 3.8, new Color(0, 0, 0, 120).getRGB());
+
+                int color = Client.INSTANCE.getModuleManager().getModule(Interface.class).mainColor.get().getRGB();
+                RenderUtil.drawGradientRect2(x - half, y, x - half + width * percentageWidth, y + thickness, false,
+                        color, ColorUtil.darker(color));
+                break;
+            }
+
+
+            case "Augustus": {
+                float x, y;
+
+                float blockWH = heldItem != null ? 15 : -2;
+                int spacing = 3;
+                float textWidth = Fonts.interBold.get(18).getStringWidth(countStr);
+
+                float totalWidth = ((textWidth + blockWH + spacing) + 6);
                 x = sr.getScaledWidth() / 2f - (totalWidth / 2f);
-                y = sr.getScaledHeight() - (sr.getScaledHeight() / 2f - 70);
+                y = sr.getScaledHeight() - (sr.getScaledHeight() / 2f - 120);
                 float height = 20;
 
-                GL11.glPushMatrix();
-                RenderUtil.scissor(x - 1.5, y - 1.5, totalWidth + 3, height + 3);
-                GL11.glEnable(GL11.GL_SCISSOR_TEST);
-
-                RoundedUtil.drawRound(x, y, totalWidth, height, 6, new Color(INSTANCE.getModuleManager().getModule(Interface.class).bgColor(), true));
+                RoundedUtil.drawRound(x, y, totalWidth, height, 3, new Color(INSTANCE.getModuleManager().getModule(Interface.class).bgColor(), true));
+                fr.drawString(countStr, x + 2 + blockWH + spacing, y + 6.5f, -1);
 
                 if (heldItem != null) {
                     RenderHelper.enableGUIStandardItemLighting();
-                    mc.getRenderItem().renderItemAndEffectIntoGUI(heldItem, (int) x + 3, (int) (y + 10 - (blockWH / 2)));
+                    mc.getRenderItem().renderItemAndEffectIntoGUI(heldItem, (int) x + 2, (int) (y + 10 - (blockWH / 2)));
                     RenderHelper.disableStandardItemLighting();
                 }
 
-                mc.fontRendererObj.drawStringWithShadow(textX, x + 3 + blockWH + spacing, y + height / 2F / 2F + 2.5f, -1);
-
-                GL11.glDisable(GL11.GL_SCISSOR_TEST);
-                GL11.glPopMatrix();
                 break;
             }
-            case "normal": {
+
+            case "Normal": {
+                anim.setDirection(scaffold.isEnabled() ? Direction.FORWARDS : Direction.BACKWARDS);
+
+                float x, y;
+
+                float blockWH = heldItem != null ? 15 : -2;
+                int spacing = 3;
+                String text = "§l" + countStr + "§r block" + (count != 1 ? "s" : "");
+                float textWidth = Fonts.interBold.get(18).getStringWidth(text);
+
                 float totalWidth = ((textWidth + blockWH + spacing) + 6) * output;
                 x = sr.getScaledWidth() / 2f - (totalWidth / 2f);
-                y = sr.getScaledHeight() - (sr.getScaledHeight() / 2f - 80);
+                y = sr.getScaledHeight() - (sr.getScaledHeight() / 2f - 20);
                 float height = 20;
-                GL11.glPushMatrix();
                 RenderUtil.scissor(x - 1.5, y - 1.5, totalWidth + 3, height + 3);
                 GL11.glEnable(GL11.GL_SCISSOR_TEST);
                 RoundedUtil.drawRound(x, y, totalWidth, height, 5, new Color(INSTANCE.getModuleManager().getModule(Interface.class).bgColor(), true));
 
-                Fonts.interBold.get(18).drawString(text, x + 3 + blockWH + spacing, y + height / 2F - Fonts.interBold.get(18).getHeight() / 2F + 2.5f, -1);
+                Fonts.interBold.get(18).drawString(text, x + 3 + blockWH + spacing, y + Fonts.interBold.get(18).getMiddleOfBox(height) + 2.5f, -1);
 
                 if (heldItem != null) {
                     RenderHelper.enableGUIStandardItemLighting();
                     mc.getRenderItem().renderItemAndEffectIntoGUI(heldItem, (int) x + 3, (int) (y + 10 - (blockWH / 2)));
                     RenderHelper.disableStandardItemLighting();
                 }
+
                 GL11.glDisable(GL11.GL_SCISSOR_TEST);
-                GL11.glPopMatrix();
+
                 break;
             }
-            case "exhibition": {
-                if (!scaffold.isEnabled()) return;
-                int c = ColorUtil.getColor(255, 0, 0, 150);
-                if (ScaffoldUtil.getBlockCount() >= 64 && 128 > ScaffoldUtil.getBlockCount()) {
-                    c = ColorUtil.getColor(255, 255, 0, 150);
-                } else if (ScaffoldUtil.getBlockCount() >= 128) {
-                    c = ColorUtil.getColor(0, 255, 0, 150);
-                }
-                ScaledResolution scaledResolution = new ScaledResolution(mc);
-                mc.fontRendererObj.drawString(String.valueOf(ScaffoldUtil.getBlockCount()), scaledResolution.getScaledWidth() / 2f - (mc.fontRendererObj.getStringWidth(String.valueOf(ScaffoldUtil.getBlockCount())) / 2f) - 1, scaledResolution.getScaledHeight() / 2f - 36, 0xff000000, false);
-                mc.fontRendererObj.drawString(String.valueOf(ScaffoldUtil.getBlockCount()), scaledResolution.getScaledWidth() / 2f - (mc.fontRendererObj.getStringWidth(String.valueOf(ScaffoldUtil.getBlockCount())) / 2f) + 1, scaledResolution.getScaledHeight() / 2f - 36, 0xff000000, false);
-                mc.fontRendererObj.drawString(String.valueOf(ScaffoldUtil.getBlockCount()), scaledResolution.getScaledWidth() / 2f - (mc.fontRendererObj.getStringWidth(String.valueOf(ScaffoldUtil.getBlockCount())) / 2f), scaledResolution.getScaledHeight() / 2f - 35, 0xff000000, false);
-                mc.fontRendererObj.drawString(String.valueOf(ScaffoldUtil.getBlockCount()), scaledResolution.getScaledWidth() / 2f - (mc.fontRendererObj.getStringWidth(String.valueOf(ScaffoldUtil.getBlockCount())) / 2f), scaledResolution.getScaledHeight() / 2f - 37, 0xff000000, false);
-                mc.fontRendererObj.drawString(String.valueOf(ScaffoldUtil.getBlockCount()), scaledResolution.getScaledWidth() / 2f - (mc.fontRendererObj.getStringWidth(String.valueOf(ScaffoldUtil.getBlockCount())) / 2f), scaledResolution.getScaledHeight() / 2f - 36, c, false);
-                break;
-            }
-            case "adjust":
-                if (!scaffold.isEnabled()) return;
-                //Fonts.interRegular.get(16).drawStringWithShadow("blocks", sr.getScaledWidth() / 2f + Fonts.Tahoma.get(16).getStringWidth(ScaffoldUtil.getBlockCount() + "") / 2f, sr.getScaledHeight() / 2f + 22, new Color(255,255,255).getRGB());
-                //Fonts.Tahoma.get(16).drawStringWithShadow(ScaffoldUtil.getBlockCount() + "", sr.getScaledWidth() / 2f - Fonts.interRegular.get(16).getStringWidth("blocks") / 2f, sr.getScaledHeight() / 2f + 22, new Color(Moonlight.INSTANCE.getModuleManager().getModule(Interface.class).color()).getRGB());
-
-                Fonts.interRegular.get(16).drawCenteredStringWithShadow(ScaffoldUtil.getBlockCount() + " " + EnumChatFormatting.GRAY + "blocks", sr.getScaledWidth() / 2f, sr.getScaledHeight() / 2f + 22, -1);
-                break;
-            case "simple": {
-                if (!scaffold.isEnabled()) return;
-                int c = ColorUtil.getColor(255, 0, 0, 150);
-                if (ScaffoldUtil.getBlockCount() >= 64 && 128 > ScaffoldUtil.getBlockCount()) {
-                    c = ColorUtil.getColor(255, 255, 0, 150);
-                } else if (ScaffoldUtil.getBlockCount() >= 128) {
-                    c = ColorUtil.getColor(0, 255, 0, 150);
-                }
-                Fonts.interMedium.get(18).drawCenteredStringWithShadow(String.valueOf(ScaffoldUtil.getBlockCount()), sr.getScaledWidth() / 2f, sr.getScaledHeight() / 2f + 10, new Color(c).brighter().getRGB());
-                break;
-            }
-
-            case "novo": {
-                if (!scaffold.isEnabled()) return;
-                ItemStack stack = mc.thePlayer.inventory.getStackInSlot(ScaffoldUtil.getBlockSlot());
-
-                if (stack != null && stack.getItem() instanceof ItemBlock) {
-                    float width = Fonts.interRegular.get(18).getStringWidth("/" + ScaffoldUtil.getBlockCount());
-                    float x1 = sr.getScaledWidth() / 2f - width / 2, y1 = sr.getScaledHeight() / 2f;
-
-                    RenderUtil.renderItemStack(stack, x1 - 5.0F, y1 + 11, 1);
-                    Fonts.interRegular.get(18).drawStringWithShadow(Integer.toString(ScaffoldUtil.getBlockCount()), x1 + 11.0F, y1 + 16, -1);
-                }
-            }
-
-            break;
         }
     }
 
     @EventTarget
     public void drawShader2D(Shader2DEvent event) {
-        Scaffold scaffold = INSTANCE.getModuleManager().getModule(Scaffold.class);
-
         ScaledResolution sr = new ScaledResolution(mc);
+        if (!scaffold.counter.is("Normal")) {
+            if (!scaffold.isEnabled()) return;
+        }
 
+        if (scaffold.counter.is("Hanabi")) {
+            hanabiBlockCount(sr.getScaledWidth(), sr.getScaledHeight() / 2f);
+        }
+
+        float x, y;
         int slot = ScaffoldUtil.getBlockSlot();
-        ItemStack heldItem = slot == -1 ? null : mc.thePlayer.inventory.mainInventory[slot];
         int count = slot == -1 ? 0 : ScaffoldUtil.getBlockCount();
         String countStr = String.valueOf(count);
-        float x, y;
-        float output = (float) anim.getOutput();
+        ItemStack heldItem = slot == -1 ? null : mc.thePlayer.inventory.mainInventory[slot];
         float blockWH = heldItem != null ? 15 : -2;
-        int spacing = 3;
-        String text = "§l" + countStr + "§r block" + (count != 1 ? "s" : "");
-        float textWidth = Fonts.interBold.get(18).getStringWidth(text);
 
-        switch (scaffold.counter.getValue().toLowerCase()) {
+        if (scaffold.counter.is("Augustus")) {
+            float textWidth = Fonts.interBold.get(18).getStringWidth(countStr);
+            int spacing = 3;
 
-            case "augustus": {
-                if (!scaffold.isEnabled()) return;
+            float totalWidth = ((textWidth + blockWH + spacing) + 6);
+            x = sr.getScaledWidth() / 2f - (totalWidth / 2f);
+            y = sr.getScaledHeight() - (sr.getScaledHeight() / 2f - 120);
+            float height = 20;
 
-                String textX = "§l" + countStr + "§r";
-                float totalWidth = (mc.fontRendererObj.getStringWidth(textX) + blockWH + spacing + 6);
-                x = sr.getScaledWidth() / 2f - (totalWidth / 2f);
-                y = sr.getScaledHeight() - (sr.getScaledHeight() / 2f - 70);
-                float height = 20;
+            RoundedUtil.drawRound(x, y, totalWidth, height, 3, Color.BLACK);
 
-                GL11.glPushMatrix();
-                RenderUtil.scissor(x - 1.5, y - 1.5, totalWidth + 3, height + 3);
-                GL11.glEnable(GL11.GL_SCISSOR_TEST);
-
-                RoundedUtil.drawRound(x, y, totalWidth, height, 6, new Color(INSTANCE.getModuleManager().getModule(Interface.class).bgColor(), true));
-
-                if (heldItem != null) {
-                    RenderHelper.enableGUIStandardItemLighting();
-                    mc.getRenderItem().renderItemAndEffectIntoGUI(heldItem, (int) x + 3, (int) (y + 10 - (blockWH / 2)));
-                    RenderHelper.disableStandardItemLighting();
-                }
-
-                mc.fontRendererObj.drawStringWithShadow(textX, x + 3 + blockWH + spacing, y + height / 2F / 2F + 2.5f, Color.BLACK.getRGB());
-
-                GL11.glDisable(GL11.GL_SCISSOR_TEST);
-                GL11.glPopMatrix();
-                break;
+            if (heldItem != null) {
+                RenderHelper.enableGUIStandardItemLighting();
+                mc.getRenderItem().renderItemAndEffectIntoGUI(heldItem, (int) x + 2, (int) (y + 10 - (blockWH / 2)));
+                RenderHelper.disableStandardItemLighting();
             }
-            case "normal": {
-                anim.setDirection(scaffold.isEnabled() ? Direction.FORWARDS : Direction.BACKWARDS);
+        }
 
-                float totalWidth = ((textWidth + blockWH + spacing) + 6) * output;
-                x = sr.getScaledWidth() / 2f - (totalWidth / 2f);
-                y = sr.getScaledHeight() - (sr.getScaledHeight() / 2f - 80);
-                float height = 20;
-                GL11.glPushMatrix();
-                RenderUtil.scissor(x - 1.5, y - 1.5, totalWidth + 3, height + 3);
-                GL11.glEnable(GL11.GL_SCISSOR_TEST);
-                RoundedUtil.drawRound(x, y, totalWidth, height, 5, new Color(INSTANCE.getModuleManager().getModule(Interface.class).bgColor(),true));
-                GL11.glDisable(GL11.GL_SCISSOR_TEST);
-                GL11.glPopMatrix();
-                break;
+        if (scaffold.counter.is("Normal")) {
+            anim.setDirection(scaffold.isEnabled() ? Direction.FORWARDS : Direction.BACKWARDS);
+
+            int spacing = 3;
+            String text = "§l" + countStr + "§r block" + (count != 1 ? "s" : "");
+
+            float textWidth = Fonts.interBold.get(18).getStringWidth(text);
+            float totalWidth = ((textWidth + blockWH + spacing) + 6) * (float) anim.getOutput();
+
+            float height = 20;
+            x = sr.getScaledWidth() / 2f - (totalWidth / 2f);
+            y = sr.getScaledHeight() - (sr.getScaledHeight() / 2f - 20);
+
+            RenderUtil.scissor(x - 1.5, y - 1.5, totalWidth + 3, height + 3);
+            GL11.glEnable(GL11.GL_SCISSOR_TEST);
+            RoundedUtil.drawRound(x, y, totalWidth, height, 5, Color.BLACK);
+
+            if (heldItem != null) {
+                RenderHelper.enableGUIStandardItemLighting();
+                mc.getRenderItem().renderItemAndEffectIntoGUI(heldItem, (int) x + 3, (int) (y + 10 - (blockWH / 2)));
+                RenderHelper.disableStandardItemLighting();
             }
+
+            GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        }
+    }
+
+    public int blockCount = 0;
+    public float alphaAnimation = 0;
+    public float yAxisAnimation = 0;
+
+    public void hanabiBlockCount(float width, float height) {
+        boolean state = scaffold.isEnabled();
+
+        this.alphaAnimation = RenderUtil.getAnimationState(this.alphaAnimation, state ? 0.7f : 0, 10f);
+        this.yAxisAnimation = RenderUtil.getAnimationState(this.yAxisAnimation, state ? 0 : 10, (float) Math.max(10, (Math.abs(this.yAxisAnimation - (state ? 0 : 10)) * 50) * 0.5));
+
+        float trueHeight = 18;
+
+        if (alphaAnimation > 0.2f) {
+            try {
+                blockCount = ScaffoldUtil.getBlockCount();
+            } catch (Exception ignore) {
+                blockCount = 0;
+            }
+            String cunt = "block" + (blockCount > 1 ? "s" : "");
+            FontRenderer font = Fonts.interBold.get(20);
+            FontRenderer font2 = Fonts.interBold.get(18);
+            float length = font.getStringWidth(blockCount + "  ") + font2.getStringWidth(cunt) + 1f;
+            RenderUtil.drawRoundedRect(width / 2 - (length / 2), height + trueHeight - this.yAxisAnimation, length, 15, 2, ColorUtil.reAlpha(Color.BLACK.getRGB(), alphaAnimation), 0.5f, ColorUtil.reAlpha(Color.BLACK.getRGB(), alphaAnimation));
+
+            font.drawString(blockCount + "", width / 2 - (length / 2 - 2f), height + (trueHeight + 3.5f) - this.yAxisAnimation, ColorUtil.reAlpha(Color.WHITE.getRGB(), MathUtil.clampValue(alphaAnimation + 0.25f, 0f, 1f)));
+            font2.drawString(cunt, width / 2 - (length / 2 - 1f) + font.getStringWidth(blockCount + " "), height + (trueHeight + 4) - this.yAxisAnimation, ColorUtil.reAlpha(Color.WHITE.getRGB(), MathUtil.clampValue(alphaAnimation - 0.1f, 0f, 1f)));
         }
     }
 }

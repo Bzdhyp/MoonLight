@@ -59,6 +59,13 @@ public class MathUtil {
         return interpolate(old,now,mc.timer.renderPartialTicks);
     }
 
+    public static float clampValue(final float value, final float floor, final float cap) {
+        if (value < floor) {
+            return floor;
+        }
+        return Math.min(value, cap);
+    }
+
     public static int getRandom(int min, int max) {
         if (min == max) {
             return min;

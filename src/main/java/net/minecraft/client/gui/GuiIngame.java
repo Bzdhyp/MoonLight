@@ -298,31 +298,23 @@ public class GuiIngame extends Gui
         GlStateManager.enableAlpha();
     }
 
-    protected void renderTooltip(ScaledResolution sr, float partialTicks)
-    {
-        if (this.mc.getRenderViewEntity() instanceof EntityPlayer entityplayer)
-        {
-
+    protected void renderTooltip(ScaledResolution sr, float partialTicks) {
+        if (this.mc.getRenderViewEntity() instanceof EntityPlayer entityplayer) {
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             this.mc.getTextureManager().bindTexture(widgetsTexPath);
             int i = sr.getScaledWidth() / 2;
-            float f = this.zLevel;
-            this.zLevel = -90.0F;
-            if(Client.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Interface.class).hotBar.get()){
-                RoundedUtil.drawRound(i - 91, sr.getScaledHeight() - 22, 182, 22,6 ,new Color(0,0,0,100));
-                RoundedUtil.drawRoundOutline(i - 91 - 1 + SpoofSlotComponent.getSpoofedSlot() * 20, sr.getScaledHeight() - 22 - 1,24,22,6,0.5f,new Color(0,0,0,0),new Color(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(),true));
-            } else {
-                this.drawTexturedModalRect(i - 91, sr.getScaledHeight() - 22, 0, 0, 182, 22);
-                this.drawTexturedModalRect(i - 91 - 1 + SpoofSlotComponent.getSpoofedSlot() * 20, sr.getScaledHeight() - 22 - 1, 0, 22, 24, 22);
-            }
-            this.zLevel = f;
+            float f = zLevel;
+            zLevel = -90.0F;
+            drawTexturedModalRect(i - 91, sr.getScaledHeight() - 22, 0, 0, 182, 22);
+            drawTexturedModalRect(i - 91 - 1 + SpoofSlotComponent.getSpoofedSlot() * 20, sr.getScaledHeight() - 22 - 1, 0, 22, 24, 22);
+            zLevel = f;
             GlStateManager.enableRescaleNormal();
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
             RenderHelper.enableGUIStandardItemLighting();
+            GlStateManager.enableDepth();
 
-            for (int j = 0; j < 9; ++j)
-            {
+            for (int j = 0; j < 9; ++j) {
                 int k = sr.getScaledWidth() / 2 - 90 + j * 20 + 2;
                 int l = sr.getScaledHeight() - 16 - 3;
                 this.renderHotbarItem(j, k, l, partialTicks, entityplayer);

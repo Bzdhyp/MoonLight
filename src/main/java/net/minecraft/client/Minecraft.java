@@ -184,6 +184,7 @@ import wtf.moonlight.Client;
 import wtf.moonlight.events.misc.KeyPressEvent;
 import wtf.moonlight.events.misc.TickEvent;
 import wtf.moonlight.util.MovementInputFromKeyboard;
+import wtf.moonlight.util.render.RenderUtil;
 
 public class Minecraft implements IThreadListener, IPlayerUsage
 {
@@ -937,8 +938,18 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         System.gc();
     }
 
+    private long lasteFrame = getTime();
+    public long getTime() {
+        return (Sys.getTime() * 1000) / Sys.getTimerResolution();
+    }
+
     private void runGameLoop() throws IOException
     {
+        final long currentTime = getTime();
+        final int deltaTime = (int) (currentTime - lasteFrame);
+        lasteFrame = currentTime;
+        RenderUtil.delta = deltaTime / 1000.0f;
+
         long i = System.nanoTime();
         this.mcProfiler.startSection("root");
 
