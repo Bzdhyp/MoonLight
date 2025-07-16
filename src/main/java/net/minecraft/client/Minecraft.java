@@ -1932,28 +1932,13 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 this.displayGuiScreen(new GuiChat());
             }
 
-            if (this.currentScreen == null && this.gameSettings.keyBindCommand.isPressed() && flag)
-            {
+            if (this.currentScreen == null && this.gameSettings.keyBindCommand.isPressed() && flag) {
                 this.displayGuiScreen(new GuiChat("/"));
             }
 
-            if (this.thePlayer.isUsingItem())
-            {
-                if (!this.gameSettings.keyBindUseItem.isKeyDown())
-                {
+            if (this.thePlayer.isUsingItem()) {
+                if (!this.gameSettings.keyBindUseItem.isKeyDown()) {
                     this.playerController.onStoppedUsingItem(this.thePlayer);
-                }
-
-                while (this.gameSettings.keyBindAttack.isPressed()) {
-                    if (Client.INSTANCE.getModuleManager().getModule(Animations.class).isEnabled() &&
-                            Client.INSTANCE.getModuleManager().getModule(Animations.class).getSwingWhileUsingItem().get()) {
-                        if (!thePlayer.isSwingInProgress ||
-                                thePlayer.swingProgressInt >= thePlayer.getArmSwingAnimationEnd() / 2 ||
-                                thePlayer.swingProgressInt < 0) {
-                            thePlayer.swingProgressInt = -1;
-                            thePlayer.isSwingInProgress = true;
-                        }
-                    }
                 }
 
                 while (this.gameSettings.keyBindUseItem.isPressed())

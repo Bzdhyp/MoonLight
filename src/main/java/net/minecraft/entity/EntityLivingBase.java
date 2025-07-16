@@ -1152,12 +1152,21 @@ public abstract class EntityLivingBase extends Entity
         this.dataWatcher.updateObject(9, (byte) count);
     }
 
-    public int getArmSwingAnimationEnd() {
-        if (Client.INSTANCE.getModuleManager().getModule(Animations.class).isEnabled() && this == Minecraft.getMinecraft().thePlayer) {
-            return (int) (6 + Client.INSTANCE.getModuleManager().getModule(Animations.class).getSlowdown().getValue());
-        } else {
-            return this.isPotionActive(digSpeed) ? 6 - (1 + this.getActivePotionEffect(digSpeed).getAmplifier()) : this.isPotionActive(digSlowdown) ? 6 + (1 + this.getActivePotionEffect(digSlowdown).getAmplifier()) * 2 : 6;
+    private int getArmSwingAnimationEnd() {
+        int animationEnd = this.isPotionActive(Potion.digSpeed)
+                ? 6 - (1 + this.getActivePotionEffect(Potion.digSpeed).getAmplifier())
+                : this.isPotionActive(Potion.digSlowdown)
+                ? 6 + (1 + this.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2
+                : 6;
+
+        Animations animations = Client.INSTANCE.getModuleManager().getModule(Animations.class);
+        if (animations.swingSpeed.getValue() != null) {
+            animationEnd = (int) (animationEnd * (((-animations.swingSpeed.getValue()) / 100.0f) + 1.0f));
         }
+
+        animationEnd = (int) (animationEnd * Minecraft.getMinecraft().timer.timerSpeed);
+
+        return animationEnd;
     }
 
     public void swingItem()
