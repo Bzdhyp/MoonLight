@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 @ModuleInfo(name = "LongJump", category = Categor.Movement)
 public class LongJump extends Module {
-    public final ListValue mode = new ListValue("Mode", new String[]{"Prediction", "Delay"}, "Prediction", this);
+    public final ListValue mode = new ListValue("Mode", new String[]{"Prediction"}, "Prediction", this);
     private final SliderValue delayTime = new SliderValue("Delay Time", 1000, 0, 5000, 1, this);
 
     private final Queue<DelayedPacket> delayedPackets = new ConcurrentLinkedQueue<>();
