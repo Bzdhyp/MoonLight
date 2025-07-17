@@ -142,6 +142,7 @@ public final class ModuleManager {
 
                 // display
                 Interface.class,
+                Island.class,
                 ArrayList.class,
                 TargetHUD.class,
                 KeyBindHUD.class,
