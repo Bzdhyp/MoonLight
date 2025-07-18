@@ -17,8 +17,8 @@ import net.minecraft.network.Packet;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import wtf.moonlight.Client;
+import wtf.moonlight.gui.notification.NotificationManager;
 import wtf.moonlight.module.impl.display.Interface;
-import wtf.moonlight.module.impl.display.Settings;
 import wtf.moonlight.module.values.Value;
 import wtf.moonlight.gui.notification.NotificationType;
 import wtf.moonlight.util.misc.InstanceAccess;
@@ -84,40 +84,7 @@ public abstract class Module implements InstanceAccess {
      * @param tag The tag to set.
      */
     public void setTag(String tag) {
-        if (tag != null && !tag.isEmpty()) {
-            String tagStyle = Optional.ofNullable(getModule(wtf.moonlight.module.impl.display.ArrayList.class)).map(m -> m.tags.getValue()).orElse("").toLowerCase();
-            if (getModule(wtf.moonlight.module.impl.display.ArrayList.class).suffixColor.get()){
-                switch (tagStyle) {
-                    case "simple":
-                        this.tag  = " " + tag;
-                        break;
-                    case "dash":
-                        this.tag = " - " + tag;
-                        break;
-                    case "bracket":
-                        this.tag = " [" + tag + "]";
-                        break;
-                    default:
-                        this.tag = "";
-                }
-            }else {
-                switch (tagStyle) {
-                    case "simple":
-                        this.tag = "§f " + tag;
-                        break;
-                    case "dash":
-                        this.tag = "§f - " + tag;
-                        break;
-                    case "bracket":
-                        this.tag = "§f [" + tag + "]";
-                        break;
-                    default:
-                        this.tag = "";
-                }
-            }
-        } else {
-            this.tag = "";
-        }
+ 
     }
 
     /**
@@ -192,7 +159,7 @@ public abstract class Module implements InstanceAccess {
     private void enable() {
         Client.INSTANCE.getEventManager().register(this);
         try {
-            Client.INSTANCE.getNotificationManager().post(NotificationType.OKAY, "Module", getName() + EnumChatFormatting.GREEN + " enabled");
+            NotificationManager.post(NotificationType.OKAY, "Module", getName() + EnumChatFormatting.GREEN + " enabled");
             onEnable();
             playClickSound(1.0F);
         } catch (Exception e) {
@@ -206,7 +173,7 @@ public abstract class Module implements InstanceAccess {
     private void disable() {
         Client.INSTANCE.getEventManager().unregister(this);
         try {
-            Client.INSTANCE.getNotificationManager().post(NotificationType.WARNING, "Module", getName() + EnumChatFormatting.RED + " disabled");
+            NotificationManager.post(NotificationType.WARNING, "Module", getName() + EnumChatFormatting.RED + " disabled");
             onDisable();
             playClickSound(0.8F);
         } catch (Exception e) {
@@ -221,15 +188,22 @@ public abstract class Module implements InstanceAccess {
      */
     private void playClickSound(float volume) {
         if (mc.thePlayer != null) {
-            switch (Client.INSTANCE.getModuleManager().getModule(Settings.class).soundMode.getValue()) {
+            switch (Client.INSTANCE.getModuleManager().getModule(Interface.class).soundMode.getValue()) {
                 case "Default":
                     mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("random.click"), volume));
                     break;
+                case "Sigma":
+                    if (state) {
+                        SoundUtil.playSound(new ResourceLocation("moonlight/sound/jello/activate.wav"), 1);
+                    } else {
+                        SoundUtil.playSound(new ResourceLocation("moonlight/sound/jello/deactivate.wav"), 1);
+                    }
+                    break;
                 case "Augustus":
                     if (state) {
-                        SoundUtil.playSound(new ResourceLocation("moonlight/sound/enable.wav"), 1);
+                        SoundUtil.playSound(new ResourceLocation("moonlight/sound/augustus/enable.wav"), 1);
                     } else {
-                        SoundUtil.playSound(new ResourceLocation("moonlight/sound/disable.wav"), 1);
+                        SoundUtil.playSound(new ResourceLocation("moonlight/sound/augustus/disable.wav"), 1);
                     }
                     break;
             }

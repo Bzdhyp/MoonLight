@@ -25,6 +25,7 @@ import wtf.moonlight.events.misc.WorldEvent;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.events.player.UpdateEvent;
+import wtf.moonlight.gui.notification.NotificationManager;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
@@ -172,12 +173,12 @@ public class Disabler extends Module {
                 if (testTicks >= 20) {
                     disabled = false;
                     testTicks = -1;
-                    Client.INSTANCE.getNotificationManager().post(NotificationType.OKAY, "Successfully Disabled Watchdog.", "Enjoy lowhopping yay", 3);
+                    NotificationManager.post(NotificationType.OKAY, "Successfully Disabled Watchdog.", "Enjoy lowhopping yay", 3);
                 } else {
                     mc.thePlayer.motionY = mc.thePlayer.motionZ = mc.thePlayer.motionX = 0;
                 }
                 if (disabled) {
-                    Client.INSTANCE.getNotificationManager().post(NotificationType.WARNING, "Don't Move! ", "Disabling Motion Checks", 3);
+                    NotificationManager.post(NotificationType.WARNING, "Don't Move! ", "Disabling Motion Checks", 3);
                 }
             }
         }

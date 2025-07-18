@@ -1,113 +1,89 @@
 package wtf.moonlight.module.impl.movement;
 
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.client.C00PacketKeepAlive;
+import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
+import net.minecraft.network.play.server.S00PacketKeepAlive;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
-import net.minecraft.network.play.server.S0EPacketSpawnObject;
-import net.minecraft.network.play.server.S2APacketParticles;
 import net.minecraft.util.EnumChatFormatting;
+import org.lwjglx.input.Mouse;
 import wtf.moonlight.Client;
 import com.cubk.EventTarget;
+import wtf.moonlight.events.misc.TickEvent;
 import wtf.moonlight.events.packet.PacketEvent;
-import wtf.moonlight.events.player.UpdateEvent;
+import wtf.moonlight.events.render.Render2DEvent;
+import wtf.moonlight.gui.font.Fonts;
+import wtf.moonlight.gui.notification.NotificationManager;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
-import wtf.moonlight.module.values.impl.ListValue;
-import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.notification.NotificationType;
+import wtf.moonlight.util.packet.PacketUtils;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @ModuleInfo(name = "LongJump", category = Categor.Movement)
 public class LongJump extends Module {
-    public final ListValue mode = new ListValue("Mode", new String[]{"Prediction"}, "Prediction", this);
-    private final SliderValue delayTime = new SliderValue("Delay Time", 1000, 0, 5000, 1, this);
-
-    private final Queue<DelayedPacket> delayedPackets = new ConcurrentLinkedQueue<>();
-    private boolean isActive;
-
-    private static class DelayedPacket {
-        final Packet<?> packet;
-        final long timestamp;
-
-        DelayedPacket(Packet<?> packet, long timestamp) {
-            this.packet = packet;
-            this.timestamp = timestamp;
-        }
-    }
+    private int kbCount = 0;
+    public static LinkedBlockingQueue<Packet<?>> packets = new LinkedBlockingQueue<>();
 
     @EventTarget
     public void onEnable() {
         if (getFireball() == -1) {
-            Client.INSTANCE.getNotificationManager().post(NotificationType.WARNING,
+            NotificationManager.post(NotificationType.WARNING,
                     EnumChatFormatting.RED + "Inventory",
                     "You don't have a Fireball.", 5);
             this.toggle();
             return;
         }
 
-        isActive = true;
-        delayedPackets.clear();
+        super.onEnable();
     }
 
     @Override
     public void onDisable() {
-        isActive = false;
-        delayedPackets.clear();
+        if (!packets.isEmpty()) {
+            packets.forEach(PacketUtils::queue);
+            packets.clear();
+        }
+        kbCount = 0;
+    }
+
+    @EventTarget
+    public void onRender2d(Render2DEvent event) {
+        ScaledResolution sr = event.scaledResolution();
+        Fonts.Bold.get(18).drawString("KB Count: " + kbCount, sr.getScaledWidth() / 2 - Fonts.Bold.get(18).getStringWidth("KB Count: " + kbCount) / 2, sr.getScaledHeight() / 2 - 18, -1);
     }
 
     @EventTarget
     public void onPacket(PacketEvent event) {
-        if (!isActive) return;
-
         Packet<?> packet = event.getPacket();
-
-        if (mode.is("Prediction")) {
-            if (packet instanceof S12PacketEntityVelocity velocityPacket) {
-                if (velocityPacket.getEntityID() == mc.thePlayer.getEntityId()) {
-                    delayedPackets.add(new DelayedPacket(packet, System.currentTimeMillis()));
-                    event.setCancelled(true);
-                }
+        if (packet instanceof S12PacketEntityVelocity || packet instanceof C0FPacketConfirmTransaction
+                || packet instanceof C00PacketKeepAlive || packet instanceof S00PacketKeepAlive) {
+            if ((packet instanceof S12PacketEntityVelocity s12 && s12.getEntityID() == mc.thePlayer.getEntityId())) {
+                kbCount++;
+                packets.add(packet);
+                event.setCancelled(true);
             }
-        }
-
-        if (shouldHideExplosion() && (
-                packet instanceof S0EPacketSpawnObject ||
-                        packet instanceof S2APacketParticles)) {
-            event.setCancelled(true);
+            if (!(packet instanceof S12PacketEntityVelocity)) {
+                packets.add(packet);
+                event.setCancelled(true);
+            }
         }
     }
 
     @EventTarget
-    public void onUpdate(UpdateEvent event) {
-        setTag(mode.getValue());
-        if (!isActive) return;
-
-        if (mode.is("Prediction")) {
-            long currentTime = System.currentTimeMillis();
-            while (!delayedPackets.isEmpty()) {
-                DelayedPacket entry = delayedPackets.peek();
-                if (currentTime - entry.timestamp >= delayTime.getValue()) {
-                    releasePacket(entry.packet);
-                    delayedPackets.remove();
-                } else {
-                    break;
-                }
+    public void onTick(TickEvent event) {
+        if (Mouse.isButtonDown(4)) {
+            if (!packets.isEmpty()) {
+                packets.forEach(PacketUtils::queue);
+                packets.clear();
             }
+            kbCount = 0;
         }
-    }
-
-    private void releasePacket(Packet<?> packet) {
-        if (mc.getNetHandler() != null) {
-            mc.getNetHandler().addToSendQueue(packet);
-        }
-    }
-
-    private boolean shouldHideExplosion() {
-        return true;
     }
 
     private int getFireball() {

@@ -23,7 +23,6 @@ import wtf.moonlight.config.ConfigManager;
 import wtf.moonlight.gui.click.arcane.ArcaneClickGui;
 import wtf.moonlight.config.impl.friend.FriendManager;
 import wtf.moonlight.module.ModuleManager;
-import wtf.moonlight.gui.widget.impl.ScaffoldCounter;
 import wtf.moonlight.gui.click.dropdown.DropdownGUI;
 import wtf.moonlight.gui.click.neverlose.NeverLose;
 import wtf.moonlight.gui.notification.NotificationManager;
@@ -32,13 +31,10 @@ import wtf.moonlight.gui.widget.WidgetManager;
 import wtf.moonlight.util.DiscordInfo;
 import wtf.moonlight.util.player.RotationUtil;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Objects;
 
 @Getter
 public class Client {
@@ -51,14 +47,12 @@ public class Client {
     // Client information
     public final String clientName = "Moonlight";
     public final String version = "Latest";
-    public final String clientCloud = "https://randomguy3725.github.io/MoonLightCloud/";
 
     // Directory for configuration files and other data
     private final File mainDir = new File(Minecraft.getMinecraft().mcDataDir, clientName);
 
     // Managers and GUI components
     private EventManager eventManager;
-    private NotificationManager notificationManager;
     private ModuleManager moduleManager;
     private ConfigManager configManager;
     private WidgetManager widgetManager;
@@ -73,11 +67,6 @@ public class Client {
 
     // System Tray icon
     private TrayIcon trayIcon;
-
-    // Start time tracking
-    private int startTime;
-    private long startTimeLong;
-
     // Load status
     private boolean loaded;
 
@@ -85,20 +74,51 @@ public class Client {
 
     public void init() {
         loaded = false;
+        LOGGER.info("Client starting up...");
+        this.initViaMCP();
+
+        long start = System.currentTimeMillis();
 
         setupMainDirectory();
-        initializeManagers();
+
+        LOGGER.info("Initializing managers...");
+        eventManager = new EventManager();
+        moduleManager = new ModuleManager();
+        widgetManager = new WidgetManager();
+        configManager = new ConfigManager();
+        commandManager = new CommandManager();
+        friendManager = new FriendManager();
+
+        neverLose = new NeverLose();
+        dropdownGUI = new DropdownGUI();
+        arcaneClickGui = new ArcaneClickGui();
+
         registerEventHandlers();
-        initializeStartTime();
-        initializeViaMCP();
+
         setupDiscordRPC();
-        setupSystemTray();
         handleFastRender();
+
+        VideoComponent.ensureVideoExists();
+        VideoComponent.startVideoPlayback();
 
         loaded = true;
 
         dataFolder = Paths.get(Minecraft.getMinecraft().mcDataDir.getAbsolutePath()).resolve(clientName);
-        LOGGER.info("{} {} initialized successfully.", clientName, version);
+
+        LOGGER.info("Finished loading in {} seconds.", (System.currentTimeMillis() - start) / 1000f);
+    }
+
+    private void registerEventHandlers() {
+        LOGGER.info("Registering...");
+
+        eventManager.register(new BackgroundProcess());
+        eventManager.register(new RotationUtil());
+        eventManager.register(new FallDistanceComponent());
+        eventManager.register(new BadPacketsComponent());
+        eventManager.register(new PingSpoofComponent());
+        eventManager.register(new FreeLookComponent());
+        eventManager.register(new BlinkComponent());
+        eventManager.register(new SpoofSlotComponent());
     }
 
     private void setupMainDirectory() {
@@ -117,43 +137,7 @@ public class Client {
         this.dataFolder = Paths.get(Minecraft.getMinecraft().mcDataDir.getAbsolutePath()).resolve(clientName);
     }
 
-    private void initializeManagers() {
-        eventManager = new EventManager();
-        notificationManager = new NotificationManager();
-        moduleManager = new ModuleManager();
-        widgetManager = new WidgetManager();
-        configManager = new ConfigManager();
-        commandManager = new CommandManager();
-        friendManager = new FriendManager();
-
-        VideoComponent.ensureVideoExists();
-        VideoComponent.startVideoPlayback();
-
-        neverLose = new NeverLose();
-        dropdownGUI = new DropdownGUI();
-        arcaneClickGui = new ArcaneClickGui();
-    }
-
-    private void registerEventHandlers() {
-        eventManager.register(new ScaffoldCounter());
-        eventManager.register(new RotationUtil());
-        eventManager.register(new FallDistanceComponent());
-        eventManager.register(new BadPacketsComponent());
-        eventManager.register(new PingSpoofComponent());
-        eventManager.register(new FreeLookComponent());
-        eventManager.register(new BlinkComponent());
-        eventManager.register(new SpoofSlotComponent());
-
-        LOGGER.info("Event handlers registered.");
-    }
-
-    private void initializeStartTime() {
-        startTime = (int) System.currentTimeMillis();
-        startTimeLong = System.currentTimeMillis();
-        LOGGER.info("Start time initialized: {} ms", startTime);
-    }
-
-    private void initializeViaMCP() {
+    private void initViaMCP() {
         ViaMCP.create();
         ViaMCP.INSTANCE.initAsyncSlider();
         LOGGER.info("ViaMCP initialized.");
@@ -169,37 +153,12 @@ public class Client {
         }
     }
 
-    private void setupSystemTray() {
-        if (isWindows() && SystemTray.isSupported()) {
-            try {
-                Image trayImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/minecraft/moonlight/img/logo.png")));
-                trayIcon = new TrayIcon(trayImage, clientName);
-                trayIcon.setImageAutoSize(true);
-                trayIcon.setToolTip(clientName);
-
-                SystemTray.getSystemTray().add(trayIcon);
-                trayIcon.displayMessage(clientName, "Client started successfully.", TrayIcon.MessageType.INFO);
-
-                LOGGER.info("System tray icon added.");
-            } catch (IOException | AWTException | NullPointerException e) {
-                LOGGER.error("Failed to create or add TrayIcon.", e);
-            }
-        } else {
-            LOGGER.warn("System tray not supported or not running on Windows.");
-        }
-    }
-
     private void handleFastRender() {
         if (Minecraft.getMinecraft().gameSettings.ofFastRender) {
-            notificationManager.post(NotificationType.WARNING, "Fast Rendering has been disabled", "due to compatibility issues");
+            NotificationManager.post(NotificationType.WARNING, "Fast Rendering has been disabled", "due to compatibility issues");
             Minecraft.getMinecraft().gameSettings.ofFastRender = false;
             LOGGER.info("Fast Rendering was disabled due to compatibility issues.");
         }
-    }
-
-    private boolean isWindows() {
-        String osName = System.getProperty("os.name").toLowerCase();
-        return osName.contains("windows");
     }
 
     public void onStop() {

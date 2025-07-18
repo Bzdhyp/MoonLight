@@ -45,7 +45,7 @@ public class ColorPickerComponent extends Component {
         RoundedUtil.drawRound(getX() + 4, getY() + 10, 172, .5f, 4, lineColor2);
 
         Fonts.interSemiBold.get(17).drawString(setting.getName(), getX() + 6, getY() + 20, textRGB);
-        RenderUtil.drawCircle(getX() + 164, getY() + 22, 0, 360, 7, 2, true, (setting.isRainbow() ? INSTANCE.getModuleManager().getModule(Interface.class).getRainbow(0) : setting.getValue().getRGB()));
+        RenderUtil.drawCircle(getX() + 164, getY() + 22, 0, 360, 7, 2, true, (setting.isRainbow() ? ColorUtil.getRainbow(0) : setting.getValue().getRGB()));
         //picker
         if (open.getOutput() > 0) {
             float colorAlpha = 1;
@@ -62,10 +62,10 @@ public class ColorPickerComponent extends Component {
                 RenderUtil.drawRect(getX() + 78, getY() + 34 + i, 8, 1, Color.getHSBColor((float) (i / 78 * open.getOutput()), 1f, 1f).getRGB());
             }
 
-            RenderUtil.drawRect(getX() + 77, (float) (getY() + 34 + (setting.isRainbow() ? INSTANCE.getModuleManager().getModule(Interface.class).getRainbowHSB(0)[0] : setting.getHue()) * 78 * open.getOutput()),
+            RenderUtil.drawRect(getX() + 77, (float) (getY() + 34 + (setting.isRainbow() ? ColorUtil.getRainbowHSB(0)[0] : setting.getHue()) * 78 * open.getOutput()),
                     10, 1, Color.WHITE.getRGB());
             for (float i = 0; i <= 78 * open.getOutput(); i++) {
-                RenderUtil.drawRect(getX() + 65, getY() + 34 + i, 8, 1, ColorUtil.applyOpacity(new Color(setting.isRainbow() ? (INSTANCE.getModuleManager().getModule(Interface.class).getRainbow(0)) : (Color.HSBtoRGB(setting.getHue(), setting.getSaturation(), setting.getBrightness()))), setting.getAlpha() - i / 78).getRGB());
+                RenderUtil.drawRect(getX() + 65, getY() + 34 + i, 8, 1, ColorUtil.applyOpacity(new Color(setting.isRainbow() ? (ColorUtil.getRainbow(0)) : (Color.HSBtoRGB(setting.getHue(), setting.getSaturation(), setting.getBrightness()))), setting.getAlpha() - i / 78).getRGB());
             }
             RenderUtil.drawRect(getX() + 64, (float) (getY() + 34 + (1 - setting.getAlpha()) * 78 * open.getOutput()),
                     10, 1, Color.WHITE.getRGB());
@@ -86,7 +86,7 @@ public class ColorPickerComponent extends Component {
                 setting.setSaturation(MathHelper.clamp_float((mouseX - gradientX) / 80, 0, 1));
             }
 
-            Color firstColor = (setting.isRainbow() ? new Color(INSTANCE.getModuleManager().getModule(Interface.class).getRainbow(0)) : ColorUtil.applyOpacity(Color.getHSBColor(hsb[0], 1, 1), colorAlpha));
+            Color firstColor = (setting.isRainbow() ? new Color(ColorUtil.getRainbow(0)) : ColorUtil.applyOpacity(Color.getHSBColor(hsb[0], 1, 1), colorAlpha));
             RoundedUtil.drawRound(gradientX, gradientY, gradientWidth, gradientHeight, 2,
                     ColorUtil.applyOpacity(firstColor, colorAlpha));
             Color secondColor = Color.getHSBColor(hsb[0], 0, 1);

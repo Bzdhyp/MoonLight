@@ -16,6 +16,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import wtf.moonlight.Client;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.gui.font.Fonts;
+import wtf.moonlight.module.impl.display.NotificationHUD;
 import wtf.moonlight.util.misc.InstanceAccess;
 import wtf.moonlight.util.animations.advanced.Animation;
 import wtf.moonlight.util.animations.Translate;
@@ -34,7 +35,7 @@ public class Notification implements InstanceAccess {
     private final Translate translate;
 
     public Notification(NotificationType type, String title, String description) {
-        this(type, title, description, Client.INSTANCE.getNotificationManager().getToggleTime());
+        this(type, title, description, NotificationManager.toggleTime);
     }
 
     public Notification(NotificationType type, String title, String description, float time) {
@@ -49,7 +50,7 @@ public class Notification implements InstanceAccess {
     }
     
     public double getWidth(){
-        return switch (INSTANCE.getModuleManager().getModule(Interface.class).notificationMode.getValue()) {
+        return switch (INSTANCE.getModuleManager().getModule(NotificationHUD.class).notificationMode.getValue()) {
             case "Default" -> Fonts.interMedium.get(15).getStringWidth(getDescription()) + 5;
             case "Test" ->
                     Math.max(Fonts.interSemiBold.get(15).getStringWidth(getTitle()), Fonts.interSemiBold.get(15).getStringWidth(getDescription())) + 5;
@@ -72,7 +73,7 @@ public class Notification implements InstanceAccess {
     }
 
     public double getHeight(){
-        return switch (INSTANCE.getModuleManager().getModule(Interface.class).notificationMode.getValue()) {
+        return switch (INSTANCE.getModuleManager().getModule(NotificationHUD.class).notificationMode.getValue()) {
             case "Default" -> 16;
             case "Test" -> Fonts.interRegular.get(15).getHeight() * 2 + 2;
             case "Test2" -> 33;

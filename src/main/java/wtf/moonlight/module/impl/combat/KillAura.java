@@ -10,7 +10,6 @@
  */
 package wtf.moonlight.module.impl.combat;
 
-import com.cubk.EventPriority;
 import com.viaversion.viarewind.protocol.protocol1_8to1_9.Protocol1_8To1_9;
 import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.api.protocol.packet.PacketWrapper;
@@ -38,10 +37,10 @@ import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.display.Interface;
+import wtf.moonlight.module.impl.display.TargetHUD;
 import wtf.moonlight.module.impl.movement.AntiFall;
 import wtf.moonlight.module.impl.player.BedNuker;
 import wtf.moonlight.module.impl.movement.Scaffold;
-import wtf.moonlight.module.impl.player.Clutch;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.MultiBoolValue;
@@ -176,7 +175,7 @@ public class KillAura extends Module {
         prevRotation = rotation = null;
         prevVec = currentVec = targetVec = null;
         blinkTicks = 0;
-        Iterator<Map.Entry<EntityPlayer, DecelerateAnimation>> iterator = getModule(Interface.class).animationEntityPlayerMap.entrySet().iterator();
+        Iterator<Map.Entry<EntityPlayer, DecelerateAnimation>> iterator = TargetHUD.animationEntityPlayerMap.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<EntityPlayer, DecelerateAnimation> entry = iterator.next();
             DecelerateAnimation animation = entry.getValue();

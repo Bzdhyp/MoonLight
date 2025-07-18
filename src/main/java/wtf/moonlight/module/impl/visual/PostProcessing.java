@@ -11,7 +11,7 @@ import wtf.moonlight.util.render.RenderUtil;
 import wtf.moonlight.util.render.shader.KawaseBloom;
 import wtf.moonlight.util.render.shader.KawaseBlur;
 
-@ModuleInfo(name = "PostProcessing", category = Categor.Visual)
+@ModuleInfo(name = "PostProcessing", category = Categor.Display)
 public class PostProcessing extends Module {
     public final BoolValue blur = new BoolValue("Blur", true, this);
     private final SliderValue blurRadius = new SliderValue("Blur Radius", 8, 1, 50, 1, this, this.blur::get);

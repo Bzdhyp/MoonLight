@@ -176,8 +176,16 @@ public class InvManager extends Module {
                 }
 
                 if (item instanceof ItemBlock) {
-                    if (block == -1) block = i;
-                    else if (stack.stackSize > mc.thePlayer.inventory.getStackInSlot(block).stackSize) block = i;
+                    keepSlots.add(i);
+
+                    if (block == -1) {
+                        block = i;
+                    } else {
+                        ItemStack currentBlock = mc.thePlayer.inventory.getStackInSlot(block);
+                        if (stack.stackSize > currentBlock.stackSize) {
+                            block = i;
+                        }
+                    }
                     continue;
                 }
 

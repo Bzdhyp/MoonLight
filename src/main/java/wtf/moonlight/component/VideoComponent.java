@@ -4,7 +4,7 @@ import lombok.SneakyThrows;
 import net.minecraft.client.Minecraft;
 import org.apache.commons.io.IOUtils;
 import wtf.moonlight.Client;
-import wtf.moonlight.gui.video.VideoPlayer;
+import wtf.moonlight.gui.main.video.VideoPlayer;
 
 import java.io.File;
 import java.io.FileOutputStream;

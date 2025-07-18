@@ -129,9 +129,7 @@ public class GuiNewChat extends Gui
         this.sentMessages.clear();
     }
 
-    public void printChatMessage(IChatComponent chatComponent)
-    {
-
+    public void printChatMessage(IChatComponent chatComponent) {
         if(Client.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Interface.class).chatCombine.get()) {
 
             String text = fixString(chatComponent.getFormattedText());

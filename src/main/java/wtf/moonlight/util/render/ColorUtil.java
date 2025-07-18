@@ -12,44 +12,47 @@ package wtf.moonlight.util.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
+import wtf.moonlight.Client;
+import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.util.MathUtil;
 
 import java.awt.*;
 
 public class ColorUtil {
-
     public static int applyOpacity(int color, float opacity) {
         Color old = new Color(color);
         return applyOpacity(old, opacity).getRGB();
-    }
-    public static Color applyOpacity3(int color, float opacity) {
-        Color old = new Color(color);
-        return applyOpacity(old, opacity);
     }
 
     public static Color applyOpacity(final Color color, float opacity) {
         opacity = Math.min(1.0f, Math.max(0.0f, opacity));
         return new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) (color.getAlpha() * opacity));
     }
-    public static Color interpolateColorsBackAndForth(int speed, int index, Color start, Color end, boolean trueColor) {
-        int angle = (int) (((System.currentTimeMillis()) / speed + index) % 360);
-        angle = (angle >= 180 ? 360 - angle : angle) * 2;
-        return trueColor ? ColorUtil.interpolateColorHue(start, end, angle / 360f) : ColorUtil.interpolateColorC(start, end, angle / 360f);
-    }
 
-    public static Color interpolateColorHue(Color color1, Color color2, float amount) {
-        amount = Math.min(1, Math.max(0, amount));
-
-        float[] color1HSB = Color.RGBtoHSB(color1.getRed(), color1.getGreen(), color1.getBlue(), null);
-        float[] color2HSB = Color.RGBtoHSB(color2.getRed(), color2.getGreen(), color2.getBlue(), null);
-
-        Color resultColor = Color.getHSBColor(MathUtil.interpolateFloat(color1HSB[0], color2HSB[0], amount),
-                MathUtil.interpolateFloat(color1HSB[1], color2HSB[1], amount), MathUtil.interpolateFloat(color1HSB[2], color2HSB[2], amount));
-
-        return ColorUtil.applyOpacity(resultColor, interpolateInt(color1.getAlpha(), color2.getAlpha(), amount) / 255f);
-    }
     public static Color reAlpha(Color color, int alpha) {
         return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
+    }
+
+    public static int getRainbow(int counter) {
+        return Color.HSBtoRGB(getRainbowHSB(counter)[0], getRainbowHSB(counter)[1], getRainbowHSB(counter)[2]);
+    }
+
+    public static float[] getRainbowHSB(int counter) {
+        final int width = 20;
+
+        double rainbowState = Math.ceil(System.currentTimeMillis() - (long) counter * width) / 8;
+        rainbowState %= 360;
+
+        float hue = (float) (rainbowState / 360);
+        float saturation = Client.INSTANCE.getModuleManager().getModule(Interface.class).mainColor.getSaturation();
+        float brightness = Client.INSTANCE.getModuleManager().getModule(Interface.class).mainColor.getBrightness();
+
+        return new float[]{hue, saturation, brightness};
+    }
+
+    public static int astolfoRainbow(int offset, float saturation, float brightness) {
+        double currentColor = Math.ceil((double)(System.currentTimeMillis() + (long)offset * 130L)) / 6.0D;
+        return Color.getHSBColor((double)((float)((currentColor %= 360.0D) / 360.0D)) < 0.5D?-((float)(currentColor / 360.0D)):(float)(currentColor / 360.0D), saturation, brightness).getRGB();
     }
 
     public static int reAlpha(int color, float alpha) {
@@ -58,6 +61,29 @@ public class ColorUtil {
         float g = ((float) 1 / 255) * c.getGreen();
         float b = ((float) 1 / 255) * c.getBlue();
         return new Color(r, g, b, alpha).getRGB();
+    }
+
+    public static int fade(int startColor, int endColor, float progress) {
+        if (progress > 1.0f) {
+            progress = 1.0f - progress % 1.0f;
+        }
+        return fadeTo(startColor, endColor, progress);
+    }
+
+    public static int fadeBetween(int startColor, int endColor, float progress) {
+        if (progress > 1.0f) {
+            progress = 1.0f - progress % 1.0f;
+        }
+        return fadeTo(startColor, endColor, progress);
+    }
+
+    public static int fadeTo(int startColor, int endColor, float progress) {
+        float invert = 1.0f - progress;
+        int r = (int)((float)(startColor >> 16 & 0xFF) * invert + (float)(endColor >> 16 & 0xFF) * progress);
+        int g = (int)((float)(startColor >> 8 & 0xFF) * invert + (float)(endColor >> 8 & 0xFF) * progress);
+        int b = (int)((float)(startColor & 0xFF) * invert + (float)(endColor & 0xFF) * progress);
+        int a = (int)((float)(startColor >> 24 & 0xFF) * invert + (float)(endColor >> 24 & 0xFF) * progress);
+        return (a & 0xFF) << 24 | (r & 0xFF) << 16 | (g & 0xFF) << 8 | b & 0xFF;
     }
 
     public static Color getRainbow() {
@@ -105,28 +131,6 @@ public class ColorUtil {
 
     public static int getColorFromPercentage(float percentage) {
         return Color.HSBtoRGB(Math.min(1.0F, Math.max(0.0F, percentage)) / 3, 0.9F, 0.9F);
-    }
-
-    public static Color colorSwitch(Color firstColor, Color secondColor, float time, int index, long timePerIndex, double speed) {
-        return colorSwitch(firstColor, secondColor, time, index, timePerIndex, speed, 255.0D);
-    }
-
-    public static Color colorSwitch(Color firstColor, Color secondColor, float time, int index, long timePerIndex, double speed, double alpha) {
-        long now = (long) (speed * (double) System.currentTimeMillis() + (double) ((long) index * timePerIndex));
-        float redDiff = (float) (firstColor.getRed() - secondColor.getRed()) / time;
-        float greenDiff = (float) (firstColor.getGreen() - secondColor.getGreen()) / time;
-        float blueDiff = (float) (firstColor.getBlue() - secondColor.getBlue()) / time;
-        int red = Math.round((float) secondColor.getRed() + redDiff * (float) (now % (long) time));
-        int green = Math.round((float) secondColor.getGreen() + greenDiff * (float) (now % (long) time));
-        int blue = Math.round((float) secondColor.getBlue() + blueDiff * (float) (now % (long) time));
-        float redInverseDiff = (float) (secondColor.getRed() - firstColor.getRed()) / time;
-        float greenInverseDiff = (float) (secondColor.getGreen() - firstColor.getGreen()) / time;
-        float blueInverseDiff = (float) (secondColor.getBlue() - firstColor.getBlue()) / time;
-        int inverseRed = Math.round((float) firstColor.getRed() + redInverseDiff * (float) (now % (long) time));
-        int inverseGreen = Math.round((float) firstColor.getGreen() + greenInverseDiff * (float) (now % (long) time));
-        int inverseBlue = Math.round((float) firstColor.getBlue() + blueInverseDiff * (float) (now % (long) time));
-
-        return now % ((long) time * 2L) < (long) time ? (new Color(inverseRed, inverseGreen, inverseBlue, (int) alpha)) : (new Color(red, green, blue, (int) alpha));
     }
 
     public static int darker(int color) {
@@ -190,7 +194,7 @@ public class ColorUtil {
         color |= alpha << 24;
         color |= red << 16;
         color |= green << 8;
-        return color |= blue;
+        return color | blue;
     }
 
     public static int swapAlpha(int color, float alpha) {
@@ -198,22 +202,6 @@ public class ColorUtil {
         int f1 = color >> 8 & 0xFF;
         int f2 = color & 0xFF;
         return ColorUtil.getColor(f, f1, f2, (int) alpha);
-    }
-
-    public static int fadeTo(int startColour, int endColour, double progress) {
-        double invert = 1.0 - progress;
-        int r = (int) ((startColour >> 16 & 0xFF) * invert +
-                (endColour >> 16 & 0xFF) * progress);
-        int g = (int) ((startColour >> 8 & 0xFF) * invert +
-                (endColour >> 8 & 0xFF) * progress);
-        int b = (int) ((startColour & 0xFF) * invert +
-                (endColour & 0xFF) * progress);
-        int a = (int) ((startColour >> 24 & 0xFF) * invert +
-                (endColour >> 24 & 0xFF) * progress);
-        return ((a & 0xFF) << 24) |
-                ((r & 0xFF) << 16) |
-                ((g & 0xFF) << 8) |
-                (b & 0xFF);
     }
 
     public static int getHealthColor(EntityLivingBase player) {

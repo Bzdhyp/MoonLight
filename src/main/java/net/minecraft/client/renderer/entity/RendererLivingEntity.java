@@ -368,7 +368,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 GlStateManager.enableCull();
                 OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0f, 240.0f);
 
-                long ms = hud.fadeSpeed.getValue().longValue() * 15L;
+                long ms = hud.speedValue.getValue().longValue() * 15L;
                 RenderUtil.glColor(chams.getRainbow().get() ? ColorUtil.getRainbow(925, (int)(System.currentTimeMillis() / ms)) : chams.getInvisibleColorValue().get().getRGB());
                 this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);
 

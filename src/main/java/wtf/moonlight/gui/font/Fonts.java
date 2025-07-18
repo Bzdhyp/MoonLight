@@ -32,13 +32,11 @@ public enum Fonts {
     session("others/session"),
     session2("others/session2"),
     neverlose("others/nlicon"),
-    icon("others/icon"),
     sfui("others/sfui"),
     Bold("bold"),
     Icon("icon"),
-    Regular("regular"),
-    Light("light"),
     esp("esp"),
+    wqy("wqy"),
     Semibold("semibold");
 
     private final String file;

@@ -16,6 +16,7 @@ import wtf.moonlight.events.player.*;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
+import wtf.moonlight.module.impl.movement.LongJump;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.util.player.MovementUtil;
@@ -96,6 +97,8 @@ public class Velocity extends Module {
     public void onUpdate(UpdateEvent event) {
         setTag(mode.getValue());
 
+        if (getModule(LongJump.class).isEnabled()) return;
+
         if (mode.is("Skip Tick")) {
             if (skipTickCounter > 0) {
                 skipTickCounter--;
@@ -141,6 +144,8 @@ public class Velocity extends Module {
     @EventTarget
     public void onPacket(PacketEvent event) {
         Packet<?> packet = event.getPacket();
+
+        if (getModule(LongJump.class).isEnabled()) return;
 
         if (packet instanceof S12PacketEntityVelocity velocity && velocity.getEntityID() == mc.thePlayer.getEntityId()) {
             switch (mode.getValue()) {
@@ -235,6 +240,9 @@ public class Velocity extends Module {
     @EventTarget
     public void onMotion(MotionEvent event) {
         setTag(mode.getValue());
+
+        if (getModule(LongJump.class).isEnabled()) return;
+
         if (mode.is("Boost")) {
             if (veloPacket) {
                 idk++;
@@ -249,6 +257,8 @@ public class Velocity extends Module {
 
     @EventTarget
     public void onStrafe(StrafeEvent event) {
+        if (getModule(LongJump.class).isEnabled()) return;
+
         if (mode.is("Jump Reset")) {
             boolean shouldJump = false;
 
@@ -277,6 +287,8 @@ public class Velocity extends Module {
 
     @EventTarget
     public void onMoveInput(MoveInputEvent event) {
+        if (getModule(LongJump.class).isEnabled()) return;
+
         if (mode.is("Legit") && getModule(KillAura.class).target != null && mc.thePlayer.hurtTime > 0) {
             ArrayList<Vec3> vec3s = new ArrayList<>();
             HashMap<Vec3, Integer> map = new HashMap<>();

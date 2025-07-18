@@ -29,6 +29,10 @@ public class Sprint extends Module {
     private final BoolValue rotate = new BoolValue("Rotate", false, this);
     private final BoolValue onlyOnGround = new BoolValue("Only On Ground", true, this, rotate::get);
 
+    public Sprint() {
+        this.setEnabled(true);
+    }
+
     @EventTarget
     public void onUpdate(UpdateEvent event) {
         if (!isEnabled(Scaffold.class))

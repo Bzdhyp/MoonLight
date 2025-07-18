@@ -51,12 +51,12 @@ public class TargetHUDWidget extends Widget {
     public void render() {
         int count = 0;
         float lastTargetWidth = 0;
-        for (EntityPlayer target : setting.animationEntityPlayerMap.keySet()) {
+        for (EntityPlayer target : TargetHUD.animationEntityPlayerMap.keySet()) {
             this.height = getTHUDHeight();
             float currentTargetWidth = getTHUDWidth(target);
             this.width = currentTargetWidth;
             if (count > 9) continue;
-            TargetDisplay targetHUD = new TargetDisplay((float) (renderX + ((count % 3) * (lastTargetWidth + 4)) * setting.animationEntityPlayerMap.get(target).getOutput()), (float) (this.renderY + ((count / 3) * (this.height + 4)) * setting.animationEntityPlayerMap.get(target).getOutput()), target, setting.animationEntityPlayerMap.get(target), false, Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudMode);
+            TargetDisplay targetHUD = new TargetDisplay((float) (renderX + ((count % 3) * (lastTargetWidth + 4)) * TargetHUD.animationEntityPlayerMap.get(target).getOutput()), (float) (this.renderY + ((count / 3) * (this.height + 4)) * TargetHUD.animationEntityPlayerMap.get(target).getOutput()), target, TargetHUD.animationEntityPlayerMap.get(target), false, Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudMode);
             targetHUD.render();
             lastTargetWidth = currentTargetWidth;
             count++;
@@ -67,12 +67,12 @@ public class TargetHUDWidget extends Widget {
     public void onShader(Shader2DEvent event) {
         int count = 0;
         float lastTargetWidth = 0;
-        for (EntityPlayer target : setting.animationEntityPlayerMap.keySet()) {
+        for (EntityPlayer target : TargetHUD.animationEntityPlayerMap.keySet()) {
             this.height = getTHUDHeight();
             float currentTargetWidth = getTHUDWidth(target);
             this.width = currentTargetWidth;
             if (count > 9) continue;
-            TargetDisplay targetHUD = new TargetDisplay((float) (renderX + ((count % 3) * (lastTargetWidth + 4)) * setting.animationEntityPlayerMap.get(target).getOutput()), (float) (this.renderY + ((count / 3) * (this.height + 4)) * setting.animationEntityPlayerMap.get(target).getOutput()), target, setting.animationEntityPlayerMap.get(target), true, Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudMode);
+            TargetDisplay targetHUD = new TargetDisplay((float) (renderX + ((count % 3) * (lastTargetWidth + 4)) * TargetHUD.animationEntityPlayerMap.get(target).getOutput()), (float) (this.renderY + ((count / 3) * (this.height + 4)) * TargetHUD.animationEntityPlayerMap.get(target).getOutput()), target, TargetHUD.animationEntityPlayerMap.get(target), true, Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudMode);
             targetHUD.render();
             lastTargetWidth = currentTargetWidth;
             count++;

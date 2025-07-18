@@ -17,6 +17,7 @@ import net.arikia.dev.drpc.DiscordRichPresence;
 import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.GuiSelectWorld;
+import wtf.moonlight.component.BackgroundProcess;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.util.misc.InstanceAccess;
@@ -54,8 +55,8 @@ public class DiscordInfo implements InstanceAccess {
         DiscordRPC.discordInitialize("1266031153572479107", handlers, true);
         Workers.IO.execute(() -> {
             while (running) {
-                int killed = INSTANCE.getModuleManager().getModule(Interface.class).killed;
-                int win = INSTANCE.getModuleManager().getModule(Interface.class).won;
+                int killed = BackgroundProcess.killed;
+                int win = BackgroundProcess.won;
                 if (mc.thePlayer != null) {
                     if (mc.isSingleplayer()) {
                         update("Ig: " + detectUsername(), "is in SinglePlayer", true);

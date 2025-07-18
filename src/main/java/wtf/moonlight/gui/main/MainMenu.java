@@ -6,7 +6,7 @@ import wtf.moonlight.Client;
 import wtf.moonlight.gui.font.FontRenderer;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.main.alt.GuiAccountManager;
-import wtf.moonlight.gui.video.VideoPlayer;
+import wtf.moonlight.gui.main.video.VideoPlayer;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.util.animations.advanced.Animation;
 import wtf.moonlight.util.animations.advanced.Direction;

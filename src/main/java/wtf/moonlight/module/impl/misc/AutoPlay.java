@@ -7,6 +7,7 @@ import net.minecraft.network.play.server.S07PacketRespawn;
 import net.minecraft.util.StringUtils;
 import wtf.moonlight.Client;
 import wtf.moonlight.events.packet.PacketEvent;
+import wtf.moonlight.gui.notification.NotificationManager;
 import wtf.moonlight.gui.notification.NotificationType;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
@@ -79,7 +80,7 @@ public class AutoPlay extends Module {
                         msg = true;
                     }
                     if (msg) {
-                        Client.INSTANCE.getNotificationManager().post(NotificationType.INFO, "Respawn Detected!", "Disabled movement modules/aura.", 3.5f);
+                        NotificationManager.post(NotificationType.INFO, "Respawn Detected!", "Disabled movement modules/aura.", 3.5f);
                     }
                     this.respawnTimer.reset();
                 }
@@ -90,7 +91,7 @@ public class AutoPlay extends Module {
     private void sendToGame(String mode) {
         float delay = autoPlayDelay.getValue();
         String delayText = delay > 0 ? String.format("in %.1f s", delay) : "immediately";
-        Client.INSTANCE.getNotificationManager().post(NotificationType.OKAY,"Playing Again!", "Playing again " + delayText + ".", delay);
+        NotificationManager.post(NotificationType.OKAY,"Playing Again!", "Playing again " + delayText + ".", delay);
         Multithreading.schedule(() -> DebugUtil.send(mode), (long) delay, TimeUnit.SECONDS);
     }
 }

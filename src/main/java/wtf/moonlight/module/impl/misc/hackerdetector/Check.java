@@ -13,6 +13,7 @@ package wtf.moonlight.module.impl.misc.hackerdetector;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import wtf.moonlight.events.packet.PacketEvent;
+import wtf.moonlight.gui.notification.NotificationManager;
 import wtf.moonlight.module.impl.misc.HackerDetector;
 import wtf.moonlight.gui.notification.NotificationType;
 import wtf.moonlight.util.misc.InstanceAccess;
@@ -36,7 +37,7 @@ public abstract class Check implements InstanceAccess {
     public void flag(EntityPlayer player, String verbose) {
         if (flagTimer.hasTimeElapsed(time * 1000L)) {
             DebugUtil.sendMessage(player.getName() + EnumChatFormatting.WHITE + " detected for " + EnumChatFormatting.GRAY + getName() + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.WHITE + verbose);
-            INSTANCE.getNotificationManager().post(NotificationType.WARNING, player.getName() + EnumChatFormatting.WHITE + " detected for " + EnumChatFormatting.GRAY + getName() + EnumChatFormatting.WHITE, verbose, 2);
+            NotificationManager.post(NotificationType.WARNING, player.getName() + EnumChatFormatting.WHITE + " detected for " + EnumChatFormatting.GRAY + getName() + EnumChatFormatting.WHITE, verbose, 2);
             INSTANCE.getModuleManager().getModule(HackerDetector.class).mark(player);
             flagTimer.reset();
         }

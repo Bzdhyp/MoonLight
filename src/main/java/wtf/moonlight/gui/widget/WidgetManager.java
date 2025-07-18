@@ -27,18 +27,16 @@ public class WidgetManager implements InstanceAccess {
 
     public WidgetManager() {
         INSTANCE.getEventManager().register(this);
+
+        register(new KeyBindWidget());
         register(new TargetHUDWidget());
         register(new PotionHUDWidget());
-        register(new KeyBindWidget());
-        register(new ArrayListGui());
-        register(new ModuleListWidget());
     }
 
-    public boolean loaded;
 
     @EventTarget
     public void onRender2D(Render2DEvent event) {
-        if(Display.isVisible()) {
+        if (Display.isVisible()) {
             for (Widget widget : widgetList) {
                 if (widget.shouldRender()) {
                     widget.updatePos();

@@ -18,7 +18,6 @@ import com.cubk.EventTarget;
 import wtf.moonlight.events.misc.KeyPressEvent;
 import wtf.moonlight.module.impl.combat.*;
 import wtf.moonlight.module.impl.display.*;
-import wtf.moonlight.module.impl.display.ArrayList;
 import wtf.moonlight.module.impl.misc.Timer;
 import wtf.moonlight.module.impl.misc.*;
 import wtf.moonlight.module.impl.movement.*;
@@ -131,7 +130,6 @@ public final class ModuleManager {
                 JumpCircles.class,
                 LineGlyphs.class,
                 SilentView.class,
-                PostProcessing.class,
                 Trajectories.class,
                 TargetESP.class,
                 Breadcrumbs.class,
@@ -142,13 +140,14 @@ public final class ModuleManager {
 
                 // display
                 Interface.class,
-                Island.class,
-                ArrayList.class,
                 TargetHUD.class,
                 KeyBindHUD.class,
                 Watermark.class,
-                Settings.class,
-                PotionHUD.class
+                PotionHUD.class,
+                IslandHUD.class,
+                PostProcessing.class,
+                NotificationHUD.class,
+                ScoreboardMod.class
         );
 
         // Register the ModuleManager to listen for events

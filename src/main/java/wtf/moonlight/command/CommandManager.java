@@ -25,7 +25,7 @@ public final class CommandManager {
     public List<Command> cmd = new ArrayList<>();
 
     public CommandManager() {
-        addCommands(new HelpCommand(), new ToggleCommand(), new BindCommand(), new HideCommand(), new FriendCommand(), new ConfigCommand(),new OnlineConfigCommand());
+        addCommands(new HelpCommand(), new ToggleCommand(), new BindCommand(), new HideCommand(), new FriendCommand(), new ConfigCommand());
 
         Client.INSTANCE.getModuleManager().getModules().forEach(module -> {
             if(!module.getValues().isEmpty())

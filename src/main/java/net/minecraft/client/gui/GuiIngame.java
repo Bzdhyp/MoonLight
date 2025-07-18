@@ -35,6 +35,7 @@ import net.optifine.CustomColors;
 import wtf.moonlight.Client;
 import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.module.impl.display.Interface;
+import wtf.moonlight.module.impl.display.ScoreboardMod;
 import wtf.moonlight.module.impl.visual.PostProcessing;
 import wtf.moonlight.component.SpoofSlotComponent;
 import wtf.moonlight.util.render.RoundedUtil;
@@ -43,6 +44,8 @@ import java.awt.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GuiIngame extends Gui
 {
@@ -268,7 +271,7 @@ public class GuiIngame extends Gui
 
         ScoreObjective scoreobjective1 = scoreobjective != null ? scoreobjective : scoreboard.getObjectiveInDisplaySlot(1);
 
-        if (scoreobjective1 != null) {
+        if (scoreobjective1 != null && Client.INSTANCE.getModuleManager().getModule(ScoreboardMod.class).isEnabled()) {
             this.renderScoreboard(scoreobjective1, scaledresolution);
         }
 
@@ -479,41 +482,39 @@ public class GuiIngame extends Gui
         }
     }
 
+    public int scoreBoardHeight = 0;
+    private final Pattern LINK_PATTERN = Pattern.compile("(http(s)?://.)?(www\\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\\.[A-z]{2,6}\\b([-a-zA-Z0-9@:%_+.~#?&/=]*)");
+
     private void renderScoreboard(ScoreObjective objective, ScaledResolution scaledRes) {
-
-        if (Client.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Interface.class).customScoreboard.get()) {
-            Client.INSTANCE.getModuleManager().getModule(Interface.class).drawScoreboard(scaledRes,objective,objective.getScoreboard(),objective.getScoreboard().getSortedScores(objective));
-            return;
-        }
-
-        if (Client.INSTANCE.getModuleManager().getModule(Interface.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Interface.class).hideScoreboard.get())
-            return;
-
         Scoreboard scoreboard = objective.getScoreboard();
-        Collection<Score> collection = scoreboard.getSortedScores(objective);
-        List<Score> list = Lists.newArrayList(Iterables.filter(collection, p_apply_1_ -> p_apply_1_.getPlayerName() != null && !p_apply_1_.getPlayerName().startsWith("#")));
+        Collection<Score> scores = scoreboard.getSortedScores(objective);
+        List<Score> list = Lists.newArrayList(Iterables.filter(scores, p_apply_1_ -> p_apply_1_.getPlayerName() != null && !p_apply_1_.getPlayerName().startsWith("#")));
 
         if (list.size() > 15) {
-            collection = Lists.newArrayList(Iterables.skip(list, collection.size() - 15));
+            scores = Lists.newArrayList(Iterables.skip(list, scores.size() - 15));
         } else {
-            collection = list;
+            scores = list;
         }
 
         int i = this.getFontRenderer().getStringWidth(objective.getDisplayName());
 
-        for (Score score : collection) {
+        for (Score score : scores) {
             ScorePlayerTeam scoreplayerteam = scoreboard.getPlayersTeam(score.getPlayerName());
             String s = ScorePlayerTeam.formatPlayerName(scoreplayerteam, score.getPlayerName()) + ": " + EnumChatFormatting.RED + score.getScorePoints();
             i = Math.max(i, this.getFontRenderer().getStringWidth(s));
         }
 
-        int i1 = collection.size() * this.getFontRenderer().FONT_HEIGHT;
+        int i1 = scores.size() * this.getFontRenderer().FONT_HEIGHT;
         int j1 = scaledRes.getScaledHeight() / 2 + i1 / 3;
         int k1 = 3;
         int l1 = scaledRes.getScaledWidth() - i - k1;
         int j = 0;
 
-        for (Score score1 : collection) {
+        if (Client.INSTANCE.getModuleManager().getModule(ScoreboardMod.class).fixHeight.get()) {
+            j1 = Math.max(j1, scoreBoardHeight + i1 + this.getFontRenderer().FONT_HEIGHT + 17);
+        }
+
+        for (Score score1 : scores) {
             ++j;
 
             ScorePlayerTeam scoreplayerteam1 = scoreboard.getPlayersTeam(score1.getPlayerName());
@@ -522,16 +523,27 @@ public class GuiIngame extends Gui
             int k = j1 - j * this.getFontRenderer().FONT_HEIGHT;
 
             int l = scaledRes.getScaledWidth() - k1 + 2;
-            drawRect(l1 - 2, k, l, k + this.getFontRenderer().FONT_HEIGHT, 1342177280);
 
-            this.getFontRenderer().drawString(s1, l1, k, 553648127, true);
+            if(!Client.INSTANCE.getModuleManager().getModule(ScoreboardMod.class).hideBackground.get())
+                drawRect(l1 - 2, k, l, k + this.getFontRenderer().FONT_HEIGHT, 1342177280);
 
-            this.getFontRenderer().drawString(s2, l - this.getFontRenderer().getStringWidth(s2), k, 553648127);
+            final Matcher linkMatcher = LINK_PATTERN.matcher(s1);
+            if(linkMatcher.find()) {
+                s1 = Client.INSTANCE.getClientName() + "V2@github";
+                this.getFontRenderer().drawGradientWithShadow(s1, l1, k, (index) -> new Color(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(index)));
+            } else {
+                this.getFontRenderer().drawString(s1, l1, k, 553648127, true);
+            }
 
-            if (j == collection.size()) {
+            if(!(Client.INSTANCE.getModuleManager().getModule(ScoreboardMod.class).hideScoreRed.get()))
+                this.getFontRenderer().drawString(s2, l - this.getFontRenderer().getStringWidth(s2), k, 553648127);
+
+            if (j == scores.size()) {
                 String s3 = objective.getDisplayName();
-                drawRect(l1 - 2, k - this.getFontRenderer().FONT_HEIGHT - 1, l, k - 1, 1610612736);
-                drawRect(l1 - 2, k - 1, l, k, 1342177280);
+                if(!Client.INSTANCE.getModuleManager().getModule(ScoreboardMod.class).hideBackground.get()) {
+                    drawRect(l1 - 2, k - this.getFontRenderer().FONT_HEIGHT - 1, l, k - 1, 1610612736);
+                    drawRect(l1 - 2, k - 1, l, k, 1342177280);
+                }
                 this.getFontRenderer().drawString(s3, l1 + i / 2 - this.getFontRenderer().getStringWidth(s3) / 2, k - this.getFontRenderer().FONT_HEIGHT, 553648127);
             }
         }

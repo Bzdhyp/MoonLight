@@ -35,7 +35,6 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import wtf.moonlight.Client;
 import wtf.moonlight.events.packet.PacketEvent;
-import wtf.moonlight.module.impl.combat.Velocity;
 import wtf.moonlight.module.impl.misc.Disabler;
 
 import javax.crypto.SecretKey;
@@ -139,17 +138,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
         PacketEvent event = new PacketEvent(packetIn, this.packetListener, this.direction, PacketEvent.State.OUTGOING);
         if (direction == CLIENTBOUND) Client.INSTANCE.getEventManager().call(event);
 
-        if ((packetIn instanceof C03PacketPlayer.C04PacketPlayerPosition || packetIn instanceof C03PacketPlayer.C05PacketPlayerLook || packetIn instanceof C03PacketPlayer.C06PacketPlayerPosLook) && Minecraft.getMinecraft().theWorld != null && Minecraft.getMinecraft().thePlayer != null) {
-            final C03PacketPlayer c03PacketPlayer = (C03PacketPlayer) packetIn;
-            Minecraft.getMinecraft().thePlayer.rotIncrement = 3;
-            if (!(packetIn instanceof C03PacketPlayer.C05PacketPlayerLook)) {
-                Minecraft.getMinecraft().thePlayer.setLastServerPosition(Minecraft.getMinecraft().thePlayer.getSeverPosition());
-                Minecraft.getMinecraft().thePlayer.setSeverPosition(new Vec3(c03PacketPlayer.getPositionX(), c03PacketPlayer.getPositionY(), c03PacketPlayer.getPositionZ()));
-            }
-        }
-
-        if(event.isCancelled())
-            return;
+        if(event.isCancelled()) return;
 
         if (this.isChannelOpen()) {
             this.flushOutboundQueue();

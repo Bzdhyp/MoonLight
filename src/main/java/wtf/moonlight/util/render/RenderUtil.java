@@ -1183,24 +1183,6 @@ public class RenderUtil implements InstanceAccess {
         return COLOR_PATTERN.matcher(input).replaceAll("");
     }
 
-    public static String sessionTime() {
-        int elapsedTime = ((int)System.currentTimeMillis() - INSTANCE.getStartTime()) / 1000;
-        String days = elapsedTime > 86400 ? elapsedTime / 86400 + "d " : "";
-        elapsedTime = !days.isEmpty() ? elapsedTime % 86400 : elapsedTime;
-        String hours = elapsedTime > 3600 ? elapsedTime / 3600 + "h " : "";
-        elapsedTime = !hours.isEmpty() ? elapsedTime % 3600 : elapsedTime;
-        String minutes = elapsedTime > 60 ? elapsedTime / 60 + "m " : "";
-        elapsedTime = !minutes.isEmpty() ? elapsedTime % 60 : elapsedTime;
-        String seconds = elapsedTime > 0 ? elapsedTime + "s" : "";
-        return days + hours + minutes + seconds;
-    }
-
-    public static String sessionTime2() {
-        int elapsedTime = ((int)System.currentTimeMillis() - INSTANCE.getStartTime()) / 1000;
-        String minutes = elapsedTime > 60 ? elapsedTime / 60 + " minutes " : "";
-        return minutes;
-    }
-
     public static void drawExhiRect(float x, float y, float x2, float y2, float alpha) {
         x2 = x + x2;
         y2 = y + y2;

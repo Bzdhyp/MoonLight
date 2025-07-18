@@ -10,14 +10,13 @@
  */
 package wtf.moonlight.gui.notification;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.gui.font.Fonts;
+import wtf.moonlight.module.impl.display.NotificationHUD;
 import wtf.moonlight.util.misc.InstanceAccess;
 import wtf.moonlight.util.animations.advanced.Animation;
 import wtf.moonlight.util.animations.advanced.Direction;
@@ -30,41 +29,40 @@ import java.awt.*;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-@Getter
 public class NotificationManager implements InstanceAccess {
-    private final Deque<Notification> notifications = new ConcurrentLinkedDeque<>();
+    public static final Deque<Notification> notifications = new ConcurrentLinkedDeque<>();
 
-    @Setter
-    private float toggleTime = 2;
+    public static float toggleTime = 2;
 
-    public void post(NotificationType type, String title, String description) {
+    public static void post(NotificationType type, String title, String description) {
         post(new Notification(type, title, description));
     }
 
-    public void post(NotificationType type, String title, String description, float time) {
+    public static void post(NotificationType type, String title, String description, float time) {
         post(new Notification(type, title, description, time));
     }
-    public void post(NotificationType type, String title) {
+
+    public static void post(NotificationType type, String title) {
         post(new Notification(type, title, title));
     }
 
-    private void post(Notification notification) {
-        if (INSTANCE.getModuleManager().getModule(Interface.class).elements.isEnabled("Notification") || INSTANCE.getModuleManager().getModule(Interface.class).elements.isEnabled("Island")) {
+    private static void post(Notification notification) {
+        if (INSTANCE.getModuleManager().getModule(NotificationHUD.class).isEnabled()) {
             notifications.add(notification);
         }
     }
 
-    public void publish(ScaledResolution sr,boolean shader) {
+    public static void publish(ScaledResolution sr, boolean shader) {
         float yOffset = 0;
-        for (Notification notification : getNotifications()) {
+        for (Notification notification : notifications) {
             float width = (float) notification.getWidth();
             float height = (float) notification.getHeight();
 
             Animation animation = notification.getAnimation();
             animation.setDirection(notification.getTimerUtil().hasTimeElapsed((long) notification.getTime()) ? Direction.BACKWARDS : Direction.FORWARDS);
 
-            if (!INSTANCE.getModuleManager().getModule(Interface.class).notificationMode.is("Exhi") && notification.getAnimation().finished(Direction.BACKWARDS)) {
-                getNotifications().remove(notification);
+            if (!INSTANCE.getModuleManager().getModule(NotificationHUD.class).notificationMode.is("Exhi") && notification.getAnimation().finished(Direction.BACKWARDS)) {
+                notifications.remove(notification);
             }
 
             if (!animation.finished(Direction.BACKWARDS)) {
@@ -72,7 +70,7 @@ public class NotificationManager implements InstanceAccess {
                 float y = 0;
                 float yVal;
                 float actualOffset = 0;
-                switch (INSTANCE.getModuleManager().getModule(Interface.class).notificationMode.getValue()) {
+                switch (INSTANCE.getModuleManager().getModule(NotificationHUD.class).notificationMode.getValue()) {
                     case "Augustus": {
                         animation.setDuration(500);
                         actualOffset = 10;
@@ -112,18 +110,48 @@ public class NotificationManager implements InstanceAccess {
                     case "Default":
                         actualOffset = 3;
 
-                        x = (sr.getScaledWidth() - ((sr.getScaledWidth() / 2f + width / 2f)));
+                        float bgWidth = Math.max(width, Fonts.interMedium.get(15).getStringWidth(notification.getDescription()) + 30);
+                        float iconAreaWidth = 15;
+
+                        x = (sr.getScaledWidth() - bgWidth) / 2f;
                         y = sr.getScaledHeight() / 2f - height / 2f + 55 + yOffset;
 
                         yVal = (y + height) - height;
-                        if (!shader) {
-                            RoundedUtil.drawRound(x, yVal, width + 2, height, 4, ColorUtil.applyOpacity(new Color(INSTANCE.getModuleManager().getModule(Interface.class).bgColor(), true), (float) notification.getAnimation().getOutput()));
 
-                            Fonts.interMedium.get(15).drawCenteredStringNoFormat(notification.getDescription(), x + width / 2f,
-                                    yVal + Fonts.interMedium.get(15).getMiddleOfBox(height) + 2, ColorUtil.applyOpacity(-1, (float) notification.getAnimation().getOutput()));
+                        if (!shader) {
+                            RoundedUtil.drawRound(x, yVal, bgWidth, height, 4,
+                                    ColorUtil.applyOpacity(new Color(INSTANCE.getModuleManager().getModule(Interface.class).bgColor(), true),
+                                            (float) Math.max(.1, notification.getAnimation().getOutput())));
+
+                            float lineX = x + iconAreaWidth;
+                            RenderUtil.drawRect(lineX, yVal, 1, height,
+                                    ColorUtil.applyOpacity(new Color(100, 100, 100, 150),
+                                            (float) Math.max(.1, notification.getAnimation().getOutput())));
+
+                            float iconX = x + (iconAreaWidth - 8) / 2f;
+                            float iconY = yVal + (height - 2) / 2f;
+
+                            if (notification.getNotificationType() == NotificationType.INFO) {
+                                Fonts.noti.get(20).drawStringNoFormat("B", iconX + 1, iconY, -1);
+                            } else if (notification.getNotificationType() == NotificationType.NOTIFY) {
+                                Fonts.noti.get(20).drawStringNoFormat("A", iconX  + 2, iconY, -1);
+                            } else if (notification.getNotificationType() == NotificationType.WARNING) {
+                                Fonts.noti2.get(20).drawStringNoFormat("L", iconX, iconY, -1);
+                            } else {
+                                Fonts.noti2.get(20).drawStringNoFormat("M", iconX, iconY, -1);
+                            }
+
+                            Fonts.interMedium.get(15).drawCenteredStringNoFormat(
+                                    notification.getDescription(),
+                                    x + iconAreaWidth + (bgWidth - iconAreaWidth) / 2f,
+                                    yVal + Fonts.interMedium.get(15).getMiddleOfBox(height) + 2,
+                                    ColorUtil.applyOpacity(-1, (float) Math.max(.1, notification.getAnimation().getOutput())));
                         } else {
-                            RoundedUtil.drawRound(x, yVal, width + 2, height, 4, ColorUtil.applyOpacity(new Color(INSTANCE.getModuleManager().getModule(Interface.class).bgColor(), true), (float) notification.getAnimation().getOutput()));
+                            RoundedUtil.drawRound(x, yVal, bgWidth, height, 4,
+                                    ColorUtil.applyOpacity(new Color(INSTANCE.getModuleManager().getModule(Interface.class).bgColor(), true),
+                                            (float) notification.getAnimation().getOutput()));
                         }
+
                         yOffset += (height + actualOffset) * (float) notification.getAnimation().getOutput();
                         break;
                     case "Test":
@@ -163,7 +191,7 @@ public class NotificationManager implements InstanceAccess {
                         break;
                     case "Exhi": {
                         Translate translate = notification.getTranslate();
-                        boolean middlePos = INSTANCE.getModuleManager().getModule(Interface.class).centerNotif.get() && mc.thePlayer != null && (mc.currentScreen instanceof GuiChat || mc.currentScreen == null);
+                        boolean middlePos = INSTANCE.getModuleManager().getModule(NotificationHUD.class).centerNotif.get() && mc.thePlayer != null && (mc.currentScreen instanceof GuiChat || mc.currentScreen == null);
                         int scaledHeight = sr.getScaledHeight();
                         int scaledWidth = sr.getScaledWidth();
                         y = middlePos ? (int) (scaledHeight / 2.0f + 43.0f) : scaledHeight - (mc.currentScreen instanceof GuiChat ? 45 : 31);
