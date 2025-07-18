@@ -82,6 +82,23 @@ public class PlayerUtil implements InstanceAccess {
             return false;
         }
     }
+    public static boolean isBlockUnder1(int he) {
+        if (mc.thePlayer.posY < 0.0) {
+            return false;
+        } else {
+            for (int offset = 0; offset < (int) mc.thePlayer.posY + he; offset += 2) {
+                AxisAlignedBB bb = mc.thePlayer.getEntityBoundingBox().offset(0.0, (-offset), 0.0);
+                if (!mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, bb).isEmpty()) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+
+
 
     /**
      * Gets the block at a position

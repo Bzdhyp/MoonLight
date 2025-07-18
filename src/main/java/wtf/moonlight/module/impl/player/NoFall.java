@@ -10,7 +10,13 @@
  */
 package wtf.moonlight.module.impl.player;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemAppleGold;
+import net.minecraft.item.ItemBucket;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.player.MotionEvent;
@@ -22,16 +28,24 @@ import wtf.moonlight.module.impl.movement.Scaffold;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.component.BlinkComponent;
+import wtf.moonlight.util.MovementCorrection;
 import wtf.moonlight.util.player.MovementUtil;
 import wtf.moonlight.util.player.PlayerUtil;
+import wtf.moonlight.util.player.RotationUtil;
 
 @ModuleInfo(name = "NoFall", category = Categor.Player)
 public class NoFall extends Module {
 
-    public final ListValue mode = new ListValue("Mode", new String[]{"NoGround", "Blink", "Extra"}, "NoGround", this);
+    public final ListValue mode = new ListValue("Mode", new String[]{"NoGround", "Blink", "Extra","Water"}, "Water", this);
     public final SliderValue minDistance = new SliderValue("Min Distance", 3, 0, 8, 1, this, () -> !mode.is("NoGround"));
     private boolean blinked = false;
+
+
     private boolean prevOnGround = false;
+
+    private int slot;
+
+    private int lastslot;
     private double fallDistance = 0;
     private boolean timed = false;
 
@@ -67,7 +81,7 @@ public class NoFall extends Module {
             fallDistance -= MovementUtil.predictedMotionY(mc.thePlayer.motionY, 1);
         }
 
-        if (mc.thePlayer.capabilities.allowFlying) return;
+        //if (mc.thePlayer.capabilities.allowFlying) return;
         if (isVoid()) {
             if (blinked) {
                 BlinkComponent.dispatch();
@@ -92,6 +106,36 @@ public class NoFall extends Module {
                     timed = false;
                 }
                 break;
+            case "Water":
+                //md isBlockUnder太玄幻了写了一个早上还是概率
+                if (PlayerUtil.isBlockUnder1(14) && mc.thePlayer.fallDistance >= minDistance.getValue()) {
+                    slot = getWaterBucket();
+                    if (slot != -1) {
+                        mc.thePlayer.inventory.currentItem = slot;
+                        RotationUtil.setRotation(new float[]{mc.thePlayer.rotationYaw, 90}, MovementCorrection.SILENT, 5);
+                        for (int i = 0; i < 4; i++) {
+                            final Block block = PlayerUtil.blockRelativeToPlayer(0, -i, 0);
+                            if (block.getMaterial() == Material.water) {
+                                break;
+                            }
+                            if (block.isFullBlock()) {
+                                mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
+                            }
+                        }
+                        mc.thePlayer.inventory.currentItem = lastslot;
+                    }
+
+                }else {
+                    slot = getBucket();
+                    if (mc.thePlayer.isInWater() && slot != -1 && mc.thePlayer.onGround){
+                        mc.thePlayer.inventory.currentItem = slot;
+                        RotationUtil.setRotation(new float[]{mc.thePlayer.rotationYaw, 90}, MovementCorrection.SILENT, 5);
+                        mc.playerController.sendUseItem(mc.thePlayer,mc.theWorld,mc.thePlayer.inventory.getCurrentItem());
+                        mc.thePlayer.inventory.currentItem = lastslot;
+                    }else {
+                        lastslot = mc.thePlayer.inventory.currentItem;
+                    }
+                }
             case "Blink":
                 if (mc.thePlayer.onGround) {
                     if (blinked) {
@@ -131,5 +175,27 @@ public class NoFall extends Module {
 
     private boolean shouldBlink() {
         return !mc.thePlayer.onGround && !PlayerUtil.isBlockUnder((int) Math.floor(minDistance.getValue())) && PlayerUtil.isBlockUnder() && !getModule(Scaffold.class).isEnabled();
+    }
+    private int getWaterBucket() {
+        for (int i = 0;i < 9;i++) {
+            final ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
+            if (stack == null)
+                continue;
+            if (stack.getItem() == Items.water_bucket) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    private int getBucket() {
+        for (int i = 0;i < 9;i++) {
+            final ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
+            if (stack == null)
+                continue;
+            if (stack.getItem() == Items.bucket) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

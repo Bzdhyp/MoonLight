@@ -33,9 +33,11 @@ public class ColorPickerComponent extends Component {
     public void drawScreen(int mouseX, int mouseY) {
         open.setDirection(opened ? Direction.FORWARDS : Direction.BACKWARDS);
         setHeight((float) (24 + 66 * open.getOutput()));
+        RenderUtil.resetColor();
+        RenderUtil.drawCircle(getX() + 149, getY() + 7, 0, 360, 5, 2, true, setting.get().getRGB());
+        RenderUtil.resetColor();
 
         Fonts.Bold.get(18).drawString(setting.getName(), getX() + 10, getY() + 4, ColorUtil.applyOpacity(INSTANCE.getArcaneClickGui().fontcolor.getRGB(),0.4f));
-        RenderUtil.drawCircle(getX() + 149, getY() + 7, 0, 360, 5, 2, true, (setting.isRainbow() ? ColorUtil.getRainbow().getRGB() : setting.getColor().getRGB()));
         RenderUtil.resetColor();
         //picker
         if (open.getOutput() > 0) {
@@ -86,7 +88,7 @@ public class ColorPickerComponent extends Component {
                     ColorUtil.applyOpacity(thirdColor, 0),
                     ColorUtil.applyOpacity(thirdColor, colorAlpha));
 
-            RenderUtil.drawCircle((int) pickerX, (int) pickerY, 0, 360, 2, .1f, false, -1);
+            RenderUtil.drawCircle((int) pickerX, (int) pickerY, 0, 360, 2, .1f, false, setting.color.getRGB());
 
         }
         super.drawScreen(mouseX, mouseY);
