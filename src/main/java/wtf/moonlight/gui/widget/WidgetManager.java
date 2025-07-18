@@ -28,14 +28,16 @@ public class WidgetManager implements InstanceAccess {
     public WidgetManager() {
         INSTANCE.getEventManager().register(this);
 
+        register(new HotKeyWidget());
         register(new KeyBindWidget());
         register(new TargetHUDWidget());
         register(new PotionHUDWidget());
     }
 
-
     @EventTarget
     public void onRender2D(Render2DEvent event) {
+        if (mc.gameSettings.showDebugInfo) return;
+
         if (Display.isVisible()) {
             for (Widget widget : widgetList) {
                 if (widget.shouldRender()) {
@@ -48,6 +50,8 @@ public class WidgetManager implements InstanceAccess {
 
     @EventTarget
     public void onShader2D(Shader2DEvent event) {
+        if (mc.gameSettings.showDebugInfo) return;
+
         if (Display.isVisible()) {
             for (Widget widget : widgetList) {
                 if (widget.shouldRender()) {

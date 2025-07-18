@@ -23,10 +23,8 @@ import java.awt.*;
 
 @ModuleInfo(name = "ClickGUI", category = Categor.Visual, key = Keyboard.KEY_RSHIFT)
 public class ClickGUI extends Module {
-    public final ListValue mode = new ListValue("Mode", new String[]{"NeverLose", "DropDown", "Arcane"}, "Arcane", this);
-
+    public final ListValue mode = new ListValue("Mode", new String[]{"Arcane", "DropDown", "NeverLose"}, "DropDown", this);
     public final ColorValue color = new ColorValue("Color", new Color(128, 128, 255), this);
-    public final BoolValue rainbow = new BoolValue("Rainbow",true,this,() -> mode.is("Exhi"));
 
     @Override
     public void onEnable() {

@@ -26,10 +26,9 @@ import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.widget.Widget;
 import wtf.moonlight.util.misc.InstanceAccess;
-import wtf.moonlight.util.animations.advanced.Animation;
+import wtf.moonlight.util.render.animations.advanced.Animation;
 import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.render.ColorUtil;
-import wtf.moonlight.util.ParticleRenderer;
 import wtf.moonlight.util.render.RenderUtil;
 import wtf.moonlight.util.render.RoundedUtil;
 
@@ -56,7 +55,7 @@ public class TargetHUDWidget extends Widget {
             float currentTargetWidth = getTHUDWidth(target);
             this.width = currentTargetWidth;
             if (count > 9) continue;
-            TargetDisplay targetHUD = new TargetDisplay((float) (renderX + ((count % 3) * (lastTargetWidth + 4)) * TargetHUD.animationEntityPlayerMap.get(target).getOutput()), (float) (this.renderY + ((count / 3) * (this.height + 4)) * TargetHUD.animationEntityPlayerMap.get(target).getOutput()), target, TargetHUD.animationEntityPlayerMap.get(target), false, Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudMode);
+            TargetDisplay targetHUD = new TargetDisplay((float) (renderX + ((count % 3) * (lastTargetWidth + 4)) * TargetHUD.animationEntityPlayerMap.get(target).getOutput()), (float) (this.renderY + (((double) count / 3) * (this.height + 4)) * TargetHUD.animationEntityPlayerMap.get(target).getOutput()), target, TargetHUD.animationEntityPlayerMap.get(target), false, Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudMode);
             targetHUD.render();
             lastTargetWidth = currentTargetWidth;
             count++;
@@ -72,7 +71,7 @@ public class TargetHUDWidget extends Widget {
             float currentTargetWidth = getTHUDWidth(target);
             this.width = currentTargetWidth;
             if (count > 9) continue;
-            TargetDisplay targetHUD = new TargetDisplay((float) (renderX + ((count % 3) * (lastTargetWidth + 4)) * TargetHUD.animationEntityPlayerMap.get(target).getOutput()), (float) (this.renderY + ((count / 3) * (this.height + 4)) * TargetHUD.animationEntityPlayerMap.get(target).getOutput()), target, TargetHUD.animationEntityPlayerMap.get(target), true, Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudMode);
+            TargetDisplay targetHUD = new TargetDisplay((float) (renderX + ((count % 3) * (lastTargetWidth + 4)) * TargetHUD.animationEntityPlayerMap.get(target).getOutput()), (float) (this.renderY + (((double) count / 3) * (this.height + 4)) * TargetHUD.animationEntityPlayerMap.get(target).getOutput()), target, TargetHUD.animationEntityPlayerMap.get(target), true, Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudMode);
             targetHUD.render();
             lastTargetWidth = currentTargetWidth;
             count++;
@@ -89,7 +88,7 @@ public class TargetHUDWidget extends Widget {
             case "Moon" -> 35 + Fonts.interSemiBold.get(18).getStringWidth(entity.getName()) + 33;
             case "Type 3" -> 125.0f;
             case "Augustus" -> 35 + Fonts.interSemiBold.get(18).getStringWidth(entity.getName()) + 33;
-            case "New" -> Math.max(160, Fonts.interSemiBold.get(17).getStringWidth(entity.getName()) + 30);
+            case "Rise" -> Math.max(160, Fonts.interSemiBold.get(17).getStringWidth(entity.getName()) + 30);
             case "Novo 1", "Novo 2" -> 35 + mc.fontRendererObj.getStringWidth(entity.getName()) + 33;
             case "Novo 3" -> 35 + mc.fontRendererObj.getStringWidth(entity.getName()) + 34;
             case "Novo 4" -> 135.0f;
@@ -108,7 +107,7 @@ public class TargetHUDWidget extends Widget {
             case "Type 2" -> 38.0F;
             case "Exhi" -> 38;
             case "Adjust", "Innominate" -> 35;
-            case "Moon", "Augustus", "New" -> 40.5f;
+            case "Moon", "Augustus", "Rise" -> 40.5f;
             case "Type 3" -> 32.5f;
             case "Novo 1" -> 37.5f;
             case "Novo 2", "Novo 3" -> 36f;
@@ -122,7 +121,7 @@ public class TargetHUDWidget extends Widget {
 
     @Override
     public boolean shouldRender() {
-        return setting.isEnabled() && Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).isEnabled();
+        return Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).isEnabled();
     }
 }
 
@@ -189,14 +188,9 @@ class TargetDisplay implements InstanceAccess {
                     RoundedUtil.drawGradientHorizontal(x + 44, y + 30, target.healthAnimation.getOutput(), 6, 3, ColorUtil.applyOpacity(new Color(INSTANCE.getModuleManager().getModule(Interface.class).color(0)), (float) animation.getOutput()), ColorUtil.applyOpacity(new Color(INSTANCE.getModuleManager().getModule(Interface.class).color(10)), (float) animation.getOutput()));
                 } else {
                     RoundedUtil.drawRound(x, y, width, height, 6, ColorUtil.applyOpacity(Color.BLACK, (float) (1f * animation.getOutput())));
-                    //RoundedUtils.drawRound(x,y,width,height,6,new Color(INSTANCE.getModuleManager().getModule(Interface.class).color(1)));
                 }
+                break;
             }
-
-            if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
-                ParticleRenderer.renderParticle(target, x + 4, y + 4);
-            }
-            break;
 
             case "Type 2": {
                 if (!shader) {
@@ -233,12 +227,8 @@ class TargetDisplay implements InstanceAccess {
                 } else {
                     RoundedUtil.drawGradientHorizontal(x, y, width, height, 4, new Color(setting.color(0)), new Color(setting.color(90)));
                 }
-
-                if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
-                    ParticleRenderer.renderParticle(target, x + 5, y + 6.8f);
-                }
+                break;
             }
-            break;
 
             case "Exhi": {
                 float health = target.getHealth();
@@ -285,9 +275,8 @@ class TargetDisplay implements InstanceAccess {
                 GlStateManager.translate(73.0f, 102.0f, 40.0f);
                 RenderUtil.drawEntityOnScreen(target.rotationYaw, target.rotationPitch, target);
                 GlStateManager.popMatrix();
+                break;
             }
-            break;
-
             case "Felix": {
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(x, y, 0);
@@ -318,7 +307,6 @@ class TargetDisplay implements InstanceAccess {
             break;
 
             case "Adjust": {
-
                 float padding = 2;
                 float healthX = x + padding;
                 float healthPercentage = target.getHealth() / target.getMaxHealth();
@@ -354,12 +342,8 @@ class TargetDisplay implements InstanceAccess {
                         i += 16;
                     }
                 }
-
-                if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
-                    ParticleRenderer.renderParticle(target, x + padding, y + padding);
-                }
+                break;
             }
-            break;
 
             case "Moon": {
 
@@ -381,12 +365,8 @@ class TargetDisplay implements InstanceAccess {
                 } else {
                     RoundedUtil.drawRound(x, y, width, height, 8, new Color(setting.color()));
                 }
-
-                if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
-                    ParticleRenderer.renderParticle(target, x + 2.5f, y + 2.5f);
-                }
+                break;
             }
-            break;
             case "Type 3": {
 
                 float healthPercentage = target.getHealth() / target.getMaxHealth();
@@ -409,11 +389,6 @@ class TargetDisplay implements InstanceAccess {
                 } else {
                     RoundedUtil.drawRound(x, y, width, height, 8, new Color(setting.color()));
                 }
-
-                if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
-                    ParticleRenderer.renderParticle(target, x + 3f, y + 1.5f);
-                }
-
                 break;
             }
             case "Augustus": {
@@ -436,14 +411,10 @@ class TargetDisplay implements InstanceAccess {
                 } else {
                     RoundedUtil.drawRound(x, y, width, height, 8, new Color(setting.color()));
                 }
-
-                if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
-                    ParticleRenderer.renderParticle(target, x + 2.5f, y + 2.5f);
-                }
+                break;
             }
-            break;
-            case "New": {
 
+            case "Rise": {
                 float healthPercentage = target.getHealth() / target.getMaxHealth();
                 float space = (width - 48) / 100;
 
@@ -464,15 +435,10 @@ class TargetDisplay implements InstanceAccess {
                     RoundedUtil.drawRound(x, y, width, height, 3, new Color(setting.color()));
                     RoundedUtil.drawRoundOutline(x, y, this.width, this.height, 5, 0.1f, new Color(0, 0, 0, 0), new Color(setting.color(0)));
                 }
-
-                if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
-                    ParticleRenderer.renderParticle(target, x + 2.5f, y + 2.5f);
-                }
+                break;
             }
-            break;
 
             case "Novo 1": {
-
                 float healthPercentage = target.getHealth() / target.getMaxHealth();
                 float space = (width - 50) / 100;
 
@@ -489,11 +455,10 @@ class TargetDisplay implements InstanceAccess {
                     mc.fontRendererObj.drawStringWithShadow(target.getName(), x + 40, y + 4, -1);
                     mc.fontRendererObj.drawStringWithShadow("❤", x + 40 + 23, y + 27, new Color(255, 100, 100).getRGB());
                 }
+                break;
             }
-            break;
 
             case "Novo 2": {
-
                 float healthPercentage = target.getHealth() / target.getMaxHealth();
                 float space = (width - 50) / 100;
 
@@ -509,22 +474,16 @@ class TargetDisplay implements InstanceAccess {
                     mc.fontRendererObj.drawStringWithShadow(text, x + 40 + 1, y + 28f, -1);
                     mc.fontRendererObj.drawStringWithShadow(target.getName(), x + 40f, y + 4, -1);
                 }
-
-                if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
-                    ParticleRenderer.renderParticle(target, (x + 1.5f + 1), (float) (y + 0.4));
-                }
+                break;
             }
-            break;
 
             case "Novo 3": {
-
                 float healthPercentage = target.getHealth() / target.getMaxHealth();
                 float space = (width - 50) / 100;
 
                 target.healthAnimation.animate((100 * space) * MathHelper.clamp_float(healthPercentage, 0, 1), 30);
 
                 if (!shader) {
-
                     RenderUtil.drawBorderedRect(x, y, width, height, 1f, new Color(0, 0, 0, 50).getRGB(), new Color(29, 29, 29, 180).getRGB());
                     RenderUtil.drawRect(x, y, width, height, new Color(40, 40, 40, 130).getRGB());
                     RenderUtil.drawRect(x + 40 + 1, y + 16.5f, 100 * space + 1, 10.8f, new Color(0, 0, 0, 50).getRGB());
@@ -534,16 +493,10 @@ class TargetDisplay implements InstanceAccess {
                     mc.fontRendererObj.drawStringWithShadow(text, x + 1 + 40 + 50 * space - mc.fontRendererObj.getStringWidth(text) / 2f, y + 18f, -1);
                     mc.fontRendererObj.drawStringWithShadow(target.getName(), x + 1 + 40, y + 4, -1);
                 }
+                break;
             }
-
-            if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
-                ParticleRenderer.renderParticle(target, (x + 1.5f + 1f), (float) (y + 0.4));
-            }
-
-            break;
 
             case "Novo 4": {
-
                 float healthPercentage = target.getHealth() / target.getMaxHealth();
                 float space = width;
 
@@ -556,12 +509,10 @@ class TargetDisplay implements InstanceAccess {
                     GuiInventory.drawEntityOnScreen(x + 15, y + 40, 15, target.rotationYaw, -target.rotationPitch, target);
                     RenderUtil.drawRect(x - 1, y + 47, target.healthAnimation.getOutput(), 2f, ColorUtil.getHealthColor(target));
                 }
+                break;
             }
 
-            break;
-
             case "Novo 5": {
-
                 float healthPercentage = target.getHealth() / target.getMaxHealth();
                 float space = width - Fonts.interRegular.get(17).getStringWidth("20.0") - 3 - 3.2f;
 
@@ -570,16 +521,13 @@ class TargetDisplay implements InstanceAccess {
                 if (!shader) {
                     RenderUtil.drawRect(x, y, width, height, setting.bgColor());
                     Fonts.interRegular.get(20).drawStringWithShadow(target.getName(), x + 40f, y + 3.2f + 1, -1);
+
                     String text = String.format("%.1f", target.getHealth());
-                    Fonts.interRegular.get(17).drawString(text, x + target.healthAnimation.getOutput() + 3, y + 37F, -1);
+                    Fonts.interRegular.get(17).drawString(text, x + target.healthAnimation.getOutput() + 6, y + 39F, -1);
+
                     RenderUtil.renderPlayer2D(target, x + 3.2f, y + 3.2f, 33, 0, -1);
-                    RenderUtil.drawGradientRect(x + 3.2f, y + 39, target.healthAnimation.getOutput(), 4, true, setting.color(0), setting.color(90));
+                    RenderUtil.drawGradientRect(x + 3.2f, y + 40, target.healthAnimation.getOutput(), 4, true, setting.color(0), setting.color(90));
                     RenderUtil.renderItemStack(target, x + 40f, y + 15, 1, false, true);
-
-                    if (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudParticle.get()) {
-                        ParticleRenderer.renderParticle(target, x + 3.2f, y + 3.2f);
-                    }
-
                 } else {
                     RenderUtil.drawRect(x, y, width, height, setting.color(0));
                 }
@@ -588,7 +536,6 @@ class TargetDisplay implements InstanceAccess {
             break;
 
             case "Akrien": {
-
                 float healthPercentage = target.getHealth() / target.getMaxHealth();
                 float space = width - 2;
 
@@ -620,8 +567,8 @@ class TargetDisplay implements InstanceAccess {
                 } else {
                     RenderUtil.drawRect(x, y, width, height, setting.color());
                 }
+                break;
             }
-            break;
 
             case "Innominate": {
                 float healthPercentage = target.getHealth() / target.getMaxHealth();

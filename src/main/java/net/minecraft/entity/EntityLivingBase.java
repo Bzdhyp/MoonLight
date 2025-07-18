@@ -59,12 +59,9 @@ import wtf.moonlight.events.player.*;
 import wtf.moonlight.module.impl.movement.NoFluid;
 import wtf.moonlight.module.impl.visual.Animations;
 import wtf.moonlight.module.impl.misc.SilentView;
-import wtf.moonlight.util.animations.advanced.ContinualAnimation;
+import wtf.moonlight.util.render.animations.advanced.ContinualAnimation;
 import wtf.moonlight.util.player.MovementUtil;
 import wtf.moonlight.util.player.RotationUtil;
-
-import static net.minecraft.potion.Potion.digSlowdown;
-import static net.minecraft.potion.Potion.digSpeed;
 
 public abstract class EntityLivingBase extends Entity
 {

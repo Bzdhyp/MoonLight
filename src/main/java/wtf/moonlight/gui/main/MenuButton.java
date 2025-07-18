@@ -14,9 +14,9 @@ import wtf.moonlight.Client;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.main.button.Button;
 import wtf.moonlight.module.impl.display.Interface;
-import wtf.moonlight.util.animations.advanced.Animation;
-import wtf.moonlight.util.animations.advanced.Direction;
-import wtf.moonlight.util.animations.advanced.impl.SmoothStepAnimation;
+import wtf.moonlight.util.render.animations.advanced.Animation;
+import wtf.moonlight.util.render.animations.advanced.Direction;
+import wtf.moonlight.util.render.animations.advanced.impl.SmoothStepAnimation;
 import wtf.moonlight.util.render.MouseUtil;
 import wtf.moonlight.util.render.RoundedUtil;
 

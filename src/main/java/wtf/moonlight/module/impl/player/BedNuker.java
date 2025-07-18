@@ -44,7 +44,7 @@ import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.util.MovementCorrection;
-import wtf.moonlight.util.animations.advanced.ContinualAnimation;
+import wtf.moonlight.util.render.animations.advanced.ContinualAnimation;
 import wtf.moonlight.util.player.PlayerUtil;
 import wtf.moonlight.util.player.RotationUtil;
 import wtf.moonlight.util.render.RenderUtil;

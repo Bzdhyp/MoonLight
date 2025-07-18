@@ -19,10 +19,10 @@ import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.impl.movement.Scaffold;
 import wtf.moonlight.util.MathUtil;
-import wtf.moonlight.util.animations.advanced.Animation;
-import wtf.moonlight.util.animations.advanced.ContinualAnimation;
-import wtf.moonlight.util.animations.advanced.Direction;
-import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.render.animations.advanced.Animation;
+import wtf.moonlight.util.render.animations.advanced.ContinualAnimation;
+import wtf.moonlight.util.render.animations.advanced.Direction;
+import wtf.moonlight.util.render.animations.advanced.impl.DecelerateAnimation;
 import wtf.moonlight.util.misc.InstanceAccess;
 import wtf.moonlight.util.player.ScaffoldUtil;
 import wtf.moonlight.util.render.ColorUtil;
@@ -128,7 +128,7 @@ public class BackgroundProcess implements InstanceAccess {
 
                 Gui.drawRect2(x - half - 0.5, y - 0.6, 81, 3.8, new Color(0, 0, 0, 120).getRGB());
 
-                int color = Client.INSTANCE.getModuleManager().getModule(Interface.class).mainColor.get().getRGB();
+                int color = Client.INSTANCE.getModuleManager().getModule(Interface.class).getMainColor().getRGB();
                 RenderUtil.drawGradientRect2(x - half, y, x - half + width * percentageWidth, y + thickness, false,
                         color, ColorUtil.darker(color));
                 break;

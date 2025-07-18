@@ -50,7 +50,7 @@ public class Disabler extends Module {
             new BoolValue("Watchdog Motion", false),
             new BoolValue("Watchdog Inventory", false),
             new BoolValue("Matrix Semi", false),
-            new BoolValue("GrimAC", false),
+            new BoolValue("Grim", false),
             new BoolValue("Verus", false),
             new BoolValue("Miniblox", false)
     ), this);
@@ -58,7 +58,7 @@ public class Disabler extends Module {
     public final SliderValue tick = new SliderValue("Tick",3,1,10,this,() -> options.isEnabled("Watchdog Motion"));
     public final MultiBoolValue grim = new MultiBoolValue("Grim Addons", Arrays.asList(new BoolValue("Post", false),
             new BoolValue("Speed Mine", false), new BoolValue("BadPackets F", false),
-            new BoolValue("BadPackets G", false)), this, () -> options.isEnabled("GrimAC"));
+            new BoolValue("BadPackets G", false)), this, () -> options.isEnabled("Grim"));
 
     public final MultiBoolValue verus = new MultiBoolValue("Verus Addons", List.of(new BoolValue("Combat", false)), this, () -> options.isEnabled("Verus"));
     public final BoolValue singlePlayerCheck = new BoolValue("Singleplayer Check", true, this, () -> options.isEnabled("Watchdog Motion"));
@@ -133,7 +133,7 @@ public class Disabler extends Module {
             }
         }
 
-        if (options.isEnabled("GrimAC")) {
+        if (options.isEnabled("Grim")) {
             if (grim.isEnabled("Post")) {
                 if (event.isPre() && !getPost()) {
                     processPackets();
@@ -199,7 +199,7 @@ public class Disabler extends Module {
             }
         }
 
-        if (options.isEnabled("GrimAC")) {
+        if (options.isEnabled("Grim")) {
             if (packet instanceof C0BPacketEntityAction wrapped) {
                 if (grim.isEnabled("BadPackets F")) {
                     if (wrapped.getAction() == C0BPacketEntityAction.Action.START_SPRINTING) {
@@ -313,7 +313,7 @@ public class Disabler extends Module {
     }
 
     public void processPackets() {
-        if (options.isEnabled("GrimAC")) {
+        if (options.isEnabled("Grim")) {
             if (!storedPackets.isEmpty()) {
                 for (Packet<INetHandler> packet : storedPackets) {
                     PacketEvent event = new PacketEvent(packet, PacketEvent.State.INCOMING);

@@ -12,6 +12,8 @@ package wtf.moonlight.util;
 
 import net.minecraft.util.*;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.security.SecureRandom;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -29,9 +31,16 @@ public class MathUtil {
         double one = 1.0 / inc;
         return Math.round(val * one) / one;
     }
-    public static float interpolateFloat(float oldValue, float newValue, double interpolationValue){
-        return interpolate(oldValue, newValue, (float) interpolationValue);
+
+    public static double roundToDecimalPlace(double value, double inc) {
+        double halfOfInc = inc / 2.0;
+        double floored = StrictMath.floor(value / inc) * inc;
+        if (value >= floored + halfOfInc) {
+            return new BigDecimal(StrictMath.ceil(value / inc) * inc, MathContext.DECIMAL64).stripTrailingZeros().doubleValue();
+        }
+        return new BigDecimal(floored, MathContext.DECIMAL64).stripTrailingZeros().doubleValue();
     }
+
     public static double interpolate(double old,
                                      double now,
                                      float partialTicks) {

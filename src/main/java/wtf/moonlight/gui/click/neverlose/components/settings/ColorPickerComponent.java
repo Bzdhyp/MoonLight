@@ -11,13 +11,12 @@
 package wtf.moonlight.gui.click.neverlose.components.settings;
 
 import net.minecraft.util.MathHelper;
-import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.ColorValue;
 import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.util.animations.advanced.Animation;
-import wtf.moonlight.util.animations.advanced.Direction;
-import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.render.animations.advanced.Animation;
+import wtf.moonlight.util.render.animations.advanced.Direction;
+import wtf.moonlight.util.render.animations.advanced.impl.DecelerateAnimation;
 import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.render.MouseUtil;
 import wtf.moonlight.util.render.RenderUtil;

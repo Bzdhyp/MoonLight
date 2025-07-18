@@ -145,9 +145,10 @@ public final class ModuleManager {
                 Watermark.class,
                 PotionHUD.class,
                 IslandHUD.class,
+                ArrayListMod.class,
+                ScoreboardMod.class,
                 PostProcessing.class,
-                NotificationHUD.class,
-                ScoreboardMod.class
+                NotificationHUD.class
         );
 
         // Register the ModuleManager to listen for events

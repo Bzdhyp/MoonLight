@@ -20,9 +20,9 @@ import wtf.moonlight.gui.click.Component;
 import wtf.moonlight.gui.click.IComponent;
 import wtf.moonlight.gui.click.dropdown.component.impl.*;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.util.animations.advanced.Direction;
-import wtf.moonlight.util.animations.advanced.impl.EaseInOutQuad;
-import wtf.moonlight.util.animations.advanced.impl.EaseOutSine;
+import wtf.moonlight.util.render.animations.advanced.Direction;
+import wtf.moonlight.util.render.animations.advanced.impl.EaseInOutQuad;
+import wtf.moonlight.util.render.animations.advanced.impl.EaseOutSine;
 import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.render.MouseUtil;
 import wtf.moonlight.util.render.RenderUtil;
@@ -51,18 +51,23 @@ public class ModuleComponent implements IComponent {
             if (value instanceof BoolValue boolValue) {
                 settings.add(new BooleanComponent(boolValue));
             }
+
             if (value instanceof ColorValue colorValue) {
                 settings.add(new ColorPickerComponent(colorValue));
             }
+
             if (value instanceof SliderValue sliderValue) {
                 settings.add(new SliderComponent(sliderValue));
             }
+
             if (value instanceof ListValue modeValue) {
                 settings.add(new ModeComponent(modeValue));
             }
+
             if (value instanceof MultiBoolValue multiBoolValue) {
                 settings.add(new MultiBooleanComponent(multiBoolValue));
             }
+
             if(value instanceof StringValue textValue){
                 settings.add(new StringComponent(textValue));
             }
@@ -71,7 +76,7 @@ public class ModuleComponent implements IComponent {
 
     @Override
     public void drawScreen(int mouseX, int mouseY) {
-        float yOffset = 19;
+        float yOffset = 20;
         openAnimation.setDirection(opened ? Direction.FORWARDS : Direction.BACKWARDS);
         toggleAnimation.setDirection(module.isEnabled() ? Direction.FORWARDS : Direction.BACKWARDS);
         hoverAnimation.setDirection(isHovered(mouseX, mouseY) ? Direction.FORWARDS : Direction.BACKWARDS);

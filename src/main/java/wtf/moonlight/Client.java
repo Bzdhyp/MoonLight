@@ -31,7 +31,6 @@ import wtf.moonlight.gui.widget.WidgetManager;
 import wtf.moonlight.util.DiscordInfo;
 import wtf.moonlight.util.player.RotationUtil;
 
-import java.awt.*;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -65,8 +64,6 @@ public class Client {
 
     private DiscordInfo discordRP;
 
-    // System Tray icon
-    private TrayIcon trayIcon;
     // Load status
     private boolean loaded;
 

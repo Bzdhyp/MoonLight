@@ -27,7 +27,7 @@ import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.util.animations.advanced.impl.SmoothStepAnimation;
+import wtf.moonlight.util.render.animations.advanced.impl.SmoothStepAnimation;
 import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.render.RenderUtil;

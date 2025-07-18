@@ -48,13 +48,9 @@ public final class ChestStealer extends Module {
         if (stealingIndicator.get() && stealing) {
             ScaledResolution sr = new ScaledResolution(mc);
             Interface hudMod = Client.INSTANCE.getModuleManager().getModule(Interface.class);
-            if (hudMod.cFont.get()) {
-                hudMod.getFr().drawStringWithShadow("§lStealing...", sr.getScaledWidth() / 2.0F -
-                        hudMod.getFr().getStringWidth("§lStealing...") / 2.0F, sr.getScaledHeight() / 2.0F + 10, hudMod.color(0));
-            } else {
-                mc.fontRendererObj.drawStringWithShadow("§lStealing...", sr.getScaledWidth() / 2.0F -
-                        mc.fontRendererObj.getStringWidth("§lStealing...") / 2.0F, sr.getScaledHeight() / 2.0F + 10, hudMod.color(0));
-            }
+
+            mc.fontRendererObj.drawStringWithShadow("§lStealing...", sr.getScaledWidth() / 2.0F -
+                    mc.fontRendererObj.getStringWidth("§lStealing...") / 2.0F, sr.getScaledHeight() / 2.0F + 10, hudMod.color(0));
         }
     }
 

@@ -29,6 +29,11 @@ public class ColorUtil {
         return new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) (color.getAlpha() * opacity));
     }
 
+    public static Color applyOpacity3(int color, float opacity) {
+        Color old = new Color(color);
+        return applyOpacity(old, opacity);
+    }
+
     public static Color reAlpha(Color color, int alpha) {
         return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
     }
@@ -50,24 +55,12 @@ public class ColorUtil {
         return new float[]{hue, saturation, brightness};
     }
 
-    public static int astolfoRainbow(int offset, float saturation, float brightness) {
-        double currentColor = Math.ceil((double)(System.currentTimeMillis() + (long)offset * 130L)) / 6.0D;
-        return Color.getHSBColor((double)((float)((currentColor %= 360.0D) / 360.0D)) < 0.5D?-((float)(currentColor / 360.0D)):(float)(currentColor / 360.0D), saturation, brightness).getRGB();
-    }
-
-    public static int reAlpha(int color, float alpha) {
-        Color c = new Color(color);
-        float r = ((float) 1 / 255) * c.getRed();
-        float g = ((float) 1 / 255) * c.getGreen();
-        float b = ((float) 1 / 255) * c.getBlue();
-        return new Color(r, g, b, alpha).getRGB();
-    }
-
-    public static int fade(int startColor, int endColor, float progress) {
-        if (progress > 1.0f) {
-            progress = 1.0f - progress % 1.0f;
-        }
-        return fadeTo(startColor, endColor, progress);
+    public static int astolfoRainbow(int delay, int offset, int index) {
+        double rainbowDelay = Math.ceil(System.currentTimeMillis() + ((long) delay * index)) / offset;
+        return Color.getHSBColor(
+                (double) ((float) ((rainbowDelay %= 360.0) / 360.0)) < 0.5 ? -((float) (rainbowDelay / 360.0))
+                        : (float) (rainbowDelay / 360.0),
+                0.5F, 1).getRGB();
     }
 
     public static int fadeBetween(int startColor, int endColor, float progress) {
@@ -84,6 +77,14 @@ public class ColorUtil {
         int b = (int)((float)(startColor & 0xFF) * invert + (float)(endColor & 0xFF) * progress);
         int a = (int)((float)(startColor >> 24 & 0xFF) * invert + (float)(endColor >> 24 & 0xFF) * progress);
         return (a & 0xFF) << 24 | (r & 0xFF) << 16 | (g & 0xFF) << 8 | b & 0xFF;
+    }
+
+    public static int reAlpha(int color, float alpha) {
+        Color c = new Color(color);
+        float r = ((float) 1 / 255) * c.getRed();
+        float g = ((float) 1 / 255) * c.getGreen();
+        float b = ((float) 1 / 255) * c.getBlue();
+        return new Color(r, g, b, alpha).getRGB();
     }
 
     public static Color getRainbow() {

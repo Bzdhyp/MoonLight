@@ -19,7 +19,7 @@ import java.util.Map;
 @ModuleInfo(name = "NoWeb",category = Categor.Movement)
 public class NoWeb extends Module {
 
-    private final ListValue mode = new ListValue("Mode", new String[]{"Vanilla", "GrimAC", "Intave"}, "Vanilla",this);
+    private final ListValue mode = new ListValue("Mode", new String[]{"Vanilla", "Grim", "Intave"}, "Vanilla",this);
     public final BoolValue noDown = new BoolValue("No Down",true,this,() -> mode.is("Intave"));
     public final BoolValue upAndDown = new BoolValue("Up And Down",true,this,() -> mode.is("Intave") && noDown.get());
 
@@ -34,7 +34,7 @@ public class NoWeb extends Module {
             case "Vanilla":
                 mc.thePlayer.isInWeb = false;
                 break;
-            case "GrimAC":
+            case "Grim":
                 Map<BlockPos, Block> searchBlock = PlayerUtil.searchBlocks(2);
                 for (Map.Entry<BlockPos, Block> block : searchBlock.entrySet()) {
                     if (mc.theWorld.getBlockState(block.getKey()).getBlock() instanceof BlockWeb) {

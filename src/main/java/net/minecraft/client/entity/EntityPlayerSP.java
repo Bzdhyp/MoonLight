@@ -216,7 +216,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
                 flag2 = false;
             }
 
-            if (Client.INSTANCE.getModuleManager().getModule(Disabler.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Disabler.class).options.isEnabled("GrimAC") && Client.INSTANCE.getModuleManager().getModule(Disabler.class).grim.isEnabled("Post")) {
+            if (Client.INSTANCE.getModuleManager().getModule(Disabler.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(Disabler.class).options.isEnabled("Grim") && Client.INSTANCE.getModuleManager().getModule(Disabler.class).grim.isEnabled("Post")) {
                 Client.INSTANCE.getModuleManager().getModule(Disabler.class).processPackets();
             }
             ++this.positionUpdateTicks;

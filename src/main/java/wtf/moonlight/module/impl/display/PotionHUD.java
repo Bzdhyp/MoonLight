@@ -24,10 +24,54 @@ import static net.minecraft.client.gui.Gui.drawTexturedModalRect;
 
 @ModuleInfo(name = "PotionHUD", category = Categor.Display)
 public class PotionHUD extends Module {
-    public final ListValue potionHudMode = new ListValue("Potion Mode", new String[]{"Default","Nursultan","Exhi","Moon","Sexy","Type 1","NeverLose","Mod"}, "Default", this);
+    public final ListValue potionHudMode = new ListValue("Potion Mode", new String[]{"Default", "Exhi", "Moon", "Sexy", "Type 1", "Type 2", "NeverLose"}, "Default", this);
 
     @EventTarget
     public void onRender2D(Render2DEvent event) {
+        if (potionHudMode.is("Default")) {
+            GL11.glPushMatrix();
+            GL11.glTranslatef(25, event.scaledResolution().getScaledHeight() / 2f, 0F);
+            float yPos = -75F;
+            float width = 0F;
+            for (final PotionEffect effect : mc.thePlayer.getActivePotionEffects()) {
+                final Potion potion = Potion.potionTypes[effect.getPotionID()];
+                final String number = intToRomanByGreedy(effect.getAmplifier());
+                final String name = I18n.format(potion.getName()) + " " + number;
+                final float stringWidth = mc.fontRendererObj.getStringWidth(name)
+                        + mc.fontRendererObj.getStringWidth("§f" + Potion.getDurationString(effect));
+
+                if (width < stringWidth)
+                    width = stringWidth;
+                final float finalY = yPos;
+                mc.fontRendererObj.drawString(name, 2f, finalY - 7f, Color.white.getRGB(), true);
+                mc.fontRendererObj.drawStringWithShadow("§f" + Potion.getDurationString(effect), 2f, finalY + 4, -1);
+                if (potion.hasStatusIcon()) {
+                    GL11.glPushMatrix();
+                    final boolean is2949 = GL11.glIsEnabled(2929);
+                    final boolean is3042 = GL11.glIsEnabled(3042);
+                    if (is2949)
+                        GL11.glDisable(2929);
+                    if (!is3042)
+                        GL11.glEnable(3042);
+                    GL11.glDepthMask(false);
+                    OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+                    GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+                    final int statusIconIndex = potion.getStatusIconIndex();
+                    mc.getTextureManager().bindTexture(new ResourceLocation("textures/gui/container/inventory.png"));
+                    drawTexturedModalRect(-20F, finalY - 5, statusIconIndex % 8 * 18, 198 + statusIconIndex / 8 * 18, 18, 18);
+                    GL11.glDepthMask(true);
+                    if (!is3042)
+                        GL11.glDisable(3042);
+                    if (is2949)
+                        GL11.glEnable(2929);
+                    GL11.glPopMatrix();
+                }
+
+                yPos += mc.fontRendererObj.FONT_HEIGHT + 15;
+            }
+            GL11.glPopMatrix();
+        }
+
         if (potionHudMode.is("Exhi")) {
             ArrayList<PotionEffect> potions = new ArrayList<>(mc.thePlayer.getActivePotionEffects());
             potions.sort(Comparator.comparingDouble(effect -> -mc.fontRendererObj.getStringWidth(I18n.format(Potion.potionTypes[effect.getPotionID()].getName()))));
@@ -87,50 +131,6 @@ public class PotionHUD extends Module {
                 GlStateManager.popMatrix();
                 y -= 9.5f;
             }
-        }
-
-        if (potionHudMode.is("Mod")) {
-            GL11.glPushMatrix();
-            GL11.glTranslatef(25, event.scaledResolution().getScaledHeight() / 2f, 0F);
-            float yPos = -75F;
-            float width = 0F;
-            for (final PotionEffect effect : mc.thePlayer.getActivePotionEffects()) {
-                final Potion potion = Potion.potionTypes[effect.getPotionID()];
-                final String number = intToRomanByGreedy(effect.getAmplifier());
-                final String name = I18n.format(potion.getName()) + " " + number;
-                final float stringWidth = mc.fontRendererObj.getStringWidth(name)
-                        + mc.fontRendererObj.getStringWidth("§f" + Potion.getDurationString(effect));
-
-                if (width < stringWidth)
-                    width = stringWidth;
-                final float finalY = yPos;
-                mc.fontRendererObj.drawString(name, 2f, finalY - 7f, Color.white.getRGB(), true);
-                mc.fontRendererObj.drawStringWithShadow("§f" + Potion.getDurationString(effect), 2f, finalY + 4, -1);
-                if (potion.hasStatusIcon()) {
-                    GL11.glPushMatrix();
-                    final boolean is2949 = GL11.glIsEnabled(2929);
-                    final boolean is3042 = GL11.glIsEnabled(3042);
-                    if (is2949)
-                        GL11.glDisable(2929);
-                    if (!is3042)
-                        GL11.glEnable(3042);
-                    GL11.glDepthMask(false);
-                    OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-                    GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                    final int statusIconIndex = potion.getStatusIconIndex();
-                    mc.getTextureManager().bindTexture(new ResourceLocation("textures/gui/container/inventory.png"));
-                    drawTexturedModalRect(-20F, finalY - 5, statusIconIndex % 8 * 18, 198 + statusIconIndex / 8 * 18, 18, 18);
-                    GL11.glDepthMask(true);
-                    if (!is3042)
-                        GL11.glDisable(3042);
-                    if (is2949)
-                        GL11.glEnable(2929);
-                    GL11.glPopMatrix();
-                }
-
-                yPos += mc.fontRendererObj.FONT_HEIGHT + 15;
-            }
-            GL11.glPopMatrix();
         }
     }
 

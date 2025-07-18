@@ -4,8 +4,6 @@ import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.*;
-import wtf.moonlight.gui.font.FontRenderer;
-import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.util.render.ColorUtil;
 
 import java.awt.*;
@@ -16,19 +14,14 @@ public class Interface extends Module {
 
     public ListValue soundMode = new ListValue("Sound Mode", new String[]{"None", "Default", "Sigma", "Augustus"}, "Default", this);
 
-    public final BoolValue cFont = new BoolValue("C Fonts",true,this);
-    public final ListValue fontMode = new ListValue("C Fonts Mode", new String[]{"WQY", "Bold", "SFUI", "Medium", "Tahoma", "Regular", "Semi Bold"}, "Semi Bold", this,() -> cFont.canDisplay() && cFont.get());
-    public final SliderValue fontSize = new SliderValue("Font Size",15,10,25,this,cFont::get);
+    public final ListValue colorMode = new ListValue("Color Mode", new String[]{"Custom", "Fade", "Rainbow", "Astolfo", "Dynamic"}, "Dynamic", this);
+    public final SliderValue speedValue = new SliderValue("Speed", 2.0f, 1.0f, 10.0f, 0.5f, this, () -> !colorMode.is("Custom"));
+    public final ColorValue mainColor = new ColorValue("Main Color", new Color(128, 128, 255), this);
+    private final ColorValue secondColor = new ColorValue("Second Color", new Color(128, 255, 255), this, () -> colorMode.is("Fade"));
+    public final SliderValue astolfoOffsetValue = new SliderValue("Offset", 5, 0, 20, this, () -> colorMode.is("Astolfo"));
+    public final SliderValue astolfoIndexValue = new SliderValue("Index", 107, 0, 200, this, () -> colorMode.is("Astolfo"));
 
-    public final ListValue color = new ListValue("Color Mode", new String[]{"Custom", "Fade", "White", "Astolfo", "Rainbow", "Dynamic"}, "White", this);
-    public final SliderValue speedValue = new SliderValue("Speed", 2.0f, 1.0f, 10.0f, 0.5f, this, () -> color.is("Fade") || color.is("Rainbow") || color.is("Dynamic"));
-    public final ColorValue mainColor = new ColorValue("Main Color", new Color(128, 128, 255), this,() -> !color.is("White"));
-    private final ColorValue secondColor = new ColorValue("Second Color", new Color(4, 179, 232), this, () -> color.is("Dynamic"));
-    public final SliderValue astolfoSaturationValue = new SliderValue("Saturation", 0.75f, 0.35f, 1.0f, 0.1f, this, () -> color.is("Astolfo"));
-    public final SliderValue astolfoBrightnessValue = new SliderValue("Brightness", 0.85f, 0.35f, 1.0f, 0.1f, this, () -> color.is("Astolfo"));
-
-    public final BoolValue background = new BoolValue("Background",true,this);
-    public final ListValue bgColor = new ListValue("Background Color", new String[]{"None", "Custom", "Dark", "White", "Synced"}, "Synced", this,background::get);
+    public final ListValue bgColor = new ListValue("Background Color, Mode", new String[]{"None", "Custom", "Dark", "White", "Synced"}, "Synced", this);
     private final ColorValue bgCustomColor = new ColorValue("Background Custom Color", new Color(32, 32, 64), this,() -> bgColor.canDisplay() && bgColor.is("Custom"));
     private final SliderValue bgAlpha = new SliderValue("Background Alpha",100,1,255,1,this);
     public final BoolValue chatCombine = new BoolValue("Chat Combine", true, this);
@@ -37,20 +30,6 @@ public class Interface extends Module {
     public final ListValue capeMode = new ListValue("Cape Mode", new String[]{"Default", "Sexy", "Sexy 2"}, "Default", this);
     public final BoolValue wavey = new BoolValue("Wavey Cape", true, this);
     public final BoolValue enchanted = new BoolValue("Enchanted", true, this, () -> cape.get() && !wavey.get());
-    float xyz = 0.0f;
-
-    public FontRenderer getFr() {
-        return switch (fontMode.getValue()) {
-            case "WQY" -> Fonts.wqy.get(fontSize.getValue());
-            case "Bold" -> Fonts.interBold.get(fontSize.getValue());
-            case "SFUI" -> Fonts.sfui.get(fontSize.getValue());
-            case "Medium" -> Fonts.interMedium.get(fontSize.getValue());
-            case "Tahoma" -> Fonts.Tahoma.get(fontSize.getValue());
-            case "Regular" -> Fonts.interRegular.get(fontSize.getValue());
-            case "Semi Bold" -> Fonts.interSemiBold.get(fontSize.getValue());
-            default -> null;
-        };
-    }
 
     public Color getMainColor() {
         return mainColor.getValue();
@@ -58,43 +37,6 @@ public class Interface extends Module {
 
     public Color getSecondColor() {
         return secondColor.getValue();
-    }
-
-    public int color() {
-        return color(0);
-    }
-
-    public int color(int counter) {
-        return color(counter, getMainColor().getAlpha());
-    }
-
-    public int color(int counter, int alpha) {
-        this.xyz = (float) ((double) this.xyz + this.speedValue.getValue() / 45.0);
-        if (this.xyz > 255.0f) this.xyz = 0.0f;
-
-        float qwerty = this.xyz + counter;
-        int colors = getMainColor().getRGB();
-        long ms = this.speedValue.getValue().longValue() * 1000L;
-
-        if (qwerty > 255.0f) {
-            qwerty = qwerty % 255.0f;
-        }
-
-        colors = switch (color.getValue()) {
-            case "Custom" -> ColorUtil.swapAlpha(mainColor.getValue().getRGB(), alpha);
-            case "Fade" ->
-                    ColorUtil.swapAlpha(ColorUtil.fadeBetween(colors, this.getSecondColor().getRGB(), (float)((System.currentTimeMillis() + ms) % ms) / ((float)ms / 2.0f)), alpha);
-            case "White" -> ColorUtil.swapAlpha(new Color(255, 255, 255).getRGB(), alpha);
-            case "Astolfo" ->
-                    ColorUtil.swapAlpha(ColorUtil.astolfoRainbow(0, this.astolfoSaturationValue.getValue(), this.astolfoBrightnessValue.getValue()), alpha);
-            case "Rainbow" -> ColorUtil.swapAlpha(Color.getHSBColor(qwerty / 255.0f, 0.55f, 0.9f).getRGB(), alpha);
-            case "Dynamic" -> ColorUtil.swapAlpha(ColorUtil.fade(
-                    mainColor.get().getRGB(),
-                    ColorUtil.darker(mainColor.get().getRGB(), 0.3f),
-                    (float) ((System.currentTimeMillis() + (ms + (long) counter * 100L)) % ms) / ((float) ms / 2.0f)), alpha);
-            default -> colors;
-        };
-        return new Color(colors,true).getRGB();
     }
 
     public int bgColor() {
@@ -113,9 +55,52 @@ public class Interface extends Module {
             case "Dark" -> (new Color(21, 21, 21, alpha)).getRGB();
             case "White" -> ColorUtil.swapAlpha(new Color(255, 255, 255).getRGB(), alpha);
             case "Synced" ->
-                    new Color(ColorUtil.applyOpacity(color(counter, alpha), alpha / 255f), true).darker().darker().getRGB();
+                    new Color(ColorUtil.applyOpacity(color(counter), alpha / 255f), true).darker().darker().getRGB();
             default -> colors;
         };
         return colors;
+    }
+
+    public int color() {
+        return color(0);
+    }
+
+    public int color(int counter) {
+        return color(counter, mainColor.getAlpha());
+    }
+
+    public int color(int counter, float opacity) {
+        long ms = this.speedValue.getValue().longValue() * 1000L;
+        float progress = (float)(System.currentTimeMillis() % ms) / ms;
+
+        int color = -1;
+        switch (colorMode.getValue()) {
+            case "Custom" ->
+                    color = ColorUtil.applyOpacity(getMainColor().getRGB(), opacity);
+
+            case "Fade" ->
+                    color = ColorUtil.fadeBetween(this.getMainColor().getRGB(), this.getSecondColor().getRGB(),
+                            (float)((System.currentTimeMillis() + (long)counter * 100L) % ms) / ((float)ms / 2.0f));
+            case "Rainbow" -> {
+                if (mc.thePlayer == null) return Color.WHITE.getRGB();
+                color = new Color(Color.HSBtoRGB(
+                        (float) ((double) mc.thePlayer.ticksExisted / 50.0 + Math.sin((double) counter / 50.0 * 1.6)) % 1.0f,
+                        0.6f, 1.0f)).getRGB();
+            }
+
+            case "Astolfo" -> color = ColorUtil.applyOpacity(
+                    new Color(ColorUtil.astolfoRainbow(
+                            (int)(counter + (progress * 100)),
+                            astolfoOffsetValue.getValue().intValue(),
+                            astolfoIndexValue.getValue().intValue()
+                    )).getRGB(),
+                    opacity
+            );
+
+            case "Dynamic" -> color = ColorUtil.fadeBetween(this.mainColor.getValue().getRGB(), ColorUtil.darker(this.getMainColor().getRGB(),
+                    0.3f), (float)((System.currentTimeMillis() + (ms + (long)counter * 100L)) % ms) / ((float)ms / 2.0f));
+        }
+
+        return new Color(color, true).getRGB();
     }
 }

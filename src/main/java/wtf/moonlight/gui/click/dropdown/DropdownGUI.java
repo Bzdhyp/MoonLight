@@ -17,9 +17,9 @@ import org.lwjglx.input.Keyboard;
 import org.lwjglx.input.Mouse;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.gui.click.dropdown.panel.CategoryPanel;
-import wtf.moonlight.util.animations.advanced.Animation;
-import wtf.moonlight.util.animations.advanced.Direction;
-import wtf.moonlight.util.animations.advanced.impl.EaseOutSine;
+import wtf.moonlight.util.render.animations.advanced.Animation;
+import wtf.moonlight.util.render.animations.advanced.Direction;
+import wtf.moonlight.util.render.animations.advanced.impl.EaseOutSine;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -13,7 +13,6 @@ package wtf.moonlight.gui.click.dropdown.panel;
 import kotlin.collections.CollectionsKt;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import wtf.moonlight.Client;
 import wtf.moonlight.module.Categor;
@@ -21,8 +20,8 @@ import wtf.moonlight.module.impl.visual.ClickGUI;
 import wtf.moonlight.gui.click.IComponent;
 import wtf.moonlight.gui.click.dropdown.component.ModuleComponent;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.util.animations.advanced.Direction;
-import wtf.moonlight.util.animations.advanced.impl.EaseInOutQuad;
+import wtf.moonlight.util.render.animations.advanced.Direction;
+import wtf.moonlight.util.render.animations.advanced.impl.EaseInOutQuad;
 import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.render.MouseUtil;
 import wtf.moonlight.util.render.RenderUtil;
@@ -55,13 +54,10 @@ public class CategoryPanel implements IComponent {
     public void drawScreen(int mouseX, int mouseY) {
         update(mouseX, mouseY);
 
-        RenderUtil.scaleStart((float) new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() / 2, (float) new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight() / 2, (float) INSTANCE.getDropdownGUI().getOpeningAnimation().getOutput());
+        RenderUtil.scaleStart((float) new ScaledResolution(mc).getScaledWidth() / 2, (float) new ScaledResolution(mc).getScaledHeight() / 2, (float) INSTANCE.getDropdownGUI().getOpeningAnimation().getOutput());
 
-        RoundedUtil.drawRound(x, y - 2, width, (float) (19 + ((height - 19) * openAnimation.getOutput())), 6, new Color(ColorUtil.darker(INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue().getRGB(),0.2f)));
-        //RoundedUtils.drawRound(x, y - 2, width, 19, 3, ColorUtils.reAlpha(INSTANCE.getModuleManager().getModule(ClickGUI.class).color.get(), 25));
-        //RoundedUtils.drawRound(x, y - 2, width, (float) (19 + ((height - 19) * openAnimation.getOutput())), 3, ColorUtils.reAlpha(INSTANCE.getModuleManager().getModule(ClickGUI.class).color.get(), 50));
-
-        Fonts.interRegular.get(18).drawCenteredString(category.getName(), x + width / 2, y + 4.5, -1);
+        RoundedUtil.drawRound(x, y - 2, width, (float) (19 + ((height - 19) * openAnimation.getOutput())), 4, new Color(ColorUtil.darker(INSTANCE.getModuleManager().getModule(ClickGUI.class).color.getValue().getRGB(),0.2f)));
+        Fonts.Bold.get(18).drawCenteredString(category.getName(), x + width / 2, y + 4.5, -1);
 
         float componentOffsetY = 21;
         float distance = 7;

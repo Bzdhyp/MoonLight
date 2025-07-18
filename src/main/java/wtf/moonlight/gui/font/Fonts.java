@@ -36,7 +36,6 @@ public enum Fonts {
     Bold("bold"),
     Icon("icon"),
     esp("esp"),
-    wqy("wqy"),
     Semibold("semibold");
 
     private final String file;

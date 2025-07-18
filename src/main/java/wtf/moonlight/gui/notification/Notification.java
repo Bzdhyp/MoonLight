@@ -13,14 +13,12 @@ package wtf.moonlight.gui.notification;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import wtf.moonlight.Client;
-import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.module.impl.display.NotificationHUD;
 import wtf.moonlight.util.misc.InstanceAccess;
-import wtf.moonlight.util.animations.advanced.Animation;
-import wtf.moonlight.util.animations.Translate;
-import wtf.moonlight.util.animations.advanced.impl.EaseOutSine;
+import wtf.moonlight.util.render.animations.advanced.Animation;
+import wtf.moonlight.util.render.animations.Translate;
+import wtf.moonlight.util.render.animations.advanced.impl.EaseOutSine;
 import wtf.moonlight.util.TimerUtil;
 
 

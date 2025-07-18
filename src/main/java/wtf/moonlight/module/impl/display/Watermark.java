@@ -262,16 +262,16 @@ public class Watermark extends Module {
                     String name = clientName.charAt(0) + clientName.substring(1);
 
                     RenderUtil.drawRect(x - 2.5f, 5.5f, 2 + Fonts.sfui.get(18).getStringWidth(clientName + " - " + dateFormat.format(new Date()) + " - " + mc.thePlayer.getName() + " - " + fpsFormat.format(Minecraft.getDebugFPS()) + " FPS"), 12, setting.bgColor());
-                    if (setting.color.is("Fade")) {
+                    if (setting.colorMode.is("Fade")) {
                         RenderUtil.drawHorizontalGradientSideways(x - 2.5f, 5.5f, 2 + Fonts.sfui.get(18).getStringWidth(clientName + rectText), 1, setting.getMainColor().getRGB(), setting.getSecondColor().getRGB());
-                    } else if (setting.color.is("Dynamic")) {
+                    } else if (setting.colorMode.is("Dynamic")) {
                         RenderUtil.drawHorizontalGradientSideways(x - 2.5f, 5.5f, 2 + Fonts.sfui.get(18).getStringWidth(clientName + rectText), 1, setting.getMainColor().getRGB(), ColorUtil.darker(setting.getMainColor().getRGB(), 0.25F));
                     } else {
                         RenderUtil.drawHorizontalGradientSideways(x - 2.5f, 5.5f, 2 + Fonts.sfui.get(18).getStringWidth(clientName + rectText), 1, setting.color(0), setting.color(90));
                     }
                     for (int i = 0; i < name.length(); i++) {
                         String newstr = WHITE + String.valueOf(name.charAt(i));
-                        if (setting.color.is("Fade") || setting.color.is("Dynamic")) {
+                        if (setting.colorMode.is("Fade") || setting.colorMode.is("Dynamic")) {
                             if (i == 0) {
                                 Fonts.sfui.get(18).drawStringWithShadow(String.valueOf(name.charAt(i)), x - 1.0f, 9.0f, setting.getMainColor().getRGB());
                             } else {

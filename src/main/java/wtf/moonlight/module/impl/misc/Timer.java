@@ -23,7 +23,7 @@ import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.TimerUtil;
-import wtf.moonlight.util.animations.advanced.ContinualAnimation;
+import wtf.moonlight.util.render.animations.advanced.ContinualAnimation;
 import wtf.moonlight.util.packet.*;
 import wtf.moonlight.util.render.RoundedUtil;
 

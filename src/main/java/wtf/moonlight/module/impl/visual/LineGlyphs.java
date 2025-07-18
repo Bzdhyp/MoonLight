@@ -27,8 +27,8 @@ import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
-import wtf.moonlight.util.animations.advanced.Direction;
-import wtf.moonlight.util.animations.advanced.impl.SmoothStepAnimation;
+import wtf.moonlight.util.render.animations.advanced.Direction;
+import wtf.moonlight.util.render.animations.advanced.impl.SmoothStepAnimation;
 import wtf.moonlight.util.MathUtil;
 
 import java.util.ArrayList;

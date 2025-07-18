@@ -32,7 +32,7 @@ import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.util.TimerUtil;
 import wtf.moonlight.util.player.PlayerUtil;
 import wtf.moonlight.util.render.RenderUtil;
-import wtf.moonlight.util.animations.advanced.ContinualAnimation;
+import wtf.moonlight.util.render.animations.advanced.ContinualAnimation;
 
 import java.awt.*;
 import java.util.ArrayList;

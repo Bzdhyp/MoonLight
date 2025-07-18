@@ -18,20 +18,21 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import wtf.moonlight.Client;
 import wtf.moonlight.gui.notification.NotificationManager;
+import wtf.moonlight.module.impl.display.ArrayListMod;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.values.Value;
 import wtf.moonlight.gui.notification.NotificationType;
 import wtf.moonlight.util.misc.InstanceAccess;
-import wtf.moonlight.util.animations.Translate;
-import wtf.moonlight.util.animations.advanced.impl.DecelerateAnimation;
+import wtf.moonlight.util.render.animations.Translate;
+import wtf.moonlight.util.render.animations.advanced.impl.DecelerateAnimation;
 import wtf.moonlight.util.packet.PacketUtils;
 import wtf.moonlight.util.render.SoundUtil;
 
 import java.util.*;
 
 public abstract class Module implements InstanceAccess {
-
     private final ModuleInfo moduleInfo;
+
     @Getter
     private final String name;
     @Getter
@@ -84,7 +85,27 @@ public abstract class Module implements InstanceAccess {
      * @param tag The tag to set.
      */
     public void setTag(String tag) {
- 
+        if (tag != null && !tag.isEmpty()) {
+            String tagStyle = Optional.of(Client.INSTANCE.getModuleManager().getModule(ArrayListMod.class))
+                    .map(m -> m.tags.getValue())
+                    .orElse("")
+                    .toLowerCase();
+            switch (tagStyle) {
+                case "simple":
+                    this.tag = "§7 " + tag;
+                    break;
+                case "dash":
+                    this.tag = "§7 - " + tag;
+                    break;
+                case "bracket":
+                    this.tag = "§7 [" + tag + "]";
+                    break;
+                default:
+                    this.tag = "";
+            }
+        } else {
+            this.tag = "";
+        }
     }
 
     /**

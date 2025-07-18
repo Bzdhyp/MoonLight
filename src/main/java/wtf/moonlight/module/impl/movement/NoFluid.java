@@ -19,7 +19,7 @@ import java.util.Map;
 @ModuleInfo(name = "NoFluid",category = Categor.Movement)
 public class NoFluid extends Module {
 
-    private final ListValue mode = new ListValue("Mode", new String[]{"Vanilla", "GrimAC"}, "Vanilla",this);
+    private final ListValue mode = new ListValue("Mode", new String[]{"Vanilla", "Grim"}, "Vanilla",this);
 
     public boolean shouldCancel;
 
@@ -52,7 +52,7 @@ public class NoFluid extends Module {
                     || mc.theWorld.getBlockState(block.getKey()).getBlock() == Blocks.flowing_lava;
             if (checkBlock) {
                 shouldCancel = true;
-                if (mode.is("GrimAC") && shouldCancel) {
+                if (mode.is("Grim") && shouldCancel) {
                     mc.getNetHandler().getNetworkManager().sendPacket(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.ABORT_DESTROY_BLOCK, block.getKey(), EnumFacing.DOWN));
                     mc.getNetHandler().getNetworkManager().sendPacket(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK, block.getKey(), EnumFacing.DOWN));
                 }
