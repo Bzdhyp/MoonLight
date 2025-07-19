@@ -8,9 +8,6 @@ import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.main.alt.GuiAccountManager;
 import wtf.moonlight.gui.main.video.VideoPlayer;
 import wtf.moonlight.module.impl.display.Interface;
-import wtf.moonlight.util.render.animations.advanced.Animation;
-import wtf.moonlight.util.render.animations.advanced.Direction;
-import wtf.moonlight.util.render.animations.advanced.impl.DecelerateAnimation;
 import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.render.RoundedUtil;
 import wtf.moonlight.util.render.shader.KawaseBlur;
@@ -26,9 +23,6 @@ public class MainMenu extends GuiScreen {
             new MenuButton("Alt Manager"),
             new MenuButton("Settings"),
             new MenuButton("Exit"));
-
-    int alpha = 0;
-    private final Animation fadeInAnimation = new DecelerateAnimation(4000, 1).setDirection(Direction.FORWARDS);
 
     @Override
     public void initGui() {
@@ -62,27 +56,10 @@ public class MainMenu extends GuiScreen {
         FontRenderer font = Fonts.interBold.get(40);
 
         if (text != null && !text.isEmpty()) {
-            int length = text.length();
-
-            String colorPart;
-            String whitePart;
-
-            if (length >= 8) {
-                colorPart = text.substring(0, 4);
-                whitePart = text.substring(4);
-            } else {
-                colorPart = text.substring(0, 1);
-                whitePart = text.substring(1);
-            }
-
-            int colorPartWidth = font.getStringWidth(colorPart);
-            int whitePartWidth = font.getStringWidth(whitePart);
-            int totalWidth = colorPartWidth + whitePartWidth;
-
+            int totalWidth = font.getStringWidth(text.substring(0, 4)) + font.getStringWidth(text.substring(4));
             float x = width / 2f - totalWidth / 2f;
 
-            font.drawStringWithShadow(colorPart, x, y, textColor);
-            font.drawStringWithShadow(whitePart, x + colorPartWidth, y, defaultColor);
+            MainMenu.renderColoredText(font, text, x, y, textColor, defaultColor);
         } else {
             String clientName = Client.INSTANCE.getClientName();
             int totalWidth = font.getStringWidth(clientName);
@@ -91,7 +68,6 @@ public class MainMenu extends GuiScreen {
 
             font.drawStringWithShadow(clientName, x, y2, defaultColor);
         }
-
 
         for (MenuButton button : buttons) {
             button.x = width / 2f - buttonWidth / 2f;
@@ -111,6 +87,24 @@ public class MainMenu extends GuiScreen {
             count += (int) (buttonHeight + 5);
         }
         super.drawScreen(mouseX, mouseY, partialTicks);
+    }
+
+    public static void renderColoredText(FontRenderer font, String text, float x, float y, int textColor, int defaultColor) {
+        int length = text.length();
+
+        String colorPart;
+        String whitePart;
+
+        if (length >= 8) {
+            colorPart = text.substring(0, 4);
+            whitePart = text.substring(4);
+        } else {
+            colorPart = text.substring(0, 1);
+            whitePart = text.substring(1);
+        }
+
+        font.drawStringWithShadow(colorPart, x, y, textColor);
+        font.drawStringWithShadow(whitePart, x + font.getStringWidth(colorPart), y, defaultColor);
     }
 
     @Override

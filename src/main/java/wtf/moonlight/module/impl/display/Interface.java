@@ -54,8 +54,7 @@ public class Interface extends Module {
             case "Custom" -> ColorUtil.swapAlpha(bgCustomColor.getValue().getRGB(), alpha);
             case "Dark" -> (new Color(21, 21, 21, alpha)).getRGB();
             case "White" -> ColorUtil.swapAlpha(new Color(255, 255, 255).getRGB(), alpha);
-            case "Synced" ->
-                    new Color(ColorUtil.applyOpacity(color(counter), alpha / 255f), true).darker().darker().getRGB();
+            case "Synced" -> ColorUtil.swapAlpha(color(counter), alpha);
             default -> colors;
         };
         return colors;
@@ -75,19 +74,11 @@ public class Interface extends Module {
 
         int color = -1;
         switch (colorMode.getValue()) {
-            case "Custom" ->
-                    color = ColorUtil.applyOpacity(getMainColor().getRGB(), opacity);
-
+            case "Custom" -> color = ColorUtil.applyOpacity(getMainColor().getRGB(), opacity);
             case "Fade" ->
                     color = ColorUtil.fadeBetween(this.getMainColor().getRGB(), this.getSecondColor().getRGB(),
                             (float)((System.currentTimeMillis() + (long)counter * 100L) % ms) / ((float)ms / 2.0f));
-            case "Rainbow" -> {
-                if (mc.thePlayer == null) return Color.WHITE.getRGB();
-                color = new Color(Color.HSBtoRGB(
-                        (float) ((double) mc.thePlayer.ticksExisted / 50.0 + Math.sin((double) counter / 50.0 * 1.6)) % 1.0f,
-                        0.6f, 1.0f)).getRGB();
-            }
-
+            case "Rainbow" -> color = ColorUtil.swapAlpha(ColorUtil.getRainbow(counter), opacity);
             case "Astolfo" -> color = ColorUtil.applyOpacity(
                     new Color(ColorUtil.astolfoRainbow(
                             (int)(counter + (progress * 100)),

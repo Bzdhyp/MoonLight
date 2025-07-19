@@ -152,8 +152,6 @@ public class ArcaneClickGui extends GuiScreen {
         Fonts.Semibold.get(16).drawString("Time remaining:", x + w - 132, y + h - 20, fontcolor.getRGB());
         Fonts.Semibold.get(16).drawStringDynamic("Lifetime", x + w - 132 + Fonts.Semibold.get(16).getStringWidth("Time remaining:"), y + h - 20, 1, 6);
 
-        Fonts.Icon.get(25).drawStringDynamic("M", x + 16, y + 53.5f, 1, 6);
-        Fonts.Icon.get(20).drawStringDynamic("G", x + 62, y + 54.5f, 1, 6);
         Fonts.Bold.get(16).drawString("ESP", x + 28, y + 54.5f, fontcolor.getRGB());
 
         Color rectColor = smallbackgroundColor2;

@@ -74,12 +74,11 @@ public class Notification implements InstanceAccess {
         return switch (INSTANCE.getModuleManager().getModule(NotificationHUD.class).notificationMode.getValue()) {
             case "Default" -> 16;
             case "Test" -> Fonts.interRegular.get(15).getHeight() * 2 + 2;
-            case "Test2" -> 33;
+            case "Test2", "Augustus 2" -> 33;
             case "Exhi" -> 26;
             case "Type 2" -> 30;
             case "Type 3" -> 35;
             case "Augustus" -> 29;
-            case "Augustus 2" -> 33;
             case "Type 4" -> 27f;
             case "Type 5" -> 24;
             default -> 0;

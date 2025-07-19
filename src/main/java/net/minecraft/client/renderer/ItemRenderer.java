@@ -370,8 +370,6 @@ public class ItemRenderer {
                                 case "1.7":
                                     this.transformFirstPersonItem(equipProgress, swingProgress);
                                     this.doBlockTransformations();
-                                    GlStateManager.scale(0.83F, 0.88F, 0.85F);
-                                    GlStateManager.translate(-0.3F, 0.1F, 0.0F);
                                     break;
                                 case "Swing":
                                     GL11.glTranslated(0.015f, 0.12f, 0.0);

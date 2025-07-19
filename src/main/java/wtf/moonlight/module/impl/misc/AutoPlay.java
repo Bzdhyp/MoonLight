@@ -91,7 +91,7 @@ public class AutoPlay extends Module {
     private void sendToGame(String mode) {
         float delay = autoPlayDelay.getValue();
         String delayText = delay > 0 ? String.format("in %.1f s", delay) : "immediately";
-        NotificationManager.post(NotificationType.OKAY,"Playing Again!", "Playing again " + delayText + ".", delay);
+        NotificationManager.post(NotificationType.INFO,"Playing Again!", "Playing again " + delayText + ".", delay);
         Multithreading.schedule(() -> DebugUtil.send(mode), (long) delay, TimeUnit.SECONDS);
     }
 }

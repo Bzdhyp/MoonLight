@@ -58,6 +58,7 @@ public class BackgroundProcess implements InstanceAccess {
             if (unformattedText.contains("VICTORY!")) {
                 ++won;
             }
+
             if (unformattedText.contains("GAME OVER!") || unformattedText.contains("DEFEAT!") || unformattedText.contains("YOU DIED!")) {
                 ++lost;
             }

@@ -5,7 +5,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
 import org.lwjgl.opengl.GL11;
 import wtf.moonlight.Client;
+import wtf.moonlight.gui.font.FontRenderer;
 import wtf.moonlight.gui.font.Fonts;
+import wtf.moonlight.gui.main.MainMenu;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.util.render.animations.advanced.Animation;
 import wtf.moonlight.util.render.animations.advanced.Direction;
@@ -23,44 +25,29 @@ public class SplashScreen implements InstanceAccess {
     public static Animation animation = new DecelerateAnimation(250, 1);
     private static Framebuffer framebuffer;
     private static Animation progress2Anim;
-    private static Animation progress3Anim;
-    private static Animation progress4Anim;
 
     private static void drawScreen(float width, float height) {
         animation.setDirection((float) progressAnim.getOutput() >= 0.5 ? Direction.FORWARDS : Direction.BACKWARDS);
         float progress = (float) progress2Anim.getOutput();
         RenderUtil.drawRect(0, 0, width, height, new Color(0, 0, 0, 255));
 
-        // Get the first character width (like "A" in the reference)
-        String firstChar = Client.INSTANCE.getClientName().substring(0, 1);
-        float firstCharWidth = Fonts.interBold.get(40).getStringWidth(firstChar);
+        FontRenderer font = Fonts.interBold.get(40);
+        String text = Client.INSTANCE.getModuleManager().getModule(Interface.class).clientName.getValue();
+        int textColor = ColorUtil.swapAlpha(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(), 255);
+        int defaultColor = new Color(255, 255, 255, 255).getRGB();
+        float y = height / 2 - 50 + 7;
 
-        if ((float) progress2Anim.getOutput() >= 0.99f) {
-            progress3Anim.setDirection(Direction.FORWARDS);
-            progress4Anim.setDirection(Direction.FORWARDS);
+        if (text != null && !text.isEmpty()) {
+            int totalWidth = font.getStringWidth(text.substring(0, 4)) + font.getStringWidth(text.substring(4));
+            float x = width / 2f - totalWidth / 2f;
 
-            String restOfName = Client.INSTANCE.getClientName().substring(1);
-
-            Fonts.interBold.get(40).drawStringWithShadow(
-                    firstChar,
-                    5 + width / 2 - firstCharWidth / 2 - ((float) Fonts.interBold.get(40).getStringWidth(restOfName) / 2) * (float)progress3Anim.getOutput() - 5,
-                    7 + height / 2 - 50,
-                    Client.INSTANCE.getModuleManager().getModule(Interface.class).color()
-            );
-
-            Fonts.interBold.get(40).drawStringWithShadow(
-                    restOfName,
-                    width / 2 - ((float) Fonts.interBold.get(40).getStringWidth(restOfName) / 2) + firstCharWidth / 2,
-                    7 + height / 2 - 50 - 120 * (float)progress3Anim.getOutput() + 120,
-                    ColorUtil.applyOpacity(new Color(255, 255, 255).getRGB(), (float)progress4Anim.getOutput())
-            );
+            MainMenu.renderColoredText(font, text, x, y, textColor, defaultColor);
         } else {
-            Fonts.interBold.get(40).drawStringWithShadow(
-                    firstChar,
-                    5 + width / 2 - firstCharWidth / 2,
-                    height / 2 - 50 + 7,
-                    -1
-            );
+            String clientName = Client.INSTANCE.getClientName();
+            int totalWidth = font.getStringWidth(clientName);
+            float x = width / 2f - totalWidth / 2f;
+
+            font.drawStringWithShadow(clientName, x, y, defaultColor);
         }
 
         RoundedUtil.drawRound(width / 2 - (float) 170 / 2, height / 2 + 15, 170, 5, 2, new Color(221, 228, 255));
@@ -72,17 +59,17 @@ public class SplashScreen implements InstanceAccess {
     public static void drawScreen() {
         ScaledResolution sr = new ScaledResolution(mc);
         int scaleFactor = sr.getScaleFactor();
+
         // Create the scale factor
         // Bind the width and height to the framebuffer
         framebuffer = RenderUtil.createFrameBuffer(framebuffer);
         progressAnim = new DecelerateAnimation(9000, 1);
         progress2Anim = new DecelerateAnimation(5000, 1);
-        progress3Anim = new DecelerateAnimation(400, 1).setDirection(Direction.BACKWARDS);
-        progress4Anim = new DecelerateAnimation(5000, 1).setDirection(Direction.BACKWARDS);
 
         while (!progressAnim.isDone()) {
             framebuffer.framebufferClear();
             framebuffer.bindFramebuffer(true);
+
             // Create the projected image to be rendered
             GlStateManager.matrixMode(GL11.GL_PROJECTION);
             GlStateManager.loadIdentity();

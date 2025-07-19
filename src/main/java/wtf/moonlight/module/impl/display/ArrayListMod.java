@@ -27,21 +27,22 @@ import java.util.Comparator;
 @ModuleInfo(name = "Arraylist", category = Categor.Display)
 public class ArrayListMod extends Module {
     public final ListValue renderMod = new ListValue("Styles", new String[]{"Normal", "Hot Key"}, "Normal", this);
-    public final ListValue fontMode = new ListValue("Fonts Mode", new String[]{"Minecraft", "Bold", "SFUI", "Medium", "Tahoma", "Regular", "Semi Bold"}, "Semi Bold", this, () -> !renderMod.is("Hot Key"));
+    public final ListValue fontMode = new ListValue("Fonts Mode", new String[]{"Minecraft", "Bold", "SFUI", "Medium", "Tahoma", "Regular", "Semi Bold"}, "Semi Bold", this);
+    public final SliderValue fontSize = new SliderValue("Font Size", 15, 10, 25, this,() -> !fontMode.is("Minecraft"));
 
-    public final ListValue iconStyle = new ListValue("Icon Style", new String[]{"Categor", "Toggle"}, "Categor", this);
-    public final BoolValue hotkeysDisplay = new BoolValue("HotKeys Display", false, this);
-    public SliderValue radius = new SliderValue("Radius", 3, 0, 8, 0.1f, this);
+    public final ListValue iconStyle = new ListValue("Icon Style", new String[]{"Categor", "Toggle"}, "Categor", this, () -> renderMod.is("Hot Key"));
+    public final BoolValue hotkeysDisplay = new BoolValue("HotKeys Display", false, this, () -> renderMod.is("Hot Key"));
+    public SliderValue count = new SliderValue("Array Count", 1.4f, 1.4f, 2.5f, 0.1f, this, () -> renderMod.is("Hot Key"));
+    public SliderValue radius = new SliderValue("Radius", 3, 0, 6, 0.1f, this, () -> renderMod.is("Hot Key"));
 
-    public final SliderValue fontSize = new SliderValue("Font Size", 15, 10, 25, this,() -> !fontMode.is("Minecraft") && !renderMod.is("Hot Key"));
-    public final SliderValue positionOffset = new SliderValue("Position", 0, 0, 50, this, () -> !renderMod.is("Hot Key"));
-    public final SliderValue textHeight = new SliderValue("Text Height", 4, 0, 10, this, () -> !renderMod.is("Hot Key"));
+    public final SliderValue positionOffset = new SliderValue("Position", 0, 0, 50, this, () -> renderMod.is("Normal"));
+    public final SliderValue textHeight = new SliderValue("Text Height", 4, 0, 10, this, () -> renderMod.is("Normal"));
 
-    public final ListValue animation = new ListValue("Animation", new String[]{"Scale In", "Move In", "Slide In"}, "Scale In", this, () -> !renderMod.is("Hot Key"));
-    public final ListValue tags = new ListValue("Suffix", new String[]{"None", "Simple", "Bracket", "Dash"}, "Simple", this, () -> !renderMod.is("Hot Key"));
-    public final ListValue rectangleValue = new ListValue("Rectangle", new String[]{"None", "Top", "Side"}, "Top", this, () -> !renderMod.is("Hot Key"));
-    public final BoolValue backgroundValue = new BoolValue("Back Ground", true, this, () -> !renderMod.is("Hot Key"));
-    public final SliderValue bgAlpha = new SliderValue("Back Ground Alpha", 100, 1, 255, this, () -> backgroundValue.get() || renderMod.is("Hot Key"));
+    public final ListValue animation = new ListValue("Animation", new String[]{"Scale In", "Move In", "Slide In"}, "Scale In", this, () -> renderMod.is("Normal"));
+    public final ListValue tags = new ListValue("Suffix", new String[]{"None", "Simple", "Bracket", "Dash"}, "Simple", this);
+    public final ListValue rectangleValue = new ListValue("Rectangle", new String[]{"None", "Top", "Side"}, "Top", this, () -> renderMod.is("Normal"));
+    public final BoolValue backgroundValue = new BoolValue("Back Ground", true, this, () -> renderMod.is("Normal"));
+    public final SliderValue bgAlpha = new SliderValue("Back Ground Alpha", 100, 1, 255, this, () -> backgroundValue.get() || renderMod.is("Normal"));
 
     @EventTarget
     public void onRender2D(Render2DEvent event) {
@@ -181,10 +182,10 @@ public class ArrayListMod extends Module {
                 }
 
                 float leftSide = xValue - 2f;
-                int textcolor = ColorUtil.swapAlpha(getModule(Interface.class).color(count), alphaAnimation * 255);
                 float bottom = (customFontMode ? font.getHeight() : mc.fontRendererObj.FONT_HEIGHT) + fontHeight;
+                float textYOffset = (bottom - (customFontMode ? font.getHeight() - 4f : mc.fontRendererObj.FONT_HEIGHT)) / 2.0f;
 
-                float textYOffset = (bottom - (customFontMode ? font.getHeight() : mc.fontRendererObj.FONT_HEIGHT)) / 2.0f;
+                int textcolor = ColorUtil.swapAlpha(getModule(Interface.class).color(count), alphaAnimation * 255);
 
                 if (backgroundValue.get()) {
                     if (!shadow) {
