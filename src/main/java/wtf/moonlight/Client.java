@@ -28,6 +28,7 @@ import wtf.moonlight.gui.click.neverlose.NeverLose;
 import wtf.moonlight.gui.notification.NotificationManager;
 import wtf.moonlight.gui.notification.NotificationType;
 import wtf.moonlight.gui.widget.WidgetManager;
+import wtf.moonlight.module.impl.display.island.IslandManager;
 import wtf.moonlight.util.DiscordInfo;
 import wtf.moonlight.util.player.RotationUtil;
 
@@ -57,6 +58,7 @@ public class Client {
     private WidgetManager widgetManager;
     private CommandManager commandManager;
     private FriendManager friendManager;
+    private IslandManager islandManager;
 
     private NeverLose neverLose;
     private DropdownGUI dropdownGUI;
@@ -85,6 +87,7 @@ public class Client {
         configManager = new ConfigManager();
         commandManager = new CommandManager();
         friendManager = new FriendManager();
+        islandManager = new IslandManager();
 
         neverLose = new NeverLose();
         dropdownGUI = new DropdownGUI();

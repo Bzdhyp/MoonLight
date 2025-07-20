@@ -10,6 +10,7 @@
  */
 package wtf.moonlight.module.impl.combat;
 
+import com.cubk.EventPriority;
 import com.viaversion.viarewind.protocol.protocol1_8to1_9.Protocol1_8To1_9;
 import com.viaversion.viarewind.utils.PacketUtil;
 import com.viaversion.viaversion.api.Via;
@@ -33,11 +34,13 @@ import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.events.player.MoveInputEvent;
 import wtf.moonlight.events.player.MoveMathEvent;
+import wtf.moonlight.events.player.SlowDownEvent;
 import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.display.Interface;
+import wtf.moonlight.module.impl.movement.Stuck;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.font.Fonts;
@@ -49,15 +52,15 @@ import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.concurrent.LinkedBlockingQueue;
 
-@ModuleInfo(name = "AutoGap", category = Categor.Combat)
-public class AutoGap extends Module {
+@ModuleInfo(name = "AutoGapple", category = Categor.Combat)
+public class AutoGapple extends Module {
+    private final SliderValue delay = new SliderValue("Delay", 1000, 0, 10000, 100, this);
+    private final SliderValue health = new SliderValue("Health", 15, 0, 20, 0.5f, this);
+    private final BoolValue noMove = new BoolValue("Stop Move When Eating", false, this);
+    public final BoolValue alwaysAttack = new BoolValue("Always Attack", false, this);
+    private final BoolValue autoClose = new BoolValue("Close When No Golden Apple", true, this);
+    private final BoolValue lagValue = new BoolValue("Lag When In Air", false, this);
 
-    private final SliderValue delay = new SliderValue("Delay", 1000, 0, 10000, 100,this);
-    private final SliderValue health = new SliderValue("Health", 15, 0, 20, 0.5f,this);
-    private final BoolValue noMove = new BoolValue("Stop Move When Eating", false,this);
-    public final BoolValue alwaysAttack = new BoolValue("Always Attack", false,this);
-    private final BoolValue autoClose = new BoolValue("Close When No Golden Apple", true,this);
-    private final BoolValue lagValue = new BoolValue("Lag When In Air", false,this);
     private final TimerUtil timer = new TimerUtil();
     public boolean eating = false;
     private int movingPackets = 0;
@@ -73,7 +76,7 @@ public class AutoGap extends Module {
     }
 
     @Override
-    public void onEnable(){
+    public void onEnable() {
         packets.clear();
         slot = -1;
         needSkip = false;
@@ -92,20 +95,17 @@ public class AutoGap extends Module {
     }
 
     @EventTarget
-    public void onPreMotion(MotionEvent event){
-
+    public void onPreMotion(MotionEvent event) {
         if (event.isPre()) {
             if (mc.thePlayer == null || !mc.thePlayer.isEntityAlive()) {
                 eating = false;
                 packets.clear();
-
                 return;
             }
 
             if (!mc.playerController.getCurrentGameType().isSurvivalOrAdventure() || !timer.hasTimeElapsed(delay.getValue())) {
                 eating = false;
                 release();
-
                 return;
             }
 
@@ -119,24 +119,22 @@ public class AutoGap extends Module {
             } else {
                 eating = true;
                 if (movingPackets >= 32) {
-                    if (slot != mc.thePlayer.inventory.currentItem) sendPacketNoEvent(new C09PacketHeldItemChange(slot));
+                    if (slot != mc.thePlayer.inventory.currentItem)
+                        sendPacketNoEvent(new C09PacketHeldItemChange(slot));
                     sendPacketNoEvent(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getStackInSlot(slot)));
                     mc.thePlayer.itemInUseCount -= 32;
                     release();
-                    if (slot != mc.thePlayer.inventory.currentItem) sendPacketNoEvent(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
+                    if (slot != mc.thePlayer.inventory.currentItem)
+                        sendPacketNoEvent(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
                     timer.reset();
 
                 } else if (mc.thePlayer.ticksExisted % 3 == 0) {
                     while (!packets.isEmpty()) {
                         final Packet<?> packet = packets.poll();
 
-                        if (packet instanceof C01PacketChatMessage) {
-                            break;
-                        }
+                        if (packet instanceof C01PacketChatMessage) break;
 
-                        if (packet instanceof C03PacketPlayer) {
-                            movingPackets--;
-                        }
+                        if (packet instanceof C03PacketPlayer) movingPackets--;
 
                         sendPacketNoEvent(packet);
 
@@ -154,11 +152,12 @@ public class AutoGap extends Module {
     }
 
     @EventTarget
-    public void onPacket(PacketEvent event){
+    public void onPacket(PacketEvent event) {
         if (mc.thePlayer == null || !mc.playerController.getCurrentGameType().isSurvivalOrAdventure()) return;
 
-        final Packet<?> packet = event.getPacket();
-        if(event.getState() == PacketEvent.State.OUTGOING) {
+        Packet<?> packet = event.getPacket();
+        if (event.getState() == PacketEvent.State.OUTGOING) {
+            if (mc.thePlayer == null || !mc.playerController.getCurrentGameType().isSurvivalOrAdventure()) return;
 
             if (packet instanceof C00Handshake || packet instanceof C00PacketLoginStart ||
                     packet instanceof C00PacketServerQuery || packet instanceof C01PacketPing ||
@@ -169,8 +168,7 @@ public class AutoGap extends Module {
             if (!(packet instanceof C09PacketHeldItemChange) &&
                     !(packet instanceof C0EPacketClickWindow) &&
                     !(packet instanceof C16PacketClientStatus) &&
-                    !(packet instanceof C0DPacketCloseWindow)
-            ) {
+                    !(packet instanceof C0DPacketCloseWindow)) {
                 if (eating) {
                     event.setCancelled(true);
 
@@ -179,13 +177,16 @@ public class AutoGap extends Module {
             }
         } else {
             if (packet instanceof S12PacketEntityVelocity wrapped) {
-
                 if (wrapped.getEntityID() == mc.thePlayer.getEntityId())
                     needSkip = true;
             }
         }
     }
 
+    @EventTarget
+    public void onWorld(WorldEvent event) {
+        toggle();
+    }
 
     @EventTarget
     public void onMoveMath(MoveMathEvent event) {
@@ -193,17 +194,55 @@ public class AutoGap extends Module {
         else if (needSkip) needSkip = false;
     }
 
+    @EventTarget()
+    @EventPriority(0)
+    public void onSlowDown(SlowDownEvent event) {
+        if (eating) {
+            event.setCancelled(false);
+            event.setStrafe(0.2f);
+            event.setForward(0.2f);
+        }
+    }
+
     @EventTarget
-    public void onMoveInput(MoveInputEvent event){
+    public void onMoveInput(MoveInputEvent event) {
         if (eating && noMove.get()) {
             event.setForward(0);
             event.setStrafe(0);
         }
     }
 
-    @EventTarget
-    public void onWorld(WorldEvent event){
-        toggle();
+    private void release() {
+        if (mc.getNetHandler() == null) return;
+
+        while (!packets.isEmpty()) {
+            final Packet<?> packet = packets.poll();
+
+            if (packet instanceof C01PacketChatMessage || packet instanceof C08PacketPlayerBlockPlacement || packet instanceof C07PacketPlayerDigging)
+                continue;
+
+            sendPacketNoEvent(packet);
+        }
+
+        movingPackets = 0;
+    }
+
+    private int getGApple() {
+        for (int i = 0; i < 9; i++) {
+            final ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
+
+            if (stack == null)
+                continue;
+
+            if (stack.getItem() instanceof ItemAppleGold) {
+                return i;
+            }
+        }
+
+        if (autoClose.get())
+            this.toggle();
+
+        return -1;
     }
 
     @EventTarget
@@ -220,8 +259,8 @@ public class AutoGap extends Module {
             final int half = width / 2;
             animation.animate((width - 2) * percentage, 40);
 
-            RoundedUtil.drawRound(x - half - 1, y - 1 - 12, width + 1, (int) (thickness + 1) + 12 + 3, 2, new Color(getModule(Interface.class).bgColor(),true));
-            RoundedUtil.drawRound(x - half - 1, y - 1, width + 1, (int) (thickness + 1), 2, new Color(getModule(Interface.class).bgColor(),true));
+            RoundedUtil.drawRound(x - half - 1, y - 1 - 12, width + 1, (int) (thickness + 1) + 12 + 3, 2, new Color(getModule(Interface.class).bgColor(), true));
+            RoundedUtil.drawRound(x - half - 1, y - 1, width + 1, (int) (thickness + 1), 2, new Color(getModule(Interface.class).bgColor(), true));
 
             RoundedUtil.drawGradientHorizontal(x - half, y - 1, animation.getOutput(), thickness, 2, new Color(getModule(Interface.class).color(0)), new Color(getModule(Interface.class).color(90)));
 
@@ -229,36 +268,5 @@ public class AutoGap extends Module {
 
             Fonts.interRegular.get(12).drawCenteredString(new DecimalFormat("0.0").format(percentage * 100) + "%", x, y + 2, -1);
         }
-    }
-    private void release() {
-        if (mc.getNetHandler() == null) return;
-
-        while (!packets.isEmpty()) {
-            final Packet<?> packet = packets.poll();
-
-            if (packet instanceof C01PacketChatMessage || packet instanceof C08PacketPlayerBlockPlacement || packet instanceof C07PacketPlayerDigging)
-                continue;
-
-            sendPacketNoEvent(packet);
-        }
-
-        movingPackets = 0;
-    }
-    private int getGApple() {
-        for (int i = 0;i < 9;i++) {
-            final ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
-
-            if (stack == null)
-                continue;
-
-            if (stack.getItem() instanceof ItemAppleGold) {
-                return i;
-            }
-        }
-
-        if (autoClose.get())
-            this.toggle();
-
-        return -1;
     }
 }

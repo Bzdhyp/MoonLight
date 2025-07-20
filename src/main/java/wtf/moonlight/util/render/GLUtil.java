@@ -10,8 +10,10 @@
  */
 package wtf.moonlight.util.render;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
+import org.lwjglx.input.Mouse;
 import org.lwjglx.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjglx.util.glu.GLU;
@@ -30,6 +32,38 @@ public class GLUtil {
     private static final FloatBuffer modelMatrix = GLAllocation.createDirectFloatBuffer(16);
     private static final FloatBuffer projectionMatrix = GLAllocation.createDirectFloatBuffer(16);
     private static final float[] BUFFER = new float[3];
+
+    public static int getMouseX() {
+        return Mouse.getX() * getScreenWidth() / Minecraft.getMinecraft().displayWidth;
+    }
+
+    public static int getMouseY() {
+        return getScreenHeight() - Mouse.getY() * getScreenHeight() / Minecraft.getMinecraft().displayWidth - 1;
+    }
+
+    public static int getScreenWidth() {
+        return Minecraft.getMinecraft().displayWidth / getScaleFactor();
+    }
+
+    public static int getScreenHeight() {
+        return Minecraft.getMinecraft().displayHeight / getScaleFactor();
+    }
+
+    public static int getScaleFactor() {
+        int scaleFactor = 1;
+        final boolean isUnicode = Minecraft.getMinecraft().isUnicode();
+        int guiScale = Minecraft.getMinecraft().gameSettings.guiScale;
+        if (guiScale == 0) {
+            guiScale = 1000;
+        }
+        while (scaleFactor < guiScale && Minecraft.getMinecraft().displayWidth / (scaleFactor + 1) >= 320 && Minecraft.getMinecraft().displayHeight / (scaleFactor + 1) >= 240) {
+            ++scaleFactor;
+        }
+        if (isUnicode && scaleFactor % 2 != 0 && scaleFactor != 1) {
+            --scaleFactor;
+        }
+        return scaleFactor;
+    }
 
     public static void enableDepth() {
         GlStateManager.enableDepth();

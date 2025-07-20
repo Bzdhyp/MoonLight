@@ -17,8 +17,12 @@ import org.lwjglx.input.Mouse;
 import wtf.moonlight.events.render.Shader2DEvent;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.util.misc.InstanceAccess;
+import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.render.MouseUtil;
 import wtf.moonlight.util.render.RoundedUtil;
+import wtf.moonlight.util.render.animations.advanced.Animation;
+import wtf.moonlight.util.render.animations.advanced.Direction;
+import wtf.moonlight.util.render.animations.advanced.impl.DecelerateAnimation;
 
 import java.awt.*;
 
@@ -41,6 +45,8 @@ public abstract class Widget implements InstanceAccess {
     protected ScaledResolution sr;
     protected Interface setting = INSTANCE.getModuleManager().getModule(Interface.class);
 
+    public Animation hoverAnimation = new DecelerateAnimation(250, 1, Direction.BACKWARDS);
+
     public Widget(String name) {
         this.name = name;
         this.x = 0f;
@@ -55,41 +61,59 @@ public abstract class Widget implements InstanceAccess {
         this.align = align;
     }
 
+    public abstract void render();
+
     public abstract void onShader(Shader2DEvent event);
 
-    public abstract void render();
+    public abstract boolean shouldRender();
 
     public void updatePos() {
         sr = new ScaledResolution(mc);
-
         renderX = x * sr.getScaledWidth();
         renderY = y * sr.getScaledHeight();
 
-        if (renderX < 0f) x = 0f;
-        if (renderX > sr.getScaledWidth() - width) x = (sr.getScaledWidth() - width) / sr.getScaledWidth();
-        if (renderY < 0f) y = 0f;
-        if (renderY > sr.getScaledHeight() - height) y = (sr.getScaledHeight() - height) / sr.getScaledHeight();
-
-        if (align == (WidgetAlign.LEFT | WidgetAlign.TOP)) return;
-
-        if ((align & WidgetAlign.RIGHT) != 0) {
-            renderX -= width;
-        } else if ((align & WidgetAlign.CENTER) != 0) {
-            renderX -= width / 2f;
+        if (align != (WidgetAlign.LEFT | WidgetAlign.TOP)) {
+            if ((align & WidgetAlign.RIGHT) != 0) {
+                renderX -= width;
+            } else if ((align & WidgetAlign.CENTER) != 0) {
+                renderX -= width / 2f;
+            }
+            if ((align & WidgetAlign.BOTTOM) != 0) {
+                renderY -= height;
+            } else if ((align & WidgetAlign.MIDDLE) != 0) {
+                renderY -= height / 2f;
+            }
         }
 
-        if ((align & WidgetAlign.BOTTOM) != 0) {
-            renderY -= height;
-        } else if ((align & WidgetAlign.MIDDLE) != 0) {
-            renderY -= height / 2f;
+        if (width <= sr.getScaledWidth()) {
+            if (renderX < 0) {
+                x = 0;
+                renderX = 0;
+            } else if (renderX > sr.getScaledWidth() - width) {
+                x = (sr.getScaledWidth() - width) / sr.getScaledWidth();
+                renderX = sr.getScaledWidth() - width;
+            }
+        }
+
+        if (height <= sr.getScaledHeight()) {
+            if (renderY < 0) {
+                y = 0;
+                renderY = 0;
+            } else if (renderY > sr.getScaledHeight() - height) {
+                y = (sr.getScaledHeight() - height) / sr.getScaledHeight();
+                renderY = sr.getScaledHeight() - height;
+            }
         }
     }
 
     public final void onChatGUI(int mouseX, int mouseY, boolean drag) {
         boolean hovering = MouseUtil.isHovered2(renderX, renderY, width, height, mouseX, mouseY);
 
-        if (dragging) {
-            RoundedUtil.drawRoundOutline(renderX, renderY, width, height, 2f, 0.05f, new Color(0, 0, 0, 0), Color.WHITE);
+        hoverAnimation.setDirection(hovering ? Direction.FORWARDS : Direction.BACKWARDS);
+
+        if (!hoverAnimation.isDone() || hoverAnimation.finished(Direction.FORWARDS)) {
+            RoundedUtil.drawRoundOutline(renderX - 2, renderY - 4, width + 6, height + 6, 2f, 0.05f,
+                    ColorUtil.applyOpacity(Color.WHITE, 0), ColorUtil.applyOpacity(Color.WHITE, (float) hoverAnimation.getOutput()));
         }
 
         if (hovering && Mouse.isButtonDown(0) && !dragging && drag) {
@@ -110,8 +134,5 @@ public abstract class Widget implements InstanceAccess {
             dragX = mouseX;
             dragY = mouseY;
         }
-
     }
-
-    public abstract boolean shouldRender();
 }

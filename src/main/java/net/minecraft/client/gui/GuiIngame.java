@@ -38,6 +38,8 @@ import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.impl.display.ScoreboardMod;
 import wtf.moonlight.module.impl.visual.PostProcessing;
 import wtf.moonlight.component.SpoofSlotComponent;
+import wtf.moonlight.util.render.ColorUtil;
+import wtf.moonlight.util.render.GLUtil;
 import wtf.moonlight.util.render.RoundedUtil;
 
 import java.awt.*;
@@ -482,69 +484,65 @@ public class GuiIngame extends Gui
         }
     }
 
-    public int scoreBoardHeight = 0;
     private final Pattern LINK_PATTERN = Pattern.compile("(http(s)?://.)?(www\\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\\.[A-z]{2,6}\\b([-a-zA-Z0-9@:%_+.~#?&/=]*)");
 
-    private void renderScoreboard(ScoreObjective objective, ScaledResolution scaledRes) {
+    public void renderScoreboard(ScoreObjective objective, ScaledResolution scaledRes) {
         Scoreboard scoreboard = objective.getScoreboard();
-        Collection<Score> scores = scoreboard.getSortedScores(objective);
-        List<Score> list = Lists.newArrayList(Iterables.filter(scores, p_apply_1_ -> p_apply_1_.getPlayerName() != null && !p_apply_1_.getPlayerName().startsWith("#")));
+        Collection<Score> collection = scoreboard.getSortedScores(objective);
+        List<Score> list = Lists.newArrayList(Iterables.filter(collection, p_apply_1_ -> p_apply_1_.getPlayerName() != null && !p_apply_1_.getPlayerName().startsWith("#")));
+
+        ScoreboardMod scoreboardMod = Client.INSTANCE.getModuleManager().getModule(ScoreboardMod.class);
 
         if (list.size() > 15) {
-            scores = Lists.newArrayList(Iterables.skip(list, scores.size() - 15));
+            collection = Lists.newArrayList(Iterables.skip(list, collection.size() - 15));
         } else {
-            scores = list;
+            collection = list;
         }
 
-        int i = this.getFontRenderer().getStringWidth(objective.getDisplayName());
+        float i = this.getFontRenderer().getStringWidth(objective.getDisplayName());
 
-        for (Score score : scores) {
+        for (Score score : collection) {
             ScorePlayerTeam scoreplayerteam = scoreboard.getPlayersTeam(score.getPlayerName());
             String s = ScorePlayerTeam.formatPlayerName(scoreplayerteam, score.getPlayerName()) + ": " + EnumChatFormatting.RED + score.getScorePoints();
             i = Math.max(i, this.getFontRenderer().getStringWidth(s));
         }
 
-        int i1 = scores.size() * this.getFontRenderer().FONT_HEIGHT;
-        int j1 = scaledRes.getScaledHeight() / 2 + i1 / 3;
-        int k1 = 3;
-        int l1 = scaledRes.getScaledWidth() - i - k1;
+        int i1 = collection.size() * this.getFontRenderer().FONT_HEIGHT;
+        int j1 = scaledRes.getScaledHeight() / 2 + i1 / 3 + scoreboardMod.yOffset.getValue().intValue();
+        float l1 = scaledRes.getScaledWidth() - i - 3;
         int j = 0;
 
-        if (Client.INSTANCE.getModuleManager().getModule(ScoreboardMod.class).fixHeight.get()) {
-            j1 = Math.max(j1, scoreBoardHeight + i1 + this.getFontRenderer().FONT_HEIGHT + 17);
-        }
-
-        for (Score score1 : scores) {
+        Color color = ColorUtil.applyOpacity(Color.BLACK, 75 / 255f);
+        for (Score score1 : collection) {
             ++j;
-
             ScorePlayerTeam scoreplayerteam1 = scoreboard.getPlayersTeam(score1.getPlayerName());
             String s1 = ScorePlayerTeam.formatPlayerName(scoreplayerteam1, score1.getPlayerName());
-            String s2 = EnumChatFormatting.RED + "" + score1.getScorePoints();
             int k = j1 - j * this.getFontRenderer().FONT_HEIGHT;
+            int l = scaledRes.getScaledWidth() - 3 + 2;
+            GLUtil.startBlend();
+            drawRect(l1 - 2, k, l, k + this.getFontRenderer().FONT_HEIGHT, color.getRGB());
 
-            int l = scaledRes.getScaledWidth() - k1 + 2;
-
-            if(!Client.INSTANCE.getModuleManager().getModule(ScoreboardMod.class).hideBackground.get())
-                drawRect(l1 - 2, k, l, k + this.getFontRenderer().FONT_HEIGHT, 1342177280);
-
+            // Line text
             final Matcher linkMatcher = LINK_PATTERN.matcher(s1);
             if(linkMatcher.find()) {
                 s1 = Client.INSTANCE.getClientName() + "V2@github";
                 this.getFontRenderer().drawGradientWithShadow(s1, l1, k, (index) -> new Color(Client.INSTANCE.getModuleManager().getModule(Interface.class).color(index)));
             } else {
-                this.getFontRenderer().drawString(s1, l1, k, 553648127, true);
+                this.getFontRenderer().drawString(s1, l1, k, -1, scoreboardMod.textShadow.get());
             }
 
-            if(!(Client.INSTANCE.getModuleManager().getModule(ScoreboardMod.class).hideScoreRed.get()))
-                this.getFontRenderer().drawString(s2, l - this.getFontRenderer().getStringWidth(s2), k, 553648127);
+            // Line number
+            if (scoreboardMod.redNumbers.get()) {
+                String s2 = EnumChatFormatting.RED + "" + score1.getScorePoints();
+                this.getFontRenderer().drawString(s2, l - this.getFontRenderer().getStringWidth(s2), k, -1, scoreboardMod.textShadow.get());
+            }
 
-            if (j == scores.size()) {
+            if (j == collection.size()) {
                 String s3 = objective.getDisplayName();
-                if(!Client.INSTANCE.getModuleManager().getModule(ScoreboardMod.class).hideBackground.get()) {
-                    drawRect(l1 - 2, k - this.getFontRenderer().FONT_HEIGHT - 1, l, k - 1, 1610612736);
-                    drawRect(l1 - 2, k - 1, l, k, 1342177280);
-                }
-                this.getFontRenderer().drawString(s3, l1 + i / 2 - this.getFontRenderer().getStringWidth(s3) / 2, k - this.getFontRenderer().FONT_HEIGHT, 553648127);
+                drawRect(l1 - 2, k - this.getFontRenderer().FONT_HEIGHT - 1, l, k - 1, color.getRGB());
+                GLUtil.startBlend();
+                drawRect(l1 - 2, k - 1, l, k, color.getRGB());
+                this.getFontRenderer().drawString(s3, l1 + i / 2.0F - this.getFontRenderer().getStringWidth(s3) / 2.0F, k - this.getFontRenderer().FONT_HEIGHT, -1, scoreboardMod.textShadow.get());
             }
         }
     }

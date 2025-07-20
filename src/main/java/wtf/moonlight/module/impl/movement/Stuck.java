@@ -25,8 +25,8 @@ import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.util.packet.PacketUtils;
 
-@ModuleInfo(name = "Freeze", category = Categor.Movement)
-public class Freeze extends Module {
+@ModuleInfo(name = "Stuck", category = Categor.Movement)
+public class Stuck extends Module {
     private final BoolValue disableOnHurt = new BoolValue("Disable On Hurt", false, this);
     private double x;
     private double y;
@@ -56,7 +56,7 @@ public class Freeze extends Module {
     public void onPacket(final PacketEvent event) {
         if (event.getPacket() instanceof C08PacketPlayerBlockPlacement) {
             final Vector2f current = new Vector2f(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
-            final float f = mc.gameSettings.mouseSensitivity * 0.6f + 0.2f;
+            final float f = mc.gameSettings.mouseSensitivity + 0.2f;
             final float gcd = f * f * f * 1.2f;
             current.x -= current.x % gcd;
             current.y -= current.y % gcd;
@@ -68,6 +68,7 @@ public class Freeze extends Module {
             sendPacketNoEvent(new C03PacketPlayer.C05PacketPlayerLook(current.x, current.y, this.onGround));
             sendPacketNoEvent(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
         }
+
         if (event.getPacket() instanceof C03PacketPlayer) {
             event.setCancelled(true);
         }
@@ -78,7 +79,7 @@ public class Freeze extends Module {
 
         if (disableOnHurt.get()) {
             if (mc.thePlayer.hurtTime == 1)
-                getModule(Freeze.class).setEnabled(false);
+                getModule(Stuck.class).setEnabled(false);
         }
     }
 
@@ -96,7 +97,7 @@ public class Freeze extends Module {
     }
 
     public static void throwPearl(final Vector2f current) {
-        if (!Client.INSTANCE.getModuleManager().getModule(Freeze.class).isEnabled()) {
+        if (!Client.INSTANCE.getModuleManager().getModule(Stuck.class).isEnabled()) {
             return;
         }
         mc.thePlayer.rotationYaw = current.x;
@@ -105,10 +106,10 @@ public class Freeze extends Module {
         final float gcd = f * f * f * 1.2f;
         current.x -= current.x % gcd;
         current.y -= current.y % gcd;
-        if (!Client.INSTANCE.getModuleManager().getModule(Freeze.class).rotation.equals(current)) {
-            PacketUtils.sendPacket(new C03PacketPlayer.C05PacketPlayerLook(current.x, current.y, Client.INSTANCE.getModuleManager().getModule(Freeze.class).onGround));
+        if (!Client.INSTANCE.getModuleManager().getModule(Stuck.class).rotation.equals(current)) {
+            PacketUtils.sendPacket(new C03PacketPlayer.C05PacketPlayerLook(current.x, current.y, Client.INSTANCE.getModuleManager().getModule(Stuck.class).onGround));
         }
-        Client.INSTANCE.getModuleManager().getModule(Freeze.class).rotation = current;
+        Client.INSTANCE.getModuleManager().getModule(Stuck.class).rotation = current;
         PacketUtils.sendPacket(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
     }
 }

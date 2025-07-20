@@ -6,6 +6,7 @@ import wtf.moonlight.Client;
 import wtf.moonlight.gui.font.FontRenderer;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.main.alt.GuiAccountManager;
+import wtf.moonlight.gui.main.particle.ParticleEngine;
 import wtf.moonlight.gui.main.video.VideoPlayer;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.util.render.ColorUtil;
@@ -23,6 +24,7 @@ public class MainMenu extends GuiScreen {
             new MenuButton("Alt Manager"),
             new MenuButton("Settings"),
             new MenuButton("Exit"));
+    public ParticleEngine particle = new ParticleEngine();
 
     @Override
     public void initGui() {
@@ -43,6 +45,8 @@ public class MainMenu extends GuiScreen {
         float buttonHeight = 20;
         float frameY = height / 2f - (buttons.size() * (buttonHeight + 2)) / 2f - 16;
 
+        particle.render(0, 0);
+
         RoundedUtil.drawRound(width / 2f - buttonWidth / 2f - 14, (height / 2f) - 80, buttonWidth + 14 * 2, 180, 8, new Color(0, 0, 0, 74));
         KawaseBlur.startBlur();
         RoundedUtil.drawRound(width / 2f - buttonWidth / 2f - 14, (height / 2f) - 80, buttonWidth + 14 * 2, 180, 8, new Color(0, 0, 0, 74));
@@ -56,7 +60,8 @@ public class MainMenu extends GuiScreen {
         FontRenderer font = Fonts.interBold.get(40);
 
         if (text != null && !text.isEmpty()) {
-            int totalWidth = font.getStringWidth(text.substring(0, 4)) + font.getStringWidth(text.substring(4));
+            int splitPoint = Math.min(4, text.length());
+            int totalWidth = font.getStringWidth(text.substring(0, splitPoint)) + font.getStringWidth(text.substring(splitPoint));
             float x = width / 2f - totalWidth / 2f;
 
             MainMenu.renderColoredText(font, text, x, y, textColor, defaultColor);
@@ -90,18 +95,11 @@ public class MainMenu extends GuiScreen {
     }
 
     public static void renderColoredText(FontRenderer font, String text, float x, float y, int textColor, int defaultColor) {
-        int length = text.length();
+        if (text == null || text.isEmpty()) return;
 
-        String colorPart;
-        String whitePart;
-
-        if (length >= 8) {
-            colorPart = text.substring(0, 4);
-            whitePart = text.substring(4);
-        } else {
-            colorPart = text.substring(0, 1);
-            whitePart = text.substring(1);
-        }
+        int splitPoint = Math.min(4, text.length());
+        String colorPart = text.substring(0, splitPoint);
+        String whitePart = text.substring(splitPoint);
 
         font.drawStringWithShadow(colorPart, x, y, textColor);
         font.drawStringWithShadow(whitePart, x + font.getStringWidth(colorPart), y, defaultColor);
@@ -111,9 +109,5 @@ public class MainMenu extends GuiScreen {
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         buttons.forEach(button -> button.mouseClicked(mouseX, mouseY, mouseButton));
         super.mouseClicked(mouseX, mouseY, mouseButton);
-    }
-
-    public boolean doesGuiPauseGame() {
-        return false;
     }
 }

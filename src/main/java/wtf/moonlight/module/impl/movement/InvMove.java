@@ -20,7 +20,7 @@ import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.player.InvManager;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
-import wtf.moonlight.util.misc.ServerUtil;
+import wtf.moonlight.util.ServerUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,7 +189,7 @@ public class InvMove extends Module {
 
     @EventTarget
     public final void onUpdate(UpdateEvent event) {
-        if (!mc.currentScreen.GuiInvMove()) return;
+        if (mc.currentScreen.GuiInvMove()) return;
 
         KeyBinding[] moveKeys = new KeyBinding[]{
                 mc.gameSettings.keyBindForward,
@@ -206,7 +206,7 @@ public class InvMove extends Module {
 
     @EventTarget
     public final void onMoveInput(MoveInputEvent event) {
-        if (!mc.currentScreen.GuiInvMove()) return;
+        if (mc.currentScreen.GuiInvMove()) return;
 
         float moveStrafe = 0.0F;
         float moveForward = 0.0F;

@@ -28,7 +28,7 @@ public class GuiChest extends GuiContainer
     }
 
     public boolean GuiInvMove() {
-        return Client.INSTANCE.getModuleManager().getModule(InvMove.class).noChestValue.get();
+        return !Client.INSTANCE.getModuleManager().getModule(InvMove.class).noChestValue.get();
     }
 
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)

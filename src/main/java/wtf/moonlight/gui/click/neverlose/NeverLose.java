@@ -98,7 +98,7 @@ public class NeverLose extends GuiScreen {
     }
 
     public boolean GuiInvMove() {
-        return true;
+        return false;
     }
 
     @Override

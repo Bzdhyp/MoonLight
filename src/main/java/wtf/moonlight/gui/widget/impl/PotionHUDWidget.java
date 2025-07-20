@@ -12,17 +12,16 @@ package wtf.moonlight.gui.widget.impl;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
-import wtf.moonlight.Client;
 import wtf.moonlight.events.render.Shader2DEvent;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.widget.Widget;
-import wtf.moonlight.module.impl.display.PotionHUD;
 import wtf.moonlight.util.render.animations.advanced.ContinualAnimation;
 import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.render.RenderUtil;
@@ -42,8 +41,8 @@ public class PotionHUDWidget extends Widget {
 
     public PotionHUDWidget() {
         super("Potion HUD");
-        this.x = 0;
-        this.y = 0.0f;
+        this.x = 10;
+        this.y = 20f;
     }
 
     @Override
@@ -58,13 +57,13 @@ public class PotionHUDWidget extends Widget {
 
     @Override
     public boolean shouldRender() {
-        return Client.INSTANCE.getModuleManager().getModule(PotionHUD.class).isEnabled() && !Client.INSTANCE.getModuleManager().getModule(PotionHUD.class).potionHudMode.is("Exhi");
+        return setting.isEnabled() && setting.elements.isEnabled("Potion HUD") && !setting.potionHudMode.is("Exhi");
     }
 
     public void PotionDisplay(boolean shadow) {
         ArrayList<PotionEffect> potions = new ArrayList<>(mc.thePlayer.getActivePotionEffects());
 
-        switch (Client.INSTANCE.getModuleManager().getModule(PotionHUD.class).potionHudMode.getValue()) {
+        switch (setting.potionHudMode.getValue()) {
             case "Sexy": {
                 width = 92;
                 height = heightAnimation.getOutput();
@@ -161,15 +160,18 @@ public class PotionHUDWidget extends Widget {
                 float yOffset = 0;
                 heightAnimation.animate(potions.size() * 13 - 14, 18);
 
+                float adjustedRenderX = renderX + 1;
+
                 if (!shadow) {
-                    RoundedUtil.drawRound(renderX, renderY + yOffset, widthAnimation.getOutput(), Fonts.interBold.get(15).getHeight() + 12f + heightAnimation.getOutput() + 4 + 2, 4, new Color(setting.bgColor(), true));
+                    RoundedUtil.drawRound(adjustedRenderX, renderY + yOffset, widthAnimation.getOutput(), Fonts.interBold.get(15).getHeight() + 12f + heightAnimation.getOutput() + 4 + 2, 4, new Color(setting.bgColor(), true));
                 } else {
-                    RoundedUtil.drawRound(renderX, renderY + yOffset, widthAnimation.getOutput(), Fonts.interBold.get(15).getHeight() + 12f + heightAnimation.getOutput() + 4 + 2, 4, new Color(setting.color(), true));
+                    RoundedUtil.drawRound(adjustedRenderX, renderY + yOffset, widthAnimation.getOutput(), Fonts.interBold.get(15).getHeight() + 12f + heightAnimation.getOutput() + 4 + 2, 4, new Color(setting.color(), true));
                 }
 
-                Fonts.interBold.get(15).drawString("Potions Status", renderX + 5, renderY + 5.5, setting.color());
-                width = (MathHelper.clamp_int(!potions.isEmpty() ? Fonts.interRegular.get(16).getStringWidth(Objects.requireNonNull(potions.stream().max(Comparator.comparingDouble(effect -> Fonts.interRegular.get(16).getStringWidth(Objects.requireNonNull(I18n.format(Potion.potionTypes[effect.getPotionID()].getName()))))).stream().findFirst().orElse(null)).getEffectName()) + 20 : 0, 80, 999));
-                height = ((Fonts.interRegular.get(15).getHeight() + 2 + (12 + heightAnimation.getOutput())));
+                Fonts.interBold.get(15).drawString("Potions Status", adjustedRenderX + 4, renderY + 4.5, setting.color());
+                width = (MathHelper.clamp_int(!potions.isEmpty() ? Fonts.interRegular.get(16).getStringWidth(Objects.requireNonNull(potions.stream().max(Comparator.comparingDouble(effect -> Fonts.interRegular.get(16).getStringWidth(Objects.requireNonNull(I18n.format(Potion.potionTypes[effect.getPotionID()].getName()))))).stream().findFirst().orElse(null)).getEffectName()) + 20 : - 5, 62, 999));
+                height = ((Fonts.interRegular.get(15).getHeight() + 8 + (12 + heightAnimation.getOutput())));
+
                 for (PotionEffect potion : potions) {
                     String potionString = I18n.format(Potion.potionTypes[potion.getPotionID()].getName()) + " " + (potion.getAmplifier() > 0 ? I18n.format("enchantment.level." + (potion.getAmplifier() + 1)) : "");
                     String durationString = Potion.getDurationString(potion);
@@ -180,13 +182,14 @@ public class PotionHUDWidget extends Widget {
                         int i1 = Potion.potionTypes[potion.getPotionID()].getStatusIconIndex();
                         GL11.glScaled(0.5, 0.5, 0.5);
                         mc.getTextureManager().bindTexture(GuiContainer.inventoryBackground);
-                        Gui.drawTexturedModalRect((renderX + 4) * 9 / 4.5f, ((4 + 2 + Fonts.interRegular.get(15).getHeight() + renderY + yOffset + 0.5f + potions.indexOf(potion) * 13) * 9) / 4.5f, i1 % 8 * 18, 198 + i1 / 8 * 18, 18, 18);
+                        Gui.drawTexturedModalRect((adjustedRenderX + 3) * 9 / 4.5f, ((4 + 2 + Fonts.interRegular.get(15).getHeight() + renderY + yOffset + 0.5f + potions.indexOf(potion) * 13) * 9) / 4.5f, i1 % 8 * 18, 198 + i1 / 8 * 18, 18, 18);
                         GL11.glScaled(2, 2, 2);
                         RenderHelper.disableStandardItemLighting();
                         GL11.glPopMatrix();
+                        RenderUtil.resetColor();
                     }
-                    Fonts.interRegular.get(16).drawString(potionString, (renderX + 15), (Fonts.interRegular.get(15).getHeight() + renderY + yOffset + 4 + 2 + 2) + potions.indexOf(potion) * 13, -1);
-                    Fonts.interRegular.get(14).drawCenteredString(durationString, (1 + renderX - 6 + widthAnimation.getOutput() - Fonts.interRegular.get(16).getStringWidth(durationString)) + Fonts.interRegular.get(16).getStringWidth(durationString) / 2f + 3, (renderY + yOffset + 4 + Fonts.interBold.get(15).getHeight() + 2 + 2 + 1) + potions.indexOf(potion) * 13, -1);
+                    Fonts.interRegular.get(16).drawString(potionString, (adjustedRenderX + 15), (Fonts.interRegular.get(15).getHeight() + renderY + yOffset + 4 + 2 + 3) + potions.indexOf(potion) * 13, -1);
+                    Fonts.interRegular.get(14).drawCenteredString(durationString, (1 + adjustedRenderX - 6 + widthAnimation.getOutput() - Fonts.interRegular.get(16).getStringWidth(durationString)) + Fonts.interRegular.get(16).getStringWidth(durationString) / 2f + 3, (renderY + yOffset + 4 + Fonts.interBold.get(15).getHeight() + 2 + 2 + 2) + potions.indexOf(potion) * 13, -1);
                 }
                 break;
             }
@@ -196,45 +199,55 @@ public class PotionHUDWidget extends Widget {
                 widthAnimation.animate(width, 18);
                 potions.sort(Comparator.comparingDouble(effect -> -Fonts.interSemiBold.get(16).getStringWidth(Objects.requireNonNull(I18n.format(Potion.potionTypes[effect.getPotionID()].getName())))));
 
+                float adjustedRenderX = renderX + 1;
+
                 float yOffset = 18;
                 if (!shadow) {
-                    RoundedUtil.drawRound(renderX, renderY, widthAnimation.getOutput(), 14f, 4, ColorUtil.applyOpacity(bgColor, 1f));
+                    RoundedUtil.drawRound(adjustedRenderX, renderY, widthAnimation.getOutput(), 14f, 4, ColorUtil.applyOpacity(bgColor, 1f));
                 } else {
-                    RoundedUtil.drawRound(renderX, renderY, widthAnimation.getOutput(), 14f, 4, bgColor);
+                    RoundedUtil.drawRound(adjustedRenderX, renderY, widthAnimation.getOutput(), 14f, 4, bgColor);
                 }
 
-                Fonts.nursultan.get(15).drawString("E ", renderX + 5, renderY + 5.5f, iconRGB);
-                Fonts.interSemiBold.get(15).drawString("Potions Status", renderX + 5 + Fonts.nursultan.get(15).getStringWidth("E "), renderY + 5.5, textRGB);
+                Fonts.nursultan.get(15).drawString("E ", adjustedRenderX + 4, renderY + 6f, iconRGB);
+                Fonts.interSemiBold.get(15).drawString("Potions Status", adjustedRenderX + Fonts.nursultan.get(15).getStringWidth("E "), renderY + 5.5, textRGB);
 
                 heightAnimation.animate(potions.size() * 13 - 14, 18);
 
                 if (!shadow) {
-                    RoundedUtil.drawRound(renderX, renderY + yOffset, widthAnimation.getOutput(), 12f + heightAnimation.getOutput(), 4, ColorUtil.applyOpacity(bgColor, 1f));
+                    RoundedUtil.drawRound(adjustedRenderX, renderY + yOffset, widthAnimation.getOutput(), 12f + heightAnimation.getOutput(), 4, ColorUtil.applyOpacity(bgColor, 1f));
                 } else {
-                    RoundedUtil.drawRound(renderX, renderY + yOffset, widthAnimation.getOutput(), 12f + heightAnimation.getOutput(), 4, bgColor);
+                    RoundedUtil.drawRound(adjustedRenderX, renderY + yOffset, widthAnimation.getOutput(), 12f + heightAnimation.getOutput(), 4, bgColor);
                 }
 
                 for (PotionEffect potion : potions) {
                     String potionString = I18n.format(Potion.potionTypes[potion.getPotionID()].getName()) + " " + (potion.getAmplifier() > 0 ? I18n.format("enchantment.level." + (potion.getAmplifier() + 1)) : "");
-
                     String durationString = Potion.getDurationString(potion);
 
                     if (Potion.potionTypes[potion.getPotionID()].hasStatusIcon()) {
                         GL11.glPushMatrix();
+
                         RenderUtil.resetColor();
-                        RenderHelper.enableGUIStandardItemLighting();
+                        RenderHelper.disableStandardItemLighting();
+
+                        GlStateManager.enableBlend();
+                        GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+
                         int i1 = Potion.potionTypes[potion.getPotionID()].getStatusIconIndex();
+
                         GL11.glScaled(0.5, 0.5, 0.5);
                         mc.getTextureManager().bindTexture(GuiContainer.inventoryBackground);
-                        drawTexturedModalRect((renderX + 4) * 9 / 4.5f, (renderY + yOffset + 1f + potions.indexOf(potion) * 13) * 9 / 4.5f, i1 % 8 * 18, 198 + i1 / 8 * 18, 18, 18);
-                        GL11.glScaled(2, 2, 2);
-                        RenderHelper.disableStandardItemLighting();
+
+                        float scaledX = (adjustedRenderX + 2.5f) * 2.0f;
+                        float scaledY = (renderY + yOffset + 1f + potions.indexOf(potion) * 13) * 2.0f;
+
+                        drawTexturedModalRect(scaledX, scaledY, i1 % 8 * 18, 198 + i1 / 8 * 18, 18, 18);
+                        GL11.glScaled(2.0, 2.0, 2.0);
+
                         GL11.glPopMatrix();
                     }
 
-                    Fonts.interSemiBold.get(16).drawString(potionString, (renderX + 15), (renderY + yOffset + 4) + potions.indexOf(potion) * 13, textRGB);
-                    Fonts.interSemiBold.get(14).drawCenteredString(durationString, (renderX - 6 + widthAnimation.getOutput() - Fonts.interSemiBold.get(16).getStringWidth(durationString)) + Fonts.interSemiBold.get(16).getStringWidth(durationString) / 2f + 3, (renderY + yOffset + 4) + potions.indexOf(potion) * 13, iconRGB);
-                    //yOffset += (float) (16);
+                    Fonts.interSemiBold.get(16).drawString(potionString, (adjustedRenderX + 15), (renderY + yOffset + 4) + potions.indexOf(potion) * 13, textRGB);
+                    Fonts.interSemiBold.get(14).drawCenteredString(durationString, (adjustedRenderX - 6 + widthAnimation.getOutput() - Fonts.interSemiBold.get(16).getStringWidth(durationString)) + Fonts.interSemiBold.get(16).getStringWidth(durationString) / 2f + 3, (renderY + yOffset + 4) + potions.indexOf(potion) * 13, setting.color());
                 }
                 break;
             }

@@ -79,24 +79,20 @@ public abstract class Animation {
     }
 
     public double getOutput() {
-        if (direction.forwards()) {
-            if (isDone()) {
-                return endPoint;
+        if (this.direction.forwards()) {
+            if (this.isDone()) {
+                return this.endPoint;
             }
-
-            return getEquation(timerUtil.getTime() / (double) duration) * endPoint;
-        } else {
-            if (isDone()) {
-                return 0.0;
-            }
-
-            if (correctOutput()) {
-                double revTime = Math.min(duration, Math.max(0, duration - timerUtil.getTime()));
-                return getEquation(revTime / duration) * endPoint;
-            }
-
-            return (1 - getEquation(timerUtil.getTime() / (double) duration)) * endPoint;
+            return this.getEquation((double) this.timerUtil.getTime() / (double) this.duration) * this.endPoint;
         }
+        if (this.isDone()) {
+            return 0.0;
+        }
+        if (this.correctOutput()) {
+            double revTime = Math.min(this.duration, Math.max(0L, (long) this.duration - this.timerUtil.getTime()));
+            return this.getEquation(revTime / (double) this.duration) * this.endPoint;
+        }
+        return (1.0 - this.getEquation((double) this.timerUtil.getTime() / (double) this.duration)) * this.endPoint;
     }
 
 

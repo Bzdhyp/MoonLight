@@ -12,8 +12,6 @@ package wtf.moonlight.util.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 import wtf.moonlight.util.misc.InstanceAccess;
 
@@ -22,12 +20,11 @@ import java.awt.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class RoundedUtil implements InstanceAccess {
-
     public static ShaderUtil roundedShader = new ShaderUtil("roundedRect");
     public static ShaderUtil roundedOutlineShader = new ShaderUtil("roundRectOutline");
+    private static final ShaderUtil circleShader = new ShaderUtil("moonlight/shader/circle-arc.frag");
     private static final ShaderUtil roundedTexturedShader = new ShaderUtil("roundRectTexture");
     private static final ShaderUtil roundedGradientShader = new ShaderUtil("roundedRectGradient");
-
 
     public static void drawRound(float x, float y, float width, float height, float radius, Color color) {
         drawRound(x, y, width, height, radius, false, color);
@@ -37,45 +34,23 @@ public class RoundedUtil implements InstanceAccess {
         drawGradientRound(x, y, width, height, radius, left, left, right, right);
     }
 
-    public static void drawCircle(float x, float y, float start, float end, float radius, float width, boolean filled, int color) {
-        float i;
-        float endOffset;
-        if (start > end) {
-            endOffset = end;
-            end = start;
-            start = endOffset;
-        }
-
-        GlStateManager.enableBlend();
-        GL11.glDisable(GL_TEXTURE_2D);
-        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-
-        GL11.glEnable(GL11.GL_LINE_SMOOTH);
-        GL11.glLineWidth(width);
-        GL11.glBegin(GL11.GL_LINE_STRIP);
-        for (i = end; i >= start; i--) {
-            setColor(color);
-            float cos = MathHelper.cos((float) (i * Math.PI / 180)) * radius;
-            float sin = MathHelper.sin((float) (i * Math.PI / 180)) * radius;
-            GL11.glVertex2f(x + cos, y + sin);
-        }
-        GL11.glEnd();
-        GL11.glDisable(GL11.GL_LINE_SMOOTH);
-
-        if (filled) {
-            GL11.glBegin(GL11.GL_TRIANGLE_FAN);
-            for (i = end; i >= start; i--) {
-                setColor(color);
-                float cos = MathHelper.cos((float) (i * Math.PI / 180)) * radius;
-                float sin = MathHelper.sin((float) (i * Math.PI / 180)) * radius;
-                GL11.glVertex2f(x + cos, y + sin);
-            }
-            GL11.glEnd();
-        }
-
-        GL11.glEnable(GL_TEXTURE_2D);
-        GlStateManager.disableBlend();
-        resetColor();
+    public static void drawCircle(float x, float y, float radius, float progress, int change, Color color, float smoothness) {
+        GLUtil.startBlend();
+        float borderThickness = 1;
+        circleShader.init();
+        circleShader.setUniformf("radialSmoothness", smoothness);
+        circleShader.setUniformf("radius", radius);
+        circleShader.setUniformf("borderThickness", borderThickness);
+        circleShader.setUniformf("progress", progress);
+        circleShader.setUniformi("change", change);
+        circleShader.setUniformf("color", color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, color.getAlpha() / 255f);
+        float wh = radius + 10;
+        ScaledResolution sr = new ScaledResolution(mc);
+        circleShader.setUniformf("pos", (x + ((wh / 2f) - ((radius + borderThickness) / 2f))) * sr.getScaleFactor(),
+                (Minecraft.getMinecraft().displayHeight - ((radius + borderThickness) * sr.getScaleFactor())) - ((y + ((wh / 2f) - ((radius + borderThickness) / 2f))) * sr.getScaleFactor()));
+        ShaderUtil.drawQuads(x, y, wh, wh);
+        circleShader.unload();
+        GLUtil.endBlend();
     }
 
     public static void setColor(int color) {

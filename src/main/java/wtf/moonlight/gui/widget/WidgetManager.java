@@ -17,6 +17,7 @@ import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.events.render.Shader2DEvent;
 import wtf.moonlight.gui.widget.impl.*;
 import wtf.moonlight.util.misc.InstanceAccess;
+import wtf.moonlight.util.render.animations.advanced.Direction;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,6 +31,8 @@ public class WidgetManager implements InstanceAccess {
 
         register(new HotKeyWidget());
         register(new KeyBindWidget());
+        register(new PlayerListWidget());
+        register(new WatermarkWidget());
         register(new TargetHUDWidget());
         register(new PotionHUDWidget());
     }
@@ -74,6 +77,10 @@ public class WidgetManager implements InstanceAccess {
 
             for (Widget widget : widgetList) {
                 if (widget.shouldRender()) {
+                    if (!widget.hoverAnimation.getDirection().equals(Direction.BACKWARDS)) {
+                        widget.hoverAnimation.setDirection(Direction.BACKWARDS);
+                    }
+
                     widget.onChatGUI(event.mouseX, event.mouseY, (draggingWidget == null || draggingWidget == widget));
                     if (widget.dragging) draggingWidget = widget;
                 }

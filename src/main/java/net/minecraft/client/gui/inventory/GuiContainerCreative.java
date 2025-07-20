@@ -49,7 +49,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer
     private CreativeCrafting field_147059_E;
 
     public boolean GuiInvMove() {
-        return Client.INSTANCE.getModuleManager().getModule(InvMove.class).noInventoryValue.get();
+        return !Client.INSTANCE.getModuleManager().getModule(InvMove.class).noInventoryValue.get();
     }
 
     public GuiContainerCreative(EntityPlayer p_i1088_1_)

@@ -19,7 +19,7 @@ import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
-import wtf.moonlight.module.impl.movement.Freeze;
+import wtf.moonlight.module.impl.movement.Stuck;
 import wtf.moonlight.module.impl.movement.Scaffold;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
@@ -80,7 +80,7 @@ public class AutoProjectile extends Module {
 
         target = PlayerUtil.getTarget(range.getValue());
 
-        if (getModule(Scaffold.class).isEnabled() || getModule(KillAura.class).target != null || isEnabled(Freeze.class) || !mc.thePlayer.canEntityBeSeen(target) || mc.thePlayer.isUsingItem()) {
+        if (getModule(Scaffold.class).isEnabled() || getModule(KillAura.class).target != null || isEnabled(Stuck.class) || !mc.thePlayer.canEntityBeSeen(target) || mc.thePlayer.isUsingItem()) {
             return;
         }
 

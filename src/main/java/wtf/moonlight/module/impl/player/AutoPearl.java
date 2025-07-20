@@ -18,7 +18,7 @@ import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
-import wtf.moonlight.module.impl.movement.Freeze;
+import wtf.moonlight.module.impl.movement.Stuck;
 import wtf.moonlight.util.Workers;
 import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.util.TimerUtil;
@@ -47,7 +47,7 @@ public class AutoPearl extends Module {
         if (event.isPost() && this.calculating && (this.calculationFuture == null || this.calculationFuture.isDone())) {
             this.calculating = false;
             if (this.calculationFuture != null) {
-                Freeze.throwPearl(this.calculationFuture.get());
+                Stuck.throwPearl(this.calculationFuture.get());
             }
         }
         final boolean overVoid = !mc.thePlayer.onGround && !PlayerUtil.isBlockUnder(30.0, true);
@@ -71,7 +71,7 @@ public class AutoPearl extends Module {
             this.calculating = true;
             var job = new CalculateJob(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, 0.0, 0.0);
             this.calculationFuture = Workers.Default.submit(job);
-            this.getModule(Freeze.class).setEnabled(true);
+            this.getModule(Stuck.class).setEnabled(true);
         }
     }
 

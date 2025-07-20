@@ -1,5 +1,7 @@
 package wtf.moonlight.util.render.animations;
 
+import wtf.moonlight.util.render.RenderUtil;
+
 public class AnimationUtil {
     public static double animate(double target, double current, double speed) {
         boolean larger;
@@ -40,5 +42,64 @@ public class AnimationUtil {
             current = target;
         }
         return current;
+    }
+
+    /**
+     * @param current The raw number
+     * @param target The target number
+     * @param speed The animation speed (The speed increases as this value increases)
+     * @return The animated number
+     */
+    public static float smooth(float current, float target, float speed) {
+        long deltaTime = (long) RenderUtil.delta;
+
+        speed = Math.abs(target - current) * speed;
+
+        if (deltaTime < 1L) deltaTime = 1L;
+
+        final float difference = current - target;
+        final float smoothing = Math.max(speed * (deltaTime / 16F), .15F);
+
+        if (difference > speed) {
+            current = Math.max(current - smoothing, target);
+        } else if (difference < -speed) {
+            current = Math.min(current + smoothing, target);
+        } else {
+            current = target;
+        }
+
+        return current;
+    }
+
+    public static float moveUD(float current, float end, float smoothSpeed, float minSpeed) {
+        boolean larger = end > current;
+        if (smoothSpeed < 0.0f) {
+            smoothSpeed = 0.0f;
+        } else if (smoothSpeed > 1.0f) {
+            smoothSpeed = 1.0f;
+        }
+        if (minSpeed < 0.0f) {
+            minSpeed = 0.0f;
+        } else if (minSpeed > 1.0f) {
+            minSpeed = 1.0f;
+        }
+        float movement = (end - current) * smoothSpeed;
+        if (movement > 0) {
+            movement = Math.max(minSpeed, movement);
+            movement = Math.min(end - current, movement);
+        } else if (movement < 0) {
+            movement = Math.min(-minSpeed, movement);
+            movement = Math.max(end - current, movement);
+        }
+        if (larger){
+            if (end <= current + movement){
+                return end;
+            }
+        }else {
+            if (end >= current + movement){
+                return end;
+            }
+        }
+        return current + movement;
     }
 }

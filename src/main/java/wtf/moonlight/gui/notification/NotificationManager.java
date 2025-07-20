@@ -16,7 +16,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.module.impl.display.NotificationHUD;
 import wtf.moonlight.util.misc.InstanceAccess;
 import wtf.moonlight.util.render.animations.advanced.Animation;
 import wtf.moonlight.util.render.animations.advanced.Direction;
@@ -47,7 +46,7 @@ public class NotificationManager implements InstanceAccess {
     }
 
     private static void post(Notification notification) {
-        if (INSTANCE.getModuleManager().getModule(NotificationHUD.class).isEnabled()) {
+        if (INSTANCE.getModuleManager().getModule(Interface.class).isEnabled()) {
             notifications.add(notification);
         }
     }
@@ -61,7 +60,7 @@ public class NotificationManager implements InstanceAccess {
             Animation animation = notification.getAnimation();
             animation.setDirection(notification.getTimerUtil().hasTimeElapsed((long) notification.getTime()) ? Direction.BACKWARDS : Direction.FORWARDS);
 
-            if (!INSTANCE.getModuleManager().getModule(NotificationHUD.class).notificationMode.is("Exhi") && notification.getAnimation().finished(Direction.BACKWARDS)) {
+            if (!INSTANCE.getModuleManager().getModule(Interface.class).notificationMode.is("Exhi") && notification.getAnimation().finished(Direction.BACKWARDS)) {
                 notifications.remove(notification);
             }
 
@@ -70,7 +69,7 @@ public class NotificationManager implements InstanceAccess {
                 float y = 0;
                 float yVal;
                 float actualOffset = 0;
-                switch (INSTANCE.getModuleManager().getModule(NotificationHUD.class).notificationMode.getValue()) {
+                switch (INSTANCE.getModuleManager().getModule(Interface.class).notificationMode.getValue()) {
                     case "Augustus": {
                         animation.setDuration(500);
                         actualOffset = 10;
@@ -123,22 +122,29 @@ public class NotificationManager implements InstanceAccess {
                                     ColorUtil.applyOpacity(new Color(INSTANCE.getModuleManager().getModule(Interface.class).bgColor(), true),
                                             (float) Math.max(.1, notification.getAnimation().getOutput())));
 
-                            float lineX = x + iconAreaWidth;
-                            RenderUtil.drawRect(lineX, yVal, 1, height,
+                            float textWidth = Fonts.interMedium.get(15).getStringWidth(notification.getDescription());
+                            float textX = x + iconAreaWidth + (bgWidth - iconAreaWidth - textWidth) / 2f;
+                            float lineX = textX - 6;
+
+                            RenderUtil.drawRect(lineX, yVal + 3.5f, 0.6f, height - 6,
                                     ColorUtil.applyOpacity(new Color(100, 100, 100, 150),
-                                            (float) Math.max(.1, notification.getAnimation().getOutput())));
+                                            (float) Math.max(.07, notification.getAnimation().getOutput())));
 
                             float iconX = x + (iconAreaWidth - 8) / 2f;
                             float iconY = yVal + (height - 2) / 2f;
 
+                            RenderUtil.drawRect(lineX, yVal + 3.5f, 0.6f, height - 6,
+                                    ColorUtil.applyOpacity(new Color(100, 100, 100, 150),
+                                            (float) Math.max(.07, notification.getAnimation().getOutput())));
+
                             if (notification.getNotificationType() == NotificationType.INFO) {
-                                Fonts.noti.get(20).drawStringNoFormat("B", iconX + 1, iconY, -1);
+                                Fonts.noti.get(20).drawStringNoFormat("B", iconX + 2, iconY, -1);
                             } else if (notification.getNotificationType() == NotificationType.NOTIFY) {
-                                Fonts.noti.get(20).drawStringNoFormat("A", iconX  + 2, iconY, -1);
+                                Fonts.noti.get(20).drawStringNoFormat("A", iconX + 2, iconY, -1);
                             } else if (notification.getNotificationType() == NotificationType.WARNING) {
-                                Fonts.noti2.get(20).drawStringNoFormat("L", iconX, iconY, -1);
+                                Fonts.Icon.get(20).drawStringNoFormat("q", iconX, iconY, -1);
                             } else {
-                                Fonts.noti2.get(20).drawStringNoFormat("M", iconX, iconY, -1);
+                                Fonts.Icon.get(20).drawStringNoFormat("X", iconX, iconY, -1);
                             }
 
                             Fonts.interMedium.get(15).drawCenteredStringNoFormat(
@@ -191,7 +197,7 @@ public class NotificationManager implements InstanceAccess {
                         break;
                     case "Exhi": {
                         Translate translate = notification.getTranslate();
-                        boolean middlePos = INSTANCE.getModuleManager().getModule(NotificationHUD.class).centerNotif.get() && mc.thePlayer != null && (mc.currentScreen instanceof GuiChat || mc.currentScreen == null);
+                        boolean middlePos = INSTANCE.getModuleManager().getModule(Interface.class).centerNotif.get() && mc.thePlayer != null && (mc.currentScreen instanceof GuiChat || mc.currentScreen == null);
                         int scaledHeight = sr.getScaledHeight();
                         int scaledWidth = sr.getScaledWidth();
                         y = middlePos ? (int) (scaledHeight / 2.0f + 43.0f) : scaledHeight - (mc.currentScreen instanceof GuiChat ? 45 : 31);

@@ -12,7 +12,9 @@ import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
+import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
+import wtf.moonlight.module.values.impl.MultiBoolValue;
 import wtf.moonlight.util.player.MovementUtil;
 import wtf.moonlight.util.render.ColorUtil;
 import wtf.moonlight.util.render.RenderUtil;
@@ -22,6 +24,7 @@ import java.awt.*;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 import static net.minecraft.util.EnumChatFormatting.GRAY;
@@ -31,15 +34,25 @@ import static wtf.moonlight.gui.click.neverlose.NeverLose.textRGB;
 
 @ModuleInfo(name = "Watermark", category = Categor.Display)
 public class Watermark extends Module {
-    public final ListValue watemarkMode = new ListValue("Watermark Mode", new String[]{"Text","Styles","Styles 2","Rect","Nursultan","Exhi","Exhi 2",
-            "Exhi 3","Nursultan 2","NeverLose","Novo","Novo 2","Novo 3","OneTap"}, "Text", this);
+    public final ListValue watemarkMode = new ListValue("Watermark Mode", new String[]{"Text","Styles 2", "Rect", "Nursultan", "Exhi", "Exhi 2",
+            "Exhi 3", "Nursultan 2", "NeverLose", "Novo", "Novo 2", "Novo 3", "OneTap"}, "Text", this);
+
+    public final MultiBoolValue nlOptions = new MultiBoolValue("NeverLose Options", Arrays.asList(
+            new BoolValue("User",true),
+            new BoolValue("FPS",true),
+            new BoolValue("Time",false)), this, () -> watemarkMode.is("NeverLose"));
 
     private final DateFormat dateFormat = new SimpleDateFormat("hh:mm");
     private final DateFormat dateFormat2 = new SimpleDateFormat("hh:mm:ss");
     private final DecimalFormat bpsFormat = new DecimalFormat("0.00");
     private final DecimalFormat fpsFormat = new DecimalFormat("0");
 
+    public Watermark() {
+        setEnabled(true);
+    }
+
     protected Interface setting;
+
     @Override
     public void onEnable() {
         setting = INSTANCE.getModuleManager().getModule(Interface.class);
@@ -58,24 +71,6 @@ public class Watermark extends Module {
                     Fonts.interBold.get(30).drawStringWithShadow(clientName, 10, 10, setting.color(0));
                 }
                 break;
-                case "Styles": {
-                    String dateString = dateFormat.format(new Date());
-
-                    String name = " | " + Client.INSTANCE.getVersion() +
-                            EnumChatFormatting.GRAY + " | " + EnumChatFormatting.WHITE + dateString +
-                            EnumChatFormatting.GRAY + " | " + EnumChatFormatting.WHITE + mc.thePlayer.getName() +
-                            EnumChatFormatting.GRAY + " | " + EnumChatFormatting.WHITE + mc.getCurrentServerData().serverIP;
-
-                    int x = 7;
-                    int y = 7;
-                    int width = Fonts.interBold.get(17).getStringWidth("ML") + Fonts.interRegular.get(17).getStringWidth(name) + 5;
-                    int height = Fonts.interRegular.get(17).getHeight() + 3;
-
-                    RoundedUtil.drawRound(x, y, width, height, 4, new Color(getModule(Interface.class).bgColor(), true));
-                    Fonts.interBold.get(17).drawOutlinedString("ML", x + 2, y + 4.5f, -1, setting.color());
-                    Fonts.interRegular.get(17).drawStringWithShadow(name, Fonts.interBold.get(17).getStringWidth("ML") + x + 2, y + 4.5f, -1);
-                }
-                break;
                 case "Styles 2": {
                     String dateString2 = dateFormat2.format(new Date());
 
@@ -88,8 +83,9 @@ public class Watermark extends Module {
 
                     RoundedUtil.drawRound(x, y, width, height, 4, new Color(getModule(Interface.class).bgColor(), true));
                     Fonts.interSemiBold.get(17).drawString(stylesname, Fonts.interBold.get(17).getStringWidth("") + x + 2, y + 4.5f, new Color(setting.color(1)).getRGB());
+                    break;
                 }
-                break;
+
                 case "Nursultan": {
                     RoundedUtil.drawRound(7, 7.5f, 20 + Fonts.interMedium.get(15).getStringWidth(INSTANCE.getVersion()) + 5, 15, 4, new Color(setting.bgColor(0)));
                     Fonts.nursultan.get(16).drawString("P", 13, 14, setting.color(0));
@@ -180,51 +176,6 @@ public class Watermark extends Module {
                     Fonts.interMedium.get(fontSize).drawString(pingText, pingX + iconSize * 1.5F + rectWidth, positionY + rectWidth / 2.0F + 1.5F, -1);
                 }
                 break;
-                case "NeverLose": {
-                    //title
-                    FontRenderer titleFont = Fonts.interBold.get(20);
-
-                    //info
-                    FontRenderer info = Fonts.interSemiBold.get(16);
-                    String userIcon = "W ";
-                    String fpsIcon = "X ";
-                    String timeIcon = "V ";
-                    float userIconX = 3 + titleFont.getStringWidth(clientName) + 9 + 7;
-                    float fpsIconX = Fonts.nursultan.get(20).getStringWidth(userIcon) + userIconX + info.getStringWidth(mc.thePlayer.getName()) + Fonts.nursultan.get(20).getStringWidth(fpsIcon) - 10;
-                    float clockIconX = fpsIconX + info.getStringWidth(Minecraft.getDebugFPS() + "fps") + Fonts.nursultan.get(20).getStringWidth(timeIcon);
-                    String times = dateFormat.format(new Date());
-
-                    int bgY = 5;
-
-                    int textY = 11;
-
-                    //title
-                    RoundedUtil.drawRound(3, bgY, titleFont.getStringWidth(clientName) + 10, Fonts.interRegular.get(20).getHeight() + 2, 4, ColorUtil.applyOpacity(NeverLose.bgColor, 1f));
-                    titleFont.drawOutlinedString(clientName, 8, textY - 2, textRGB, outlineTextRGB);
-
-
-                    //info
-                    RoundedUtil.drawRound(3 + titleFont.getStringWidth(clientName) + 14, bgY,
-                            Fonts.nursultan.get(20).getStringWidth(userIcon) +
-                                    info.getStringWidth(mc.thePlayer.getName()) +
-                                    Fonts.nursultan.get(20).getStringWidth(fpsIcon) +
-                                    info.getStringWidth(String.valueOf(Minecraft.getDebugFPS())) +
-                                    Fonts.nursultan.get(20).getStringWidth(timeIcon) +
-                                    info.getStringWidth(times)
-                                    + 17
-                            , Fonts.interRegular.get(20).getHeight() + 2, 4, ColorUtil.applyOpacity(NeverLose.bgColor, 1f));
-
-                    Fonts.nursultan.get(20).drawString(userIcon, userIconX, textY, iconRGB);
-                    info.drawString(mc.thePlayer.getName(), userIconX + Fonts.nursultan.get(20).getStringWidth(userIcon) - 6, 11, textRGB);
-
-                    Fonts.nursultan.get(20).drawString(fpsIcon, fpsIconX - 7, textY, iconRGB);
-                    info.drawString(Minecraft.getDebugFPS() + "fps", fpsIconX + Fonts.nursultan.get(20).getStringWidth(fpsIcon) - 13, textY, textRGB);
-
-                    Fonts.nursultan.get(20).drawString(timeIcon, clockIconX - 6, textY, iconRGB);
-                    info.drawString(times, clockIconX + Fonts.nursultan.get(20).getStringWidth(timeIcon) - 12, textY, textRGB);
-                }
-                break;
-
                 case "Novo": {
                     float x = 1;
                     String name = clientName.charAt(0) + clientName.substring(1);

@@ -18,7 +18,7 @@ import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
-import wtf.moonlight.module.impl.movement.Freeze;
+import wtf.moonlight.module.impl.movement.Stuck;
 import wtf.moonlight.module.impl.movement.Speed;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.util.player.MovementUtil;
@@ -52,11 +52,11 @@ public class Critical extends Module {
                     mc.thePlayer.jump();
                 }
                 if (mc.thePlayer.fallDistance > 0) {
-                    getModule(Freeze.class).setEnabled(true);
+                    getModule(Stuck.class).setEnabled(true);
                     stuckEnabled = true;
                 }
                 if (getModule(KillAura.class).target == null && stuckEnabled) {
-                    getModule(Freeze.class).setEnabled(false);
+                    getModule(Stuck.class).setEnabled(false);
                     stuckEnabled = false;
                 }
                 break;

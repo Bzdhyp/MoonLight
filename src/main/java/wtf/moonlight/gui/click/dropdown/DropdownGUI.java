@@ -56,7 +56,7 @@ public class DropdownGUI extends GuiScreen {
     }
 
     public boolean GuiInvMove() {
-        return true;
+        return false;
     }
 
     @Override

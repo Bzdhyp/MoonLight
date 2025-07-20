@@ -22,6 +22,11 @@ public enum Fonts {
     interMedium("inter/Inter_Medium"),
     interRegular("inter/Inter_Regular"),
     interSemiBold("inter/Inter_SemiBold"),
+
+    MuseBold("museo-sans/Museo Sans Cyrl 900"),
+    MuseMedium("museo-sans/Museo Sans Cyrl 500"),
+    MuseSemiBold("museo-sans/Museo Sans Cyrl 300"),
+
     psRegular("product-sans/Regular"),
     psBold("product-sans/Bold"),
     nursultan("others/Nursultan"),

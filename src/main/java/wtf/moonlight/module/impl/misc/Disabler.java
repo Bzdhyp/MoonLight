@@ -12,32 +12,29 @@ package wtf.moonlight.module.impl.misc;
 
 import lombok.Getter;
 import net.minecraft.client.gui.GuiDownloadTerrain;
-import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.*;
 import net.minecraft.network.play.server.*;
-import net.minecraft.potion.Potion;
-import wtf.moonlight.Client;
 import com.cubk.EventTarget;
 import wtf.moonlight.events.misc.WorldEvent;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.MotionEvent;
-import wtf.moonlight.events.player.UpdateEvent;
 import wtf.moonlight.gui.notification.NotificationManager;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
-import wtf.moonlight.module.impl.player.InvManager;
 import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.MultiBoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.gui.notification.NotificationType;
+import wtf.moonlight.util.ServerUtil;
 import wtf.moonlight.util.packet.PacketUtils;
 import wtf.moonlight.util.player.MovementUtil;
 import wtf.moonlight.util.player.RotationUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -70,21 +67,18 @@ public class Disabler extends Module {
     private final CopyOnWriteArrayList<Packet<INetHandler>> storedPackets = new CopyOnWriteArrayList<>();
     @Getter
     private final ConcurrentLinkedDeque<Integer> pingPackets = new ConcurrentLinkedDeque<>();
+    private final ArrayList<Packet<?>> packetsQueue = new ArrayList<>();
     private boolean sprinting;
     private boolean sneaking;
-    private boolean c16 = false;
-    private boolean c0d = false;
     private double lastMotionX = 0.0;
     private double lastMotionY = 0.0;
     private double lastMotionZ = 0.0;
     private boolean pendingFlagApplyPacket = false;
     public boolean transaction;
-    private int resyncDelay;
 
     @Override
     public void onEnable() {
         testTicks = 0;
-        resyncDelay = 0;
         jump = false;
         sprinting = false;
         sneaking = false;
@@ -92,6 +86,13 @@ public class Disabler extends Module {
 
     @Override
     public void onDisable() {
+        if(!packetsQueue.isEmpty()) {
+            for(Packet<?> packet : packetsQueue) {
+                PacketUtils.sendPacketNoEvent(packet);
+            }
+
+            packetsQueue.clear();
+        }
     }
 
     @EventTarget
@@ -143,31 +144,15 @@ public class Disabler extends Module {
     }
 
     @EventTarget
-    public void onUpdate(UpdateEvent event) {
-        if (options.isEnabled("Watchdog Inventory")) {
-            c16 = false;
-            c0d = false;
-            if (mc.currentScreen instanceof GuiInventory ||(isEnabled(InvManager.class) && getModule(InvManager.class).isOpen())) {
-                if (mc.thePlayer.ticksExisted % (mc.thePlayer.isPotionActive(Potion.moveSpeed) ? 3 : 4) == 0) {
-                    sendPacketNoEvent(new C0DPacketCloseWindow());
-                } else if (mc.thePlayer.ticksExisted % (mc.thePlayer.isPotionActive(Potion.moveSpeed) ? 3 : 4) == 1) {
-                    sendPacketNoEvent(new C16PacketClientStatus(C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT));
-                }
-            }
-        }
-    }
-
-    @EventTarget
     public void onPacket(PacketEvent event) {
         if (mc.thePlayer == null) return;
-        Packet packet = event.getPacket();
-        resyncDelay++;
+        Packet<?> packet = event.getPacket();
 
         if (options.isEnabled("Watchdog Motion")) {
             if (mc.isSingleplayer() && singlePlayerCheck.get())
                 return;
 
-            if (event.getPacket() instanceof S08PacketPlayerPosLook) {
+            if (packet instanceof S08PacketPlayerPosLook) {
                 if(testTicks != -1)
                     testTicks++;
                 if (testTicks >= 20) {
@@ -182,20 +167,21 @@ public class Disabler extends Module {
                 }
             }
         }
+
         if (options.isEnabled("Watchdog Inventory")) {
+            if (!ServerUtil.isHypixelLobby()) return;
 
-            if (event.getPacket() instanceof C16PacketClientStatus) {
-                if (c16) {
-                    event.setCancelled(true);
-                }
-                c16 = true;
-            }
+            if(packet instanceof C16PacketClientStatus || packet instanceof C0EPacketClickWindow) {
+                event.setCancelled(true);
+                packetsQueue.add(packet);
+            } else if(packet instanceof C0DPacketCloseWindow) {
+                if(!packetsQueue.isEmpty()) {
+                    for(Packet<?> i : packetsQueue) {
+                        PacketUtils.sendPacketNoEvent(i);
+                    }
 
-            if (event.getPacket() instanceof C0DPacketCloseWindow) {
-                if (c0d) {
-                    event.setCancelled(true);
+                    packetsQueue.clear();
                 }
-                c0d = true;
             }
         }
 
@@ -257,7 +243,7 @@ public class Disabler extends Module {
         }
 
         if (options.isEnabled("Miniblox")) {
-            if (event.getPacket() instanceof S08PacketPlayerPosLook s08 && mc.thePlayer.ticksExisted >= 100) {
+            if (packet instanceof S08PacketPlayerPosLook s08 && mc.thePlayer.ticksExisted >= 100) {
                 event.setCancelled(true);
 
                 PacketUtils.sendPacketNoEvent(new C03PacketPlayer.C06PacketPlayerPosLook(

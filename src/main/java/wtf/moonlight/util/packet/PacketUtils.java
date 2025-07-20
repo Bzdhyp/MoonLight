@@ -11,6 +11,11 @@
 package wtf.moonlight.util.packet;
 
 import net.minecraft.network.Packet;
+import net.minecraft.network.handshake.client.C00Handshake;
+import net.minecraft.network.login.client.C00PacketLoginStart;
+import net.minecraft.network.login.client.C01PacketEncryptionResponse;
+import net.minecraft.network.status.client.C00PacketServerQuery;
+import net.minecraft.network.status.client.C01PacketPing;
 import wtf.moonlight.util.NetworkAPI;
 import wtf.moonlight.util.misc.InstanceAccess;
 

@@ -17,7 +17,6 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.passive.EntityHorse;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -36,7 +35,6 @@ import wtf.moonlight.events.player.MotionEvent;
 import wtf.moonlight.events.player.PlayerTickEvent;
 import wtf.moonlight.events.player.SlowDownEvent;
 import wtf.moonlight.events.player.UpdateEvent;
-import wtf.moonlight.module.impl.combat.AutoGap;
 import wtf.moonlight.module.impl.combat.KillAura;
 import wtf.moonlight.module.impl.misc.Disabler;
 import wtf.moonlight.util.player.MovementUtil;
@@ -690,10 +688,9 @@ public class EntityPlayerSP extends AbstractClientPlayer
         this.movementInput.updatePlayerMoveState();
         this.keyMovementInput.updatePlayerMoveState();
         if ((this.isUsingItem() || Client.INSTANCE.getModuleManager().getModule(KillAura.class).target != null && Client.INSTANCE.getModuleManager().getModule(KillAura.class).slow.get() &&
-                Client.INSTANCE.getModuleManager().getModule(KillAura.class).shouldBlock() && Client.INSTANCE.getModuleManager().getModule(KillAura.class).isBlocking ||
-                Client.INSTANCE.getModuleManager().getModule(AutoGap.class).eating
+                Client.INSTANCE.getModuleManager().getModule(KillAura.class).shouldBlock() && Client.INSTANCE.getModuleManager().getModule(KillAura.class).isBlocking
         ) && !this.isRiding()) {
-            SlowDownEvent slowDownEvent = new SlowDownEvent(0.2F, 0.2F,isSprinting());
+            SlowDownEvent slowDownEvent = new SlowDownEvent(0.2F, 0.2F, isSprinting());
             Client.INSTANCE.getEventManager().call(slowDownEvent);
             this.movementInput.moveStrafe *= slowDownEvent.getStrafe();
             this.movementInput.moveForward *= slowDownEvent.getForward();

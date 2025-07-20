@@ -12,16 +12,14 @@ package wtf.moonlight.gui.widget.impl;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
-import wtf.moonlight.Client;
 import wtf.moonlight.events.render.Shader2DEvent;
+import wtf.moonlight.gui.click.neverlose.NeverLose;
 import wtf.moonlight.module.impl.display.Interface;
-import wtf.moonlight.module.impl.display.TargetHUD;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.gui.font.Fonts;
 import wtf.moonlight.gui.widget.Widget;
@@ -50,13 +48,24 @@ public class TargetHUDWidget extends Widget {
     public void render() {
         int count = 0;
         float lastTargetWidth = 0;
-        for (EntityPlayer target : TargetHUD.animationEntityPlayerMap.keySet()) {
+        for (EntityPlayer target : Interface.animationEntityPlayerMap.keySet()) {
             this.height = getTHUDHeight();
             float currentTargetWidth = getTHUDWidth(target);
             this.width = currentTargetWidth;
             if (count > 9) continue;
-            TargetDisplay targetHUD = new TargetDisplay((float) (renderX + ((count % 3) * (lastTargetWidth + 4)) * TargetHUD.animationEntityPlayerMap.get(target).getOutput()), (float) (this.renderY + (((double) count / 3) * (this.height + 4)) * TargetHUD.animationEntityPlayerMap.get(target).getOutput()), target, TargetHUD.animationEntityPlayerMap.get(target), false, Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudMode);
+
+            float xPos = renderX + (count % 3) * (lastTargetWidth + 4);
+            float yPos = renderY + (float) (Math.floor(count / 3.0) * (this.height + 4));
+
+            TargetDisplay targetHUD = new TargetDisplay(
+                    xPos, yPos,
+                    target,
+                    Interface.animationEntityPlayerMap.get(target),
+                    false,
+                    setting.targetHudMode
+            );
             targetHUD.render();
+
             lastTargetWidth = currentTargetWidth;
             count++;
         }
@@ -66,62 +75,69 @@ public class TargetHUDWidget extends Widget {
     public void onShader(Shader2DEvent event) {
         int count = 0;
         float lastTargetWidth = 0;
-        for (EntityPlayer target : TargetHUD.animationEntityPlayerMap.keySet()) {
+        for (EntityPlayer target : Interface.animationEntityPlayerMap.keySet()) {
             this.height = getTHUDHeight();
             float currentTargetWidth = getTHUDWidth(target);
             this.width = currentTargetWidth;
             if (count > 9) continue;
-            TargetDisplay targetHUD = new TargetDisplay((float) (renderX + ((count % 3) * (lastTargetWidth + 4)) * TargetHUD.animationEntityPlayerMap.get(target).getOutput()), (float) (this.renderY + (((double) count / 3) * (this.height + 4)) * TargetHUD.animationEntityPlayerMap.get(target).getOutput()), target, TargetHUD.animationEntityPlayerMap.get(target), true, Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudMode);
+
+            float xPos = renderX + (count % 3) * (lastTargetWidth + 4);
+            float yPos = renderY + (float) (Math.floor(count / 3.0) * (this.height + 4));
+
+            TargetDisplay targetHUD = new TargetDisplay(
+                    xPos, yPos,
+                    target,
+                    Interface.animationEntityPlayerMap.get(target),
+                    true,
+                    setting.targetHudMode
+            );
             targetHUD.render();
+
             lastTargetWidth = currentTargetWidth;
             count++;
         }
     }
 
     public float getTHUDWidth(Entity entity) {
-        return switch (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudMode.getValue()) {
+        return switch (setting.targetHudMode.getValue()) {
             case "Type 1" -> Math.max(120, Fonts.interBold.get(18).getStringWidth(entity.getName()) + 50);
             case "Astolfo" -> Math.max(130, mc.fontRendererObj.getStringWidth(entity.getName()) + 60);
             case "Type 2" -> Math.max(100, mc.fontRendererObj.getStringWidth(entity.getDisplayName().getFormattedText())) + 11;
             case "Exhi" -> Math.max(124.0f, Fonts.interBold.get(17).getStringWidth(entity.getName()) + 54.0f);
             case "Adjust" -> 130;
-            case "Moon" -> 35 + Fonts.interSemiBold.get(18).getStringWidth(entity.getName()) + 33;
-            case "Type 3" -> 125.0f;
-            case "Augustus" -> 35 + Fonts.interSemiBold.get(18).getStringWidth(entity.getName()) + 33;
+            case "Moon", "Augustus" -> 35 + Fonts.interSemiBold.get(18).getStringWidth(entity.getName()) + 33;
+            case "Type 3", "NeverLose" -> 125.0f;
             case "Rise" -> Math.max(160, Fonts.interSemiBold.get(17).getStringWidth(entity.getName()) + 30);
             case "Novo 1", "Novo 2" -> 35 + mc.fontRendererObj.getStringWidth(entity.getName()) + 33;
             case "Novo 3" -> 35 + mc.fontRendererObj.getStringWidth(entity.getName()) + 34;
             case "Novo 4" -> 135.0f;
             case "Novo 5" -> Math.max(118, Fonts.interSemiBold.get(17).getStringWidth(entity.getName()) + 38) + 27F;
             case "Akrien" -> 114 + ((35 + Fonts.interSemiBold.get(21).getStringWidth(entity.getName())) / 25f);
-            case "Felix" -> 140.0f;
-            case "Innominate" -> Math.max(78, Fonts.interSemiBold.get(17).getStringWidth(entity.getName()) + 39) + 22;
             default -> 0;
         };
     }
 
     public float getTHUDHeight() {
-        return switch (Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).targetHudMode.getValue()) {
+        return switch (setting.targetHudMode.getValue()) {
             case "Type 1" -> 44;
             case "Astolfo" -> 56;
             case "Type 2" -> 38.0F;
             case "Exhi" -> 38;
-            case "Adjust", "Innominate" -> 35;
+            case "Adjust" -> 35;
             case "Moon", "Augustus", "Rise" -> 40.5f;
-            case "Type 3" -> 32.5f;
+            case "Type 3", "NeverLose" -> 32.5f;
             case "Novo 1" -> 37.5f;
             case "Novo 2", "Novo 3" -> 36f;
             case "Novo 4" -> 45.0f;
             case "Novo 5" -> 47;
             case "Akrien" -> 39.5f;
-            case "Felix" -> 37.6f;
             default -> 0;
         };
     }
 
     @Override
     public boolean shouldRender() {
-        return Client.INSTANCE.getModuleManager().getModule(TargetHUD.class).isEnabled();
+        return setting.isEnabled() && setting.elements.isEnabled("Target HUD");
     }
 }
 
@@ -154,6 +170,7 @@ class TargetDisplay implements InstanceAccess {
             GlStateManager.scale(animation.getOutput(), animation.getOutput(), animation.getOutput());
             GlStateManager.translate(-(x + width / 2F), -(y + height / 2F), 0);
         }
+
         switch (style.getValue()) {
             case "Astolfo": {
                 if (!shader) {
@@ -277,34 +294,6 @@ class TargetDisplay implements InstanceAccess {
                 GlStateManager.popMatrix();
                 break;
             }
-            case "Felix": {
-                GlStateManager.pushMatrix();
-                GlStateManager.translate(x, y, 0);
-                final float scale = 2;
-                RenderUtil.drawRect(1f, 1f, 140.0f, 37.6f, new Color(25, 25, 25, 210));
-                String string = String.format("%.1f", target.getHealth() / 2.0f);
-
-                GlStateManager.pushMatrix();
-                GlStateManager.scale(scale, scale, scale);
-                mc.fontRendererObj.drawStringWithShadow(string.replace(".0", ""), (29), 7, ColorUtil.getHealthColor(target));
-                mc.fontRendererObj.drawStringWithShadow("❤", 20, 6, ColorUtil.getHealthColor(target));
-                GlStateManager.popMatrix();
-
-                float healthPercentage = target.getHealth() / target.getMaxHealth();
-                float healthWidth = (width - 2) * healthPercentage;
-                target.healthAnimation.animate(healthWidth, 50);
-
-                RenderUtil.drawRect(2f, 34, 138, 3.5f, (ColorUtil.darker(ColorUtil.getHealthColor(target), 0.35f)));
-                RenderUtil.drawRect(2f, 34, target.healthAnimation.getOutput(), 3.5f, (ColorUtil.getHealthColor(target)));
-
-                final String name = target.getName();
-
-                mc.fontRendererObj.drawStringWithShadow(name, (35), (3), -855638017);
-                RenderUtil.renderPlayer2D(target, 2, 2, 31, 0, -1);
-
-                GlStateManager.popMatrix();
-            }
-            break;
 
             case "Adjust": {
                 float padding = 2;
@@ -368,7 +357,6 @@ class TargetDisplay implements InstanceAccess {
                 break;
             }
             case "Type 3": {
-
                 float healthPercentage = target.getHealth() / target.getMaxHealth();
                 float space = (width - 48) / 100;
                 float hurtTime = (target.hurtTime == 0 ? 0 :
@@ -388,6 +376,61 @@ class TargetDisplay implements InstanceAccess {
                     Fonts.interRegular.get(18).drawStringWithShadow(target.getName(), x + 34, y + 6, -1);
                 } else {
                     RoundedUtil.drawRound(x, y, width, height, 8, new Color(setting.color()));
+                }
+                break;
+            }
+            case "NeverLose": {
+                float xoffset = 1;
+                float yoffset = -1;
+                float hurtTime = (target.hurtTime == 0 ? 0 :
+                        target.hurtTime - mc.timer.renderPartialTicks) * 0.5f;
+
+                float nameWidth = Fonts.MuseBold.get(16).getStringWidth(target.getName());
+                float dynamicWidth = Math.max(width, nameWidth + 42);
+                float circleX = x + xoffset + dynamicWidth - 27.5f;
+
+                String text = String.format("%.0f", target.getHealth());
+
+                float textWidth = Fonts.interRegular.get(14).getStringWidth(text);
+                float textX = circleX - (textWidth / 2f);
+                float textY = y + yoffset + 16;
+
+                if (!shader) {
+                    Color bgColor = ColorUtil.applyOpacity(NeverLose.bgColor, (float) animation.getOutput());
+                    RoundedUtil.drawRound(x + xoffset, y + yoffset, dynamicWidth, height, 4, bgColor);
+
+                    RenderUtil.renderPlayer2D(target,
+                            x + xoffset + 3f + (hurtTime) / 2,
+                            y + yoffset + 3f + (hurtTime) / 2,
+                            26 - hurtTime,
+                            24,
+                            ColorUtil.applyOpacity(
+                                    ColorUtil.interpolateColor2(Color.WHITE, Color.RED, hurtTime / 7),
+                                    (float) animation.getOutput()
+                            )
+                    );
+
+                    RoundedUtil.drawCircle(circleX, y + yoffset + 2.5f, 20, -2f, 1,
+                            ColorUtil.applyOpacity(Color.BLACK, (float) (0.5 * animation.getOutput())), 1);
+                    RoundedUtil.drawCircle(circleX, y + yoffset + 2.5f, 20, 1 - target.getHealth() / target.getMaxHealth(), 1,
+                            ColorUtil.applyOpacity(new Color(setting.color()), (float) animation.getOutput()), 1);
+
+                    Fonts.MuseBold.get(16).drawStringWithShadow(target.getName(),
+                            x + xoffset + 34, y + yoffset + 8,
+                            ColorUtil.applyOpacity(-1, (float) animation.getOutput()));
+                    Fonts.MuseBold.get(16).drawStringWithShadow(
+                            "Distance: " + String.format("%.1f", target.getDistanceToEntity(mc.thePlayer)) + "m",
+                            x + xoffset + 34,
+                            y + yoffset + 20,
+                            ColorUtil.applyOpacity(setting.color(), (float) animation.getOutput())
+                    );
+                    Fonts.interRegular.get(14).drawStringWithShadow(text,
+                            textX + 15, textY,
+                            ColorUtil.applyOpacity(new Color(255, 255, 255, 200).getRGB(), (float) animation.getOutput()));
+                } else {
+                    RoundedUtil.drawRound(x + xoffset, y + yoffset, dynamicWidth, height, 4, Color.BLACK);
+                    RoundedUtil.drawCircle(circleX, y + yoffset + 2, 20, -2f, 1,
+                            ColorUtil.applyOpacity(Color.BLACK, .5f), 1);
                 }
                 break;
             }
@@ -506,7 +549,7 @@ class TargetDisplay implements InstanceAccess {
                     RenderUtil.drawRect(x - 1.0f, y + 4.0f, width, height, new Color(0, 0, 0, 150));
                     mc.fontRendererObj.drawStringWithShadow(target.getName(), x + 30.0f, y + 13.0f, -1);
                     RenderUtil.renderItemStack(target, x + 13, y + 25, 1, 0.5f);
-                    GuiInventory.drawEntityOnScreen(x + 15, y + 40, 15, target.rotationYaw, -target.rotationPitch, target);
+                    drawEntityOnScreen(x + 15, y + 40, 15, target.rotationYaw, -target.rotationPitch, target);
                     RenderUtil.drawRect(x - 1, y + 47, target.healthAnimation.getOutput(), 2f, ColorUtil.getHealthColor(target));
                 }
                 break;
@@ -569,29 +612,6 @@ class TargetDisplay implements InstanceAccess {
                 }
                 break;
             }
-
-            case "Innominate": {
-                float healthPercentage = target.getHealth() / target.getMaxHealth();
-                float space = width - 4;
-
-                if (!shader) {
-                    target.healthAnimation.animate(space * MathHelper.clamp_float(healthPercentage, 0, 1), 30);
-                    RenderUtil.drawBorderedRect(x, y, width, height,1, Color.BLACK.getRGB(),Color.DARK_GRAY.getRGB());
-
-                    String text = String.format("%.1f", target.getHealth());
-                    Fonts.interRegular.get(16).drawStringWithShadow(target.getName() +  " | " + text, x + 2, y + 2 + 2, -1);
-
-                    RenderUtil.renderItemStack(target,x + 2,y + 2 + Fonts.interRegular.get(16).getHeight(),1,false,0,false,false);
-
-                    RenderUtil.drawBorderedRect(x + 2,y + 2 + Fonts.interRegular.get(16).getHeight() + 16,width - 4,5,1,Color.BLACK.getRGB(),Color.DARK_GRAY.getRGB());
-
-                    RenderUtil.drawBorderedRect(x + 2,y + 2 + Fonts.interRegular.get(16).getHeight() + 16,target.healthAnimation.getOutput(),5,1,setting.color(0),Color.DARK_GRAY.getRGB());
-                } else {
-                    RenderUtil.drawBorderedRect(x, y, width, height,1, Color.BLACK.getRGB(),Color.DARK_GRAY.getRGB());
-                }
-            }
-
-            break;
         }
         GlStateManager.popMatrix();
     }

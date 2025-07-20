@@ -29,7 +29,7 @@ public class GuiInventory extends InventoryEffectRenderer
     }
 
     public boolean GuiInvMove() {
-        return Client.INSTANCE.getModuleManager().getModule(InvMove.class).noInventoryValue.get();
+        return !Client.INSTANCE.getModuleManager().getModule(InvMove.class).noInventoryValue.get();
     }
 
     public void updateScreen()

@@ -71,7 +71,7 @@ public class ArcaneClickGui extends GuiScreen {
     }
 
     public boolean GuiInvMove() {
-        return true;
+        return false;
     }
 
     @Override

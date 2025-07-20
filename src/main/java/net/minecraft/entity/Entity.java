@@ -53,6 +53,7 @@ import org.lwjglx.input.Mouse;
 import wtf.moonlight.Client;
 import wtf.moonlight.events.player.*;
 import wtf.moonlight.module.impl.misc.FreeLook;
+import wtf.moonlight.util.player.RotationUtil;
 import wtf.moonlight.util.vector.Vector3d;
 
 public abstract class Entity implements ICommandSender
@@ -1310,6 +1311,15 @@ public abstract class Entity implements ICommandSender
 
     public Vec3 getLookCustom(float yaw, float pitch) {
         return this.getVectorForRotation(pitch, yaw);
+    }
+
+    public float getClosestDistanceToEntity(Entity entityIn) {
+        Vec3 eyes = this.getPositionEyes(1F);
+        Vec3 pos = RotationUtil.getNearestPointBB(eyes, entityIn.getEntityBoundingBox());
+        double xDist = Math.abs(pos.xCoord - eyes.xCoord);
+        double yDist = Math.abs(pos.yCoord - eyes.yCoord);
+        double zDist = Math.abs(pos.zCoord - eyes.zCoord);
+        return (float) Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2) + Math.pow(zDist, 2));
     }
 
     public final Vec3 getVectorForRotation(float pitch, float yaw)

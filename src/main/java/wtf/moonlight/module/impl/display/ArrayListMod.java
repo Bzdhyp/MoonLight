@@ -30,7 +30,11 @@ public class ArrayListMod extends Module {
     public final ListValue fontMode = new ListValue("Fonts Mode", new String[]{"Minecraft", "Bold", "SFUI", "Medium", "Tahoma", "Regular", "Semi Bold"}, "Semi Bold", this);
     public final SliderValue fontSize = new SliderValue("Font Size", 15, 10, 25, this,() -> !fontMode.is("Minecraft"));
 
+    public final BoolValue importantModules = new BoolValue("Important", false, this);
+
     public final ListValue iconStyle = new ListValue("Icon Style", new String[]{"Categor", "Toggle"}, "Categor", this, () -> renderMod.is("Hot Key"));
+    public final ListValue bgColor = new ListValue("Back Ground C", new String[]{"Dark", "Synced"}, "Dark", this, () -> renderMod.is("Hot Key"));
+
     public final BoolValue hotkeysDisplay = new BoolValue("HotKeys Display", false, this, () -> renderMod.is("Hot Key"));
     public SliderValue count = new SliderValue("Array Count", 1.4f, 1.4f, 2.5f, 0.1f, this, () -> renderMod.is("Hot Key"));
     public SliderValue radius = new SliderValue("Radius", 3, 0, 6, 0.1f, this, () -> renderMod.is("Hot Key"));
@@ -42,7 +46,11 @@ public class ArrayListMod extends Module {
     public final ListValue tags = new ListValue("Suffix", new String[]{"None", "Simple", "Bracket", "Dash"}, "Simple", this);
     public final ListValue rectangleValue = new ListValue("Rectangle", new String[]{"None", "Top", "Side"}, "Top", this, () -> renderMod.is("Normal"));
     public final BoolValue backgroundValue = new BoolValue("Back Ground", true, this, () -> renderMod.is("Normal"));
-    public final SliderValue bgAlpha = new SliderValue("Back Ground Alpha", 100, 1, 255, this, () -> backgroundValue.get() || renderMod.is("Normal"));
+    public final SliderValue bgAlpha = new SliderValue("Back Ground Alpha", 100, 1, 255, this, () -> backgroundValue.get() || renderMod.is("Normal") || bgColor.is("Dark"));
+
+    public ArrayListMod() {
+        setEnabled(true);
+    }
 
     @EventTarget
     public void onRender2D(Render2DEvent event) {
@@ -82,6 +90,12 @@ public class ArrayListMod extends Module {
             enabledMods.sort(sort);
             for (Module module : enabledMods) {
                 if (module.isHidden()) continue;
+
+                if (importantModules.get()){
+                    if (module.getCategory() == Categor.Visual) continue;
+                    if (module.getCategory() == Categor.Display) continue;
+                }
+
                 Translate translate = module.getTranslate();
                 float moduleWidth = customFontMode ? getFont().getStringWidth(module.getName() + module.getTag()) : mc.fontRendererObj.getStringWidth(module.getName() + module.getTag());
 
@@ -162,6 +176,11 @@ public class ArrayListMod extends Module {
             enabledMods.sort(sort);
             for (Module module : enabledMods) {
                 if (module.isHidden()) continue;
+
+                if (importantModules.get()){
+                    if (module.getCategory() == Categor.Visual) continue;
+                    if (module.getCategory() == Categor.Display) continue;
+                }
 
                 Animation moduleAnimation = module.getAnimation();
                 moduleAnimation.setDirection(module.isEnabled() ? Direction.FORWARDS : Direction.BACKWARDS);

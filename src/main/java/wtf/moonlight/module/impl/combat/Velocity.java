@@ -1,14 +1,22 @@
 package wtf.moonlight.module.impl.combat;
 
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityTNTPrimed;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntityEgg;
+import net.minecraft.entity.projectile.EntityFishHook;
+import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.client.*;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.network.play.server.S19PacketEntityStatus;
+import net.minecraft.util.*;
 import com.cubk.EventTarget;
+import org.lwjglx.input.Keyboard;
 import wtf.moonlight.Client;
 import wtf.moonlight.events.misc.WorldEvent;
 import wtf.moonlight.events.packet.PacketEvent;
@@ -17,11 +25,15 @@ import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
 import wtf.moonlight.module.impl.movement.LongJump;
+import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.SliderValue;
+import wtf.moonlight.util.DebugUtil;
+import wtf.moonlight.util.packet.PacketUtils;
 import wtf.moonlight.util.player.MovementUtil;
 import wtf.moonlight.util.player.PlayerUtil;
 import wtf.moonlight.util.player.RotationUtil;
+import wtf.moonlight.util.vector.Vector3d;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -29,7 +41,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @ModuleInfo(name = "Velocity", category = Categor.Combat)
 public class Velocity extends Module {
     public final ListValue mode = new ListValue("Mode",
-            new String[]{"Delay", "Legit", "Polar", "Intave", "Boost", "Skip Tick", "Jump Reset", "Matrix Semi", "Matrix Reverse", "Polar Under-Block"}, "Skip Tick", this);
+            new String[]{"Grim", "Legit", "Legit 2", "Polar", "Intave", "Reduce", "Boost", "Skip Tick", "Jump Reset", "Matrix Semi", "Matrix Reverse", "Polar Under-Block"}, "Skip Tick", this);
+
+    private final ListValue grimMode = new ListValue("Grim Mode", new String[]{"Reduce", "1.17"}, "Reduce", this, () -> mode.is("Grim"));
+    private final BoolValue invalidEntity = new BoolValue("Attack Invalid Entity", true, this, () -> mode.is("Grim") && grimMode.is("Reduce"));
 
     private final SliderValue reverseTick = new SliderValue("Boost Tick", 1, 1, 5, 1, this, () -> mode.is("Boost"));
     private final SliderValue reverseStrength = new SliderValue("Boost Strength", 1, 0.1f, 1, 0.01f, this, () -> mode.is("Boost"));
@@ -45,23 +60,34 @@ public class Velocity extends Module {
     private final SliderValue hitsUntilJump = new SliderValue("Hits Until Jump", 2, 1, 10, 1, this, () -> mode.is("Jump Reset") && jumpResetMode.is("Advanced"));
     private final SliderValue ticksUntilJump = new SliderValue("Ticks Until Jump", 2, 1, 20, 1, this, () -> mode.is("Jump Reset") && jumpResetMode.is("Advanced"));
 
+    private final SliderValue reduceHurtTime = new SliderValue("Reduce Hurt Time", 9, 1, 10, 1, this, () -> mode.is("Reduce"));
+    private final SliderValue reduceFactor = new SliderValue("Reduce Factor", 0.6f, 0, 1, 0.05f, this, () -> mode.is("Reduce"));
+
+    private Entity target;
+    private long lastAttackTime;
+
     private int idk = 0;
     private int hitsCount = 0;
     private int ticksCount = 0;
     private int skipTickCounter = 0;
+    private int reduceTick, reduceDamageTick;
 
     boolean enable;
     private boolean attacked;
+    private boolean reducing;
     private boolean isFallDamage;
+    public boolean shouldVelocity;
     private boolean veloPacket = false;
     public static boolean jump = false;
+    private boolean canSpoof, canCancel;
 
     private final Random random = new Random();
-    public static List<Packet<INetHandler>> storedPackets= new CopyOnWriteArrayList<>();
+    public static List<Packet<INetHandler>> storedPackets = new CopyOnWriteArrayList<>();
 
     @Override
     public void onEnable() {
         ticksCount = 0;
+        reducing = false;
         veloPacket = false;
         skipTickCounter = 0;
 
@@ -84,13 +110,21 @@ public class Velocity extends Module {
         super.onDisable();
     }
 
-
     @EventTarget
     public void onWorld(WorldEvent event) {
+        if (mode.is("Grim") && grimMode.is("Reduce")) {
+            this.reset();
+        }
+
         if (mode.is("Jump Reset") && jumpResetMode.is("Legit")) {
             mc.gameSettings.keyBindJump.setPressed(false);
             mc.gameSettings.keyBindForward.setPressed(false);
         }
+    }
+
+    private void reset() {
+        this.shouldVelocity = false;
+        this.target = null;
     }
 
     @EventTarget
@@ -103,6 +137,30 @@ public class Velocity extends Module {
             if (skipTickCounter > 0) {
                 skipTickCounter--;
                 return;
+            }
+        }
+
+        if (mode.is("Grim")) {
+            if (grimMode.is("1.17")) {
+                if (canSpoof) {
+                    sendPacketNoEvent(new C03PacketPlayer.C06PacketPlayerPosLook(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch, mc.thePlayer.onGround));
+                    sendPacketNoEvent(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK, new BlockPos(mc.thePlayer).down(), EnumFacing.DOWN));
+                    canSpoof = false;
+                }
+            }
+        }
+
+        if (mode.is("Reduce")) {
+            if (!veloPacket) return;
+            reduceTick++;
+
+            if (mc.thePlayer.hurtTime == 2) {
+                reduceDamageTick++;
+                if (mc.thePlayer.onGround && reduceTick % 2 == 0 && reduceDamageTick <= 10) {
+                    mc.thePlayer.jump();
+                    reduceTick = 0;
+                }
+                veloPacket = false;
             }
         }
 
@@ -149,6 +207,11 @@ public class Velocity extends Module {
 
         if (packet instanceof S12PacketEntityVelocity velocity && velocity.getEntityID() == mc.thePlayer.getEntityId()) {
             switch (mode.getValue()) {
+                case "Reduce": {
+                    veloPacket = true;
+                    break;
+                }
+
                 case "Skip Tick": {
                     if (random.nextInt(100) < skipChance.getValue()) {
                         skipTickCounter = skipTicks.getValue().intValue();
@@ -183,10 +246,23 @@ public class Velocity extends Module {
                     }
                     break;
                 }
+
                 case "Matrix Semi": {
                     if (mc.thePlayer.hurtTime > 0) {
                         mc.thePlayer.motionX *= 0.6;
                         mc.thePlayer.motionZ *= 0.6;
+                    }
+                    break;
+                }
+
+                case "Legit": {
+                    if (mc.currentScreen == null) {
+                        mc.gameSettings.keyBindSprint.setPressed(true);
+                        mc.gameSettings.keyBindForward.setPressed(true);
+                        mc.gameSettings.keyBindJump.setPressed(true);
+                        mc.gameSettings.keyBindBack.setPressed(false);
+
+                        reducing = true;
                     }
                     break;
                 }
@@ -233,14 +309,64 @@ public class Velocity extends Module {
                     }
                     break;
                 }
+
+                case "Grim": {
+                    switch (grimMode.getValue()) {
+                        case "Reduce": {
+                            double strength = new Vector3d(velocity.getMotionX(), velocity.getMotionY(), velocity.getMotionZ()).length();
+                            if (velocity.getEntityID() == mc.thePlayer.getEntityId() && !mc.thePlayer.isOnLadder() && !mc.thePlayer.isInWeb) {
+                                target = getNearTarget();
+                                if (target == null) return;
+
+                                if (mc.thePlayer.getDistanceToEntity(target) > 3.3F) {
+                                    reset();
+                                    return;
+                                }
+
+                                shouldVelocity = true;
+                                DebugUtil.print("[M]" + strength + " " + (mc.thePlayer.onGround ? "on Ground" : "on Air") + (target != null ? " - Distance: " + mc.thePlayer.getClosestDistanceToEntity(target) : ""));
+                            }
+                            break;
+                        }
+
+                        case "1.17": {
+                            if (canCancel) {
+                                canCancel = false;
+                                canSpoof = true;
+                                event.setCancelled(true);
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (mode.is("Grim") && grimMode.is("1.17")) {
+            if (event.getPacket() instanceof S19PacketEntityStatus s19PacketEntityStatus) {
+
+                if (s19PacketEntityStatus.getEntity(mc.theWorld) == mc.thePlayer) {
+                    canCancel = true;
+                }
             }
         }
     }
 
     @EventTarget
-    public void onMotion(MotionEvent event) {
-        setTag(mode.getValue());
+    public void onAttack(AttackEvent event) {
+        if (mode.is("Reduce")) {
+            if (mc.thePlayer.hurtTime == reduceHurtTime.getValue() && System.currentTimeMillis() - lastAttackTime <= 8000) {
+                mc.thePlayer.motionX *= reduceFactor.getValue();
+                mc.thePlayer.motionZ *= reduceFactor.getValue();
+            }
 
+            lastAttackTime = System.currentTimeMillis();
+        }
+    }
+
+    @EventTarget
+    public void onMotion(MotionEvent event) {
         if (getModule(LongJump.class).isEnabled()) return;
 
         if (mode.is("Boost")) {
@@ -253,6 +379,72 @@ public class Velocity extends Module {
                 idk = 0;
             }
         }
+
+        if (mode.is("Legit 2")) {
+            if (reducing) {
+                if (mc.currentScreen == null) {
+                    resetKeybindings(mc.gameSettings.keyBindSprint, mc.gameSettings.keyBindForward,
+                            mc.gameSettings.keyBindJump, mc.gameSettings.keyBindBack);
+                }
+
+                reducing = false;
+            }
+        }
+    }
+
+    @EventTarget
+    public void onVelocity(VelocityEvent event) {
+        if (mc.thePlayer == null) return;
+
+        if (this.shouldVelocity) {
+            if (mc.thePlayer.getDistanceToEntity(target) > 3.0) {
+                this.reset();
+                return;
+            }
+
+            if (!mc.thePlayer.serverSprintState) {
+                PacketUtils.sendPacket(new C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.START_SPRINTING));
+                mc.thePlayer.setSprinting(true);
+            }
+
+            for (int i = 0; i < 5; i++) {
+                PacketUtils.sendPacket(new C0APacketAnimation());
+                PacketUtils.sendPacket(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
+            }
+
+            if (!mc.thePlayer.serverSprintState) {
+                PacketUtils.sendPacket(new C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SPRINTING));
+            }
+
+            event.setReduceAmount(0.07776D);
+            this.shouldVelocity = false;
+        }
+    }
+
+    private Entity getNearTarget() {
+        Entity target = null;
+        EntityLivingBase clientTarget = getModule(KillAura.class).target;
+        if (clientTarget != null) {
+            target = clientTarget;
+            return target;
+        } else {
+            for (Entity entity : mc.theWorld.loadedEntityList) {
+                if (!entity.equals(mc.thePlayer) && !entity.isDead && invalidEntity.get()) {
+                    if (entity instanceof EntityArrow entityArrow) {
+                        if (entityArrow.ticksInGround <= 0) target = entityArrow;
+                    }
+
+                    if (entity instanceof EntitySnowball) target = entity;
+
+                    if (entity instanceof EntityEgg) target = entity;
+
+                    if (entity instanceof EntityTNTPrimed) target = entity;
+
+                    if (entity instanceof EntityFishHook) target = entity;
+                }
+            }
+        }
+        return target;
     }
 
     @EventTarget
@@ -313,5 +505,23 @@ public class Velocity extends Module {
 
     private boolean checks() {
         return mc.thePlayer.isInWeb || mc.thePlayer.isInLava() || mc.thePlayer.isBurning() || mc.thePlayer.isInWater();
+    }
+
+    public static boolean isPressed(KeyBinding key) {
+        return Keyboard.isKeyDown(key.getKeyCode());
+    }
+
+    public static void resetKeybinding(KeyBinding key) {
+        if (mc.currentScreen != null) {
+            key.setPressed(false);
+        } else {
+            key.setPressed(isPressed(key));
+        }
+    }
+
+    public static void resetKeybindings(KeyBinding... keys) {
+        for (KeyBinding key : keys) {
+            resetKeybinding(key);
+        }
     }
 }

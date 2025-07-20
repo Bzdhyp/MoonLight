@@ -21,7 +21,7 @@ import wtf.moonlight.module.values.impl.StringValue;
 import wtf.moonlight.util.DebugUtil;
 import wtf.moonlight.util.TimerUtil;
 import wtf.moonlight.util.misc.Multithreading;
-import wtf.moonlight.util.misc.ServerUtil;
+import wtf.moonlight.util.ServerUtil;
 
 import java.util.Arrays;
 import java.util.List;

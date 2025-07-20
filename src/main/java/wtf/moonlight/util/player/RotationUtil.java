@@ -467,6 +467,21 @@ public class RotationUtil implements InstanceAccess {
         return getRotations(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, mc.thePlayer.posX, mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
     }
 
+    public static Vec3 getNearestPointBB(Vec3 eye, AxisAlignedBB box) {
+        double[] origin = new double[]{eye.xCoord, eye.yCoord, eye.zCoord};
+        double[] destMins = new double[]{box.minX, box.minY, box.minZ};
+        double[] destMaxs = new double[]{box.maxX, box.maxY, box.maxZ};
+        for (int i = 0; i < 3; ++i) {
+            if (origin[i] > destMaxs[i]) {
+                origin[i] = destMaxs[i];
+                continue;
+            }
+            if (!(origin[i] < destMins[i])) continue;
+            origin[i] = destMins[i];
+        }
+        return new Vec3(origin[0], origin[1], origin[2]);
+    }
+
     public static Vec3 getBestHitVec(final Entity entity) {
         final Vec3 positionEyes = mc.thePlayer.getPositionEyes(1);
         final AxisAlignedBB entityBoundingBox = entity.getEntityBoundingBox();

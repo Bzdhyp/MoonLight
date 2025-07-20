@@ -69,6 +69,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wtf.moonlight.Client;
 import wtf.moonlight.events.player.TeleportEvent;
+import wtf.moonlight.events.player.VelocityEvent;
 import wtf.moonlight.gui.main.MainMenu;
 
 import java.io.File;
@@ -311,14 +312,18 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         this.clientWorldController.addEntityToWorld(packetIn.getEntityID(), entitypainting);
     }
 
-    public void handleEntityVelocity(S12PacketEntityVelocity packetIn)
-    {
+    public void handleEntityVelocity(S12PacketEntityVelocity packetIn) {
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
         Entity entity = this.clientWorldController.getEntityByID(packetIn.getEntityID());
 
-        if (entity != null)
-        {
-            entity.setVelocity((double)packetIn.getMotionX() / 8000.0D, (double)packetIn.getMotionY() / 8000.0D, (double)packetIn.getMotionZ() / 8000.0D);
+        if (entity != null) {
+            if (entity == Minecraft.getMinecraft().thePlayer) {
+                VelocityEvent event = new VelocityEvent(1D);
+                Client.INSTANCE.getEventManager().call(event);
+                entity.setVelocity((double)packetIn.getMotionX() / 8000.0D * event.getReduceAmount(), (double)packetIn.getMotionY() / 8000.0D, (double)packetIn.getMotionZ() / 8000.0D * event.getReduceAmount());
+            } else {
+                entity.setVelocity((double)packetIn.getMotionX() / 8000.0D, (double)packetIn.getMotionY() / 8000.0D, (double)packetIn.getMotionZ() / 8000.0D);
+            }
         }
     }
 

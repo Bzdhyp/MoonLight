@@ -1,6 +1,8 @@
 package wtf.moonlight.util.player;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockAir;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.*;
 import wtf.moonlight.util.misc.InstanceAccess;
@@ -22,6 +24,12 @@ public class BlockUtil implements InstanceAccess {
             return mc.theWorld.getBlockState(blockPos).getBlock();
         }
         return null;
+    }
+
+    public static boolean isAirOrLiquid(BlockPos pos) {
+        Block block = mc.theWorld.getBlockState(pos).getBlock();
+
+        return block instanceof BlockAir || block instanceof BlockLiquid;
     }
 
     public static Material getMaterial(BlockPos blockPos) {

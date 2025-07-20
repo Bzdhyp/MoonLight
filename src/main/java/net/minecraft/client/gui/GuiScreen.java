@@ -664,7 +664,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
     }
 
     public boolean GuiInvMove() {
-        return false;
+        return true;
     }
 
     /**

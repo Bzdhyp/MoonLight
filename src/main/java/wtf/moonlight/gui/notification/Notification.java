@@ -14,7 +14,7 @@ import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import wtf.moonlight.gui.font.Fonts;
-import wtf.moonlight.module.impl.display.NotificationHUD;
+import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.util.misc.InstanceAccess;
 import wtf.moonlight.util.render.animations.advanced.Animation;
 import wtf.moonlight.util.render.animations.Translate;
@@ -48,7 +48,7 @@ public class Notification implements InstanceAccess {
     }
     
     public double getWidth(){
-        return switch (INSTANCE.getModuleManager().getModule(NotificationHUD.class).notificationMode.getValue()) {
+        return switch (INSTANCE.getModuleManager().getModule(Interface.class).notificationMode.getValue()) {
             case "Default" -> Fonts.interMedium.get(15).getStringWidth(getDescription()) + 5;
             case "Test" ->
                     Math.max(Fonts.interSemiBold.get(15).getStringWidth(getTitle()), Fonts.interSemiBold.get(15).getStringWidth(getDescription())) + 5;
@@ -71,7 +71,7 @@ public class Notification implements InstanceAccess {
     }
 
     public double getHeight(){
-        return switch (INSTANCE.getModuleManager().getModule(NotificationHUD.class).notificationMode.getValue()) {
+        return switch (INSTANCE.getModuleManager().getModule(Interface.class).notificationMode.getValue()) {
             case "Default" -> 16;
             case "Test" -> Fonts.interRegular.get(15).getHeight() * 2 + 2;
             case "Test2", "Augustus 2" -> 33;

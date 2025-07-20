@@ -38,7 +38,8 @@ public class SplashScreen implements InstanceAccess {
         float y = height / 2 - 50 + 7;
 
         if (text != null && !text.isEmpty()) {
-            int totalWidth = font.getStringWidth(text.substring(0, 4)) + font.getStringWidth(text.substring(4));
+            int splitPoint = Math.min(4, text.length());
+            int totalWidth = font.getStringWidth(text.substring(0, splitPoint)) + font.getStringWidth(text.substring(splitPoint));
             float x = width / 2f - totalWidth / 2f;
 
             MainMenu.renderColoredText(font, text, x, y, textColor, defaultColor);

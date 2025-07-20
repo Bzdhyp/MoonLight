@@ -52,7 +52,7 @@ public final class ModuleManager {
         addModules(
                 // Combat
                 AntiBot.class,
-                AutoGap.class,
+                AutoGapple.class,
                 AutoPotion.class,
                 AutoProjectile.class,
                 BackTrack.class,
@@ -61,6 +61,7 @@ public final class ModuleManager {
                 KeepSprint.class,
                 KillAura.class,
                 TargetStrafe.class,
+                MoreKB.class,
                 TickBase.class,
                 Velocity.class,
                 AutoRod.class,
@@ -81,7 +82,7 @@ public final class ModuleManager {
 
                 // Movement
                 AntiFall.class,
-                Freeze.class,
+                Stuck.class,
                 InvMove.class,
                 LongJump.class,
                 NoJumpDelay.class,
@@ -104,6 +105,7 @@ public final class ModuleManager {
                 FastPlace.class,
                 InvManager.class,
                 NoFall.class,
+                AutoPlace.class,
                 ChestStealer.class,
                 BedNuker.class,
                 Clutch.class,
@@ -140,15 +142,10 @@ public final class ModuleManager {
 
                 // display
                 Interface.class,
-                TargetHUD.class,
-                KeyBindHUD.class,
                 Watermark.class,
-                PotionHUD.class,
-                IslandHUD.class,
                 ArrayListMod.class,
                 ScoreboardMod.class,
-                PostProcessing.class,
-                NotificationHUD.class
+                PostProcessing.class
         );
 
         // Register the ModuleManager to listen for events

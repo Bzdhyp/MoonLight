@@ -36,8 +36,7 @@ import wtf.moonlight.events.render.Render2DEvent;
 import wtf.moonlight.module.Module;
 import wtf.moonlight.module.Categor;
 import wtf.moonlight.module.ModuleInfo;
-import wtf.moonlight.module.impl.display.TargetHUD;
-import wtf.moonlight.module.impl.movement.AntiFall;
+import wtf.moonlight.module.impl.display.Interface;
 import wtf.moonlight.module.impl.player.BedNuker;
 import wtf.moonlight.module.impl.movement.Scaffold;
 import wtf.moonlight.module.values.impl.BoolValue;
@@ -174,7 +173,7 @@ public class KillAura extends Module {
         prevRotation = rotation = null;
         prevVec = currentVec = targetVec = null;
         blinkTicks = 0;
-        Iterator<Map.Entry<EntityPlayer, DecelerateAnimation>> iterator = TargetHUD.animationEntityPlayerMap.entrySet().iterator();
+        Iterator<Map.Entry<EntityPlayer, DecelerateAnimation>> iterator = Interface.animationEntityPlayerMap.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<EntityPlayer, DecelerateAnimation> entry = iterator.next();
             DecelerateAnimation animation = entry.getValue();
@@ -205,10 +204,6 @@ public class KillAura extends Module {
                 BlinkComponent.dispatch();
                 blinked = false;
             }
-        }
-        AntiFall antiFall = Client.INSTANCE.getModuleManager().getModule(AntiFall.class);
-        if (antiFall.isEnabled() && antiFall.isActive()) {
-            return;
         }
 
         getTargets();
@@ -423,7 +418,7 @@ public class KillAura extends Module {
                 }
                 break;
             case "HYT":
-                if (this.isBlocking && !getModule(AutoGap.class).eating) {
+                if (this.isBlocking && !getModule(AutoGapple.class).eating) {
                     unblock();
                 }
 
@@ -466,7 +461,7 @@ public class KillAura extends Module {
             }
 
             if (via.get()) {
-                if (!getModule(AutoGap.class).eating && ViaLoadingBase.getInstance().getTargetVersion().getVersion() > 47) {
+                if (!getModule(AutoGapple.class).eating && ViaLoadingBase.getInstance().getTargetVersion().getVersion() > 47) {
                     sendPacket(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
                     PacketWrapper useItem = PacketWrapper.create(29, null, Via.getManager().getConnectionManager().getConnections().iterator().next());
                     useItem.write(Type.VAR_INT, 1);
@@ -497,7 +492,7 @@ public class KillAura extends Module {
             unblock();
         boolean test = RotationUtil.isLookingAtEntity(target, attackRange.getValue());
         if (canAttack(target) && (addons.isEnabled("Ray Cast") && test || !addons.isEnabled("Ray Cast"))) {
-            if (getModule(AutoGap.class).isEnabled() && getModule(AutoGap.class).alwaysAttack.get() && getModule(AutoGap.class).eating) {
+            if (getModule(AutoGapple.class).isEnabled() && getModule(AutoGapple.class).alwaysAttack.get() && getModule(AutoGapple.class).eating) {
                 AttackOrder.sendFixedAttackNoPacketEvent(mc.thePlayer, target);
             } else {
                 AttackOrder.sendFixedAttack(mc.thePlayer, target);

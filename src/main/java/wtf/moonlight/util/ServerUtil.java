@@ -8,7 +8,7 @@
  *
  * Author(s): [Randumbguy & wxdbie & opZywl & MukjepScarlet & lucas & eonian]
  */
-package wtf.moonlight.util.misc;
+package wtf.moonlight.util;
 
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
