@@ -46,29 +46,49 @@ public class Scaffold extends Module {
     private final ListValue switchBlock = new ListValue("Switch Block", new String[]{"Silent", "Switch", "Spoof"}, "Spoof", this);
     public final BoolValue biggestStack = new BoolValue("Biggest Stack", false, this);
     private final ListValue mode = new ListValue("Mode", new String[]{"Normal", "Telly", "Snap", "Watchdog"}, "Normal", this);
+
     private final SliderValue minTellyTicks = new SliderValue("Min Telly Ticks", 2, 1, 5, this, () -> mode.is("Telly"));
     private final SliderValue maxTellyTicks = new SliderValue("Max Telly Ticks", 4, 1, 5, this, () -> mode.is("Telly"));
-    private final ListValue rotations = new ListValue("Rotations", new String[]{"Normal", "Normal 2","Normal 3", "Back", "Strict", "God Bridge", "Reverse", "Custom", "Unfair Pitch", "Hypixel", "Derp"}, "Normal", this);
-    private final SliderValue customYaw = new SliderValue("Custom Yaw", 180, 0, 180, 1, this, () -> rotations.is("Custom"));
-    private final SliderValue minPitch = new SliderValue("Min Pitch Range", 55, 50, 90, .1f, this, () -> rotations.is("Custom") || rotations.is("God Bridge"));
-    public final SliderValue maxPitch = new SliderValue("Max Pitch Range", 75, 50, 90, .1f, this, () -> rotations.is("Custom") || rotations.is("God Bridge"));
-    private final BoolValue customRotationSetting = new BoolValue("Custom Rotation Setting", false, this);
-    private final ListValue smoothMode = new ListValue("Rotations Smooth", RotationUtil.smoothModes, RotationUtil.smoothModes[0], this, customRotationSetting::get);
-    private final SliderValue minYawRotSpeed = new SliderValue("Min Yaw Rotation Speed", 45, 1, 180, 1, this, customRotationSetting::get);
-    private final SliderValue minPitchRotSpeed = new SliderValue("Min Pitch Rotation Speed", 45, 1, 180, 1, this, customRotationSetting::get);
-    private final SliderValue maxYawRotSpeed = new SliderValue("Max Yaw Rotation Speed", 90, 1, 180, 1, this, customRotationSetting::get);
-    private final SliderValue maxPitchRotSpeed = new SliderValue("Max Pitch Rotation Speed", 90, 1, 180, 1, this, customRotationSetting::get);
-    private final SliderValue bezierP0 = new SliderValue("Bezier P0", 0f, 0f, 1f, 1, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
-    private final SliderValue bezierP1 = new SliderValue("Bezier P1", 0.05f, 0f, 1f, 1, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
-    private final SliderValue bezierP2 = new SliderValue("Bezier P2", 0.2f, 0f, 1f, 1, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
-    private final SliderValue bezierP3 = new SliderValue("Bezier P3", 0.4f, 0f, 1f, 1, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
-    private final SliderValue bezierP4 = new SliderValue("Bezier P4", 0.6f, 0f, 1f, 1, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
-    private final SliderValue bezierP5 = new SliderValue("Bezier P5", 0.8f, 0f, 1f, 1, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
-    private final SliderValue bezierP6 = new SliderValue("Bezier P6", 0.95f, 0f, 1f, 1, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
-    private final SliderValue bezierP7 = new SliderValue("Bezier P7", 0.1f, 0f, 1f, 1, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
-    private final SliderValue elasticity = new SliderValue("Elasticity", 0.3f, 0.1f, 1f, 0.01f, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && smoothMode.is(RotationUtil.smoothModes[7]));
-    private final SliderValue dampingFactor = new SliderValue("Damping Factor", 0.5f, 0.1f, 1f, 0.01f, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && smoothMode.is(RotationUtil.smoothModes[7]));
-    public final BoolValue smoothlyResetRotation = new BoolValue("Smoothly Reset Rotation", true, this, customRotationSetting::get);
+    public final BoolValue smoothRotations = new BoolValue("Smooth Rotations", false, this, () -> mode.is("Telly"));
+
+    private final ListValue rotations = new ListValue("Rotations", new String[]{"Normal", "Normal 2","Normal 3", "Back", "Strict", "God Bridge", "Reverse", "Custom", "Unfair Pitch", "Hypixel", "Derp"}, "Normal", this, () -> (mode.is("Telly") && !smoothRotations.get()));
+    private final SliderValue customYaw = new SliderValue("Custom Yaw", 180, 0, 180, 1, this, () -> rotations.is("Custom") && (mode.is("Telly") && !smoothRotations.get()));
+    private final SliderValue minPitch = new SliderValue("Min Pitch Range", 55, 50, 90, .1f, this, () -> (rotations.is("Custom") || rotations.is("God Bridge")) && (mode.is("Telly") && !smoothRotations.get()));
+    public final SliderValue maxPitch = new SliderValue("Max Pitch Range", 75, 50, 90, .1f, this, () -> (rotations.is("Custom") || rotations.is("God Bridge")) && (mode.is("Telly") && !smoothRotations.get()));
+
+    private final BoolValue customRotationSetting = new BoolValue("Custom Rotation Setting", false, this, () -> mode.is("Telly") && (mode.is("Telly") && !smoothRotations.get()));
+    private final ListValue smoothMode = new ListValue("Rotations Smooth", RotationUtil.smoothModes, RotationUtil.smoothModes[0], this, () -> customRotationSetting.get() && (mode.is("Telly") && !smoothRotations.get()));
+    private final SliderValue minYawRotSpeed = new SliderValue("Min Yaw Rotation Speed", 45, 1, 180, 1, this, () -> customRotationSetting.get() && (mode.is("Telly") && !smoothRotations.get()));
+    private final SliderValue minPitchRotSpeed = new SliderValue("Min Pitch Rotation Speed", 45, 1, 180, 1, this, () -> customRotationSetting.get() && (mode.is("Telly") && !smoothRotations.get()));
+    private final SliderValue maxYawRotSpeed = new SliderValue("Max Yaw Rotation Speed", 90, 1, 180, 1, this, () -> customRotationSetting.get() && (mode.is("Telly") && !smoothRotations.get()));
+    private final SliderValue maxPitchRotSpeed = new SliderValue("Max Pitch Rotation Speed", 90, 1, 180, 1, this, () -> customRotationSetting.get() && (mode.is("Telly") && !smoothRotations.get()));
+
+    private final SliderValue bezierP0 = new SliderValue("Bezier P0", 0f, 0f, 1f, 1, this,
+            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP1 = new SliderValue("Bezier P1", 0.05f, 0f, 1f, 1, this,
+            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP2 = new SliderValue("Bezier P2", 0.2f, 0f, 1f, 1, this,
+            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP3 = new SliderValue("Bezier P3", 0.4f, 0f, 1f, 1, this,
+            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP4 = new SliderValue("Bezier P4", 0.6f, 0f, 1f, 1, this,
+            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP5 = new SliderValue("Bezier P5", 0.8f, 0f, 1f, 1, this,
+            () ->  (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP6 = new SliderValue("Bezier P6", 0.95f, 0f, 1f, 1, this,
+            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP7 = new SliderValue("Bezier P7", 0.1f, 0f, 1f, 1, this,
+            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+
+    private final SliderValue elasticity = new SliderValue("Elasticity", 0.3f, 0.1f, 1f, 0.01f, this,
+            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && smoothMode.is(RotationUtil.smoothModes[7]));
+
+    private final SliderValue dampingFactor = new SliderValue("Damping Factor", 0.5f, 0.1f, 1f, 0.01f, this,
+            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && smoothMode.is(RotationUtil.smoothModes[7]));
+
+    public final BoolValue smoothlyResetRotation = new BoolValue("Smoothly Reset Rotation", true, this,
+            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.get());
+
     private final MultiBoolValue addons = new MultiBoolValue("Addons", Arrays.asList(
             new BoolValue("Sprint", true),
             new BoolValue("Swing", true),
@@ -84,18 +104,23 @@ public class Scaffold extends Module {
             new BoolValue("Jump", false),
             new BoolValue("Target Block ESP", false)
     ), this);
+
+    private final ListValue keepYList = new ListValue("Keep Y Mode", new String[]{"Extra", "Vanilla"}, "Extra", this, () ->
+            (mode.is("Telly") || mode.is("Watchdog")) && addons.isEnabled("Sprint") && (addons.isEnabled("Keep Y") || addons.isEnabled("Speed Keep Y")));
+
     private final SliderValue blocksToJump = new SliderValue("Blocks To Jump", 7, 1, 8, this, () -> addons.isEnabled("Jump"));
     private final SliderValue blocksToSneak = new SliderValue("Blocks To Sneak", 7, 1, 8, this, () -> addons.isEnabled("Sneak"));
     private final SliderValue sneakDistance = new SliderValue("Sneak Distance", 0, 0, 0.5f, 0.01f, this, () -> addons.isEnabled("Sneak"));
+
     private final ListValue tower = new ListValue("Tower", new String[]{"Jump", "Vanilla", "Watchdog"}, "Jump", this, () -> !mode.is("Telly"));
     private final BoolValue towerStop = new BoolValue("Tower Stop",true,this,() -> tower.is("Watchdog"));
     private final SliderValue towerStopTick = new SliderValue("Tower Stop Tick",7,4,20,this,() -> towerStop.canDisplay() && towerStop.get());
     private final ListValue towerMove = new ListValue("Tower Move", new String[]{"Jump", "Vanilla", "Watchdog", "Low"}, "Jump", this, () -> !mode.is("Telly"));
     private final BoolValue towerMoveStop = new BoolValue("Tower Move Stop",true,this,() -> tower.is("Watchdog"));
     private final SliderValue towerMoveStopTick = new SliderValue("Tower Stop Tick",7,4,20,this,() -> towerMoveStop.canDisplay() && towerMoveStop.get());
+
     private final ListValue wdSprint = new ListValue("WD Sprint Mode", new String[]{"Offset"}, "Bottom", this, () -> mode.is("Watchdog") && addons.isEnabled("Sprint") && !addons.isEnabled("Keep Y"));
     private final BoolValue sprintBoost = new BoolValue("Sprint Boost Test", true, this, () -> mode.is("Watchdog") && addons.isEnabled("Sprint") && !addons.isEnabled("Keep Y"));
-    private final ListValue wdKeepY = new ListValue("WD Keep Y Mode", new String[]{"Extra", "Vanilla"}, "Extra", this, () -> mode.is("Watchdog") && addons.isEnabled("Sprint") && (addons.isEnabled("Keep Y") || addons.isEnabled("Speed Keep Y")));
     private final ListValue wdLowhop = new ListValue("WD Fast Fall Mode", new String[]{"8 Tick", "7 Tick", "Disabled"}, "Disabled", this, () -> mode.is("Watchdog") && addons.isEnabled("Sprint") && addons.isEnabled("Keep Y"));
     private final BoolValue unFlagged = new BoolValue("Un Flagged Test", true, this, () -> mode.is("Watchdog") && addons.isEnabled("Sprint"));
     private final BoolValue unPatch = new BoolValue("Un Patch Test", true, this, () -> mode.is("Watchdog") && addons.isEnabled("Sprint") && (addons.isEnabled("Keep Y") || addons.isEnabled("Speed Keep Y")));
@@ -107,11 +132,13 @@ public class Scaffold extends Module {
     BlockPos targetBlock;
     public BlockPos previousBlock;
 
+    private double smoothY;
     private boolean placed;
     private boolean flagged;
     private boolean placing;
     private boolean isOnRightSide;
     private boolean canPlace = true;
+    private boolean smoothPlace = false;
 
     private double onGroundY;
 
@@ -122,6 +149,7 @@ public class Scaffold extends Module {
     private float derpYaw;
     private float[] rotation;
     private float[] previousRotation;
+    private float[] smoothRotation = new float[]{0, 85F};
 
     private HoverState hoverState = HoverState.DONE;
 
@@ -136,6 +164,11 @@ public class Scaffold extends Module {
         oloSlot = mc.thePlayer.inventory.currentItem;
         onGroundY = mc.thePlayer.getEntityBoundingBox().minY;
         previousRotation = new float[]{mc.thePlayer.rotationYaw + 180, 82};
+
+        if (mode.is("Telly") && smoothRotations.get()) {
+            smoothRotation = new float[]{mc.thePlayer.rotationYaw, 85F};
+            smoothY = mc.thePlayer.posY;
+        }
 
         if (wdSprint.canDisplay() && wdSprint.is("Offset") && !(PlayerUtil.getBlock(mc.thePlayer.getPosition()) instanceof BlockLiquid) && !addons.isEnabled("Hover")) {
             if (mc.thePlayer.onGround) {
@@ -220,7 +253,7 @@ public class Scaffold extends Module {
             posY = onGroundY;
         }
 
-        if (wdKeepY.canDisplay() && wdKeepY.is("Extra") && !towering() && (addons.isEnabled("Keep Y") && !isEnabled(Speed.class) || addons.isEnabled("Speed Keep Y") && isEnabled(Speed.class)) && !mc.gameSettings.keyBindJump.isKeyDown()) {
+        if (keepYList.canDisplay() && keepYList.is("Extra") && !towering() && (addons.isEnabled("Keep Y") && !isEnabled(Speed.class) || addons.isEnabled("Speed Keep Y") && isEnabled(Speed.class)) && !mc.gameSettings.keyBindJump.isKeyDown()) {
             posY = mc.thePlayer.ticksExisted % 6 != 0 ? onGroundY : mc.thePlayer.getEntityBoundingBox().minY;
         }
 
@@ -285,15 +318,24 @@ public class Scaffold extends Module {
             rotation = new float[]{mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch};
         }
 
-        canPlace = (mode.is("Telly") && mc.thePlayer.offGroundTicks >= tellyTicks || mode.is("Snap") && data != null || !mode.is("Telly") && !mode.is("Snap"));
+        canPlace = (mode.is("Telly") && mc.thePlayer.offGroundTicks >= tellyTicks || mode.is("Snap") && data != null && (mc.thePlayer.isPotionActive(Potion.moveSpeed) || doesNotContainBlock(1)) || !mode.is("Telly") && !mode.is("Snap"));
 
         getRotations();
 
         place(data.blockPos, data.facing, getVec3(data));
     }
 
+    public boolean doesNotContainBlock(int down) {
+        return PlayerUtil.blockRelativeToPlayer(0, -down, 0).isReplaceable(mc.theWorld, new BlockPos(mc.thePlayer).down(down));
+    }
+
     @EventTarget
     public void onRotationUpdate(UpdateEvent event) {
+        if (mode.is("Telly") && smoothRotations.get()) {
+            RotationUtil.setRotation(smoothRotation, MovementCorrection.SILENT);
+            return;
+        }
+
         if (canPlace) {
             if (customRotationSetting.get()) {
                 RotationUtil.setRotation(rotation, smoothMode.getValue(), addons.isEnabled("Movement Fix") ? MovementCorrection.SILENT : MovementCorrection.OFF, minYawRotSpeed.getValue(), maxYawRotSpeed.getValue(), minPitchRotSpeed.getValue(), maxPitchRotSpeed.getValue(),
@@ -439,7 +481,7 @@ public class Scaffold extends Module {
         }
 
         if (mc.thePlayer.onGround) {
-            if (((addons.isEnabled("Keep Y") || mode.is("Telly") || wdKeepY.canDisplay())) && MovementUtil.isMoving() && !towering() && !towerMoving() && (addons.isEnabled("Keep Y") && !isEnabled(Speed.class))) {
+            if (((addons.isEnabled("Keep Y") || mode.is("Telly") || keepYList.canDisplay())) && MovementUtil.isMoving() && !towering() && !towerMoving() && (addons.isEnabled("Keep Y") && !isEnabled(Speed.class))) {
                 mc.thePlayer.jump();
             }
         }
@@ -499,12 +541,45 @@ public class Scaffold extends Module {
 
     @EventTarget
     public void onMotion(MotionEvent event) {
-
         if (event.isPost())
             return;
 
         if (isEnabled(KillAura.class) && !getModule(KillAura.class).noScaffold.get() && getModule(KillAura.class).target != null && getModule(KillAura.class).shouldAttack() && data == null) {
             return;
+        }
+
+        if (mode.is("Telly") && smoothRotations.get()) {
+            if (mc.gameSettings.keyBindJump.isKeyDown() || mc.thePlayer.onGround) {
+                smoothY = mc.thePlayer.posY;
+            }
+
+            BlockPos under = new BlockPos(mc.thePlayer.posX, smoothY, mc.thePlayer.posZ);
+            Scaffold.PlaceData data = ScaffoldUtil.getPlaceData(under);
+            if (data != null) {
+                this.data = data;
+            }
+
+            if (!mc.thePlayer.onGround) {
+                smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 90;
+                if (mc.thePlayer.offGroundTicks > 0) smoothPlace = true;
+            } else {
+                smoothPlace = false;
+            }
+
+            if (smoothPlace) {
+                smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 125;
+            } else if (mc.thePlayer.onGround) {
+                smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw);
+            }
+
+            for (int i = 90; i > 60f; i--) {
+                float[] tryRot = new float[]{smoothRotation[0], i};
+                MovingObjectPosition mop = RotationUtil.rayTrace(tryRot, mc.playerController.getBlockReachDistance(), 1);
+                if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK &&
+                        mop.sideHit != EnumFacing.UP) {
+                    smoothRotation[1] = i;
+                }
+            }
         }
 
         if (!(PlayerUtil.getBlock(mc.thePlayer.getPosition()) instanceof BlockLiquid) && !towering() && !isEnabled(Speed.class) && !towerMoving()) {
@@ -522,7 +597,7 @@ public class Scaffold extends Module {
             }
         }
 
-        if (wdKeepY.canDisplay() && (addons.isEnabled("Speed Keep Y") && isEnabled(Speed.class) || !addons.isEnabled("Speed Keep Y")) && !towering() && !isEnabled(Speed.class) && !towerMoving() && !isEnabled(Speed.class) && addons.isEnabled("Sprint") && mc.thePlayer.onGround && MovementUtil.isMoving()) {
+        if (keepYList.canDisplay() && (addons.isEnabled("Speed Keep Y") && isEnabled(Speed.class) || !addons.isEnabled("Speed Keep Y")) && !towering() && !isEnabled(Speed.class) && !towerMoving() && !isEnabled(Speed.class) && addons.isEnabled("Sprint") && mc.thePlayer.onGround && MovementUtil.isMoving()) {
             MovementUtil.strafe(MovementUtil.getSpeed() * (MovementUtil.isMovingStraight() ? straightSpeed.getValue() : diagonalSpeed.getValue()));
         }
 
@@ -739,27 +814,31 @@ public class Scaffold extends Module {
     }
 
     private void place(BlockPos pos, EnumFacing facing, Vec3 hitVec) {
-        if (canPlace && data != null) {
+        if (mode.is("Telly") && smoothRotations.get() && !smoothPlace) return;
 
+        if (canPlace && data != null) {
             if (!addons.isEnabled("Ray Trace")) {
                 if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem(), pos, facing, hitVec)) {
                     if (addons.isEnabled("Swing")) {
                         mc.thePlayer.swingItem();
                         mc.getItemRenderer().resetEquippedProgress();
-                    } else
+                    } else {
                         mc.getNetHandler().addToSendQueue(new C0APacketAnimation());
+                    }
                     placing = true;
                     blocksPlaced += 1;
                     placed = true;
                 }
             } else {
                 MovingObjectPosition ray = RotationUtil.rayTrace(mc.playerController.getBlockReachDistance(), 1);
-                if (ray.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem(), ray.getBlockPos(), ray.sideHit, ray.hitVec)) {
+                if (ray.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK &&
+                        mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem(), ray.getBlockPos(), ray.sideHit, ray.hitVec)) {
                     if (addons.isEnabled("Swing")) {
                         mc.thePlayer.swingItem();
                         mc.getItemRenderer().resetEquippedProgress();
-                    } else
+                    } else {
                         mc.getNetHandler().addToSendQueue(new C0APacketAnimation());
+                    }
                     placing = true;
                     blocksPlaced += 1;
                     placed = true;

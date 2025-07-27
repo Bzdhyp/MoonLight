@@ -109,8 +109,10 @@ public class ScaffoldUtil implements InstanceAccess {
 
         Scaffold module = Client.INSTANCE.getModuleManager().getModule(Scaffold.class);
 
-        if (module.previousBlock != null && module.previousBlock.getY() > mc.thePlayer.posY) {
-            module.previousBlock = null;
+        if (module.isEnabled() && !module.smoothRotations.get()) {
+            if (module.previousBlock != null && module.previousBlock.getY() > mc.thePlayer.posY) {
+                module.previousBlock = null;
+            }
         }
 
         // 1 of the 4 directions around player
@@ -143,12 +145,16 @@ public class ScaffoldUtil implements InstanceAccess {
             for (int i = 0; i < offsets.length; i++) {
                 BlockPos newPos = pos.add(offsets[i]);
                 Block block = mc.theWorld.getBlockState(newPos).getBlock();
-                if (newPos.equals(module.previousBlock)) {
-                    return new Scaffold.PlaceData(newPos, facings[i]);
+                if (module.isEnabled() && !module.smoothRotations.get()) {
+                    if (newPos.equals(module.previousBlock)) {
+                        return new Scaffold.PlaceData(newPos, facings[i]);
+                    }
                 }
+
                 if (lastCheck == 0) {
                     continue;
                 }
+
                 if (!block.getMaterial().isReplaceable() && isInteractable(block)) {
                     return new Scaffold.PlaceData(newPos, facings[i]);
                 }

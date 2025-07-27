@@ -201,6 +201,14 @@ public class Vec3 {
         return MathHelper.sqrt_double(d0 * d0 + d2 * d2);
     }
 
+    public Vec3 scale(double factor) {
+        return this.mul(factor, factor, factor);
+    }
+
+    public Vec3 mul(double factorX, double factorY, double factorZ) {
+        return new Vec3(this.xCoord * factorX, this.yCoord * factorY, this.zCoord * factorZ);
+    }
+
     public Vec3 rotateYaw(final float yaw) {
         final float f = MathHelper.cos(yaw);
         final float f1 = MathHelper.sin(yaw);

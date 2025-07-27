@@ -30,6 +30,11 @@ public class HotKeyWidget extends Widget {
     }
 
     @Override
+    public boolean shouldRender() {
+        return Client.INSTANCE.getModuleManager().getModule(ArrayListMod.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(ArrayListMod.class).renderMod.is("Hot Key");
+    }
+
+    @Override
     public void render() {
         this.hotKeyRender(false);
     }
@@ -203,10 +208,5 @@ public class HotKeyWidget extends Widget {
                 this.height = count;
             }
         }
-    }
-
-    @Override
-    public boolean shouldRender() {
-        return Client.INSTANCE.getModuleManager().getModule(ArrayListMod.class).isEnabled() && Client.INSTANCE.getModuleManager().getModule(ArrayListMod.class).renderMod.is("Hot Key");
     }
 }

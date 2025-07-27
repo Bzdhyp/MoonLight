@@ -274,10 +274,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     private BlockRendererDispatcher blockRenderDispatcher;
     public volatile boolean running = true;
     public String debug = "";
-    public boolean field_175613_B = false;
-    public boolean field_175614_C = false;
-    public boolean field_175611_D = false;
     public boolean renderChunksMany = true;
+    public int skipTicks;
     long debugUpdateTime = getSystemTime();
     int fpsCounter;
     long prevFrameTime = -1L;
@@ -993,7 +991,16 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             if (tickBase.handleTick()) {
                 continue;
             }
-            this.runTick();
+
+            if (skipTicks > 0) {
+                skipTicks--;
+            } else {
+                try {
+                    this.runTick();
+                } catch (Throwable ex) {
+                    logger.error("Unexpected error at runTicks", ex);
+                }
+            }
         }
 
         this.mcProfiler.endStartSection("preRenderErrors");

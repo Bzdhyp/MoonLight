@@ -22,6 +22,8 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.client.*;
 import net.minecraft.util.*;
@@ -44,6 +46,7 @@ import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.MultiBoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
 import wtf.moonlight.util.MovementCorrection;
+import wtf.moonlight.util.packet.PacketUtils;
 import wtf.moonlight.util.render.animations.advanced.Direction;
 import wtf.moonlight.util.render.animations.advanced.impl.DecelerateAnimation;
 import wtf.moonlight.util.MathUtil;
@@ -87,6 +90,7 @@ public class KillAura extends Module {
     private final SliderValue dampingFactor = new SliderValue("Damping Factor", 0.5f, 0.1f, 1f,0.01f, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get() && smoothMode.is(RotationUtil.smoothModes[7]));
     private final SliderValue keepLength = new SliderValue("Keep Length", 1, 0, 20,1, this);
     public final BoolValue smoothlyResetRotation = new BoolValue("Smoothly Reset Rotation", true, this,() -> customRotationSetting.canDisplay() && customRotationSetting.get());
+
     private final BoolValue randomize = new BoolValue("Randomize", false, this);
     public final ListValue randomizerot = new ListValue("RandomizeRotation", new String[]{"Random","Advanced"}, "Noise", this, randomize::get);
     public final SliderValue yawStrength = new SliderValue("YawStrength",5f,1,35f,this, () -> this.randomize.get() && this.randomizerot.is("Random") || this.randomizerot.is("RandomSecure"));
@@ -590,7 +594,6 @@ public class KillAura extends Module {
     }
 
     public float[] calcToEntity(EntityLivingBase entity) {
-
         prevVec = currentVec;
 
         Vec3 playerPos = mc.thePlayer.getPositionEyes(1);
@@ -611,7 +614,6 @@ public class KillAura extends Module {
                 targetVec = RotationUtil.getBestHitVec(entity);
                 break;
             case "Test":
-
                 Vec3 test = new Vec3(entity.posX, entity.posY, entity.posZ);
 
                 double diffY;
@@ -627,7 +629,7 @@ public class KillAura extends Module {
         }
 
         if (heuristics.get()) {
-            targetVec = RotationUtil.heuristics(entity, targetVec);
+            RotationUtil.heuristics(entity, targetVec);
         }
 
         if (bruteforce.get()) {
@@ -680,8 +682,8 @@ public class KillAura extends Module {
         if(this.randomize.get()) {
             switch (this.randomizerot.getValue()) {
                 case "Random" -> {
-                    yaw += MathUtil.randomizeDouble(-this.yawStrength.getValue(), this.yawStrength.getValue());
-                    pitch += MathUtil.randomizeDouble(-this.pitchStrength.getValue(), this.pitchStrength.getValue());
+                    yaw += (float) MathUtil.randomizeDouble(-this.yawStrength.getValue(), this.yawStrength.getValue());
+                    pitch += (float) MathUtil.randomizeDouble(-this.pitchStrength.getValue(), this.pitchStrength.getValue());
                 }
                 case "Advanced" -> {
                     if(rdadvanceaddons.isEnabled("Sin Cos Random")) {
@@ -690,13 +692,13 @@ public class KillAura extends Module {
                         double yawAmplitude = this.xStrengthAimPattern.getValue();
                         double pitchAmplitude = this.yStrengthAimPattern.getValue();
 
-                        yaw += (Math.sin(time * frequency) * yawAmplitude);
+                        yaw += (float) (Math.sin(time * frequency) * yawAmplitude);
                         pitch += (float) (Math.cos(time * frequency) * pitchAmplitude);
                     }
 
                     if(rdadvanceaddons.isEnabled("Randomize")) {
-                        yaw += MathUtil.randomizeDouble(-this.yawStrengthAddon.getValue(), this.yawStrengthAddon.getValue());
-                        pitch += MathUtil.randomizeDouble(-this.pitchStrengthAddon.getValue(), this.pitchStrengthAddon.getValue());
+                        yaw += (float) MathUtil.randomizeDouble(-this.yawStrengthAddon.getValue(), this.yawStrengthAddon.getValue());
+                        pitch += (float) MathUtil.randomizeDouble(-this.pitchStrengthAddon.getValue(), this.pitchStrengthAddon.getValue());
                     }
                 }
             }

@@ -85,25 +85,20 @@ public abstract class Widget implements InstanceAccess {
             }
         }
 
-        if (width <= sr.getScaledWidth()) {
-            if (renderX < 0) {
-                x = 0;
-                renderX = 0;
-            } else if (renderX > sr.getScaledWidth() - width) {
-                x = (sr.getScaledWidth() - width) / sr.getScaledWidth();
-                renderX = sr.getScaledWidth() - width;
-            }
+        if (renderX < 0) {
+            renderX = 0;
+        } else if (renderX > sr.getScaledWidth() - width) {
+            renderX = sr.getScaledWidth() - width;
         }
 
-        if (height <= sr.getScaledHeight()) {
-            if (renderY < 0) {
-                y = 0;
-                renderY = 0;
-            } else if (renderY > sr.getScaledHeight() - height) {
-                y = (sr.getScaledHeight() - height) / sr.getScaledHeight();
-                renderY = sr.getScaledHeight() - height;
-            }
+        if (renderY < 0) {
+            renderY = 0;
+        } else if (renderY > sr.getScaledHeight() - height) {
+            renderY = sr.getScaledHeight() - height;
         }
+
+        x = renderX / sr.getScaledWidth();
+        y = renderY / sr.getScaledHeight();
     }
 
     public final void onChatGUI(int mouseX, int mouseY, boolean drag) {
