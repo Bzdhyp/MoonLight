@@ -19,7 +19,6 @@ import net.minecraft.potion.Potion;
 import net.minecraft.util.*;
 import org.lwjglx.input.Keyboard;
 import com.cubk.EventTarget;
-import wtf.moonlight.component.BlinkComponent;
 import wtf.moonlight.events.misc.WorldEvent;
 import wtf.moonlight.events.packet.PacketEvent;
 import wtf.moonlight.events.player.*;
@@ -51,43 +50,30 @@ public class Scaffold extends Module {
     private final SliderValue maxTellyTicks = new SliderValue("Max Telly Ticks", 4, 1, 5, this, () -> mode.is("Telly"));
     public final BoolValue smoothRotations = new BoolValue("Smooth Rotations", false, this, () -> mode.is("Telly"));
 
-    private final ListValue rotations = new ListValue("Rotations", new String[]{"Normal", "Normal 2","Normal 3", "Back", "Strict", "God Bridge", "Reverse", "Custom", "Unfair Pitch", "Hypixel", "Derp"}, "Normal", this, () -> (mode.is("Telly") && !smoothRotations.get()));
-    private final SliderValue customYaw = new SliderValue("Custom Yaw", 180, 0, 180, 1, this, () -> rotations.is("Custom") && (mode.is("Telly") && !smoothRotations.get()));
-    private final SliderValue minPitch = new SliderValue("Min Pitch Range", 55, 50, 90, .1f, this, () -> (rotations.is("Custom") || rotations.is("God Bridge")) && (mode.is("Telly") && !smoothRotations.get()));
-    public final SliderValue maxPitch = new SliderValue("Max Pitch Range", 75, 50, 90, .1f, this, () -> (rotations.is("Custom") || rotations.is("God Bridge")) && (mode.is("Telly") && !smoothRotations.get()));
+    private final ListValue rotations = new ListValue("Rotations", new String[]{"Normal", "Normal 2", "Normal 3", "Back", "Strict", "God Bridge", "Reverse", "Custom", "Unfair Pitch", "Hypixel", "Derp"}, "Normal", this, () -> !mode.is("Telly") || !smoothRotations.get());
+    private final SliderValue customYaw = new SliderValue("Custom Yaw", 180, 0, 180, 1, this, () -> rotations.is("Custom"));
+    private final SliderValue minPitch = new SliderValue("Min Pitch Range", 55, 50, 90, .1f, this, () -> rotations.is("Custom") || rotations.is("God Bridge"));
+    public final SliderValue maxPitch = new SliderValue("Max Pitch Range", 75, 50, 90, .1f, this, () -> rotations.is("Custom") || rotations.is("God Bridge"));
 
-    private final BoolValue customRotationSetting = new BoolValue("Custom Rotation Setting", false, this, () -> mode.is("Telly") && (mode.is("Telly") && !smoothRotations.get()));
-    private final ListValue smoothMode = new ListValue("Rotations Smooth", RotationUtil.smoothModes, RotationUtil.smoothModes[0], this, () -> customRotationSetting.get() && (mode.is("Telly") && !smoothRotations.get()));
-    private final SliderValue minYawRotSpeed = new SliderValue("Min Yaw Rotation Speed", 45, 1, 180, 1, this, () -> customRotationSetting.get() && (mode.is("Telly") && !smoothRotations.get()));
-    private final SliderValue minPitchRotSpeed = new SliderValue("Min Pitch Rotation Speed", 45, 1, 180, 1, this, () -> customRotationSetting.get() && (mode.is("Telly") && !smoothRotations.get()));
-    private final SliderValue maxYawRotSpeed = new SliderValue("Max Yaw Rotation Speed", 90, 1, 180, 1, this, () -> customRotationSetting.get() && (mode.is("Telly") && !smoothRotations.get()));
-    private final SliderValue maxPitchRotSpeed = new SliderValue("Max Pitch Rotation Speed", 90, 1, 180, 1, this, () -> customRotationSetting.get() && (mode.is("Telly") && !smoothRotations.get()));
+    private final BoolValue customRotationSetting = new BoolValue("Custom Rotation Setting", false, this);
+    private final ListValue smoothMode = new ListValue("Rotations Smooth", RotationUtil.smoothModes, RotationUtil.smoothModes[0], this, customRotationSetting::get);
+    private final SliderValue minYawRotSpeed = new SliderValue("Min Yaw Rotation Speed", 45, 1, 180, 1, this, customRotationSetting::get);
+    private final SliderValue minPitchRotSpeed = new SliderValue("Min Pitch Rotation Speed", 45, 1, 180, 1, this, customRotationSetting::get);
+    private final SliderValue maxYawRotSpeed = new SliderValue("Max Yaw Rotation Speed", 90, 1, 180, 1, this, customRotationSetting::get);
+    private final SliderValue maxPitchRotSpeed = new SliderValue("Max Pitch Rotation Speed", 90, 1, 180, 1, this, customRotationSetting::get);
 
-    private final SliderValue bezierP0 = new SliderValue("Bezier P0", 0f, 0f, 1f, 1, this,
-            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
-    private final SliderValue bezierP1 = new SliderValue("Bezier P1", 0.05f, 0f, 1f, 1, this,
-            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
-    private final SliderValue bezierP2 = new SliderValue("Bezier P2", 0.2f, 0f, 1f, 1, this,
-            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
-    private final SliderValue bezierP3 = new SliderValue("Bezier P3", 0.4f, 0f, 1f, 1, this,
-            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
-    private final SliderValue bezierP4 = new SliderValue("Bezier P4", 0.6f, 0f, 1f, 1, this,
-            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
-    private final SliderValue bezierP5 = new SliderValue("Bezier P5", 0.8f, 0f, 1f, 1, this,
-            () ->  (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
-    private final SliderValue bezierP6 = new SliderValue("Bezier P6", 0.95f, 0f, 1f, 1, this,
-            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
-    private final SliderValue bezierP7 = new SliderValue("Bezier P7", 0.1f, 0f, 1f, 1, this,
-            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP0 = new SliderValue("Bezier P0", 0f, 0f, 1f, 1, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP1 = new SliderValue("Bezier P1", 0.05f, 0f, 1f, 1, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP2 = new SliderValue("Bezier P2", 0.2f, 0f, 1f, 1, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP3 = new SliderValue("Bezier P3", 0.4f, 0f, 1f, 1, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP4 = new SliderValue("Bezier P4", 0.6f, 0f, 1f, 1, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP5 = new SliderValue("Bezier P5", 0.8f, 0f, 1f, 1, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP6 = new SliderValue("Bezier P6", 0.95f, 0f, 1f, 1, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
+    private final SliderValue bezierP7 = new SliderValue("Bezier P7", 0.1f, 0f, 1f, 1, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && (smoothMode.is(RotationUtil.smoothModes[1]) || smoothMode.is(RotationUtil.smoothModes[8])));
 
-    private final SliderValue elasticity = new SliderValue("Elasticity", 0.3f, 0.1f, 1f, 0.01f, this,
-            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && smoothMode.is(RotationUtil.smoothModes[7]));
-
-    private final SliderValue dampingFactor = new SliderValue("Damping Factor", 0.5f, 0.1f, 1f, 0.01f, this,
-            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.canDisplay() && customRotationSetting.get() && smoothMode.is(RotationUtil.smoothModes[7]));
-
-    public final BoolValue smoothlyResetRotation = new BoolValue("Smoothly Reset Rotation", true, this,
-            () -> (mode.is("Telly") && !smoothRotations.get()) && customRotationSetting.get());
+    private final SliderValue elasticity = new SliderValue("Elasticity", 0.3f, 0.1f, 1f, 0.01f, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && smoothMode.is(RotationUtil.smoothModes[7]));
+    private final SliderValue dampingFactor = new SliderValue("Damping Factor", 0.5f, 0.1f, 1f, 0.01f, this, () -> customRotationSetting.canDisplay() && customRotationSetting.get() && smoothMode.is(RotationUtil.smoothModes[7]));
+    public final BoolValue smoothlyResetRotation = new BoolValue("Smoothly Reset Rotation", true, this, customRotationSetting::get);
 
     private final MultiBoolValue addons = new MultiBoolValue("Addons", Arrays.asList(
             new BoolValue("Sprint", true),
@@ -331,14 +317,18 @@ public class Scaffold extends Module {
 
     @EventTarget
     public void onRotationUpdate(UpdateEvent event) {
-        if (mode.is("Telly") && smoothRotations.get()) {
-            RotationUtil.setRotation(smoothRotation, MovementCorrection.SILENT);
-            return;
-        }
+        boolean isTellyMode = mode.is("Telly") && smoothRotations.get();
+        if (isTellyMode || canPlace) {
+            float[] targetRotation = isTellyMode ? smoothRotation : rotation;
 
-        if (canPlace) {
             if (customRotationSetting.get()) {
-                RotationUtil.setRotation(rotation, smoothMode.getValue(), addons.isEnabled("Movement Fix") ? MovementCorrection.SILENT : MovementCorrection.OFF, minYawRotSpeed.getValue(), maxYawRotSpeed.getValue(), minPitchRotSpeed.getValue(), maxPitchRotSpeed.getValue(),
+                RotationUtil.setRotation(targetRotation,
+                        smoothMode.getValue(),
+                        addons.isEnabled("Movement Fix") ? MovementCorrection.SILENT : MovementCorrection.OFF,
+                        minYawRotSpeed.getValue(),
+                        maxYawRotSpeed.getValue(),
+                        minPitchRotSpeed.getValue(),
+                        maxPitchRotSpeed.getValue(),
                         bezierP0.getValue(),
                         bezierP1.getValue(),
                         bezierP2.getValue(),
@@ -348,9 +338,11 @@ public class Scaffold extends Module {
                         bezierP6.getValue(),
                         bezierP7.getValue(),
                         elasticity.getValue(),
-                        dampingFactor.getValue(), smoothlyResetRotation.get());
+                        dampingFactor.getValue(),
+                        smoothlyResetRotation.get());
             } else {
-                RotationUtil.setRotation(rotation, addons.isEnabled("Movement Fix") ? MovementCorrection.SILENT : MovementCorrection.OFF);
+                RotationUtil.setRotation(targetRotation,
+                        addons.isEnabled("Movement Fix") ? MovementCorrection.SILENT : MovementCorrection.OFF);
             }
         }
     }
