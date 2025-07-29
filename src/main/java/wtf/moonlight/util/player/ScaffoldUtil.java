@@ -103,16 +103,47 @@ public class ScaffoldUtil implements InstanceAccess {
         }
     }
 
+    public static Scaffold.PlaceData grab(BlockPos b) {
+        EnumFacing[] invert = new EnumFacing[]{EnumFacing.UP, EnumFacing.DOWN, EnumFacing.SOUTH,
+                EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.WEST};
+        BlockPos position = b.offset(EnumFacing.DOWN);
+
+        if (!(mc.theWorld.getBlockState(position).getBlock() instanceof BlockAir)) {
+            return null;
+        }
+
+        for (EnumFacing offsets : EnumFacing.values()) {
+            BlockPos offset1 = position.offset(offsets);
+            if (!(mc.theWorld.getBlockState(offset1).getBlock() instanceof BlockAir)) {
+                return new Scaffold.PlaceData(offset1, invert[offsets.ordinal()]);
+            }
+        }
+
+        BlockPos[] positions = new BlockPos[]{new BlockPos(-1, 0, 0), new BlockPos(1, 0, 0),
+                new BlockPos(0, 0, -1), new BlockPos(0, 0, 1)};
+
+        for (BlockPos var17 : positions) {
+            BlockPos offsetPos = position.add(var17.getX(), 0, var17.getZ());
+            if (mc.theWorld.getBlockState(offsetPos).getBlock() instanceof BlockAir) {
+                for (EnumFacing facing2 : EnumFacing.values()) {
+                    BlockPos offset2 = offsetPos.offset(facing2);
+                    if (!(mc.theWorld.getBlockState(offset2).getBlock() instanceof BlockAir)) {
+                        return new Scaffold.PlaceData(offset2, invert[facing2.ordinal()]);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     public static Scaffold.PlaceData getPlaceData(final BlockPos pos) {
         EnumFacing[] facings = {EnumFacing.EAST, EnumFacing.WEST, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.UP};
         BlockPos[] offsets = {new BlockPos(-1, 0, 0), new BlockPos(1, 0, 0), new BlockPos(0, 0, 1), new BlockPos(0, 0, -1), new BlockPos(0, -1, 0)};
-
         Scaffold module = Client.INSTANCE.getModuleManager().getModule(Scaffold.class);
 
         if (module.isEnabled() && !module.smoothRotations.get()) {
-            if (module.previousBlock != null && module.previousBlock.getY() > mc.thePlayer.posY) {
+            if (module.previousBlock != null && module.previousBlock.getY() > mc.thePlayer.posY)
                 module.previousBlock = null;
-            }
         }
 
         // 1 of the 4 directions around player
@@ -145,6 +176,7 @@ public class ScaffoldUtil implements InstanceAccess {
             for (int i = 0; i < offsets.length; i++) {
                 BlockPos newPos = pos.add(offsets[i]);
                 Block block = mc.theWorld.getBlockState(newPos).getBlock();
+
                 if (module.isEnabled() && !module.smoothRotations.get()) {
                     if (newPos.equals(module.previousBlock)) {
                         return new Scaffold.PlaceData(newPos, facings[i]);
@@ -154,7 +186,6 @@ public class ScaffoldUtil implements InstanceAccess {
                 if (lastCheck == 0) {
                     continue;
                 }
-
                 if (!block.getMaterial().isReplaceable() && isInteractable(block)) {
                     return new Scaffold.PlaceData(newPos, facings[i]);
                 }

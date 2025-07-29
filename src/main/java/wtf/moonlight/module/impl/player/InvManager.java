@@ -184,6 +184,11 @@ public class InvManager extends Module {
                         ItemStack currentBlock = mc.thePlayer.inventory.getStackInSlot(block);
                         if (stack.stackSize > currentBlock.stackSize) {
                             block = i;
+                        } else if (stack.stackSize == currentBlock.stackSize) {
+                            // If stacks are equal, compare block types to maintain consistency
+                            if (Item.getIdFromItem(stack.getItem()) > Item.getIdFromItem(currentBlock.getItem())) {
+                                block = i;
+                            }
                         }
                     }
                     continue;
@@ -199,12 +204,15 @@ public class InvManager extends Module {
                     continue;
                 }
 
-                if (item instanceof ItemFood foodItem) {
-                    if (food == -1) food = i;
-                    else {
-                        float curSat = ((ItemFood) mc.thePlayer.inventory.getStackInSlot(food).getItem()).getSaturationModifier(mc.thePlayer.inventory.getStackInSlot(food));
-                        float newSat = foodItem.getSaturationModifier(stack);
-                        if (newSat > curSat) food = i;
+                if (item instanceof ItemFood itemFood) {
+                    keepSlots.add(i);
+                    if (item == Item.getItemById(322) || item == Item.getItemById(466)) {
+                        if (food == -1) food = i;
+                        else {
+                            float curSat = ((ItemFood) mc.thePlayer.inventory.getStackInSlot(food).getItem()).getSaturationModifier(mc.thePlayer.inventory.getStackInSlot(food));
+                            float newSat = itemFood.getSaturationModifier(stack);
+                            if (newSat > curSat) food = i;
+                        }
                     }
                 }
             }
@@ -243,7 +251,15 @@ public class InvManager extends Module {
             if (sword != -1 && sword != swordSlot.getValue() - 1) moveItem(sword, (int) (swordSlot.getValue() - 37));
             if (pickaxe != -1 && pickaxe != pickaxeSlot.getValue() - 1) moveItem(pickaxe, (int) (pickaxeSlot.getValue() - 37));
             if (axe != -1 && axe != axeSlot.getValue() - 1) moveItem(axe, (int) (axeSlot.getValue() - 37));
-            if (block != -1 && block != blockSlot.getValue() - 1 && !isEnabled(Scaffold.class)) moveItem(block, (int) (blockSlot.getValue() - 37));
+            if (block != -1 && block != blockSlot.getValue() - 1 && !isEnabled(Scaffold.class)) {
+                ItemStack currentSlot = mc.thePlayer.inventory.getStackInSlot((int)(blockSlot.getValue() - 1));
+                if (currentSlot == null || !ItemStack.areItemStacksEqual(
+                        mc.thePlayer.inventory.getStackInSlot(block),
+                        currentSlot)) {
+                    moveItem(block, (int) (blockSlot.getValue() - 37));
+                }
+            }
+
             if (potion != -1 && potion != potionSlot.getValue() - 1) moveItem(potion, (int) (potionSlot.getValue() - 37));
             if (food != -1 && food != gappleSlot.getValue() - 1) moveItem(food, (int) (gappleSlot.getValue() - 37));
 

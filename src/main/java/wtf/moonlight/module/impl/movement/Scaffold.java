@@ -32,6 +32,7 @@ import wtf.moonlight.module.values.impl.BoolValue;
 import wtf.moonlight.module.values.impl.ListValue;
 import wtf.moonlight.module.values.impl.MultiBoolValue;
 import wtf.moonlight.module.values.impl.SliderValue;
+import wtf.moonlight.util.DebugUtil;
 import wtf.moonlight.util.MathUtil;
 import wtf.moonlight.component.SpoofSlotComponent;
 import wtf.moonlight.util.MovementCorrection;
@@ -116,6 +117,7 @@ public class Scaffold extends Module {
 
     public PlaceData data;
     BlockPos targetBlock;
+    BlockPos underPos = null;
     public BlockPos previousBlock;
 
     private double smoothY;
@@ -124,7 +126,6 @@ public class Scaffold extends Module {
     private boolean placing;
     private boolean isOnRightSide;
     private boolean canPlace = true;
-    private boolean smoothPlace = false;
 
     private double onGroundY;
 
@@ -152,8 +153,9 @@ public class Scaffold extends Module {
         previousRotation = new float[]{mc.thePlayer.rotationYaw + 180, 82};
 
         if (mode.is("Telly") && smoothRotations.get()) {
-            smoothRotation = new float[]{mc.thePlayer.rotationYaw, 85F};
+            underPos = null;
             smoothY = mc.thePlayer.posY;
+            smoothRotation = new float[]{mc.thePlayer.rotationYaw, 85F};
         }
 
         if (wdSprint.canDisplay() && wdSprint.is("Offset") && !(PlayerUtil.getBlock(mc.thePlayer.getPosition()) instanceof BlockLiquid) && !addons.isEnabled("Hover")) {
@@ -256,7 +258,17 @@ public class Scaffold extends Module {
 
         targetBlock = new BlockPos(posX, posY, posZ).offset(EnumFacing.DOWN);
 
-        data = ScaffoldUtil.getPlaceData(targetBlock);
+        underPos = new BlockPos(mc.thePlayer.posX, smoothY, mc.thePlayer.posZ);
+
+        if (mc.gameSettings.keyBindJump.isKeyDown() || mc.thePlayer.onGround) {
+            smoothY =  mc.thePlayer.posY;
+        }
+
+        PlaceData bc = ScaffoldUtil.getPlaceData(targetBlock);
+        if (bc == null) {
+            bc = ScaffoldUtil.grab(underPos);
+        }
+        this.data = bc;
 
         if (tower.canDisplay() && towering() && !isEnabled(Speed.class) && tower.is("Watchdog") && !placing) {
             BlockPos xPos = data.blockPos.add(-1, 0, 0);
@@ -306,7 +318,9 @@ public class Scaffold extends Module {
 
         canPlace = (mode.is("Telly") && mc.thePlayer.offGroundTicks >= tellyTicks || mode.is("Snap") && data != null && (mc.thePlayer.isPotionActive(Potion.moveSpeed) || doesNotContainBlock(1)) || !mode.is("Telly") && !mode.is("Snap"));
 
-        getRotations();
+        if (mode.is("Telly") && !smoothRotations.get()) {
+            getRotations();
+        }
 
         place(data.blockPos, data.facing, getVec3(data));
     }
@@ -493,7 +507,6 @@ public class Scaffold extends Module {
 
     @EventTarget
     public void onMove(MoveEvent event) {
-
         if (isEnabled(KillAura.class) && !getModule(KillAura.class).noScaffold.get() && getModule(KillAura.class).target != null && getModule(KillAura.class).shouldAttack() && data == null) {
             return;
         }
@@ -541,30 +554,88 @@ public class Scaffold extends Module {
         }
 
         if (mode.is("Telly") && smoothRotations.get()) {
-            if (mc.gameSettings.keyBindJump.isKeyDown() || mc.thePlayer.onGround) {
-                smoothY = mc.thePlayer.posY;
-            }
-
-            BlockPos under = new BlockPos(mc.thePlayer.posX, smoothY, mc.thePlayer.posZ);
-            Scaffold.PlaceData data = ScaffoldUtil.getPlaceData(under);
-            if (data != null) {
-                this.data = data;
-            }
+            float f = mc.thePlayer.rotationYaw;
+            float wrapAngleTo180_float2 = MathHelper.wrapAngleTo180_float(f);
+            boolean z2 = Math.abs(wrapAngleTo180_float2 % 90.0f) <= 10.0f || Math.abs(wrapAngleTo180_float2 % 90.0f) >= 80.0f;
 
             if (!mc.thePlayer.onGround) {
                 smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 90;
-                if (mc.thePlayer.offGroundTicks > 0) smoothPlace = true;
+                if (mc.thePlayer.offGroundTicks > 0) canPlace = true;
             } else {
-                smoothPlace = false;
+                canPlace = false;
             }
 
-            if (smoothPlace) {
-                smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 125;
-            } else if (mc.thePlayer.onGround) {
-                smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw);
+            if (!mc.gameSettings.keyBindRight.isKeyDown() || !mc.gameSettings.keyBindLeft.isKeyDown()) {
+                if (canPlace) {
+                    if (mc.gameSettings.keyBindJump.isKeyDown()) {
+                        smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 125;
+                    } else {
+                        if (mc.thePlayer.offGroundTicks > 1) {
+                            smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 90;
+                        }
+
+                        if (mc.thePlayer.offGroundTicks > 4) {
+                            smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 125;
+                        }
+
+                        if (mc.thePlayer.offGroundTicks == 8) {
+                            smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 180;
+                        }
+                    }
+                } else if (mc.thePlayer.onGround) {
+                    smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw);
+                }
             }
 
-            for (int i = 90; i > 60f; i--) {
+            // W + A
+            if (mc.gameSettings.keyBindLeft.isKeyDown() && mc.gameSettings.keyBindForward.isKeyDown() && !z2) {
+                if (canPlace) {
+                    smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 155;
+                } else if (mc.thePlayer.onGround) {
+                    smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw)  - 150;
+                }
+            } else if (mc.gameSettings.keyBindLeft.isKeyDown() && mc.gameSettings.keyBindForward.isKeyDown() && z2) {
+                if (canPlace) {
+                    smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 155;
+                } else if (mc.thePlayer.onGround) {
+                    smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 150;
+                }
+            }
+
+            // W + D
+            if (mc.gameSettings.keyBindRight.isKeyDown() && mc.gameSettings.keyBindForward.isKeyDown() && z2) {
+                if (canPlace) {
+                    smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 133;
+                } else if (mc.thePlayer.onGround) {
+                    smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 128;
+                }
+            } else if (mc.gameSettings.keyBindRight.isKeyDown() && mc.gameSettings.keyBindForward.isKeyDown()) {
+                if (canPlace) {
+                    smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 133;
+                } else if (mc.thePlayer.onGround) {
+                    smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 128;
+                }
+            }
+
+            // A
+            if (mc.gameSettings.keyBindLeft.isKeyDown() && !mc.gameSettings.keyBindForward.isKeyDown()) {
+                if (canPlace) {
+                    smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 127;
+                } else if (mc.thePlayer.onGround) {
+                    smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw);
+                }
+            }
+
+            // D
+            if (mc.gameSettings.keyBindRight.isKeyDown() && !mc.gameSettings.keyBindForward.isKeyDown()) {
+                if (canPlace) {
+                    smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 125;
+                } else if (mc.thePlayer.onGround) {
+                    smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw);
+                }
+            }
+
+            for (int i = 85; i > 60f; i--) {
                 float[] tryRot = new float[]{smoothRotation[0], i};
                 MovingObjectPosition mop = RotationUtil.rayTrace(tryRot, mc.playerController.getBlockReachDistance(), 1);
                 if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK &&
@@ -806,8 +877,6 @@ public class Scaffold extends Module {
     }
 
     private void place(BlockPos pos, EnumFacing facing, Vec3 hitVec) {
-        if (mode.is("Telly") && smoothRotations.get() && !smoothPlace) return;
-
         if (canPlace && data != null) {
             if (!addons.isEnabled("Ray Trace")) {
                 if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem(), pos, facing, hitVec)) {
@@ -817,6 +886,7 @@ public class Scaffold extends Module {
                     } else {
                         mc.getNetHandler().addToSendQueue(new C0APacketAnimation());
                     }
+                    underPos = null;
                     placing = true;
                     blocksPlaced += 1;
                     placed = true;
@@ -832,6 +902,7 @@ public class Scaffold extends Module {
                         mc.getNetHandler().addToSendQueue(new C0APacketAnimation());
                     }
                     placing = true;
+                    underPos = null;
                     blocksPlaced += 1;
                     placed = true;
                 }
