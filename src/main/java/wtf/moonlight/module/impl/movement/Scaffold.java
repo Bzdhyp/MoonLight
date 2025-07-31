@@ -318,9 +318,7 @@ public class Scaffold extends Module {
 
         canPlace = (mode.is("Telly") && mc.thePlayer.offGroundTicks >= tellyTicks || mode.is("Snap") && data != null && (mc.thePlayer.isPotionActive(Potion.moveSpeed) || doesNotContainBlock(1)) || !mode.is("Telly") && !mode.is("Snap"));
 
-        if (mode.is("Telly") && !smoothRotations.get()) {
-            getRotations();
-        }
+        getRotations();
 
         place(data.blockPos, data.facing, getVec3(data));
     }
@@ -568,19 +566,9 @@ public class Scaffold extends Module {
             if (!mc.gameSettings.keyBindRight.isKeyDown() || !mc.gameSettings.keyBindLeft.isKeyDown()) {
                 if (canPlace) {
                     if (mc.gameSettings.keyBindJump.isKeyDown()) {
-                        smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 125;
+                        smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 115;
                     } else {
-                        if (mc.thePlayer.offGroundTicks > 1) {
-                            smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 90;
-                        }
-
-                        if (mc.thePlayer.offGroundTicks > 4) {
-                            smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 125;
-                        }
-
-                        if (mc.thePlayer.offGroundTicks == 8) {
-                            smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 180;
-                        }
+                        smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw) - 125;
                     }
                 } else if (mc.thePlayer.onGround) {
                     smoothRotation[0] = MovementUtil.getBindsDirection(mc.thePlayer.rotationYaw);
